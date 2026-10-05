@@ -1,0 +1,779 @@
+<title>Tide-Tode Brand Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;900&family=Inter:wght@400;600&family=Fraunces:ital,wght@1,400&family=Bagel+Fat+One&display=swap">
+<style>
+  /* Layout: een branding board op crème papier met korrel; grote kleurvlakken, ronde fotokaders en een bento-raster bovenaan. */
+  :root {
+    color-scheme: light;
+    --creme: #F5EEDF;
+    --deep: #1F3F6B;
+    --ink: #18325A;
+    --captain: #3D6FB6;
+    --baby: #C4DAF0;
+    --poppy: #EE7B4F;
+    --rose: #F2BDBD;
+    --sunshine: #F2D06B;
+    --zacht: #4C5F7E;
+    --lijn: rgba(24, 50, 90, .14);
+    --kaart: #FBF7EF;
+
+    --f-logo: 'Bagel Fat One', 'Arial Rounded MT Bold', system-ui, sans-serif;
+    --f-kop: 'Archivo', 'Arial Black', system-ui, sans-serif;
+    --f-tekst: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --f-hand: 'Fraunces', Georgia, serif;
+
+    --breed: 1200px;
+    --r: 22px;
+    --sh: 0 24px 50px -18px rgba(24, 50, 90, .35), 0 0 0 1px var(--lijn);
+    --korrel: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--creme); color: var(--ink); font: 400 16px/1.6 var(--f-tekst); padding-inline: clamp(16px, 3.5vw, 40px); -webkit-font-smoothing: antialiased; position: relative; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: var(--korrel); opacity: .16; mix-blend-mode: multiply; pointer-events: none; z-index: 50; }
+  .wrap { max-width: var(--breed); margin-inline: auto; }
+  section { padding-block: clamp(56px, 8vw, 104px); }
+  h1, h2, h3 { font-family: var(--f-kop); font-weight: 900; color: var(--deep); margin: 0; text-wrap: balance; }
+  h2 { font-size: clamp(36px, 5.6vw, 64px); line-height: .98; letter-spacing: -0.04em; }
+  h3 { font-size: 20px; line-height: 1.2; letter-spacing: -0.01em; }
+  p { margin: 0; }
+  .label { font: 900 12px/1 var(--f-kop); letter-spacing: .16em; text-transform: uppercase; color: var(--captain); }
+  .lead { font-size: clamp(17px, 1.5vw, 19px); color: var(--zacht); max-width: 60ch; }
+  .hand { font: italic 400 1em/1 var(--f-hand); letter-spacing: 0; }
+  .kop { display: grid; gap: 16px; margin-bottom: clamp(32px, 5vw, 56px); }
+  .kaart { background: var(--kaart); border-radius: var(--r); box-shadow: var(--sh); padding: 24px; min-width: 0; }
+  .klein { font-size: 13px; color: var(--zacht); }
+  .korrel { position: relative; isolation: isolate; }
+  .korrel::after { content: ''; position: absolute; inset: 0; background-image: var(--korrel); opacity: .3; mix-blend-mode: multiply; pointer-events: none; border-radius: inherit; z-index: 3; }
+  svg { display: block; }
+  figure { margin: 0; display: grid; gap: 10px; min-width: 0; }
+  figcaption { font-size: 13px; color: var(--zacht); }
+  :focus-visible { outline: 2px solid var(--poppy); outline-offset: 3px; }
+  .ruit { height: 26px; width: 100%; color: var(--creme); background: currentColor;
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='26'><rect x='1' y='1' width='14' height='11' rx='3'/><rect x='17' y='14' width='14' height='11' rx='3'/></svg>") left top / 32px 26px repeat-x;
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='26'><rect x='1' y='1' width='14' height='11' rx='3'/><rect x='17' y='14' width='14' height='11' rx='3'/></svg>") left top / 32px 26px repeat-x; }
+
+  /* ---------- cover ---------- */
+  .cover { margin-top: 24px; border-radius: 36px; background: var(--deep); color: var(--creme); padding: clamp(24px, 5vw, 56px); overflow: hidden; display: grid; gap: clamp(28px, 5vw, 56px); }
+  .cover__hoek { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font: 900 11px/1 var(--f-kop); letter-spacing: .18em; text-transform: uppercase; color: var(--baby); position: relative; z-index: 4; }
+  .cover__logo { width: min(820px, 100%); justify-self: center; color: var(--creme); position: relative; z-index: 4; }
+  .cover__onder { display: grid; gap: 20px; align-items: end; position: relative; z-index: 4; }
+  .cover__onder p { color: rgba(245, 238, 223, .82); max-width: 46ch; font-size: 17px; }
+  .cover__onder .hand { color: var(--sunshine); font-size: 1.15em; }
+  .toc { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
+  .toc a { display: inline-block; padding: 8px 14px; border-radius: 999px; color: var(--creme); text-decoration: none; font-size: 13px; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(245, 238, 223, .3); }
+  .toc a:hover { background: rgba(245, 238, 223, .1); }
+  @media (min-width: 860px) { .cover__onder { grid-template-columns: 1fr auto; } .toc { justify-content: flex-end; max-width: 520px; } }
+
+  /* ---------- branding board (bento) ---------- */
+  .bento { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(150px, auto); }
+  .tegel { border-radius: var(--r); overflow: hidden; position: relative; display: grid; place-items: center; padding: 22px; min-width: 0; }
+  .tegel svg { max-width: 100%; }
+  .t-logo { grid-column: span 2; background: var(--kaart); box-shadow: var(--sh); color: var(--deep); min-height: 240px; }
+  .t-logo svg { width: min(560px, 92%); }
+  .t-zon { background: var(--poppy); color: var(--creme); }
+  .t-zon svg { width: min(170px, 80%); }
+  .t-tt { background: var(--baby); color: var(--deep); }
+  .t-tt svg { width: min(150px, 72%); }
+  .t-foto { grid-column: span 2; min-height: 300px; padding: 0 0 9%; place-items: end center; }
+  .t-foto > svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .t-foto .overlay-logo { position: relative; z-index: 2; width: min(300px, 64%); color: var(--creme); }
+  .t-kleur { grid-column: span 2; padding: 0; display: grid; place-items: stretch; grid-template-columns: repeat(7, minmax(0, 1fr)); min-height: 120px; }
+  .t-kleur span { display: flex; align-items: flex-end; padding: 10px 8px; font: 900 10px/1 var(--f-kop); letter-spacing: .1em; text-transform: uppercase; min-width: 0; overflow: hidden; }
+  .t-iconen { background: var(--deep); color: var(--creme); grid-column: span 2; }
+  .t-iconen .iconen-mini { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px 14px; width: 100%; }
+  .t-iconen svg { width: 100%; max-width: 46px; height: auto; margin-inline: auto; }
+  .t-type { background: var(--sunshine); color: var(--deep); display: grid; align-content: space-between; justify-items: start; }
+  .t-type b { font: 900 clamp(64px, 9vw, 104px)/.85 var(--f-kop); letter-spacing: -0.05em; }
+  .t-type .hand { font-size: 28px; color: var(--deep); }
+  .t-label { background: var(--rose); }
+  .t-label svg { width: min(150px, 70%); filter: drop-shadow(0 18px 20px rgba(24, 50, 90, .3)); transform: rotate(-5deg); }
+  .t-woord { background: var(--captain); color: var(--creme); }
+  .t-woord svg { width: min(260px, 90%); }
+  .t-ruit { grid-column: span 2; background: var(--poppy); color: var(--creme); min-height: 0; padding: 18px 0; gap: 14px; }
+  .t-ruit p { font: 400 clamp(26px, 4vw, 44px)/1 var(--f-logo); letter-spacing: -0.01em; text-align: center; padding-inline: 16px; }
+  @media (min-width: 760px) {
+    .bento { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: minmax(170px, auto); }
+    .t-logo { grid-column: span 4; grid-row: span 2; }
+    .t-zon { grid-column: span 2; }
+    .t-tt { grid-column: span 2; }
+    .t-foto { grid-column: span 3; grid-row: span 2; }
+    .t-kleur { grid-column: span 3; }
+    .t-type { grid-column: span 2; }
+    .t-label { grid-column: span 1; }
+    .t-woord { grid-column: span 3; }
+    .t-iconen { grid-column: span 3; }
+    .t-ruit { grid-column: span 6; }
+  }
+
+  /* ---------- verhaal ---------- */
+  .verhaal { display: grid; gap: 40px; align-items: center; }
+  .quote { font: 900 clamp(30px, 4.2vw, 48px)/1.02 var(--f-kop); letter-spacing: -0.035em; color: var(--deep); }
+  .quote em { font: italic 400 1.05em/1 var(--f-hand); color: var(--captain); letter-spacing: 0; }
+  .verhaal .lead + .lead { margin-top: 16px; }
+  .boog { border-radius: 999px 999px 28px 28px; overflow: hidden; aspect-ratio: 4 / 5; max-width: 420px; width: 100%; justify-self: center; }
+  .boog svg { width: 100%; height: 100%; }
+  @media (min-width: 900px) { .verhaal { grid-template-columns: 1fr 1.2fr; gap: 72px; } }
+
+  /* ---------- naam ---------- */
+  .naam { display: grid; gap: 16px; }
+  .naam-groot { background: var(--sunshine); border-radius: 32px; padding: clamp(28px, 5vw, 56px); display: grid; gap: 24px; color: var(--deep); }
+  .naam-groot svg { width: min(620px, 100%); color: var(--deep); }
+  .naam-ontleed { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+  .naam-ontleed div { background: rgba(255, 255, 255, .45); border-radius: 18px 18px 18px 6px; padding: 16px 18px; font-size: 15px; }
+  .naam-ontleed b { display: block; font: 400 26px/1 var(--f-logo); margin-bottom: 6px; }
+  .check { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 10px; }
+  .check li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; }
+  .check li::before { content: ''; flex-shrink: 0; width: 18px; height: 18px; margin-top: 3px; border-radius: 6px; box-shadow: inset 0 0 0 1.5px var(--captain); }
+
+  /* ---------- logo-systeem ---------- */
+  .logo-raster { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+  .vlak { border-radius: var(--r); display: grid; place-items: center; padding: 28px; min-height: 240px; }
+  .vlak svg { width: 100%; max-width: 280px; }
+  .vlak--creme { background: var(--kaart); box-shadow: var(--sh); color: var(--deep); }
+  .vlak--deep { background: var(--deep); color: var(--creme); }
+  .vlak--captain { background: var(--captain); color: var(--creme); }
+  .vlak--poppy { background: var(--poppy); color: var(--creme); }
+  .vlak--baby { background: var(--baby); color: var(--deep); }
+  .vlak--rose { background: var(--rose); color: var(--deep); }
+  .vlak--sunshine { background: var(--sunshine); color: var(--deep); }
+  .rol { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .rol b { font-family: var(--f-kop); font-weight: 900; color: var(--deep); font-size: 15px; }
+  .ruimte { position: relative; padding: 36px; border-radius: var(--r); background: var(--kaart); box-shadow: var(--sh); }
+  .ruimte__binnen { position: relative; outline: 1.5px dashed var(--poppy); outline-offset: 18px; color: var(--deep); }
+  .regels { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); margin-top: 16px; }
+  .regels ul { margin: 12px 0 0; padding-left: 18px; display: grid; gap: 6px; font-size: 15px; color: var(--zacht); }
+  .niet-raster { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); margin-top: 16px; }
+  .niet { position: relative; border-radius: 18px; background: var(--kaart); box-shadow: var(--sh); padding: 18px; display: grid; gap: 10px; }
+  .niet svg { width: 100%; height: 70px; }
+  .niet::after { content: ''; position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; border-radius: 50%; background: var(--poppy) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><path d='M7 7l8 8M15 7l-8 8' stroke='%23F5EEDF' stroke-width='2.4' stroke-linecap='round'/></svg>") center/100% no-repeat; }
+
+  /* ---------- kleur ---------- */
+  .verhouding { display: flex; height: 72px; border-radius: 18px; overflow: hidden; box-shadow: var(--sh); margin-bottom: 12px; }
+  .verhouding span { display: grid; place-items: center; font: 900 12px/1 var(--f-kop); letter-spacing: .06em; min-width: 0; overflow: hidden; white-space: nowrap; }
+  .kleuren { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); margin-top: 28px; }
+  .kleur { display: grid; border-radius: var(--r); overflow: hidden; box-shadow: var(--sh); background: var(--kaart); border: 0; padding: 0; text-align: left; cursor: pointer; font: inherit; color: inherit; }
+  .kleur__vlak { aspect-ratio: 1 / 1; max-width: 100%; display: flex; align-items: flex-end; padding: 12px; }
+  .kleur__vlak small { font: 900 10px/1 var(--f-kop); letter-spacing: .14em; text-transform: uppercase; }
+  .kleur__info { padding: 12px 14px 14px; display: grid; gap: 4px; }
+  .kleur__info b { font: 400 22px/1 var(--f-logo); color: var(--deep); }
+  .kleur__info code { font: 600 12.5px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); }
+  .kleur__info span { font-size: 12.5px; color: var(--zacht); }
+  .kleur .gekopieerd { display: none; color: var(--captain); font-weight: 600; }
+  .kleur.is-gekopieerd .gekopieerd { display: inline; }
+  .paren { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); margin-top: 16px; }
+  .paar { border-radius: 16px; padding: 18px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font: 900 22px/1 var(--f-kop); }
+  .paar small { font: 600 12px/1 var(--f-tekst); opacity: .9; font-variant-numeric: tabular-nums; }
+
+  /* ---------- typografie ---------- */
+  .letters { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+  .letter { display: grid; gap: 8px; align-content: start; }
+  .letter__proef { font-size: 88px; line-height: 1; margin: 6px 0 8px; color: var(--deep); }
+  .letter dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; font-size: 14px; }
+  .letter dt { color: var(--zacht); }
+  .letter dd { margin: 0; }
+  .zetproef { margin-top: 16px; border-radius: 32px; padding: clamp(28px, 5vw, 64px); background: var(--deep); color: var(--creme); display: grid; gap: 20px; }
+  .zetproef .label { color: var(--baby); }
+  .zetproef h3 { color: var(--creme); font-size: clamp(40px, 7vw, 88px); line-height: .92; letter-spacing: -0.05em; }
+  .zetproef h3 em { font: italic 400 1em/1 var(--f-hand); color: var(--sunshine); letter-spacing: -0.01em; }
+  .zetproef p { color: rgba(245, 238, 223, .8); max-width: 56ch; font-size: 18px; }
+
+  /* ---------- iconen ---------- */
+  .icoon-raster { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr)); }
+  .icoon { border-radius: 20px; background: var(--kaart); box-shadow: var(--sh); padding: 22px 16px 14px; display: grid; justify-items: center; gap: 12px; color: var(--deep); }
+  .icoon svg { width: 56px; height: 56px; }
+  .icoon span { font-size: 13px; font-weight: 600; }
+  .icoon:nth-child(4n+1) svg { color: var(--captain); }
+  .icoon:nth-child(4n+3) svg { color: var(--poppy); }
+  .icoon-gebruik { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); margin-top: 16px; }
+  .icoon-gebruik .vlak { min-height: 200px; gap: 14px; text-align: center; }
+  .icoon-gebruik .vlak svg { width: 64px; height: 64px; }
+  .icoon-gebruik p { font: 900 18px/1.1 var(--f-kop); letter-spacing: -0.01em; }
+
+  /* ---------- grafische elementen ---------- */
+  .elementen { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+  .element { border-radius: var(--r); overflow: hidden; min-height: 220px; display: grid; place-items: center; padding: 24px; position: relative; }
+  .groot-woord { overflow: hidden; border-radius: var(--r); background: var(--baby); padding-block: 28px; margin-top: 16px; position: relative; }
+  .groot-woord p { font: 900 clamp(64px, 12vw, 150px)/.85 var(--f-kop); letter-spacing: -0.05em; color: var(--creme); white-space: nowrap; }
+  .groot-woord .rij2 { margin-left: -8%; }
+  .groot-woord .bogen { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; gap: 2.5%; padding-inline: 6%; }
+  .groot-woord .bogen > div { flex: 1; max-width: 220px; aspect-ratio: 3 / 4; border-radius: 999px 999px 24px 24px; overflow: hidden; box-shadow: 0 24px 40px -20px rgba(24, 50, 90, .5); position: relative; display: grid; place-items: end center; }
+  .groot-woord .bogen svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .groot-woord .bogen span { position: relative; z-index: 2; margin-bottom: 14px; font: italic 400 clamp(18px, 2.4vw, 28px)/1 var(--f-hand); color: var(--creme); }
+
+  /* ---------- beeld ---------- */
+  .beeld { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+  .foto { position: relative; overflow: hidden; aspect-ratio: 4 / 5; max-width: 100%; display: flex; align-items: flex-end; padding: 14px; }
+  .foto svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .foto--boog { border-radius: 999px 999px 26px 26px; }
+  .foto--rond { border-radius: 30px; }
+  .foto__label { position: relative; z-index: 4; padding: 8px 14px; border-radius: 16px 16px 16px 6px; background: var(--kaart); font-size: 13px; font-weight: 600; box-shadow: 0 18px 40px -18px rgba(24, 50, 90, .5); }
+  .foto__label small { display: block; font-weight: 400; color: var(--zacht); }
+  .doen { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); margin-top: 16px; }
+  .doen ul { padding-left: 18px; display: grid; gap: 6px; margin: 12px 0 0; font-size: 15px; color: var(--zacht); }
+
+  /* ---------- stem ---------- */
+  .stem { display: grid; gap: 12px; }
+  .stem__rij { display: grid; gap: 12px; }
+  @media (min-width: 760px) { .stem__rij { grid-template-columns: 1fr 1fr; } }
+  .zeg { border-radius: var(--r); padding: 20px 22px; font-size: 16px; min-width: 0; }
+  .zeg small { display: block; font: 900 11px/1 var(--f-kop); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 10px; }
+  .zeg--wel { background: var(--kaart); box-shadow: var(--sh); }
+  .zeg--wel small { color: var(--captain); }
+  .zeg--niet { box-shadow: inset 0 0 0 1.5px var(--lijn); color: var(--zacht); }
+  .zeg--niet small { color: var(--poppy); }
+  .stem-regels { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); margin-top: 24px; }
+  .stem-regels p { font-size: 15px; color: var(--zacht); margin-top: 6px; }
+
+  /* ---------- toepassingen ---------- */
+  .toep { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); }
+  .mock { border-radius: var(--r); min-height: 340px; display: grid; place-items: center; padding: 28px; position: relative; overflow: hidden; }
+  .mock > svg { width: 100%; max-width: 330px; height: auto; position: relative; z-index: 2; }
+  .mock--breed { grid-column: 1 / -1; }
+  .insta-rij { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; width: 100%; max-width: 720px; position: relative; z-index: 2; }
+  .insta-rij > div { aspect-ratio: 1 / 1; position: relative; overflow: hidden; display: grid; place-items: center; text-align: center; padding: 10%; border-radius: 4px; }
+  .insta-rij > div:first-child { place-items: end center; padding-bottom: 12%; }
+  .insta-rij svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .insta-rij .ig-logo { position: relative; z-index: 2; width: 82%; color: var(--creme); }
+  .insta-rij b { position: relative; font: 900 clamp(14px, 2.4vw, 26px)/1 var(--f-kop); letter-spacing: -0.03em; color: var(--deep); }
+  .insta-rij b em { font: italic 400 1.05em/1 var(--f-hand); color: var(--creme); letter-spacing: 0; }
+  .insta-rij .ig-iconen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12%; width: 74%; color: var(--deep); position: relative; }
+  .insta-rij .ig-iconen svg { width: 100%; height: auto; }
+  .browser { width: 100%; max-width: 900px; border-radius: 16px; overflow: hidden; background: var(--kaart); box-shadow: 0 40px 70px -30px rgba(24, 50, 90, .55); position: relative; z-index: 2; }
+  .browser__balk { display: flex; gap: 6px; padding: 10px 14px; background: #E9E1CF; }
+  .browser__balk i { width: 10px; height: 10px; border-radius: 50%; background: rgba(24, 50, 90, .25); }
+  .site-hero { position: relative; min-height: 340px; display: grid; align-content: space-between; padding: 18px 22px 28px; color: var(--creme); overflow: hidden; }
+  .site-hero svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .site-hero::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(24, 50, 90, 0) 25%, rgba(24, 50, 90, .6)); }
+  .site-nav { position: relative; z-index: 4; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 8px 16px; border-radius: 999px; background: var(--kaart); color: var(--deep); }
+  .site-nav svg { width: 92px; }
+  .site-nav span { font-size: 11px; font-weight: 600; display: none; gap: 14px; }
+  .site-nav em { font-style: normal; font-size: 11px; font-weight: 700; padding: 8px 12px; border-radius: 999px; background: var(--captain); color: #fff; }
+  @media (min-width: 640px) { .site-nav span { display: flex; } }
+  .site-hero h4 { position: relative; z-index: 4; margin: 0; font: 900 clamp(28px, 5vw, 56px)/.92 var(--f-kop); letter-spacing: -0.045em; max-width: 12ch; }
+  .site-hero h4 em { font: italic 400 1.04em/1 var(--f-hand); color: var(--sunshine); letter-spacing: 0; }
+  .site-band { background: var(--poppy); color: var(--creme); padding: 28px 22px; display: grid; justify-items: center; gap: 12px; text-align: center; position: relative; }
+  .site-band svg { width: 80px; color: var(--creme); }
+  .site-band p { font-size: 13px; max-width: 46ch; color: rgba(245, 238, 223, .92); }
+  .site-band b { font: 900 22px/1 var(--f-kop); letter-spacing: -0.02em; }
+  .site-bogen { background: var(--rose); padding: 24px 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .site-bogen > div { aspect-ratio: 3 / 4; border-radius: 999px 999px 14px 14px; overflow: hidden; position: relative; }
+  .site-bogen svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  footer { margin-top: 24px; margin-bottom: 40px; border-radius: 36px; background: var(--deep); color: var(--creme); padding: clamp(28px, 5vw, 48px); display: grid; gap: 28px; }
+  footer svg.f-logo { width: min(360px, 80%); color: var(--creme); }
+  footer .meta { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; font-size: 13px; color: rgba(245, 238, 223, .75); }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="g-lucht" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9DC1E6"/><stop offset=".55" stop-color="#E9DCC6"/><stop offset="1" stop-color="#F3D9B8"/></linearGradient>
+    <linearGradient id="g-zee" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3D6FB6"/><stop offset="1" stop-color="#1F3F6B"/></linearGradient>
+    <linearGradient id="g-diep" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3D6FB6"/><stop offset="1" stop-color="#10284A"/></linearGradient>
+    <linearGradient id="g-duin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6C9A6"/><stop offset="1" stop-color="#EE9C74"/></linearGradient>
+    <linearGradient id="g-avond" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2BDBD"/><stop offset=".6" stop-color="#F4A27E"/><stop offset="1" stop-color="#EE7B4F"/></linearGradient>
+
+    <!-- LOGO: surfboard-woordmerk (letters als vectorpaden, vervormd in de boardvorm) -->
+    <symbol id="logo-board" viewBox="%%BOARD_VB%%">
+      <path d="%%BOARD_D%%" fill="none" stroke="currentColor" stroke-width="%%STROKE%%" stroke-linejoin="round"/>
+      <path d="%%WORD_D%%" fill="currentColor"/>
+    </symbol>
+    <symbol id="logo-caps" viewBox="%%CAPS_VB%%"><path d="%%CAPS_D%%" fill="currentColor"/></symbol>
+    <symbol id="logo-woord" viewBox="%%MIXED_VB%%"><path d="%%MIXED_D%%" fill="currentColor"/></symbol>
+    <!-- zon-spiraal: de zon boven de spot, met het tij in het midden -->
+    <symbol id="zonmerk" viewBox="0 0 200 200">
+      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="100" cy="100" r="50" stroke-width="14"/>
+        <path d="%%ZON_STRALEN%%" stroke-width="11"/>
+        <path d="%%ZON_SPIRAAL%%" stroke-width="9"/>
+      </g>
+    </symbol>
+    <!-- TT-monogram: één golf als dwarsbalk, twee draagbanden als poten -->
+    <symbol id="tt" viewBox="0 0 200 200">
+      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="%%TT_BALK%%" stroke-width="22"/>
+        <path d="M60 64v96M140 64v96" stroke-width="27"/>
+      </g>
+    </symbol>
+    <!-- hanglabel: kaart met uitgesneden zon en naam (zoals een stempel) -->
+    <mask id="m-label" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="320">
+      <rect width="240" height="320" fill="#fff"/>
+      <circle cx="120" cy="34" r="11" fill="#000"/>
+      <use href="#zonmerk" x="55" y="62" width="130" height="130" style="color:#000"/>
+      <use href="#logo-caps" x="30" y="222" width="180" height="46" style="color:#000"/>
+    </mask>
+    <symbol id="hanglabel" viewBox="0 0 240 320"><rect width="240" height="320" rx="28" fill="currentColor" mask="url(#m-label)"/></symbol>
+
+    <!-- ICONEN: handgeknipt, dikke ronde lijn, 48-grid -->
+    <symbol id="i-golven" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"><path d="M5 14c4.5 0 4.5-5 9-5s4.5 5 9 5 4.5-5 9-5 4.5 5 9 5"/><path d="M5 25c4.5 0 4.5-5 9-5s4.5 5 9 5 4.5-5 9-5 4.5 5 9 5"/><path d="M5 36c4.5 0 4.5-5 9-5s4.5 5 9 5 4.5-5 9-5 4.5 5 9 5"/></g></symbol>
+    <symbol id="i-tij" viewBox="0 0 48 48"><path d="%%SPIRAAL_ICOON%%" fill="none" stroke="currentColor" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-zon" viewBox="0 0 48 48"><circle cx="24" cy="24" r="8.5" fill="currentColor"/><path d="M24 4.5v5M24 38.5v5M4.5 24h5M38.5 24h5M10.2 10.2l3.6 3.6M34.2 34.2l3.6 3.6M37.8 10.2l-3.6 3.6M13.8 34.2l-3.6 3.6" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></symbol>
+    <mask id="m-schelp" maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="48"><rect width="48" height="48" fill="#fff"/><path d="M24 36V17M24 36l-8-15M24 36l8-15M24 36L12 26M24 36l12-10" stroke="#000" stroke-width="2.6" stroke-linecap="round"/></mask>
+    <symbol id="i-schelp" viewBox="0 0 48 48"><path d="M7 30C7 13 41 13 41 30c0 4-4 7-8 7H15c-4 0-8-3-8-7z" fill="currentColor" mask="url(#m-schelp)"/><rect x="19" y="36" width="10" height="6" rx="3" fill="currentColor"/></symbol>
+    <symbol id="i-koraal" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="5.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 44c0-7-1-13 0-19"/><path d="M24 33c-6-1-10-6-9-14"/><path d="M15 22c-4-2-6-6-5-10"/><path d="M24 27c5-3 9-8 8-16"/><path d="M31.5 17c3.5-2 6-5 6-10"/><path d="M24 25c0-6-2-10-2-14"/></g></symbol>
+    <symbol id="i-meeuw" viewBox="0 0 48 48"><path d="M4 27c6-8 13-8 20 1 7-9 14-9 20-1" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <mask id="m-board" maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="48"><rect width="48" height="48" fill="#fff"/><path d="M11 37L38 10" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-dasharray=".5 4"/><rect x="13" y="20.5" width="5.5" height="14" rx="2.4" transform="rotate(45 15.75 27.5)" fill="#000"/><rect x="25.5" y="8" width="5.5" height="14" rx="2.4" transform="rotate(45 28.25 15)" fill="#000"/></mask>
+    <symbol id="i-board" viewBox="0 0 48 48"><path d="M6 42C8 29 24 9 42 6c-2 17-22 34-36 36z" fill="currentColor" mask="url(#m-board)"/></symbol>
+    <symbol id="i-vin" viewBox="0 0 48 48"><path d="M10 41c4-14 11-26 25-33-3 11-3 22 3 33z" fill="currentColor"/></symbol>
+    <symbol id="i-wax" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="10" width="32" height="28" rx="8"/><path d="M14 25c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3"/></g></symbol>
+    <symbol id="i-karabijn" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><rect x="13" y="5" width="22" height="38" rx="11"/><path d="M28 7v18"/></g></symbol>
+    <symbol id="i-voeten" viewBox="0 0 48 48"><g fill="currentColor"><ellipse cx="15" cy="31" rx="5.2" ry="8.2" transform="rotate(-12 15 31)"/><circle cx="10.8" cy="18.6" r="2"/><circle cx="15" cy="17.4" r="2.1"/><circle cx="19.2" cy="18.9" r="2"/><ellipse cx="33" cy="19" rx="5.2" ry="8.2" transform="rotate(12 33 19)"/><circle cx="29.2" cy="6.8" r="2"/><circle cx="33.4" cy="5.8" r="2.1"/><circle cx="37.6" cy="7.4" r="2"/></g></symbol>
+    <symbol id="i-druppel" viewBox="0 0 48 48"><path d="M24 5S11 20 11 29a13 13 0 0 0 26 0C37 20 24 5 24 5z" fill="currentColor"/></symbol>
+
+    <!-- SCÈNES: tijdelijke beelden tot Veerles eigen foto's er zijn -->
+    <symbol id="sc-zee" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+      <rect width="400" height="300" fill="url(#g-lucht)"/>
+      <circle cx="290" cy="250" r="46" fill="#F2D06B" opacity=".9"/>
+      <rect y="270" width="400" height="230" fill="url(#g-zee)"/>
+      <g fill="none" stroke="#C4DAF0" stroke-width="3" stroke-linecap="round" opacity=".55"><path d="M20 310c14 0 14-6 28-6s14 6 28 6M140 330c14 0 14-6 28-6s14 6 28 6 14-6 28-6M260 300c14 0 14-6 28-6s14 6 28 6"/><path d="M40 380c18 0 18-8 36-8s18 8 36 8 18-8 36-8M220 400c18 0 18-8 36-8s18 8 36 8 18-8 36-8"/></g>
+      <path d="M0 450c40-22 80-22 120-6s90 18 140 0 100-20 140-4v60H0z" fill="#F5EEDF" opacity=".85"/>
+    </symbol>
+    <symbol id="sc-duin" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+      <rect width="400" height="500" fill="url(#g-lucht)"/>
+      <circle cx="110" cy="150" r="40" fill="#F5EEDF" opacity=".9"/>
+      <path d="M0 300c70-60 150-70 230-30s120 10 170-20v250H0z" fill="url(#g-duin)"/>
+      <path d="M0 380c90-40 190-30 270 0s100 10 130 0v120H0z" fill="#E9B28C"/>
+      <g stroke="#1F3F6B" stroke-width="5" stroke-linecap="round" opacity=".55"><path d="M60 300l-6-40M80 296l2-44M100 302l8-36"/></g>
+    </symbol>
+    <symbol id="sc-onder" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+      <rect width="400" height="500" fill="url(#g-diep)"/>
+      <path d="M120 0l-60 500M200 0l10 500M300 0l70 500" stroke="#C4DAF0" stroke-width="30" opacity=".12"/>
+      <g fill="#C4DAF0" opacity=".6"><circle cx="150" cy="300" r="6"/><circle cx="162" cy="268" r="4"/><circle cx="154" cy="240" r="3"/><circle cx="270" cy="200" r="4"/><circle cx="276" cy="176" r="2.5"/></g>
+      <g fill="none" stroke="#F2BDBD" stroke-width="12" stroke-linecap="round" opacity=".8"><path d="M300 500c0-30-4-50 0-80M300 450c-20-4-34-20-30-46M300 430c16-10 28-26 26-50"/></g>
+    </symbol>
+    <symbol id="sc-avond" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+      <rect width="400" height="320" fill="url(#g-avond)"/>
+      <circle cx="200" cy="300" r="70" fill="#F2D06B"/>
+      <rect y="300" width="400" height="200" fill="#1F3F6B"/>
+      <g fill="none" stroke="#F2D06B" stroke-width="4" stroke-linecap="round" opacity=".6"><path d="M150 330h100M165 350h70M180 370h40"/></g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+  <!-- COVER -->
+  <header class="cover korrel" id="top">
+    <div class="cover__hoek"><span>Brand identity</span><span>Oktober 2026</span><span>Versie 1</span></div>
+    <div class="ruit" aria-hidden="true"></div>
+    <svg class="cover__logo" role="img" aria-label="Tide-Tode logo: de naam in een surfboard"><use href="#logo-board"/></svg>
+    <div class="ruit" aria-hidden="true"></div>
+    <div class="cover__onder">
+      <p>Een draagtas voor je surfboard. Handen vrij op weg naar die ene lege golf. Bedacht door <span class="hand">Veerle</span>.</p>
+      <ul class="toc" aria-label="Inhoud">
+        <li><a href="#board">Board</a></li><li><a href="#verhaal">Verhaal</a></li><li><a href="#naam">Naam</a></li><li><a href="#logo">Logo</a></li><li><a href="#kleur">Kleur</a></li><li><a href="#letters">Letters</a></li><li><a href="#iconen">Iconen</a></li><li><a href="#elementen">Elementen</a></li><li><a href="#beeld">Beeld</a></li><li><a href="#stem">Stem</a></li><li><a href="#toepassingen">Toepassingen</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- BRANDING BOARD -->
+  <section id="board">
+    <div class="kop">
+      <p class="label">Branding board</p>
+      <h2>Het merk in één oogopslag</h2>
+    </div>
+    <div class="bento">
+      <div class="tegel t-logo"><svg role="img" aria-label="Hoofdlogo"><use href="#logo-board"/></svg></div>
+      <div class="tegel t-zon korrel"><svg viewBox="0 0 200 200" role="img" aria-label="Zon-spiraal"><use href="#zonmerk"/></svg></div>
+      <div class="tegel t-tt korrel"><svg viewBox="0 0 200 200" role="img" aria-label="TT-monogram"><use href="#tt"/></svg></div>
+      <div class="tegel t-foto korrel">
+        <svg class="scene" aria-hidden="true"><use href="#sc-zee"/></svg>
+        <svg class="overlay-logo" role="img" aria-label="Logo over een foto"><use href="#logo-board"/></svg>
+      </div>
+      <div class="tegel t-kleur" role="img" aria-label="Palet: Crème, Deep, Captain, Baby, Poppy, Rose, Sunshine">
+        <span style="background: var(--creme); color: var(--deep); box-shadow: inset 0 0 0 1px var(--lijn);">Crème</span>
+        <span style="background: var(--deep); color: var(--creme);">Deep</span>
+        <span style="background: var(--captain); color: var(--creme);">Captain</span>
+        <span style="background: var(--baby); color: var(--deep);">Baby</span>
+        <span style="background: var(--poppy); color: var(--deep);">Poppy</span>
+        <span style="background: var(--rose); color: var(--deep);">Rose</span>
+        <span style="background: var(--sunshine); color: var(--deep);">Sun</span>
+      </div>
+      <div class="tegel t-type korrel"><b>Aa</b><span class="hand">van riders, voor riders</span></div>
+      <div class="tegel t-label korrel"><svg viewBox="0 0 240 320" role="img" aria-label="Hanglabel" style="color: var(--sunshine);"><use href="#hanglabel"/></svg></div>
+      <div class="tegel t-woord korrel"><svg role="img" aria-label="Woordmerk Tide-Tode"><use href="#logo-woord"/></svg></div>
+      <div class="tegel t-iconen korrel">
+        <div class="iconen-mini" aria-label="Iconen">
+          <svg viewBox="0 0 48 48"><use href="#i-golven"/></svg><svg viewBox="0 0 48 48"><use href="#i-tij"/></svg><svg viewBox="0 0 48 48"><use href="#i-schelp"/></svg><svg viewBox="0 0 48 48"><use href="#i-koraal"/></svg><svg viewBox="0 0 48 48"><use href="#i-board"/></svg><svg viewBox="0 0 48 48"><use href="#i-zon"/></svg>
+        </div>
+      </div>
+      <div class="tegel t-ruit korrel">
+        <div class="ruit" aria-hidden="true"></div>
+        <p>handen vrij, op weg naar zee</p>
+        <div class="ruit" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VERHAAL -->
+  <section id="verhaal">
+    <div class="verhaal">
+      <div class="boog korrel"><svg aria-hidden="true"><use href="#sc-duin"/></svg></div>
+      <div class="kop" style="margin: 0;">
+        <p class="label">01 · Waarom dit merk bestaat</p>
+        <p class="quote">"Dit moet en kan stukken <em>comfortabeler</em>, slimmer en duurzamer."</p>
+        <p class="lead">Tijdens reizen door Australië, Midden- en Zuid-Amerika en Azië sjouwde Veerle zich een ongeluk met grote, logge boards. Op lange hikes naar afgelegen spots, met schuurplekken van de wax onder de arm. Op de scooter of fiets met één hand aan het stuur.</p>
+        <p class="lead">Touwtjes, spanbanden en standaardhoezen hielden het niet. Dus maakt ze de tas zelf: één die je board draagt, zodat jij je handen vrij hebt. De belofte: een betrouwbaar product waar je op kunt bouwen, en heel veel zin om te surfen.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NAAM -->
+  <section id="naam">
+    <div class="kop">
+      <p class="label">02 · Naam</p>
+      <h2>Tide-Tode</h2>
+      <p class="lead">De naam komt van Veerle zelf. Hij klinkt als een rijmpje, blijft hangen en zegt waar het om draait: de zee en de tas.</p>
+    </div>
+    <div class="naam">
+      <div class="naam-groot korrel">
+        <svg role="img" aria-label="Woordmerk Tide-Tode"><use href="#logo-caps"/></svg>
+        <div class="naam-ontleed">
+          <div><b>Tide</b>Het getij. De zee, het ritme van surfen, gaan als het goed is.</div>
+          <div><b>Tode</b>Klinkt als <i>tote</i>, Engels voor draagtas. Precies wat het product is.</div>
+          <div><b>T-T</b>Twee keer dezelfde klank. Makkelijk te onthouden, en als TT-monogram te gebruiken.</div>
+        </div>
+      </div>
+      <div class="kaart">
+        <h3>Voordat de naam definitief is</h3>
+        <p class="klein" style="margin-top: 6px;">Deze checks zijn nog niet gedaan. Doe ze voordat er iets gedrukt of geborduurd wordt.</p>
+        <ul class="check">
+          <li>Merkregister: zoeken bij BOIP (Benelux) en EUIPO (EU), klasse 18 (tassen) en 28 (sportartikelen).</li>
+          <li>Domein: tide-tode.com, tidetode.com en tidetode.nl.</li>
+          <li>Socials: is @tidetode vrij op Instagram en TikTok?</li>
+          <li>KvK: handelsnaam inschrijven.</li>
+          <li>Schrijfwijze vastleggen: overal Tide-Tode, met koppelteken en twee hoofdletters.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGO -->
+  <section id="logo">
+    <div class="kop">
+      <p class="label">03 · Logo</p>
+      <h2>Vier tekens, één familie</h2>
+      <p class="lead">Het hoofdlogo zet de naam in een surfboard: de letters lopen mee met de vorm, groot in het midden en klein naar de punten. Daaromheen staan drie tekens voor kleine plekken. Alles is getekend met ronde, dikke vormen, zoals stof met stevige stiksels.</p>
+    </div>
+    <div class="logo-raster">
+      <figure><div class="vlak vlak--creme korrel"><svg role="img" aria-label="Hoofdlogo op crème"><use href="#logo-board"/></svg></div><div class="rol"><b>Hoofdlogo</b><span class="klein">website, tas, verpakking</span></div></figure>
+      <figure><div class="vlak vlak--deep korrel"><svg role="img" aria-label="Woordmerk op Deep" style="max-width: 300px;"><use href="#logo-woord"/></svg></div><div class="rol"><b>Woordmerk</b><span class="klein">smalle plekken, header</span></div></figure>
+      <figure><div class="vlak vlak--poppy korrel"><svg viewBox="0 0 200 200" role="img" aria-label="Zon-spiraal op Poppy" style="max-width: 170px;"><use href="#zonmerk"/></svg></div><div class="rol"><b>Zon-spiraal</b><span class="klein">stickers, stempel, borduursel</span></div></figure>
+      <figure><div class="vlak vlak--baby korrel"><svg viewBox="0 0 200 200" role="img" aria-label="TT-monogram op Baby" style="max-width: 150px;"><use href="#tt"/></svg></div><div class="rol"><b>TT-monogram</b><span class="klein">favicon, avatar, label</span></div></figure>
+    </div>
+
+    <div class="regels">
+      <div class="ruimte">
+        <p class="label" style="margin-bottom: 30px;">Vrije ruimte</p>
+        <div class="ruimte__binnen"><svg role="img" aria-label="Hoofdlogo met vrije ruimte"><use href="#logo-board"/></svg></div>
+        <p class="klein" style="margin-top: 34px;">Houd rondom het logo minstens de hoogte van de letter O vrij.</p>
+      </div>
+      <div class="kaart">
+        <h3>Zo gebruik je het</h3>
+        <ul>
+          <li>Altijd in één kleur: Deep, Crème, Captain of wit.</li>
+          <li>Op Poppy, Rose of Sunshine: alleen in Deep of Crème.</li>
+          <li>Hoofdlogo niet smaller dan 30 mm of 120 px. Kleiner? Gebruik het TT-monogram.</li>
+          <li>Op foto's alleen op een rustig stuk lucht, zand of water.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="niet-raster">
+      <div class="niet"><svg role="img" aria-label="Fout: uitgerekt"><use href="#logo-board" transform="scale(1.4 .7) translate(0 20)"/></svg><span class="klein">Niet uitrekken of indrukken</span></div>
+      <div class="niet"><svg role="img" aria-label="Fout: verloop" style="color: var(--poppy);"><use href="#logo-board"/></svg><span class="klein">Geen Poppy, Rose of Sunshine op crème</span></div>
+      <div class="niet"><svg role="img" aria-label="Fout: gekanteld" style="color: var(--deep); transform: rotate(-14deg);"><use href="#logo-board"/></svg><span class="klein">Niet kantelen</span></div>
+      <div class="niet"><svg role="img" aria-label="Fout: schaduw" style="color: var(--deep); filter: drop-shadow(4px 6px 0 var(--poppy));"><use href="#logo-board"/></svg><span class="klein">Geen schaduw of gloed</span></div>
+    </div>
+  </section>
+
+  <!-- KLEUR -->
+  <section id="kleur">
+    <div class="kop">
+      <p class="label">04 · Kleur</p>
+      <h2>Blauw van de zee, warm in de details</h2>
+      <p class="lead">Veerles eerste kleur is "uiteraard blauw van de zee", en ze wil rust. Blauw en crème dragen het merk. Poppy, Rose en Sunshine zijn de zomer: op stickers, labels, Instagram en later de shirts.</p>
+    </div>
+    <div class="verhouding" role="img" aria-label="Verhouding: Crème 50 procent, Deep 20, Baby 12, Captain 8, Poppy 5, Rose 3, Sunshine 2">
+      <span style="flex: 50; background: var(--creme); color: var(--deep); box-shadow: inset -1px 0 0 var(--lijn);">CRÈME 50%</span>
+      <span style="flex: 20; background: var(--deep); color: var(--creme);">DEEP 20%</span>
+      <span style="flex: 12; background: var(--baby); color: var(--deep);">BABY 12%</span>
+      <span style="flex: 8; background: var(--captain); color: var(--creme);">8%</span>
+      <span style="flex: 5; background: var(--poppy);"></span>
+      <span style="flex: 3; background: var(--rose);"></span>
+      <span style="flex: 2; background: var(--sunshine);"></span>
+    </div>
+    <p class="klein">Verhouding op een gemiddelde pagina of productfoto. Op stickers en socials mogen de warme kleuren de hoofdrol spelen.</p>
+    <div class="kleuren" id="kleuren">
+      <button class="kleur" type="button" data-hex="#F5EEDF"><span class="kleur__vlak korrel" style="background: var(--creme); color: var(--deep); box-shadow: inset 0 -1px 0 var(--lijn);"><small>Basis</small></span><span class="kleur__info"><b>Crème</b><code>#F5EEDF <span class="gekopieerd">gekopieerd</span></code><span>Achtergrond, papier</span></span></button>
+      <button class="kleur" type="button" data-hex="#1F3F6B"><span class="kleur__vlak korrel" style="background: var(--deep); color: var(--creme);"><small>Hoofdkleur</small></span><span class="kleur__info"><b>Deep</b><code>#1F3F6B <span class="gekopieerd">gekopieerd</span></code><span>Logo, koppen, donkere vlakken</span></span></button>
+      <button class="kleur" type="button" data-hex="#3D6FB6"><span class="kleur__vlak korrel" style="background: var(--captain); color: var(--creme);"><small>Accent</small></span><span class="kleur__info"><b>Captain</b><code>#3D6FB6 <span class="gekopieerd">gekopieerd</span></code><span>Knoppen, accentwoord</span></span></button>
+      <button class="kleur" type="button" data-hex="#C4DAF0"><span class="kleur__vlak korrel" style="background: var(--baby); color: var(--deep);"><small>Zacht</small></span><span class="kleur__info"><b>Baby</b><code>#C4DAF0 <span class="gekopieerd">gekopieerd</span></code><span>Rustige vlakken</span></span></button>
+      <button class="kleur" type="button" data-hex="#EE7B4F"><span class="kleur__vlak korrel" style="background: var(--poppy); color: var(--deep);"><small>Zomer</small></span><span class="kleur__info"><b>Poppy</b><code>#EE7B4F <span class="gekopieerd">gekopieerd</span></code><span>Stickers, acties, één accent per scherm</span></span></button>
+      <button class="kleur" type="button" data-hex="#F2BDBD"><span class="kleur__vlak korrel" style="background: var(--rose); color: var(--deep);"><small>Zomer</small></span><span class="kleur__info"><b>Rose</b><code>#F2BDBD <span class="gekopieerd">gekopieerd</span></code><span>Labels, socials</span></span></button>
+      <button class="kleur" type="button" data-hex="#F2D06B"><span class="kleur__vlak korrel" style="background: var(--sunshine); color: var(--deep);"><small>Zomer</small></span><span class="kleur__info"><b>Sunshine</b><code>#F2D06B <span class="gekopieerd">gekopieerd</span></code><span>Hanglabel, stickers</span></span></button>
+    </div>
+    <h3 style="margin-top: 44px;">Combinaties die leesbaar zijn</h3>
+    <p class="klein" style="margin-top: 6px;">Contrast volgens WCAG: vanaf 4,5 gewone tekst, vanaf 3 grote koppen.</p>
+    <div class="paren">
+      <div class="paar" style="background: var(--creme); color: var(--ink); box-shadow: inset 0 0 0 1px var(--lijn);">Aa <small>Ink op Crème · 11,1</small></div>
+      <div class="paar" style="background: var(--deep); color: var(--creme);">Aa <small>Crème op Deep · 9,2</small></div>
+      <div class="paar" style="background: var(--baby); color: var(--deep);">Aa <small>Deep op Baby · 7,4</small></div>
+      <div class="paar" style="background: var(--sunshine); color: var(--deep);">Aa <small>Deep op Sunshine · 7,1</small></div>
+      <div class="paar" style="background: var(--rose); color: var(--deep);">Aa <small>Deep op Rose · 6,5</small></div>
+      <div class="paar" style="background: var(--captain); color: #fff;">Aa <small>Wit op Captain · 5,1</small></div>
+    </div>
+  </section>
+
+  <!-- LETTERS -->
+  <section id="letters">
+    <div class="kop">
+      <p class="label">05 · Letters</p>
+      <h2>Rond voor het logo, zwaar voor de koppen</h2>
+      <p class="lead">Elke letter heeft één taak. Allemaal gratis via Google Fonts.</p>
+    </div>
+    <div class="letters">
+      <div class="kaart letter"><p class="label">Logo en stickers</p><p class="letter__proef" style="font-family: var(--f-logo);">Aa</p><dl><dt>Letter</dt><dd>Bagel Fat One</dd><dt>Gebruik</dt><dd>logo, korte stickerteksten, prijskaartjes</dd><dt>Niet</dt><dd>lopende tekst of koppen op de site</dd></dl></div>
+      <div class="kaart letter"><p class="label">Koppen</p><p class="letter__proef" style="font-family: var(--f-kop); font-weight: 900; letter-spacing: -0.04em;">Aa</p><dl><dt>Letter</dt><dd>Archivo Black (900)</dd><dt>Afstand</dt><dd>krap, −3 tot −5%</dd><dt>Regel</dt><dd>0,92 tot 1,02</dd></dl></div>
+      <div class="kaart letter"><p class="label">Tekst</p><p class="letter__proef" style="font-family: var(--f-tekst);">Aa</p><dl><dt>Letter</dt><dd>Inter 400 en 600</dd><dt>Regel</dt><dd>1,6</dd></dl></div>
+      <div class="kaart letter"><p class="label">Handschrift</p><p class="letter__proef" style="font: italic 400 72px/1.2 var(--f-hand); color: var(--captain);">Veerle</p><dl><dt>Letter</dt><dd>Fraunces Italic</dd><dt>Gebruik</dt><dd>één woord: ondertekening of accent</dd></dl></div>
+    </div>
+    <div class="zetproef korrel">
+      <p class="label">Zetproef</p>
+      <h3>Handen vrij op weg naar die ene lege <em>golf</em></h3>
+      <p>Een draagtas die je board op je rug zet. Voor de hike naar een verstopte spot, de fietstocht door de duinen of de scooter naar het strand.</p>
+    </div>
+  </section>
+
+  <!-- ICONEN -->
+  <section id="iconen">
+    <div class="kop">
+      <p class="label">06 · Iconen</p>
+      <h2>Handgeknipt, zoals uit papier</h2>
+      <p class="lead">Twaalf eigen iconen uit Veerles wereld: de zee, de weg ernaartoe en de spullen in de shop. Ronde, dikke vormen zonder dunne lijnen, zodat ze ook klein op een label of geborduurd werken.</p>
+    </div>
+    <div class="icoon-raster">
+      <div class="icoon"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-golven"/></svg><span>Golven</span></div>
+      <div class="icoon"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-tij"/></svg><span>Tij</span></div>
+      <div class="icoon"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-zon"/></svg><span>Zon</span></div>
+      <div class="icoon"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-board"/></svg><span>Board</span></div>
+      <div class="icoon"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-schelp"/></svg><span>Schelp</span></div>
+      <div class="icoon"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-koraal"/></svg><span>Koraal</span></div>
+      <div class="icoon"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-meeuw"/></svg><span>Meeuw</span></div>
+      <div class="icoon"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-vin"/></svg><span>Vin</span></div>
+      <div class="icoon"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-wax"/></svg><span>Wax</span></div>
+      <div class="icoon"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-karabijn"/></svg><span>Karabijnhaak</span></div>
+      <div class="icoon"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-voeten"/></svg><span>Onderweg</span></div>
+      <div class="icoon"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-druppel"/></svg><span>Nat en zout</span></div>
+    </div>
+    <div class="icoon-gebruik">
+      <div class="vlak vlak--deep korrel"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-golven"/></svg><p>Kan tegen nat, zand en zout</p></div>
+      <div class="vlak vlak--rose korrel"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-voeten"/></svg><p>Voor de hike naar de spot</p></div>
+      <div class="vlak vlak--sunshine korrel"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-karabijn"/></svg><p>Binnenkort: karabijnhaken</p></div>
+    </div>
+  </section>
+
+  <!-- ELEMENTEN -->
+  <section id="elementen">
+    <div class="kop">
+      <p class="label">07 · Grafische elementen</p>
+      <h2>Ruitjes, bogen en korrel</h2>
+      <p class="lead">Een paar vaste vormen maken alles herkenbaar, ook zonder logo. Gebruik er één of twee tegelijk, niet alles samen.</p>
+    </div>
+    <div class="elementen">
+      <figure><div class="element korrel" style="background: var(--deep); color: var(--sunshine); align-content: center; gap: 18px;"><div class="ruit" aria-hidden="true"></div><div class="ruit" aria-hidden="true" style="color: var(--poppy);"></div><div class="ruit" aria-hidden="true" style="color: var(--baby);"></div></div><figcaption>Ruitjesrand: boven en onder een vlak, als een sticker of een strandlaken</figcaption></figure>
+      <figure><div class="element korrel" style="background: var(--poppy);"><div class="foto foto--boog korrel" style="width: 62%; max-width: 200px;"><svg class="scene" aria-hidden="true"><use href="#sc-avond"/></svg></div></div><figcaption>Boog: fotokader met een ronde bovenkant, zoals een raam of een zon die opkomt</figcaption></figure>
+      <figure><div class="element" style="background: var(--baby); display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 0; place-items: stretch;"><div style="background: var(--baby); display: grid; place-items: center; font: 900 13px/1.2 var(--f-kop); color: var(--deep); text-align: center; padding: 12px;">Zonder korrel</div><div class="korrel" style="background: var(--baby); display: grid; place-items: center; font: 900 13px/1.2 var(--f-kop); color: var(--deep); text-align: center; padding: 12px;">Met korrel</div></div><figcaption>Korrel: over kleurvlakken, nooit over het product</figcaption></figure>
+    </div>
+    <div class="groot-woord korrel" aria-label="Grote tekst met bogen ervoor">
+      <p aria-hidden="true">HANDEN VRIJ HANDEN VRIJ</p>
+      <p class="rij2" aria-hidden="true">OP WEG NAAR ZEE OP WEG</p>
+      <div class="bogen">
+        <div><svg class="scene" aria-hidden="true"><use href="#sc-zee"/></svg><span>surfen</span></div>
+        <div><svg class="scene" aria-hidden="true"><use href="#sc-onder"/></svg><span>duiken</span></div>
+        <div><svg class="scene" aria-hidden="true"><use href="#sc-duin"/></svg><span>onderweg</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEELD -->
+  <section id="beeld">
+    <div class="kop">
+      <p class="label">08 · Beeld</p>
+      <h2>Echte reizen, warm licht, een beetje korrel</h2>
+      <p class="lead">Veerles eigen reisfoto's zijn het startpunt. Ze laten de weg naar de golf zien, niet alleen de golf. Duiken is haar grote passie, dus onderwaterbeelden horen erbij. De beelden hieronder zijn tijdelijk, tot haar foto's er zijn.</p>
+    </div>
+    <div class="beeld">
+      <div class="foto foto--boog korrel"><svg class="scene" aria-hidden="true"><use href="#sc-duin"/></svg><span class="foto__label">Onderweg<small>De hike, de duinen, het pad</small></span></div>
+      <div class="foto foto--rond korrel"><svg class="scene" aria-hidden="true"><use href="#sc-zee"/></svg><span class="foto__label">Het water<small>Lege golven, vroeg licht</small></span></div>
+      <div class="foto foto--boog korrel"><svg class="scene" aria-hidden="true"><use href="#sc-onder"/></svg><span class="foto__label">Onder water<small>Duiken, diep blauw</small></span></div>
+      <div class="foto foto--rond korrel"><svg class="scene" aria-hidden="true"><use href="#sc-avond"/></svg><span class="foto__label">Golden hour<small>Na de sessie</small></span></div>
+    </div>
+    <div class="doen">
+      <div class="kaart"><h3>Wel</h3><ul><li>Eigen foto's van echte reizen en echte mensen.</li><li>De tas in gebruik: op de rug, op de fiets, op de scooter.</li><li>Warm, natuurlijk licht en een lichte filmkorrel.</li><li>Close-ups van stof, stiksels en messing.</li></ul></div>
+      <div class="kaart"><h3>Niet</h3><ul><li>Stockfoto's van lachende modellen op een leeg strand.</li><li>AI-beelden met rare handen of gesmolten tekst.</li><li>Neon-filters of overdreven verzadiging.</li><li>Tekst of korrel over het product heen.</li></ul></div>
+    </div>
+  </section>
+
+  <!-- STEM -->
+  <section id="stem">
+    <div class="kop">
+      <p class="label">09 · Stem</p>
+      <h2>Praat zoals een surfer aan de kant</h2>
+      <p class="lead">Gewoon Nederlands, in de je-vorm. Concreet over wat de tas doet, met Veerles eigen ervaringen als bron.</p>
+    </div>
+    <div class="stem">
+      <div class="stem__rij"><div class="zeg zeg--wel"><small>Zo wel</small>Je board zit op je rug, dus je hebt allebei je handen vrij voor het stuur.</div><div class="zeg zeg--niet"><small>Zo niet</small>Ervaar ultieme vrijheid met onze revolutionaire draagoplossing!</div></div>
+      <div class="stem__rij"><div class="zeg zeg--wel"><small>Zo wel</small>Zware, sterke stof en stevige stiksels. Gemaakt voor nat, zand en zout.</div><div class="zeg zeg--niet"><small>Zo niet</small>Premium materialen. Ongekende kwaliteit. Next level duurzaamheid.</div></div>
+      <div class="stem__rij"><div class="zeg zeg--wel"><small>Zo wel</small>Huur je op je bestemming een board, dan draag je dat in je eigen tas.</div><div class="zeg zeg--niet"><small>Zo niet</small>10.000+ tevreden surfers gingen je al voor ★★★★★</div></div>
+    </div>
+    <div class="stem-regels">
+      <div><h3>Je, niet u</h3><p>Overal hetzelfde, van website tot verzendmail.</p></div>
+      <div><h3>Echte feiten</h3><p>Maten, materialen en reviews alleen als ze kloppen.</p></div>
+      <div><h3>Geen holle woorden</h3><p>Geen "naadloos" of "ultiem". Zeg wat het doet.</p></div>
+      <div><h3>Rustig</h3><p>Geen uitroeptekens in koppen, hooguit één vraag per pagina.</p></div>
+    </div>
+  </section>
+
+  <!-- TOEPASSINGEN -->
+  <section id="toepassingen">
+    <div class="kop">
+      <p class="label">10 · Toepassingen</p>
+      <h2>Van hanglabel tot website</h2>
+      <p class="lead">Hier speelt het merk. Het product blijft stoer in Deep en Crème; de kleine dingen krijgen de zomer.</p>
+    </div>
+    <div class="toep">
+      <!-- de tas -->
+      <figure>
+        <div class="mock korrel" style="background: var(--baby);">
+          <svg viewBox="0 0 340 300" role="img" aria-label="De draagtas: board op de rug met crème hoes, Deep banden en logo-patch">
+            <g transform="rotate(-32 170 160)">
+              <path d="M28 160C60 118 250 112 312 160 250 208 60 202 28 160z" fill="#F5EEDF"/>
+              <path d="M28 160C60 118 250 112 312 160 250 208 60 202 28 160z" fill="none" stroke="#1F3F6B" stroke-width="4"/>
+              <path d="M96 128c0 0 0 64 0 64M232 128v64" stroke="#1F3F6B" stroke-width="22" stroke-linecap="round"/>
+              <path d="M96 130C110 60 220 60 232 130" fill="none" stroke="#EE7B4F" stroke-width="12" stroke-linecap="round"/>
+              <rect x="150" y="70" width="28" height="18" rx="5" fill="#F2D06B" transform="rotate(4 164 79)"/>
+              <rect x="120" y="140" width="84" height="40" rx="10" fill="#1F3F6B"/>
+              <svg x="124" y="143" width="76" height="34" style="color:#F5EEDF"><use href="#logo-board"/></svg>
+              <g stroke="#1F3F6B" stroke-width="2" stroke-dasharray="4 5" fill="none" opacity=".5"><path d="M44 160C74 130 240 126 296 160"/></g>
+            </g>
+          </svg>
+        </div>
+        <figcaption>De tas: crème canvas, banden in Deep, schouderband in Poppy, messing gesp en een geweven logo-patch</figcaption>
+      </figure>
+      <!-- hanglabel -->
+      <figure>
+        <div class="mock korrel" style="background: var(--deep); padding: 0;">
+          <svg class="scene" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0; width: 100%; height: 100%; max-width: none;" aria-hidden="true"><use href="#sc-zee"/></svg>
+          <svg viewBox="0 0 240 320" style="width: 46%; max-width: 190px; color: var(--sunshine); transform: rotate(-6deg); filter: drop-shadow(0 26px 26px rgba(16,40,74,.45));" role="img" aria-label="Hanglabel in Sunshine met uitgesneden zon en naam"><use href="#hanglabel"/></svg>
+        </div>
+        <figcaption>Hanglabel: Sunshine karton, zon en naam uitgestanst, zodat de tas erdoorheen schijnt</figcaption>
+      </figure>
+      <!-- stickers -->
+      <figure>
+        <div class="mock korrel" style="background: var(--rose);">
+          <svg viewBox="0 0 340 300" role="img" aria-label="Stickerset">
+            <g transform="rotate(-8 120 80)"><ellipse cx="120" cy="80" rx="104" ry="44" fill="#1F3F6B"/><svg x="30" y="48" width="180" height="64" style="color:#F5EEDF"><use href="#logo-board"/></svg></g>
+            <g transform="rotate(10 268 92)"><circle cx="268" cy="92" r="52" fill="#EE7B4F"/><svg x="226" y="50" width="84" height="84" viewBox="0 0 200 200" style="color:#F5EEDF"><use href="#zonmerk"/></svg></g>
+            <g transform="rotate(5 96 214)"><rect x="24" y="180" width="150" height="66" rx="33" fill="#F2D06B"/><text x="99" y="221" text-anchor="middle" font-family="Bagel Fat One, sans-serif" font-size="22" fill="#1F3F6B">handen vrij</text></g>
+            <g transform="rotate(-7 262 222)"><rect x="210" y="170" width="104" height="104" rx="30" fill="#F5EEDF"/><svg x="226" y="186" width="72" height="72" viewBox="0 0 200 200" style="color:#3D6FB6"><use href="#tt"/></svg></g>
+          </svg>
+        </div>
+        <figcaption>Stickers bij elke bestelling</figcaption>
+      </figure>
+      <!-- wax -->
+      <figure>
+        <div class="mock korrel" style="background: var(--kaart); box-shadow: var(--sh);">
+          <svg viewBox="0 0 340 260" role="img" aria-label="Verpakking van waxblokjes in drie kleuren">
+            <g transform="translate(18 26)">
+              <rect width="94" height="128" rx="16" fill="#C4DAF0"/><rect x="34" width="26" height="128" fill="#1F3F6B"/>
+              <g transform="translate(47 64) rotate(-90)"><svg x="-52" y="-10" width="104" height="20" style="color:#F5EEDF"><use href="#logo-caps"/></svg></g>
+              <svg x="8" y="96" width="20" height="20" viewBox="0 0 48 48" style="color:#1F3F6B"><use href="#i-golven"/></svg>
+              <text x="47" y="150" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#1F3F6B">Koud water</text>
+            </g>
+            <g transform="translate(123 14)">
+              <rect width="94" height="128" rx="16" fill="#F2BDBD"/><rect x="34" width="26" height="128" fill="#1F3F6B"/>
+              <g transform="translate(47 64) rotate(-90)"><svg x="-52" y="-10" width="104" height="20" style="color:#F5EEDF"><use href="#logo-caps"/></svg></g>
+              <svg x="8" y="96" width="20" height="20" viewBox="0 0 48 48" style="color:#1F3F6B"><use href="#i-zon"/></svg>
+              <text x="47" y="150" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#1F3F6B">Warm water</text>
+            </g>
+            <g transform="translate(228 26)">
+              <rect width="94" height="128" rx="16" fill="#F2D06B"/><rect x="34" width="26" height="128" fill="#1F3F6B"/>
+              <g transform="translate(47 64) rotate(-90)"><svg x="-52" y="-10" width="104" height="20" style="color:#F5EEDF"><use href="#logo-caps"/></svg></g>
+              <svg x="8" y="96" width="20" height="20" viewBox="0 0 48 48" style="color:#1F3F6B"><use href="#i-koraal"/></svg>
+              <text x="47" y="150" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#1F3F6B">Tropisch</text>
+            </g>
+            <text x="170" y="236" text-anchor="middle" font-family="Archivo, sans-serif" font-weight="900" font-size="15" fill="#1F3F6B" letter-spacing="-.3">Waxblokjes, per watertemperatuur</text>
+          </svg>
+        </div>
+        <figcaption>Waxblokjes: kleur per watertemperatuur, logo op de band</figcaption>
+      </figure>
+      <!-- shirt -->
+      <figure>
+        <div class="mock korrel" style="background: var(--poppy);">
+          <svg viewBox="0 0 300 280" role="img" aria-label="T-shirt in crème met groot logo op de rug">
+            <path d="M104 28c10 14 26 20 46 20s36-6 46-20l62 28 30 62-42 18-16-30v176H70V106l-16 30-42-18 30-62z" fill="#F5EEDF"/>
+            <path d="M104 28c10 14 26 20 46 20s36-6 46-20" fill="none" stroke="#1F3F6B" stroke-width="3"/>
+            <svg x="82" y="104" width="136" height="50" style="color:#1F3F6B"><use href="#logo-board"/></svg>
+            <svg x="128" y="176" width="44" height="44" viewBox="0 0 200 200" style="color:#EE7B4F"><use href="#zonmerk"/></svg>
+            <text x="150" y="244" text-anchor="middle" font-family="Bagel Fat One, sans-serif" font-size="13" fill="#1F3F6B">van riders, voor riders</text>
+          </svg>
+        </div>
+        <figcaption>T-shirt (later): crème met het logo op de rug</figcaption>
+      </figure>
+      <!-- kaartje -->
+      <figure>
+        <div class="mock korrel" style="background: var(--sunshine);">
+          <div class="kaart" style="width: min(270px, 100%); text-align: center; display: grid; gap: 12px; justify-items: center; padding: 28px 22px; transform: rotate(3deg);">
+            <svg viewBox="0 0 200 200" style="width: 60px; color: var(--poppy);" aria-hidden="true"><use href="#zonmerk"/></svg>
+            <p style="font: 900 22px/1.05 var(--f-kop); letter-spacing: -0.03em; color: var(--deep);">Je tas is er</p>
+            <p class="klein">Board erin, banden om en op pad. Tag ons als je onderweg bent.</p>
+            <p style="font: italic 400 26px/1 var(--f-hand); color: var(--captain);">Veerle</p>
+          </div>
+        </div>
+        <figcaption>Kaartje in het pakket, ondertekend door Veerle</figcaption>
+      </figure>
+      <!-- instagram -->
+      <figure class="mock--breed">
+        <div class="mock korrel" style="background: var(--kaart); box-shadow: var(--sh);">
+          <div class="insta-rij" aria-label="Drie Instagram-posts">
+            <div><svg class="scene" aria-hidden="true"><use href="#sc-zee"/></svg><svg class="ig-logo" role="img" aria-label="Logo over een zeefoto"><use href="#logo-board"/></svg></div>
+            <div style="background: var(--poppy);"><b>Niet iedereen rolt uit bed de <em>golf</em> in.</b></div>
+            <div style="background: var(--baby);"><div class="ig-iconen"><svg viewBox="0 0 48 48"><use href="#i-schelp"/></svg><svg viewBox="0 0 48 48"><use href="#i-tij"/></svg><svg viewBox="0 0 48 48"><use href="#i-koraal"/></svg><svg viewBox="0 0 48 48"><use href="#i-golven"/></svg><svg viewBox="0 0 48 48"><use href="#i-board"/></svg><svg viewBox="0 0 48 48"><use href="#i-zon"/></svg></div></div>
+          </div>
+        </div>
+        <figcaption>Instagram: wissel foto met logo, een zin van Veerle en een iconenpost af</figcaption>
+      </figure>
+      <!-- website -->
+      <figure class="mock--breed">
+        <div class="mock korrel" style="background: var(--baby);">
+          <div class="browser">
+            <div class="browser__balk"><i></i><i></i><i></i></div>
+            <div class="site-hero korrel">
+              <svg class="scene" aria-hidden="true"><use href="#sc-zee"/></svg>
+              <div class="site-nav"><svg role="img" aria-label="Woordmerk"><use href="#logo-woord"/></svg><span>Shop <span>Ons verhaal</span> FAQ</span><em>Bekijk de tas</em></div>
+              <h4>Handen vrij op weg naar die ene lege <em>golf</em></h4>
+            </div>
+            <div class="site-band korrel"><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#zonmerk"/></svg><b>Van riders, voor riders</b><p>Bedacht op de lange weg naar de spot, door iemand die zich er zelf een ongeluk mee sjouwde.</p></div>
+            <div class="site-bogen"><div><svg class="scene" aria-hidden="true"><use href="#sc-duin"/></svg></div><div><svg class="scene" aria-hidden="true"><use href="#sc-onder"/></svg></div><div><svg class="scene" aria-hidden="true"><use href="#sc-avond"/></svg></div></div>
+          </div>
+        </div>
+        <figcaption>Website: zo kan de Shopify-site in deze stijl verder</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <footer class="korrel">
+    <div class="ruit" aria-hidden="true" style="color: var(--sunshine);"></div>
+    <svg class="f-logo" role="img" aria-label="Tide-Tode"><use href="#logo-board"/></svg>
+    <div class="meta"><span>Tide-Tode brand book · versie 1 · oktober 2026</span><span>Opgesteld door CREAJT voor Veerle</span><span>Hexcodes geschat uit het moodboard</span></div>
+  </footer>
+</div>
+
+<script>
+  document.getElementById('kleuren').addEventListener('click', (e) => {
+    const knop = e.target.closest('.kleur');
+    if (!knop) return;
+    const klaar = () => { knop.classList.add('is-gekopieerd'); setTimeout(() => knop.classList.remove('is-gekopieerd'), 1600); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(knop.dataset.hex).then(klaar).catch(() => {});
+  });
+</script>

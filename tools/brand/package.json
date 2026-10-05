@@ -1,0 +1,14 @@
+{
+  "name": "tide-tode-brand",
+  "private": true,
+  "type": "module",
+  "description": "Genereert het Tide-Tode logo (vectorpaden uit Bagel Fat One, vervormd in een surfboard) en bouwt het brand book.",
+  "scripts": {
+    "logo": "node logo.mjs",
+    "build": "node logo.mjs && python3 build.py"
+  },
+  "dependencies": {
+    "@fontsource/bagel-fat-one": "^5.2.0",
+    "opentype.js": "^1.3.4"
+  }
+}
