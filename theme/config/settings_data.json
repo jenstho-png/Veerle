@@ -10,9 +10,9 @@
             "background": "#F4EEE4",
             "background_gradient": "",
             "text": "#142029",
-            "button": "#0D2433",
-            "button_label": "#F4EEE4",
-            "secondary_button_label": "#0D2433",
+            "button": "#1D5A78",
+            "button_label": "#FFFFFF",
+            "secondary_button_label": "#142029",
             "shadow": "#0D2433"
           }
         },
@@ -21,9 +21,9 @@
             "background": "#E9F1F3",
             "background_gradient": "",
             "text": "#142029",
-            "button": "#0D2433",
-            "button_label": "#E9F1F3",
-            "secondary_button_label": "#0D2433",
+            "button": "#1D5A78",
+            "button_label": "#FFFFFF",
+            "secondary_button_label": "#142029",
             "shadow": "#0D2433"
           }
         },
@@ -32,7 +32,7 @@
             "background": "#0D2433",
             "background_gradient": "",
             "text": "#F4EEE4",
-            "button": "#F4EEE4",
+            "button": "#8CC3D8",
             "button_label": "#0D2433",
             "secondary_button_label": "#F4EEE4",
             "shadow": "#0D2433"
@@ -54,9 +54,9 @@
             "background": "#FFFFFF",
             "background_gradient": "",
             "text": "#142029",
-            "button": "#0D2433",
+            "button": "#1D5A78",
             "button_label": "#FFFFFF",
-            "secondary_button_label": "#0D2433",
+            "secondary_button_label": "#142029",
             "shadow": "#0D2433"
           }
         }

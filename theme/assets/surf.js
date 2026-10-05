@@ -1,8 +1,5 @@
-/* Surf — kleine, afhankelijkheidsvrije interacties: header, menu, reveal, lead-popup. */
+/* Surf: header, mobiel menu en lead-popup. Opkomen en scroll-beweging zitten in mk-stijl.js. */
 (() => {
-  const root = document.documentElement;
-  root.classList.add('surf-js');
-
   /* Header: verbergen bij naar beneden scrollen, tonen bij omhoog */
   const wrap = document.querySelector('[data-surf-header]');
   if (wrap && wrap.dataset.hide === 'true') {
@@ -35,19 +32,6 @@
       if (!d.contains(e.target)) d.removeAttribute('open');
     });
   });
-
-  /* Reveal bij scrollen */
-  const items = document.querySelectorAll('.surf-reveal');
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => {
-        if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
-      });
-    }, { rootMargin: '0px 0px -8% 0px' });
-    items.forEach((el) => io.observe(el));
-  } else {
-    items.forEach((el) => el.classList.add('is-in'));
-  }
 
   /* Lead-popup */
   const popup = document.getElementById('SurfPopup');

@@ -1,0 +1,28 @@
+{%- comment -%}
+  Merkstijl: laadt de stijl, de textuur en de scroll-beweging.
+  Zet in layout/theme.liquid, vlak voor </head>:
+    {% render 'mk-stijl' %}
+  Optioneel: papier over de hele pagina en een leesbalk bovenaan:
+    {% render 'mk-stijl', papier: true, leesbalk: true %}
+{%- endcomment -%}
+{{ 'mk-papier-licht.webp' | asset_url | preload_tag: as: 'image', type: 'image/webp' }}
+<style>
+  :root {
+    --mk-tegel-licht: url("{{ 'mk-papier-licht.png' | asset_url }}");
+    --mk-tegel-donker: url("{{ 'mk-papier-donker.png' | asset_url }}");
+  }
+  @supports (background-image: image-set(url("x.webp") type("image/webp"))) {
+    :root {
+      --mk-tegel-licht: image-set(url("{{ 'mk-papier-licht.webp' | asset_url }}") type("image/webp"), url("{{ 'mk-papier-licht.png' | asset_url }}") type("image/png"));
+      --mk-tegel-donker: image-set(url("{{ 'mk-papier-donker.webp' | asset_url }}") type("image/webp"), url("{{ 'mk-papier-donker.png' | asset_url }}") type("image/png"));
+    }
+  }
+  {%- if papier %}
+  body { background-image: var(--mk-tegel-licht); background-size: 400px 400px; }
+  {%- endif %}
+</style>
+{{ 'mk-stijl.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'mk-stijl.js' | asset_url }}" defer></script>
+{%- if leesbalk %}
+  <script>document.documentElement.setAttribute("data-mk-leesbalk", "");</script>
+{%- endif %}

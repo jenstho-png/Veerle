@@ -4,22 +4,29 @@
       "type": "surf-pagehero",
       "settings": {
         "eyebrow": "Ons verhaal",
-        "heading": "Van *frustratie* naar draagtas",
-        "text": "Hoe een paar pijnlijke schouders op surfreis uitgroeiden tot een eigen merk.",
+        "heading": "Uit frustratie geboren, met liefde voor de *zee*",
+        "text": "Over sjouwen, schurende wax en de droom om iets eigens te beginnen.",
         "image_filename": "over-ons-surfreis-oprichters.jpg",
-        "image_alt": "De oprichters met hun surfboards op reis"
+        "image_alt": "De oprichters op surfreis met hun surfboards"
       }
     },
     "story": {
       "type": "surf-story",
       "settings": {
         "eyebrow": "Hoe het begon",
-        "heading": "Sjouwen, schuren en *improviseren*",
+        "heading": "Ik heb van alles geprobeerd",
         "btn_label": "",
         "image_filename": "surfboard-onder-de-arm-hike.jpg",
-        "image_alt": "Surfer draagt board onder de arm tijdens een hike",
-        "signature": "",
-        "text": "<p>Australië, Midden- en Zuid-Amerika, Azië: hoe mooier de spot, hoe langer de weg ernaartoe. En hoe meer we sjouwden. Een groot board onder je arm, wax die schuurt, schouders die protesteren. Op de scooter of fiets met één hand sturen. En een dichte boardbag? Daar wil je je natte, zanderige plank niet telkens in proppen.</p><p>We probeerden alles: losse touwtjes, spanbanden, standaardhoezen. Niets hield het vol als het ruig werd. Ondernemen zat er altijd al in, want ik kom uit een ondernemersgezin. Toen ik in februari 2025 mijn vriend leerde kennen, die net zo gek is op surfen en precies dezelfde frustratie kende, viel alles op zijn plek. Die tas bestond nog niet, dus gingen we hem maken.</p>"
+        "image_alt": "Surfer draagt een board onder de arm tijdens een hike",
+        "text": "<p>Australië, Midden- en Zuid-Amerika, Azië: hoe mooier de spot, hoe langer de weg ernaartoe. Zeker als je net begint met surfen heb je een groot board dat lastig te dragen is. Je sjouwt je een ongeluk met een log ding dat nergens lekker vast te houden is.</p><p>Ik heb van alles geprobeerd: losse touwtjes, spanbanden, standaardhoezen en allerlei onhandige draagoplossingen. Ze hielden het niet als het ruig werd, of ze schuurden mijn schouders kapot. Een grote boardbag dan? Dan moet je je natte, zanderige board telkens in een strakke tas proppen.</p><p>Toen ik steeds meer ging surfen en steeds meer in de scene terechtkwam, zag ik dat deze tas nog niet bestond. Iemand moest hem gaan maken.</p>",
+        "signature": "Veerle"
+      }
+    },
+    "woorden": {
+      "type": "mk-woorden",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "tekst": "Iets zelf ondernemen is altijd al mijn droom geweest. Ik kom uit een ondernemersgezin, en dit was het idee waar ik op had gewacht."
       }
     },
     "story2": {
@@ -27,46 +34,62 @@
       "settings": {
         "reverse": true,
         "color_scheme": "scheme-1",
-        "eyebrow": "Wat we geloven",
-        "heading": "Van riders, *voor riders*",
-        "text": "<p>Geen snelle strandtrend, maar een eerlijk product dat jaren meegaat. Robuuste stof, sterke stiksels, messing of donker-metalen details en een ontwerp zonder poespas.</p><p>We beginnen met één kernmodel in een universele maat. Daarna volgen meer varianten, waxblokjes, karabijnhaken en later ook shirts. Wat er verder op ons pad komt? Dat merken we vanzelf.</p>",
+        "eyebrow": "Samen",
+        "heading": "Van riders, voor *riders*",
         "signature": "",
-        "btn_label": "Shop de tas",
+        "btn_label": "Bekijk de tas",
         "btn_link": "shopify://collections/all",
         "image_filename": "surfboard-draagtas-details-messing.jpg",
-        "image_alt": "Close-up van de stiksels en messing details van de draagtas"
+        "image_alt": "Close-up van de stiksels en messing details van de draagtas",
+        "text": "<p>In februari 2025 leerde ik mijn vriend kennen, die net zo gek is op surfen en de struggle meteen begreep. Dat gaf me een extra zetje om hier iets moois van te maken. Sindsdien bouwen we het samen op.</p><p>We willen geen wegwerpproduct en geen snelle strandtrend. Wel een sterk merk met een eerlijke, toegankelijke prijs: een tas waar je jaren mee vooruit kunt. Robuuste stof, sterke stiksels, messing of donker metaal, en toch een mooie look.</p>"
+      }
+    },
+    "statement": {
+      "type": "surf-statement",
+      "settings": {}
+    },
+    "komt": {
+      "type": "surf-steps",
+      "settings": {
+        "color_scheme": "scheme-2",
+        "eyebrow": "Wat er nog komt",
+        "heading": "Eerst de tas, dan de rest"
       },
       "blocks": {
-        "fact-1": {
-          "type": "fact",
+        "step-1": {
+          "type": "step",
           "settings": {
-            "value": "1",
-            "label": "kernmodel, universele maat"
+            "title": "Meer modellen",
+            "text": "We starten met één kernmodel in een universele maat. Meer varianten en maten volgen."
           }
         },
-        "fact-2": {
-          "type": "fact",
+        "step-2": {
+          "type": "step",
           "settings": {
-            "value": "∞",
-            "label": "verborgen spots te ontdekken"
+            "title": "Accessoires",
+            "text": "Waxblokjes en stevige karabijnhaken om je tas en spullen aan vast te haken."
+          }
+        },
+        "step-3": {
+          "type": "step",
+          "settings": {
+            "title": "Kleding",
+            "text": "Later voegen we t-shirts toe. Wat er daarna op ons pad komt, zien we dan. De toekomst kun je niet voorspellen."
           }
         }
       },
       "block_order": [
-        "fact-1",
-        "fact-2"
+        "step-1",
+        "step-2",
+        "step-3"
       ]
-    },
-    "statement": {
-      "type": "surf-statement",
-      "settings": {
-        "quote": "Zin om je tas te pakken en *op pad* te gaan.",
-        "cite": "Avontuurlijk · Kwalitatief · No-nonsense"
-      }
     },
     "gallery": {
       "type": "surf-gallery",
-      "settings": {},
+      "settings": {
+        "eyebrow": "Onze passie",
+        "text": "Golfsurfen, windsurfen, wakeboarden, waterskiën en vooral duiken. Als het in of op de zee is, zijn we er."
+      },
       "blocks": {
         "photo-1": {
           "type": "photo",
@@ -96,7 +119,7 @@
         "photo-4": {
           "type": "photo",
           "settings": {
-            "image_filename": "surfspot-costa-rica-strand.jpg",
+            "image_filename": "surfspot-midden-amerika-strand.jpg",
             "alt": "Leeg strand met golven in Midden-Amerika",
             "caption": "Midden-Amerika",
             "tall": true
@@ -115,7 +138,7 @@
           "settings": {
             "image_filename": "zonsondergang-surfsessie.jpg",
             "alt": "Surfer bij zonsondergang",
-            "caption": "Golden hour"
+            "caption": "Zonsondergang"
           }
         }
       },
@@ -131,15 +154,20 @@
     "cta": {
       "type": "surf-cta",
       "settings": {
-        "btn2_link": "shopify://pages/veelgestelde-vragen"
+        "mode": "signup",
+        "heading": "Blijf op de *hoogte*",
+        "text": "We gaan online zodra de eerste modellen klaar zijn. Schrijf je in en je hoort het als eerste.",
+        "btn1_label": "Zet me op de lijst"
       }
     }
   },
   "order": [
     "pagehero",
     "story",
+    "woorden",
     "story2",
     "statement",
+    "komt",
     "gallery",
     "cta"
   ]

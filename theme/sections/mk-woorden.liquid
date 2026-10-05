@@ -1,0 +1,19 @@
+{%- comment -%} Eén grote zin waarvan de woorden één voor één oplichten tijdens het scrollen. {%- endcomment -%}
+<section class="mk-sectie color-{{ section.settings.color_scheme }}{% if section.settings.papier %} mk-papier{% endif %}">
+  <div class="mk-wrap">
+    <p class="mk-h2" data-mk-woorden style="font-size: clamp(28px, 5vw, 54px); line-height: 1.12; max-width: 1040px;">{{ section.settings.tekst | escape }}</p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Merk: oplichtende zin",
+  "tag": "div",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-1" },
+    { "type": "checkbox", "id": "papier", "label": "Papiertextuur", "default": true },
+    { "type": "textarea", "id": "tekst", "label": "Zin", "default": "Hier komt één zin die vertelt waar je voor staat. Elk woord licht op terwijl je verder scrolt." }
+  ],
+  "presets": [ { "name": "Merk: oplichtende zin" } ]
+}
+{% endschema %}

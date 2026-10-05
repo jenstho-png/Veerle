@@ -24,13 +24,22 @@ Samenvatting van de intake (Surfbag.docx), vertaald naar keuzes voor de site.
 - **Gevorderden/avonturiers** die door de bush of over rotsen naar afgelegen spots trekken.
 - Overal ter wereld en in Europa: te voet door duinen en bossen, op de fiets, of met de auto op roadtrip.
 
+## Merkstijl
+Sinds de tweede ronde draait het thema op het merkstijl-pakket (`docs/merkstijl/`): papier en korrel in plaats van glans, koppen in dikte 900, één bewegingscurve en zachte schaduwen. Kleuren komen uit de Shopify-kleurenschema's: de knopkleur (oceaanblauw) is ook het accentwoord-verloop.
+
+Aanpassingen ten opzichte van de eerste versie, om aan de regels te voldoen:
+- Het accentwoord is nu een verloop in de koppenletter. Fraunces wordt alleen nog gebruikt voor de ondertekening "Veerle" (één handschrift-woord per pagina).
+- Weg: glas-effect (wazige header en badge), de draaiende stempel en de doorlopende USP-band.
+- Geen verzonnen cijfers meer (de "4 continenten"-feitjes zijn eruit).
+- Kleine fix in `mk-stijl.css`: een regel stond per ongeluk binnen het `:root`-blok.
+
 ## Merk & uitstraling → ontwerpkeuzes
 | Briefing | In het thema |
 |---|---|
-| **Wel:** avontuurlijk, kwalitatief, no-nonsense | Stoere koppen (Archivo 800), korte teksten, duidelijke knoppen |
+| **Wel:** avontuurlijk, kwalitatief, no-nonsense | Stoere koppen (Archivo 900), korte teksten, duidelijke knoppen |
 | **Niet:** fragiel, massaal, ingewikkeld | Geen drukke animaties of poespas, veel witruimte |
 | "From riders for riders", authentiek | Founder-verhaal prominent op home en Over ons |
-| Vrouwelijke touch, Instagram-waardig | Sierlijk accentfont (Fraunces italic) voor *accentwoorden*, afgeronde vormen, fotogalerij |
+| Vrouwelijke touch, Instagram-waardig | Ondertekening in handschrift, afgeronde vormen, fotogalerij, Instagram-vlak met telefoon |
 | Blauw van de zee, rust, *fineline* | Palet diepzee/oceaan/schuim + zand, 1px-lijnen, golf-iconen |
 | Messing details op de tas | Messing-accent (#A9834A) voor iconen, hovers en stapnummers |
 | Duiken als passie | Galerij "Van verstopte spot tot diep blauw" met plek voor duikbeelden |
@@ -45,7 +54,7 @@ Samenvatting van de intake (Surfbag.docx), vertaald naar keuzes voor de site.
 | scheme-4 | Oceaan | `#1D5A78` | `#FFFFFF` |
 | scheme-5 | Wit (kaarten) | `#FFFFFF` | `#142029` |
 
-Accent: getij `#4F97B6`, messing `#A9834A`.
+Accent = knopkleur per schema: oceaan `#1D5A78` op licht, licht getij `#8CC3D8` op diepzee, zand op oceaan.
 
 ## Lancering
 De site gaat pas live als er meerdere modellen klaarliggen. Tot die tijd:

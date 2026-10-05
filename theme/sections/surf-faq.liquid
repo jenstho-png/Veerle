@@ -1,17 +1,17 @@
 <section class="surf surf-faq color-{{ section.settings.color_scheme }}" id="faq-{{ section.id }}">
   <div class="surf__inner">
     <div class="surf-faq__grid">
-      <div class="surf-faq__intro surf-reveal">
+      <div class="surf-faq__intro mk-in">
         {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
         {%- render 'surf-headline', text: section.settings.heading, tag: section.settings.heading_tag -%}
-        {%- if section.settings.text != blank -%}<p class="surf-lead" style="margin-top: 2rem;">{{ section.settings.text }}</p>{%- endif -%}
+        {%- if section.settings.text != blank -%}<p class="surf-lead">{{ section.settings.text }}</p>{%- endif -%}
         {%- if section.settings.btn_label != blank -%}
           <div class="surf-btns">
             <a href="{{ section.settings.btn_link | default: '/pages/contact' }}" class="surf-btn surf-btn--ghost">{{ section.settings.btn_label }}</a>
           </div>
         {%- endif -%}
       </div>
-      <div class="surf-faq__list">
+      <div class="surf-faq__list mk-in mk-na-1">
         {%- for block in section.blocks -%}
           <details class="surf-faq__item" {{ block.shopify_attributes }}>
             <summary>{{ block.settings.question }}<i aria-hidden="true"></i></summary>
@@ -43,37 +43,128 @@
 
 {% schema %}
 {
-  "name": "Surf – FAQ",
+  "name": "Surf: FAQ",
   "tag": "div",
   "max_blocks": 20,
   "settings": [
-    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-1" },
-    { "type": "text", "id": "eyebrow", "label": "Bovenregel", "default": "Veelgestelde vragen" },
-    { "type": "text", "id": "heading", "label": "Kop", "default": "Goed om te *weten*" },
-    { "type": "select", "id": "heading_tag", "label": "Kop-niveau (SEO)", "default": "h2", "options": [ { "value": "h1", "label": "H1" }, { "value": "h2", "label": "H2" } ] },
-    { "type": "textarea", "id": "text", "label": "Tekst", "default": "Staat je vraag er niet tussen? Stuur ons een berichtje, we helpen je graag." },
-    { "type": "text", "id": "btn_label", "label": "Knop", "default": "Stel je vraag" },
-    { "type": "url", "id": "btn_link", "label": "Knop-link" }
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Kleurenschema",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Bovenregel",
+      "default": "Veelgestelde vragen"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "default": "Goed om te weten"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Kop-niveau (SEO)",
+      "default": "h2",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        }
+      ]
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Tekst",
+      "default": "Staat je vraag er niet tussen? Stuur ons een bericht, we helpen je graag."
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Knop",
+      "default": "Stel je vraag"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Knop-link"
+    }
   ],
   "blocks": [
     {
       "type": "qa",
       "name": "Vraag",
       "settings": [
-        { "type": "text", "id": "question", "label": "Vraag", "default": "Vraag" },
-        { "type": "richtext", "id": "answer", "label": "Antwoord", "default": "<p>Antwoord</p>" }
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Vraag",
+          "default": "Vraag"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Antwoord",
+          "default": "<p>Antwoord</p>"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Surf – FAQ",
+      "name": "Surf: FAQ",
       "blocks": [
-        { "type": "qa", "settings": { "question": "Welke surfboards passen in de tas?", "answer": "<p>Ons kernmodel heeft een universele maat: hij past om de grotere, vollere softtops van beginners én om de meeste hardboards van gevorderde surfers.</p>" } },
-        { "type": "qa", "settings": { "question": "Kan ik de tas meenemen in het vliegtuig?", "answer": "<p>Ja. De tas vouw je klein op, zodat hij gewoon in je bagage past. Huur je op je bestemming een board, dan neem je die met jouw tas mee naar de spot.</p>" } },
-        { "type": "qa", "settings": { "question": "Kan ik ermee fietsen of op de scooter?", "answer": "<p>Daar is hij juist voor gemaakt. Het board hangt op je rug, zodat je beide handen vrij hebt voor je stuur.</p>" } },
-        { "type": "qa", "settings": { "question": "Mag mijn board nat en zanderig de tas in?", "answer": "<p>Ja. De stof kan tegen water, zout en zand. Spoel de tas af en toe na met zoet water en laat hem goed drogen.</p>" } },
-        { "type": "qa", "settings": { "question": "Wat is het verschil met een boardbag?", "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Onze tas is gemaakt om je board te dragen: open, licht en met ergonomische banden voor lange tochten naar de spot.</p>" } }
+        {
+          "type": "qa",
+          "settings": {
+            "question": "Welke surfboards passen in de tas?",
+            "answer": "<p>We beginnen met één kernmodel in een universele maat. Die past om de grote, vollere boards waar veel beginners op surfen en om hardboards in verschillende maten. Later komen er meer varianten bij.</p>"
+          }
+        },
+        {
+          "type": "qa",
+          "settings": {
+            "question": "Kan ik de tas meenemen in het vliegtuig?",
+            "answer": "<p>Ja. De tas past in je bagage. Huur je op je bestemming een board, dan neem je dat in je eigen tas mee naar de spot.</p>"
+          }
+        },
+        {
+          "type": "qa",
+          "settings": {
+            "question": "Kan ik ermee fietsen of op de scooter?",
+            "answer": "<p>Daar is hij juist voor bedacht. Je board zit op je rug, dus je hebt allebei je handen vrij voor het stuur.</p>"
+          }
+        },
+        {
+          "type": "qa",
+          "settings": {
+            "question": "Wat is het verschil met een boardbag?",
+            "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Daar moet je je natte, zanderige board na elke sessie weer in proppen. Onze tas is gemaakt om je board te dragen: naar de spot en weer terug.</p>"
+          }
+        },
+        {
+          "type": "qa",
+          "settings": {
+            "question": "Zitten er lussen of karabijnhaken aan?",
+            "answer": "<p>Het eerste model houden we bewust simpel. Lussen en karabijnhaken om extra spullen aan de tas te hangen komen op een later model. Stevige karabijnhaken komen ook los in de shop.</p>"
+          }
+        },
+        {
+          "type": "qa",
+          "settings": {
+            "question": "Verkopen jullie ook andere spullen?",
+            "answer": "<p>Naast de tas komen er waxblokjes en karabijnhaken. In een later stadium volgen t-shirts.</p>"
+          }
+        }
       ]
     }
   ]

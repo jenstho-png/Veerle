@@ -3,13 +3,13 @@
 {%- endcomment -%}
 <section class="surf surf-reviews color-{{ section.settings.color_scheme }}" id="reviews-{{ section.id }}">
   <div class="surf__inner">
-    <div class="surf-head surf-head--center surf-reveal">
+    <div class="surf-head surf-head--center mk-in">
       {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
       {%- render 'surf-headline', text: section.settings.heading, tag: 'h2' -%}
     </div>
     <div class="surf-reviews__grid">
       {%- for block in section.blocks -%}
-        <article class="surf-review surf-reveal" {{ block.shopify_attributes }}>
+        <article class="surf-review mk-in" {{ block.shopify_attributes }}>
           <div class="surf-review__top">
             <div class="surf-stars" aria-label="{{ block.settings.rating }} van 5 sterren">
               {%- for i in (1..block.settings.rating) -%}{% render 'surf-icon', icon: 'star' %}{%- endfor -%}
@@ -26,7 +26,7 @@
 
 {% schema %}
 {
-  "name": "Surf – reviews",
+  "name": "Surf: reviews",
   "tag": "div",
   "max_blocks": 9,
   "settings": [
@@ -47,6 +47,6 @@
       ]
     }
   ],
-  "presets": [ { "name": "Surf – reviews" } ]
+  "presets": [ { "name": "Surf: reviews" } ]
 }
 {% endschema %}

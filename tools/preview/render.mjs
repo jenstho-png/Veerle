@@ -6,7 +6,7 @@ import path from 'path';
 const T = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../theme');
 const OUT = path.resolve(path.dirname(new URL(import.meta.url).pathname), 'out');
 fs.mkdirSync(OUT, { recursive: true });
-for (const f of fs.readdirSync(`${T}/assets`)) if (/\.(css|woff2)$/.test(f)) fs.copyFileSync(`${T}/assets/${f}`, `${OUT}/${f}`);
+for (const f of fs.readdirSync(`${T}/assets`)) if (/\.(css|woff2|png|webp)$/.test(f) || f === 'mk-stijl.js') fs.copyFileSync(`${T}/assets/${f}`, `${OUT}/${f}`);
 fs.copyFileSync(`${T}/assets/surf.js`, `${OUT}/surf.js`);
 
 const engine = new Liquid({ root: [`${T}/snippets`], extname: '.liquid', strictFilters: false, jsTruthy: false });
@@ -20,6 +20,8 @@ const F = {
   asset_url: (s) => s, image_url: (i) => i?.src || i, money: (c) => `€${(c / 100).toFixed(2).replace('.', ',')}`,
   json: (v) => JSON.stringify(v ?? null), t: (k) => k, stylesheet_tag: (u) => `<link rel="stylesheet" href="${u}">`,
   image_tag: (src, ...a) => `<img src="${src}" alt="">`, payment_type_svg_tag: () => '',
+  preload_tag: (u) => `<link rel="preload" href="${u}" as="image">`,
+  placeholder_svg_tag: (n, cls) => `<svg class="${cls || ''}" viewBox="0 0 10 10"></svg>`,
 };
 for (const [k, fn] of Object.entries(F)) engine.registerFilter(k, fn);
 
@@ -57,7 +59,7 @@ async function page(name, tplPath, extra = {}) {
   let i = 1;
   for (const k of tpl.order) {
     const d = tpl.sections[k];
-    if (!d.type.startsWith('surf-')) { html += `<div style="padding:40px;text-align:center;opacity:.5">[Dawn: ${d.type}]</div>`; continue; }
+    if (!d.type.startsWith('surf-') && !d.type.startsWith('mk-')) { html += `<div style="padding:40px;text-align:center;opacity:.5">[Dawn: ${d.type}]</div>`; continue; }
     html += await renderSection(d.type, d, i++);
   }
   html += await renderSection('surf-footer', fg.sections['surf-footer'], 99);
@@ -66,7 +68,7 @@ async function page(name, tplPath, extra = {}) {
   const css = Object.entries(schemes).map(([id, { settings: c }]) => `.color-${id}{--color-background:${hex(c.background)};--color-foreground:${hex(c.text)};--color-button:${hex(c.button)};--color-button-text:${hex(c.button_label)};background-color:rgb(var(--color-background));color:rgb(var(--color-foreground))}`).join('\n');
   const doc = `<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name}</title>
 <style>html{font-size:62.5%}body{margin:0;font-size:1.6rem;line-height:1.5;font-family:var(--font-body-family);background:#F4EEE4;color:#142029}*,*::before,*::after{box-sizing:border-box}.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}${css}</style>
-<link rel="stylesheet" href="surf.css"><script>document.documentElement.classList.add('surf-js')</script><script src="surf.js" defer></script></head><body>${html}</body></html>`;
+<link rel="stylesheet" href="surf.css">${await engine.renderFile('mk-stijl', { papier: true, leesbalk: true })}<script src="surf.js" defer></script></head><body>${html}</body></html>`;
   fs.writeFileSync(`${OUT}/${name}.html`, doc);
 }
 

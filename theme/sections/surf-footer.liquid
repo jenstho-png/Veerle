@@ -74,33 +74,111 @@
 
 {% schema %}
 {
-  "name": "Surf – footer",
+  "name": "Surf: footer",
   "max_blocks": 5,
   "settings": [
-    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-3" },
-    { "type": "textarea", "id": "text", "label": "Merktekst", "default": "Een surfboard draagtas voor wie verder gaat dan de eerste golf. Handen vrij, schouders blij." },
-    { "type": "checkbox", "id": "show_word", "label": "Grote merknaam tonen", "default": true },
-    { "type": "checkbox", "id": "show_payment", "label": "Betaalmethoden tonen", "default": true },
-    { "type": "text", "id": "legal", "label": "Juridische regel", "info": "Bijv. KvK-nummer" }
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Kleurenschema",
+      "default": "scheme-3"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Merktekst",
+      "default": "Draagtassen voor je surfboard, van surfers voor surfers. Handen vrij op weg naar de golf."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_word",
+      "label": "Grote merknaam tonen",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment",
+      "label": "Betaalmethoden tonen",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "legal",
+      "label": "Juridische regel",
+      "info": "Bijv. KvK-nummer"
+    }
   ],
   "blocks": [
     {
       "type": "menu",
       "name": "Menu-kolom",
       "settings": [
-        { "type": "text", "id": "heading", "label": "Titel", "default": "Shop" },
-        { "type": "text", "id": "l1_label", "label": "Link 1" },
-        { "type": "url", "id": "l1_link", "label": "URL 1" },
-        { "type": "text", "id": "l2_label", "label": "Link 2" },
-        { "type": "url", "id": "l2_link", "label": "URL 2" },
-        { "type": "text", "id": "l3_label", "label": "Link 3" },
-        { "type": "url", "id": "l3_link", "label": "URL 3" },
-        { "type": "text", "id": "l4_label", "label": "Link 4" },
-        { "type": "url", "id": "l4_link", "label": "URL 4" },
-        { "type": "text", "id": "l5_label", "label": "Link 5" },
-        { "type": "url", "id": "l5_link", "label": "URL 5" },
-        { "type": "text", "id": "l6_label", "label": "Link 6" },
-        { "type": "url", "id": "l6_link", "label": "URL 6" }
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titel",
+          "default": "Shop"
+        },
+        {
+          "type": "text",
+          "id": "l1_label",
+          "label": "Link 1"
+        },
+        {
+          "type": "url",
+          "id": "l1_link",
+          "label": "URL 1"
+        },
+        {
+          "type": "text",
+          "id": "l2_label",
+          "label": "Link 2"
+        },
+        {
+          "type": "url",
+          "id": "l2_link",
+          "label": "URL 2"
+        },
+        {
+          "type": "text",
+          "id": "l3_label",
+          "label": "Link 3"
+        },
+        {
+          "type": "url",
+          "id": "l3_link",
+          "label": "URL 3"
+        },
+        {
+          "type": "text",
+          "id": "l4_label",
+          "label": "Link 4"
+        },
+        {
+          "type": "url",
+          "id": "l4_link",
+          "label": "URL 4"
+        },
+        {
+          "type": "text",
+          "id": "l5_label",
+          "label": "Link 5"
+        },
+        {
+          "type": "url",
+          "id": "l5_link",
+          "label": "URL 5"
+        },
+        {
+          "type": "text",
+          "id": "l6_label",
+          "label": "Link 6"
+        },
+        {
+          "type": "url",
+          "id": "l6_link",
+          "label": "URL 6"
+        }
       ]
     },
     {
@@ -108,13 +186,35 @@
       "name": "Contact",
       "limit": 1,
       "settings": [
-        { "type": "text", "id": "heading", "label": "Titel", "default": "Contact" },
-        { "type": "text", "id": "email", "label": "E-mail" },
-        { "type": "text", "id": "phone", "label": "Telefoon" },
-        { "type": "text", "id": "note", "label": "Extra regel", "default": "We reageren binnen één werkdag." }
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titel",
+          "default": "Contact"
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "E-mail"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Telefoon"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Extra regel",
+          "default": "We reageren binnen één werkdag."
+        }
       ]
     }
   ],
-  "enabled_on": { "groups": ["footer"] }
+  "enabled_on": {
+    "groups": [
+      "footer"
+    ]
+  }
 }
 {% endschema %}

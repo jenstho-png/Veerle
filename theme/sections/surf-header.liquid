@@ -11,7 +11,7 @@
   style="background: transparent;"
 >
   <header class="surf-header">
-    <a href="{{ routes.root_url }}" class="surf-header__logo" aria-label="{{ shop.name }} – home">
+    <a href="{{ routes.root_url }}" class="surf-header__logo" aria-label="{{ shop.name }}, naar de homepage">
       {%- if settings.logo != blank -%}
         {%- assign logo_h = settings.logo_width | divided_by: settings.logo.aspect_ratio | round -%}
         {{
@@ -131,38 +131,123 @@
 
 {% schema %}
 {
-  "name": "Surf – header",
+  "name": "Surf: header",
   "class": "surf-header-section",
   "max_blocks": 8,
   "settings": [
-    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-1" },
-    { "type": "checkbox", "id": "overlay_home", "label": "Zweef over de hero op de homepage", "default": true },
-    { "type": "checkbox", "id": "hide_on_scroll", "label": "Verbergen bij naar beneden scrollen", "default": true },
-    { "type": "text", "id": "cta_label", "label": "Knop rechts", "default": "Shop de tas" },
-    { "type": "url", "id": "cta_link", "label": "Knop-link" }
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Kleurenschema",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "overlay_home",
+      "label": "Zweef over de hero op de homepage",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_scroll",
+      "label": "Verbergen bij naar beneden scrollen",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Knop rechts",
+      "default": "Bekijk de tas"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Knop-link"
+    }
   ],
   "blocks": [
     {
       "type": "tab",
       "name": "Menu-item",
       "settings": [
-        { "type": "text", "id": "label", "label": "Label", "default": "Shop" },
-        { "type": "url", "id": "link", "label": "Link" },
-        { "type": "header", "content": "Dropdown (optioneel)" },
-        { "type": "text", "id": "dd1_label", "label": "Item 1" },
-        { "type": "url", "id": "dd1_link", "label": "Link 1" },
-        { "type": "text", "id": "dd2_label", "label": "Item 2" },
-        { "type": "url", "id": "dd2_link", "label": "Link 2" },
-        { "type": "text", "id": "dd3_label", "label": "Item 3" },
-        { "type": "url", "id": "dd3_link", "label": "Link 3" },
-        { "type": "text", "id": "dd4_label", "label": "Item 4" },
-        { "type": "url", "id": "dd4_link", "label": "Link 4" },
-        { "type": "text", "id": "dd5_label", "label": "Item 5" },
-        { "type": "url", "id": "dd5_link", "label": "Link 5" },
-        { "type": "text", "id": "dd_all_label", "label": "Label 'alles bekijken'", "info": "Linkt naar de hoofdlink van dit item" }
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Shop"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Dropdown (optioneel)"
+        },
+        {
+          "type": "text",
+          "id": "dd1_label",
+          "label": "Item 1"
+        },
+        {
+          "type": "url",
+          "id": "dd1_link",
+          "label": "Link 1"
+        },
+        {
+          "type": "text",
+          "id": "dd2_label",
+          "label": "Item 2"
+        },
+        {
+          "type": "url",
+          "id": "dd2_link",
+          "label": "Link 2"
+        },
+        {
+          "type": "text",
+          "id": "dd3_label",
+          "label": "Item 3"
+        },
+        {
+          "type": "url",
+          "id": "dd3_link",
+          "label": "Link 3"
+        },
+        {
+          "type": "text",
+          "id": "dd4_label",
+          "label": "Item 4"
+        },
+        {
+          "type": "url",
+          "id": "dd4_link",
+          "label": "Link 4"
+        },
+        {
+          "type": "text",
+          "id": "dd5_label",
+          "label": "Item 5"
+        },
+        {
+          "type": "url",
+          "id": "dd5_link",
+          "label": "Link 5"
+        },
+        {
+          "type": "text",
+          "id": "dd_all_label",
+          "label": "Label 'alles bekijken'",
+          "info": "Linkt naar de hoofdlink van dit item"
+        }
       ]
     }
   ],
-  "enabled_on": { "groups": ["header"] }
+  "enabled_on": {
+    "groups": [
+      "header"
+    ]
+  }
 }
 {% endschema %}

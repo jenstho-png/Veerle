@@ -6,7 +6,7 @@
 <section class="surf surf-product color-{{ section.settings.color_scheme }}" id="product-{{ section.id }}">
   <div class="surf__inner">
     <div class="surf-product__grid">
-      <div class="surf-media surf-product__media surf-reveal">
+      <div class="surf-media surf-product__media mk-in mk-in--zoom">
         {%- if p.featured_media != blank and section.settings.image == blank -%}
           {%- render 'surf-image', image: p.featured_media.preview_image, alt: media_alt, sizes: '(min-width: 990px) 50vw, 100vw' -%}
         {%- else -%}
@@ -19,7 +19,7 @@
         {%- endif -%}
       </div>
 
-      <div class="surf-product__body surf-reveal">
+      <div class="surf-product__body mk-in mk-na-1">
         {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
         {%- if section.settings.heading != blank -%}
           {%- render 'surf-headline', text: section.settings.heading, tag: 'h2' -%}
@@ -27,7 +27,7 @@
           <h2>{{ p.title | default: 'De draagtas' }}</h2>
         {%- endif -%}
         {%- if section.settings.text != blank -%}
-          <p class="surf-lead" style="margin-top: 2rem;">{{ section.settings.text }}</p>
+          <p class="surf-lead">{{ section.settings.text }}</p>
         {%- endif -%}
 
         {%- if p != blank -%}
@@ -55,7 +55,7 @@
               <select name="id" id="SurfVariant-{{ section.id }}">
                 {%- for v in p.variants -%}
                   <option value="{{ v.id }}"{% if v == variant %} selected{% endif %}{% unless v.available %} disabled{% endunless %}>
-                    {{ v.title }} – {{ v.price | money }}{% unless v.available %} (uitverkocht){% endunless %}
+                    {{ v.title }} · {{ v.price | money }}{% unless v.available %} (uitverkocht){% endunless %}
                   </option>
                 {%- endfor -%}
               </select>
@@ -71,7 +71,7 @@
           </div>
         {%- endif -%}
         {%- if section.settings.note != blank -%}
-          <p class="surf-product__note" style="margin-top: 1.6rem;">{{ section.settings.note }}</p>
+          <p class="surf-product__note">{{ section.settings.note }}</p>
         {%- endif -%}
       </div>
     </div>
@@ -80,32 +80,110 @@
 
 {% schema %}
 {
-  "name": "Surf – product",
+  "name": "Surf: product",
   "tag": "div",
   "max_blocks": 6,
   "settings": [
-    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-2" },
-    { "type": "product", "id": "product", "label": "Product" },
-    { "type": "text", "id": "eyebrow", "label": "Bovenregel", "default": "Het kernmodel" },
-    { "type": "text", "id": "heading", "label": "Kop", "info": "Leeg = producttitel. *woord* = accentfont", "default": "Eén tas, *elk* board" },
-    { "type": "textarea", "id": "text", "label": "Tekst", "default": "Ons universele kernmodel past om de vollere softtops van beginners én de hardboards van avonturiers. Zonder poespas, met alles wat je onderweg nodig hebt." },
-    { "type": "text", "id": "note", "label": "Kleine regel onder de knop", "default": "Veilig betalen · Verzending door heel Europa" },
-    { "type": "header", "content": "Foto (als het product nog geen foto heeft)" },
-    { "type": "image_picker", "id": "image", "label": "Foto" },
-    { "type": "text", "id": "image_filename", "label": "Bestandsnaam (SEO)", "default": "surfboard-draagtas-kernmodel.jpg" },
-    { "type": "text", "id": "image_alt", "label": "Alt-tekst", "default": "Surfboard draagtas kernmodel met messing details" }
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Kleurenschema",
+      "default": "scheme-2"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Bovenregel",
+      "default": "Het eerste model"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Leeg = producttitel. *woord* = accentfont",
+      "default": "Eén tas in een universele *maat*"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Tekst",
+      "default": "We beginnen met één kernmodel dat om de meeste boards past. Robuuste stof, sterke stiksels en details in messing of donker metaal. Meer varianten volgen."
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Kleine regel onder de knop",
+      "default": "Geen wegwerpproduct, maar een tas waar je jaren mee vooruit kunt."
+    },
+    {
+      "type": "header",
+      "content": "Foto (als het product nog geen foto heeft)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Foto"
+    },
+    {
+      "type": "text",
+      "id": "image_filename",
+      "label": "Bestandsnaam (SEO)",
+      "default": "surfboard-draagtas-kernmodel.jpg"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Alt-tekst",
+      "default": "Surfboard draagtas kernmodel met messing details"
+    }
   ],
   "blocks": [
-    { "type": "check", "name": "Kenmerk", "settings": [ { "type": "text", "id": "text", "label": "Tekst", "default": "Universele maat" } ] }
+    {
+      "type": "check",
+      "name": "Kenmerk",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Tekst",
+          "default": "Universele maat"
+        }
+      ]
+    }
   ],
   "presets": [
     {
-      "name": "Surf – product",
+      "name": "Surf: product",
       "blocks": [
-        { "type": "check", "settings": { "text": "Universele maat voor softtops én hardboards" } },
-        { "type": "check", "settings": { "text": "Ergonomische, verstelbare draagbanden" } },
-        { "type": "check", "settings": { "text": "Zware, waterbestendige stof met sterke stiksels" } },
-        { "type": "check", "settings": { "text": "Opvouwbaar: neem hem mee op elke vliegreis" } }
+        {
+          "type": "check",
+          "settings": {
+            "text": "Universele maat voor beginnersboards en hardboards"
+          }
+        },
+        {
+          "type": "check",
+          "settings": {
+            "text": "Verstelbare draagbanden, je handen blijven vrij"
+          }
+        },
+        {
+          "type": "check",
+          "settings": {
+            "text": "Sterke stof die tegen nat en zand kan"
+          }
+        },
+        {
+          "type": "check",
+          "settings": {
+            "text": "Past in je reisbagage"
+          }
+        }
       ]
     }
   ]

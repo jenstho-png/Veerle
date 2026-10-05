@@ -4,38 +4,36 @@
     assign bg = images[section.settings.image_filename]
   endif
 -%}
-<section class="surf surf-cta color-{{ section.settings.color_scheme }}" id="cta-{{ section.id }}">
+<section class="surf surf-cta color-{{ section.settings.color_scheme }}" id="cta-{{ section.id }}"{% if section.settings.vlak_kleur != blank %} style="--mk-eigen-donker: {{ section.settings.vlak_kleur }};"{% endif %}>
   <div class="surf__inner">
-    <div class="surf-cta__box color-{{ section.settings.box_scheme }}{% if bg != blank %} has-bg{% endif %} surf-reveal">
+    <div class="surf-cta__box mk-vlak mk-korrel mk-in mk-in--zoom">
       {%- if bg != blank -%}
         <div class="surf-media surf-cta__bg">{% render 'surf-image', image: bg, alt: section.settings.image_alt %}</div>
       {%- endif -%}
-      {%- if section.settings.stamp != blank -%}
-        <svg class="surf-stamp" viewBox="0 0 110 110" aria-hidden="true">
-          <defs><path id="stamp-{{ section.id }}" d="M55 55m-42 0a42 42 0 1 1 84 0a42 42 0 1 1-84 0"/></defs>
-          <text><textPath href="#stamp-{{ section.id }}">{{ section.settings.stamp | escape }}</textPath></text>
-          <g transform="translate(43 43)" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M0 9c3 0 3-4 6-4s3 4 6 4 3-4 6-4 3 4 6 4M0 17c3 0 3-4 6-4s3 4 6 4 3-4 6-4 3 4 6 4"/></g>
-        </svg>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="surf-eyebrow mk-in mk-na-1" style="color: rgba(255,255,255,.7);">{{ section.settings.eyebrow }}</p>
       {%- endif -%}
-      {%- render 'surf-headline', text: section.settings.heading, tag: 'h2' -%}
-      {%- if section.settings.text != blank -%}<p class="surf-lead">{{ section.settings.text }}</p>{%- endif -%}
+      {%- render 'surf-headline', text: section.settings.heading, tag: 'h2', class: 'mk-in mk-na-1' -%}
+      {%- if section.settings.text != blank -%}<p class="surf-lead mk-in mk-na-2">{{ section.settings.text }}</p>{%- endif -%}
 
       {%- if section.settings.mode == 'signup' -%}
-        {%- form 'customer', id: section.id -%}
-          <input type="hidden" name="contact[tags]" value="newsletter,{{ section.settings.tag | escape }}">
-          {%- if form.posted_successfully? -%}
-            <p class="surf-form-msg">{{ section.settings.success }}</p>
-          {%- else -%}
-            <div class="surf-signup">
-              <label class="visually-hidden" for="SurfCtaEmail-{{ section.id }}">E-mailadres</label>
-              <input id="SurfCtaEmail-{{ section.id }}" type="email" name="contact[email]" autocomplete="email" placeholder="jouw@email.nl" required>
-              <button type="submit" class="surf-btn surf-btn--primary">{{ section.settings.btn1_label }}</button>
-            </div>
-            {%- if form.errors -%}<p class="surf-form-msg">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>{%- endif -%}
-          {%- endif -%}
-        {%- endform -%}
+        <div class="mk-in mk-na-3">
+          {%- form 'customer', id: section.id -%}
+            <input type="hidden" name="contact[tags]" value="newsletter,{{ section.settings.tag | escape }}">
+            {%- if form.posted_successfully? -%}
+              <p class="surf-form-msg">{{ section.settings.success }}</p>
+            {%- else -%}
+              <div class="surf-signup">
+                <label class="visually-hidden" for="SurfCtaEmail-{{ section.id }}">E-mailadres</label>
+                <input id="SurfCtaEmail-{{ section.id }}" type="email" name="contact[email]" autocomplete="email" placeholder="jouw@email.nl" required>
+                <button type="submit" class="surf-btn surf-btn--primary">{{ section.settings.btn1_label }}</button>
+              </div>
+              {%- if form.errors -%}<p class="surf-form-msg">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>{%- endif -%}
+            {%- endif -%}
+          {%- endform -%}
+        </div>
       {%- else -%}
-        <div class="surf-btns">
+        <div class="surf-btns mk-in mk-na-3">
           {%- if section.settings.btn1_label != blank -%}
             <a href="{{ section.settings.btn1_link | default: routes.all_products_collection_url }}" class="surf-btn surf-btn--primary">
               {{- section.settings.btn1_label }}
@@ -53,30 +51,30 @@
 
 {% schema %}
 {
-  "name": "Surf – call-to-action",
+  "name": "Surf: call-to-action",
   "tag": "div",
   "settings": [
-    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema sectie", "default": "scheme-1" },
-    { "type": "color_scheme", "id": "box_scheme", "label": "Kleurenschema blok", "default": "scheme-4" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema rond het vlak", "default": "scheme-1" },
+    { "type": "color", "id": "vlak_kleur", "label": "Kleur van het vlak", "default": "#0D2433", "info": "Kies een donkere kleur." },
     { "type": "select", "id": "mode", "label": "Type", "default": "buttons", "options": [
       { "value": "buttons", "label": "Knoppen" },
-      { "value": "signup", "label": "E-mail inschrijving (bijv. early access)" }
+      { "value": "signup", "label": "E-mail inschrijving (bijv. wachtlijst)" }
     ] },
-    { "type": "text", "id": "stamp", "label": "Stempeltekst (rond)", "default": "Handen vrij · Op pad · Handen vrij · Op pad · " },
-    { "type": "text", "id": "heading", "label": "Kop", "default": "Pak je tas, *de zee* wacht" },
-    { "type": "textarea", "id": "text", "label": "Tekst", "default": "Voor de vroege vogels, de verre hikers en iedereen die net begint." },
-    { "type": "text", "id": "btn1_label", "label": "Knop 1 / inschrijfknop", "default": "Shop de tas" },
+    { "type": "text", "id": "eyebrow", "label": "Klein label" },
+    { "type": "text", "id": "heading", "label": "Kop", "info": "*woord* = accentwoord", "default": "Zin om je tas te pakken en op pad te gaan naar de *kust*" },
+    { "type": "textarea", "id": "text", "label": "Tekst", "default": "Voor wie vroeg opstaat, de natuur in trekt en de gebaande paden verlaat voor die ene lege golf." },
+    { "type": "text", "id": "btn1_label", "label": "Knop 1 / inschrijfknop", "default": "Bekijk de tas" },
     { "type": "url", "id": "btn1_link", "label": "Link 1" },
     { "type": "text", "id": "btn2_label", "label": "Knop 2", "default": "Veelgestelde vragen" },
     { "type": "url", "id": "btn2_link", "label": "Link 2" },
     { "type": "header", "content": "Inschrijving" },
     { "type": "text", "id": "tag", "label": "Klant-tag", "default": "early-access" },
-    { "type": "text", "id": "success", "label": "Bedankt-tekst", "default": "Top, je staat op de lijst! We laten het je als eerste weten." },
+    { "type": "text", "id": "success", "label": "Bedankt-tekst", "default": "Je staat op de lijst. We mailen je zodra de tassen online staan." },
     { "type": "header", "content": "Achtergrondfoto (optioneel)" },
     { "type": "image_picker", "id": "image", "label": "Foto" },
     { "type": "text", "id": "image_filename", "label": "Bestandsnaam (SEO)" },
     { "type": "text", "id": "image_alt", "label": "Alt-tekst", "default": "Golven bij een afgelegen surfspot" }
   ],
-  "presets": [ { "name": "Surf – call-to-action" } ]
+  "presets": [ { "name": "Surf: call-to-action" } ]
 }
 {% endschema %}

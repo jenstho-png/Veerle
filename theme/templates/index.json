@@ -9,13 +9,13 @@
         "usp-1": {
           "type": "usp",
           "settings": {
-            "text": "Voor beginners- én avonturiersboards"
+            "text": "Voor softtops én hardboards"
           }
         },
         "usp-2": {
           "type": "usp",
           "settings": {
-            "text": "Past in je reisbagage"
+            "text": "Gaat mee in je reisbagage"
           }
         }
       },
@@ -24,102 +24,142 @@
         "usp-2"
       ]
     },
-    "usp": {
-      "type": "surf-marquee",
-      "settings": {},
+    "woorden": {
+      "type": "mk-woorden",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "tekst": "Niet iedereen kan uit bed rollen en het water in rennen met een surfplank onder de arm. Voor alle anderen maakten we deze tas."
+      }
+    },
+    "chaos": {
+      "type": "mk-chaos",
+      "settings": {
+        "color_scheme": "scheme-2",
+        "kop_voor": "Herken je dit <em>gesjouw</em>?",
+        "sub_voor": "Zo ging het bij ons op elke surfreis.",
+        "kop_na": "Alles op je <em>rug</em>.",
+        "sub_na": "Je board zit vast, het gewicht valt op je schouders en je hebt je handen vrij."
+      },
       "blocks": {
-        "item-1": {
-          "type": "item",
+        "bericht-1": {
+          "type": "bericht",
           "settings": {
-            "text": "Handen vrij"
+            "tekst": "Nog twee kilometer naar de spot en mijn schouders zijn nu al op",
+            "van": "Hike · Australië",
+            "icoon": "chat",
+            "x": -30,
+            "y": -16,
+            "r": -5
           }
         },
-        "item-2": {
-          "type": "item",
+        "bericht-2": {
+          "type": "bericht",
           "settings": {
-            "text": "Bestand tegen nat en zand"
+            "tekst": "Die wax schuurt mijn arm helemaal open",
+            "van": "Onderweg",
+            "icoon": "chat",
+            "x": 29,
+            "y": -19,
+            "r": 4
           }
         },
-        "item-3": {
-          "type": "item",
+        "bericht-3": {
+          "type": "bericht",
           "settings": {
-            "text": "Past in je reisbagage"
+            "tekst": "Met één hand sturen, board onder de andere arm",
+            "van": "Scooter · Azië",
+            "icoon": "telefoon",
+            "x": -33,
+            "y": 8,
+            "r": 3
           }
         },
-        "item-4": {
-          "type": "item",
+        "bericht-4": {
+          "type": "bericht",
           "settings": {
-            "text": "Fiets & scooter-proof"
+            "tekst": "Spanband geknapt. Alweer.",
+            "van": "Midden-Amerika",
+            "icoon": "pakket",
+            "x": 31,
+            "y": 6,
+            "r": -4
+          }
+        },
+        "bericht-5": {
+          "type": "bericht",
+          "settings": {
+            "tekst": "Natte, zanderige plank weer in die strakke boardbag proppen",
+            "van": "Na de sessie",
+            "icoon": "beeld",
+            "x": -24,
+            "y": 29,
+            "r": -3
+          }
+        },
+        "bericht-6": {
+          "type": "bericht",
+          "settings": {
+            "tekst": "Huurboard opgehaald, nu nog naar het strand zien te komen",
+            "van": "Hostel · 06:30",
+            "icoon": "chat",
+            "x": 26,
+            "y": 30,
+            "r": 5
           }
         }
       },
       "block_order": [
-        "item-1",
-        "item-2",
-        "item-3",
-        "item-4"
+        "bericht-1",
+        "bericht-2",
+        "bericht-3",
+        "bericht-4",
+        "bericht-5",
+        "bericht-6"
       ]
     },
     "story": {
       "type": "surf-story",
       "settings": {
-        "btn_link": "shopify://pages/over-ons"
-      },
-      "blocks": {
-        "fact-1": {
-          "type": "fact",
-          "settings": {
-            "value": "4",
-            "label": "continenten op de proef"
-          }
-        },
-        "fact-2": {
-          "type": "fact",
-          "settings": {
-            "value": "0",
-            "label": "schuurplekken onder je arm"
-          }
-        }
-      },
-      "block_order": [
-        "fact-1",
-        "fact-2"
-      ]
+        "btn_link": "shopify://pages/over-ons",
+        "color_scheme": "scheme-1"
+      }
     },
     "features": {
       "type": "surf-features",
-      "settings": {},
+      "settings": {
+        "color_scheme": "scheme-2"
+      },
       "blocks": {
         "feature-1": {
           "type": "feature",
           "settings": {
             "icon": "backpack",
-            "title": "Draagt als een rugzak",
-            "text": "Ergonomische banden verdelen het gewicht over je rug. Lange hikes zonder pijnlijke schouders."
+            "title": "Draagt prettig op lange tochten",
+            "text": "Ergonomische banden verdelen het gewicht. Zo heb je na een lange hike nog steeds zin om het water in te gaan."
           }
         },
         "feature-2": {
           "type": "feature",
           "settings": {
             "icon": "shield",
-            "title": "Zwaar weer-bestendig",
-            "text": "Robuuste stof en dubbele stiksels die tegen nat, zand, zout en een flinke stoot kunnen."
+            "title": "Kan tegen een stootje",
+            "text": "Zware, sterke stof en stevige stiksels. Gemaakt voor nat, zand, zout en ruig gebruik."
           }
         },
         "feature-3": {
           "type": "feature",
           "settings": {
-            "icon": "bike",
-            "title": "Handen vrij op de weg",
-            "text": "Board op je rug, handen aan het stuur. Op de fiets of scooter naar de spot, zonder gegoochel."
+            "icon": "plane",
+            "title": "Gaat mee in het vliegtuig",
+            "text": "De tas past in je bagage. Huur je op je bestemming een board, dan draag je dat gewoon in je eigen tas."
           }
         },
         "feature-4": {
           "type": "feature",
           "settings": {
-            "icon": "plane",
-            "title": "Reist met je mee",
-            "text": "Opgevouwen klein genoeg voor je bagage. Huur je ter plekke een board? Je tas is er al."
+            "icon": "board",
+            "title": "Voor beginners en avonturiers",
+            "text": "Past om de grote, vollere boards van beginners en om hardboards in verschillende maten."
           }
         }
       },
@@ -132,30 +172,32 @@
     },
     "product": {
       "type": "surf-product",
-      "settings": {},
+      "settings": {
+        "color_scheme": "scheme-1"
+      },
       "blocks": {
         "check-1": {
           "type": "check",
           "settings": {
-            "text": "Universele maat voor softtops én hardboards"
+            "text": "Universele maat voor beginnersboards en hardboards"
           }
         },
         "check-2": {
           "type": "check",
           "settings": {
-            "text": "Ergonomische, verstelbare draagbanden"
+            "text": "Verstelbare draagbanden, je handen blijven vrij"
           }
         },
         "check-3": {
           "type": "check",
           "settings": {
-            "text": "Zware, waterbestendige stof met sterke stiksels"
+            "text": "Sterke stof die tegen nat en zand kan"
           }
         },
         "check-4": {
           "type": "check",
           "settings": {
-            "text": "Opvouwbaar: neem hem mee op elke vliegreis"
+            "text": "Past in je reisbagage"
           }
         }
       },
@@ -166,7 +208,7 @@
         "check-4"
       ]
     },
-    "steps": {
+    "voorwie": {
       "type": "surf-steps",
       "settings": {
         "color_scheme": "scheme-2"
@@ -175,22 +217,22 @@
         "step-1": {
           "type": "step",
           "settings": {
-            "title": "Board erin",
-            "text": "Schuif je board in de tas en zet hem vast. Nat, zanderig, gewaxt: maakt niet uit."
+            "title": "De beginner",
+            "text": "Je hebt een groot, onhandig board en loopt of fietst vanaf je hotel of hostel naar het strand. De tas draagt het board, jij hoeft alleen nog te lopen."
           }
         },
         "step-2": {
           "type": "step",
           "settings": {
-            "title": "Banden om",
-            "text": "Stel de draagbanden in op jouw lengte. Het gewicht valt op je rug, niet op je arm."
+            "title": "De avonturier",
+            "text": "Je staat vroeg op en trekt door de bush of over rotsen naar een afgelegen spot. Met je handen vrij klim en loop je een stuk makkelijker."
           }
         },
         "step-3": {
           "type": "step",
           "settings": {
-            "title": "Op pad",
-            "text": "Door de duinen, over de rotsen of op de fiets. Handen vrij tot je in het water staat."
+            "title": "De reiziger",
+            "text": "Op roadtrip door Europa of met het vliegtuig naar de andere kant van de wereld. De tas gaat mee in je bagage."
           }
         }
       },
@@ -200,13 +242,11 @@
         "step-3"
       ]
     },
-    "statement": {
-      "type": "surf-statement",
-      "settings": {}
-    },
     "gallery": {
       "type": "surf-gallery",
-      "settings": {},
+      "settings": {
+        "color_scheme": "scheme-1"
+      },
       "blocks": {
         "photo-1": {
           "type": "photo",
@@ -236,7 +276,7 @@
         "photo-4": {
           "type": "photo",
           "settings": {
-            "image_filename": "surfspot-costa-rica-strand.jpg",
+            "image_filename": "surfspot-midden-amerika-strand.jpg",
             "alt": "Leeg strand met golven in Midden-Amerika",
             "caption": "Midden-Amerika",
             "tall": true
@@ -255,7 +295,7 @@
           "settings": {
             "image_filename": "zonsondergang-surfsessie.jpg",
             "alt": "Surfer bij zonsondergang",
-            "caption": "Golden hour"
+            "caption": "Zonsondergang"
           }
         }
       },
@@ -268,45 +308,65 @@
         "photo-6"
       ]
     },
+    "instagram": {
+      "type": "mk-vlak",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "vlak_kleur": "#1D5A78",
+        "label": "Volg de reis",
+        "kop": "Onderweg met de <em>tas</em>",
+        "tekst": "<p>Op Instagram delen we de spots waar we komen, de tas in actie en wat er nieuw bijkomt.</p>",
+        "knop": "Volg ons op Instagram",
+        "toestel": "telefoon"
+      }
+    },
     "faq": {
       "type": "surf-faq",
       "settings": {
-        "btn_link": "shopify://pages/contact"
+        "btn_link": "shopify://pages/contact",
+        "color_scheme": "scheme-2"
       },
       "blocks": {
         "qa-1": {
           "type": "qa",
           "settings": {
             "question": "Welke surfboards passen in de tas?",
-            "answer": "<p>Ons kernmodel heeft een universele maat: hij past om de grotere, vollere softtops van beginners én om de meeste hardboards van gevorderde surfers.</p>"
+            "answer": "<p>We beginnen met één kernmodel in een universele maat. Die past om de grote, vollere boards waar veel beginners op surfen en om hardboards in verschillende maten. Later komen er meer varianten bij.</p>"
           }
         },
         "qa-2": {
           "type": "qa",
           "settings": {
             "question": "Kan ik de tas meenemen in het vliegtuig?",
-            "answer": "<p>Ja. De tas vouw je klein op, zodat hij gewoon in je bagage past. Huur je op je bestemming een board, dan neem je die met jouw tas mee naar de spot.</p>"
+            "answer": "<p>Ja. De tas past in je bagage. Huur je op je bestemming een board, dan neem je dat in je eigen tas mee naar de spot.</p>"
           }
         },
         "qa-3": {
           "type": "qa",
           "settings": {
             "question": "Kan ik ermee fietsen of op de scooter?",
-            "answer": "<p>Daar is hij juist voor gemaakt. Het board hangt op je rug, zodat je beide handen vrij hebt voor je stuur.</p>"
+            "answer": "<p>Daar is hij juist voor bedacht. Je board zit op je rug, dus je hebt allebei je handen vrij voor het stuur.</p>"
           }
         },
         "qa-4": {
           "type": "qa",
           "settings": {
-            "question": "Mag mijn board nat en zanderig de tas in?",
-            "answer": "<p>Ja. De stof kan tegen water, zout en zand. Spoel de tas af en toe na met zoet water en laat hem goed drogen.</p>"
+            "question": "Wat is het verschil met een boardbag?",
+            "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Daar moet je je natte, zanderige board na elke sessie weer in proppen. Onze tas is gemaakt om je board te dragen: naar de spot en weer terug.</p>"
           }
         },
         "qa-5": {
           "type": "qa",
           "settings": {
-            "question": "Wat is het verschil met een boardbag?",
-            "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Onze tas is gemaakt om je board te dragen: open, licht en met ergonomische banden voor lange tochten naar de spot.</p>"
+            "question": "Zitten er lussen of karabijnhaken aan?",
+            "answer": "<p>Het eerste model houden we bewust simpel. Lussen en karabijnhaken om extra spullen aan de tas te hangen komen op een later model. Stevige karabijnhaken komen ook los in de shop.</p>"
+          }
+        },
+        "qa-6": {
+          "type": "qa",
+          "settings": {
+            "question": "Verkopen jullie ook andere spullen?",
+            "answer": "<p>Naast de tas komen er waxblokjes en karabijnhaken. In een later stadium volgen t-shirts.</p>"
           }
         }
       },
@@ -315,25 +375,28 @@
         "qa-2",
         "qa-3",
         "qa-4",
-        "qa-5"
+        "qa-5",
+        "qa-6"
       ]
     },
     "cta": {
       "type": "surf-cta",
       "settings": {
-        "btn2_link": "shopify://pages/veelgestelde-vragen"
+        "btn2_link": "shopify://pages/veelgestelde-vragen",
+        "color_scheme": "scheme-1"
       }
     }
   },
   "order": [
     "hero",
-    "usp",
+    "woorden",
+    "chaos",
     "story",
     "features",
     "product",
-    "steps",
-    "statement",
+    "voorwie",
     "gallery",
+    "instagram",
     "faq",
     "cta"
   ]

@@ -1,14 +1,16 @@
 # Surfboard draagtas: premium Shopify-thema
 
 Custom Shopify-site voor een nieuw surfmerk (werknaam **Tide-Tode**). Het merk maakt een draagtas voor je surfboard: handen vrij op weg naar de golf.
-Gebouwd volgens de CREAJT-aanpak (`docs/shopify-premium-opbouw-sjabloon.md`): een Dawn-fork (v16) met eigen `surf-*`-secties, een centraal kleurensysteem, placeholder-foto's op vaste bestandsnamen, volledige SEO/GEO en responsive tot 4K.
+Gebouwd volgens de CREAJT-aanpak (`docs/shopify-premium-opbouw-sjabloon.md`) en de **merkstijl** (`docs/merkstijl/`, klassen `mk-`): een Dawn-fork (v16) met eigen `surf-*`-secties, een centraal kleurensysteem, placeholder-foto's op vaste bestandsnamen, volledige SEO/GEO en responsive tot 4K.
 
 ## Mappen
 ```
 theme/            Shopify-thema (Dawn 16 + surf-laag)
-  assets/surf.css   huisstijl: tokens, fonts, alle surf-secties
-  assets/surf.js    header, mobiel menu, scroll-reveal, lead-popup
-  sections/surf-*   header, hero, USP-band, verhaal, voordelen, product, stappen,
+  assets/mk-stijl.* merkstijl: letterschaal, ruimte, hoeken, schaduwen, papier/korrel, scroll-beweging
+  assets/surf.css   zee-kleuren, fonts en de surf-secties, gebouwd op de mk-tokens
+  assets/surf.js    header, mobiel menu, lead-popup
+  sections/mk-*     merkstijl-secties: intro, oplichtende zin, donker vlak, berichtjes-chaos
+  sections/surf-*   header, hero, verhaal, voordelen, product, stappen/voor wie,
                     statement, fotogalerij, reviews, FAQ, call-to-action, paginakop, footer
   snippets/surf-*   headline (*accentwoord*), image (placeholder), icon, seo (JSON-LD),
                     meta-description, lead-popup
@@ -19,8 +21,8 @@ tools/preview/    ruwe lokale preview + screenshots (liquidjs), los van Shopify
 ## Pagina's (templates)
 | Template | Admin-handle | Secties |
 |---|---|---|
-| `index.json` | (home) | hero · USP-band · verhaal · voordelen · product · stappen · statement · galerij · FAQ · CTA |
-| `page.over-ons.json` | `over-ons` | paginakop · 2× verhaal · statement · galerij · CTA |
+| `index.json` | (home) | hero · oplichtende zin · berichtjes-chaos · verhaal · voordelen · product · voor wie · galerij · Instagram-vlak · FAQ · CTA |
+| `page.over-ons.json` | `over-ons` | paginakop · verhaal · oplichtende zin · verhaal · statement · wat er nog komt · galerij · wachtlijst |
 | `page.veelgestelde-vragen.json` | `veelgestelde-vragen` | FAQ (h1 + FAQPage-schema) · CTA |
 | `page.contact.json` | `contact` | paginakop · Dawn-contactformulier |
 | `product.json` | – | Dawn main-product (incl. Product-schema) · voordelen · FAQ · gerelateerd |
@@ -36,10 +38,13 @@ Volg de veiligheidsregels uit het sjabloon (hoofdstuk 2): nooit direct live push
 
 **In Shopify-admin:**
 1. Pagina's `Over ons` (handle `over-ons`, sjabloon *over-ons*), `Veelgestelde vragen` (`veelgestelde-vragen`) en `Contact` aanmaken.
-2. Product aanmaken en koppelen in de homepage-sectie **Surf – product**.
-3. Thema-instellingen → **Surf – merk & SEO** (e-mail, plaats, oprichtingsdatum) en **Sociale media** invullen.
+2. Product aanmaken en koppelen in de homepage-sectie **Surf: product**.
+3. Thema-instellingen → **Surf: merk & SEO** (e-mail, plaats, oprichtingsdatum) en **Sociale media** invullen.
 4. Shopify Flow/Email: welkomstmail op klant-tag `early-access` (lead-popup).
 5. Foto's uploaden volgens `docs/foto-lijst.md`.
+
+## Teksten
+Alle teksten komen uit Veerles intake (`docs/briefing.md`) en volgen de schrijfregels van de merkstijl (`docs/merkstijl/MERKSTIJL.md`): je-vorm, geen gedachtestreepjes, geen holle woorden, hooguit één retorische vraag en één handschrift-woord per pagina, en geen verzonnen cijfers of reviews. Pas teksten aan in de theme-editor en toets ze aan die regels.
 
 ## Lokale preview (zonder store)
 ```bash

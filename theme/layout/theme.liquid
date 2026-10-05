@@ -280,9 +280,8 @@
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'surf.css' | asset_url | stylesheet_tag }}
-    {{ 'archivo-latin-800-normal.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+    {{ 'archivo-latin-900-normal.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
     {{ 'inter-latin-400-normal.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
-    <script>document.documentElement.classList.add('surf-js');</script>
     <script src="{{ 'surf.js' | asset_url }}" defer="defer"></script>
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
 
@@ -313,6 +312,8 @@
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
+    {% render 'mk-stijl', papier: true, leesbalk: true %}
+    <noscript><style>.mk-in { opacity: 1; }</style></noscript>
   </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">

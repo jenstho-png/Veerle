@@ -1,12 +1,13 @@
 <section class="surf surf-steps color-{{ section.settings.color_scheme }}" id="steps-{{ section.id }}">
   <div class="surf__inner">
-    <div class="surf-head surf-reveal">
+    <div class="surf-head mk-in">
       {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
       {%- render 'surf-headline', text: section.settings.heading, tag: 'h2' -%}
     </div>
     <ol class="surf-steps__list">
       {%- for block in section.blocks -%}
-        <li class="surf-step surf-reveal" {{ block.shopify_attributes }}>
+        {%- assign na = forloop.index0 | modulo: 4 -%}
+        <li class="surf-step mk-in{% if na > 0 %} mk-na-{{ na }}{% endif %}" {{ block.shopify_attributes }}>
           <h3>{{ block.settings.title }}</h3>
           <p>{{ block.settings.text }}</p>
         </li>
@@ -17,31 +18,73 @@
 
 {% schema %}
 {
-  "name": "Surf – stappen",
+  "name": "Surf: stappen",
   "tag": "div",
   "max_blocks": 6,
   "settings": [
-    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-1" },
-    { "type": "text", "id": "eyebrow", "label": "Bovenregel", "default": "Zo werkt het" },
-    { "type": "text", "id": "heading", "label": "Kop", "default": "In drie stappen *op pad*" }
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Kleurenschema",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Bovenregel",
+      "default": "Voor wie"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "default": "Voor iedereen die niet naast het strand *woont*"
+    }
   ],
   "blocks": [
     {
       "type": "step",
       "name": "Stap",
       "settings": [
-        { "type": "text", "id": "title", "label": "Titel", "default": "Stap" },
-        { "type": "textarea", "id": "text", "label": "Tekst" }
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "Stap"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Tekst"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Surf – stappen",
+      "name": "Surf: stappen",
       "blocks": [
-        { "type": "step", "settings": { "title": "Board erin", "text": "Schuif je board in de tas en zet hem vast. Nat, zanderig, gewaxt: maakt niet uit." } },
-        { "type": "step", "settings": { "title": "Banden om", "text": "Stel de draagbanden in op jouw lengte. Het gewicht valt op je rug, niet op je arm." } },
-        { "type": "step", "settings": { "title": "Op pad", "text": "Door de duinen, over de rotsen of op de fiets. Handen vrij tot je in het water staat." } }
+        {
+          "type": "step",
+          "settings": {
+            "title": "De beginner",
+            "text": "Je hebt een groot, onhandig board en loopt of fietst vanaf je hotel of hostel naar het strand. De tas draagt het board, jij hoeft alleen nog te lopen."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "De avonturier",
+            "text": "Je staat vroeg op en trekt door de bush of over rotsen naar een afgelegen spot. Met je handen vrij klim en loop je een stuk makkelijker."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "De reiziger",
+            "text": "Op roadtrip door Europa of met het vliegtuig naar de andere kant van de wereld. De tas gaat mee in je bagage."
+          }
+        }
       ]
     }
   ]

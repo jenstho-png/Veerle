@@ -1,13 +1,14 @@
 <section class="surf surf-gallery color-{{ section.settings.color_scheme }}" id="gallery-{{ section.id }}">
   <div class="surf__inner">
-    <div class="surf-head surf-reveal">
+    <div class="surf-head mk-in">
       {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
       {%- render 'surf-headline', text: section.settings.heading, tag: 'h2' -%}
       {%- if section.settings.text != blank -%}<p class="surf-lead">{{ section.settings.text }}</p>{%- endif -%}
     </div>
     <div class="surf-gallery__grid">
       {%- for block in section.blocks -%}
-        <figure class="surf-media surf-gallery__item{% if block.settings.tall %} surf-gallery__item--tall{% endif %} surf-reveal" {{ block.shopify_attributes }}>
+        {%- assign na = forloop.index0 | modulo: 4 -%}
+        <figure class="surf-media surf-gallery__item{% if block.settings.tall %} surf-gallery__item--tall{% endif %} mk-in{% if na > 0 %} mk-na-{{ na }}{% endif %}" {{ block.shopify_attributes }}>
           {%- render 'surf-image',
             image: block.settings.image,
             filename: block.settings.image_filename,
@@ -31,40 +32,136 @@
 
 {% schema %}
 {
-  "name": "Surf – fotogalerij",
+  "name": "Surf: fotogalerij",
   "tag": "div",
   "max_blocks": 12,
   "settings": [
-    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-1" },
-    { "type": "text", "id": "eyebrow", "label": "Bovenregel", "default": "Onderweg" },
-    { "type": "text", "id": "heading", "label": "Kop", "default": "Van verstopte spot tot *diep blauw*" },
-    { "type": "textarea", "id": "text", "label": "Tekst", "default": "Surfen, duiken, reizen: de zee is ons speelveld. Een greep uit de plekken waar de tas al is geweest." },
-    { "type": "text", "id": "btn_label", "label": "Knop", "default": "Volg ons op Instagram" },
-    { "type": "url", "id": "btn_link", "label": "Knop-link", "info": "Leeg = Instagram-link uit de thema-instellingen" }
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Kleurenschema",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Bovenregel",
+      "default": "Onderweg"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "default": "Van verstopte spot tot diep *blauw*"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Tekst",
+      "default": "Surfen, windsurfen, duiken: de zee is waar we het liefst zijn. Een paar plekken waar we onderweg waren."
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Knop",
+      "default": ""
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Knop-link",
+      "info": "Leeg = Instagram-link uit de thema-instellingen"
+    }
   ],
   "blocks": [
     {
       "type": "photo",
       "name": "Foto",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Foto" },
-        { "type": "text", "id": "image_filename", "label": "Bestandsnaam (SEO)", "default": "surfreis-foto.jpg" },
-        { "type": "text", "id": "alt", "label": "Alt-tekst" },
-        { "type": "text", "id": "caption", "label": "Locatie-label" },
-        { "type": "checkbox", "id": "tall", "label": "Hoge foto", "default": false }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto"
+        },
+        {
+          "type": "text",
+          "id": "image_filename",
+          "label": "Bestandsnaam (SEO)",
+          "default": "surfreis-foto.jpg"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt-tekst"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Locatie-label"
+        },
+        {
+          "type": "checkbox",
+          "id": "tall",
+          "label": "Hoge foto",
+          "default": false
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Surf – fotogalerij",
+      "name": "Surf: fotogalerij",
       "blocks": [
-        { "type": "photo", "settings": { "image_filename": "surfspot-australie-hike.jpg", "alt": "Hike naar een surfspot in Australië", "caption": "Australië", "tall": true } },
-        { "type": "photo", "settings": { "image_filename": "surfboard-scooter-azie.jpg", "alt": "Met surfboard op de scooter in Azië", "caption": "Azië" } },
-        { "type": "photo", "settings": { "image_filename": "duiken-onderwater-blauw.jpg", "alt": "Duiken in helder blauw water", "caption": "Onder water" } },
-        { "type": "photo", "settings": { "image_filename": "surfspot-costa-rica-strand.jpg", "alt": "Leeg strand met golven in Midden-Amerika", "caption": "Midden-Amerika", "tall": true } },
-        { "type": "photo", "settings": { "image_filename": "surfboard-draagtas-duinen.jpg", "alt": "Surfboard draagtas op de rug in de duinen", "caption": "Duinen" } },
-        { "type": "photo", "settings": { "image_filename": "zonsondergang-surfsessie.jpg", "alt": "Surfer bij zonsondergang", "caption": "Golden hour" } }
+        {
+          "type": "photo",
+          "settings": {
+            "image_filename": "surfspot-australie-hike.jpg",
+            "alt": "Hike naar een surfspot in Australië",
+            "caption": "Australië",
+            "tall": true
+          }
+        },
+        {
+          "type": "photo",
+          "settings": {
+            "image_filename": "surfboard-scooter-azie.jpg",
+            "alt": "Met surfboard op de scooter in Azië",
+            "caption": "Azië"
+          }
+        },
+        {
+          "type": "photo",
+          "settings": {
+            "image_filename": "duiken-onderwater-blauw.jpg",
+            "alt": "Duiken in helder blauw water",
+            "caption": "Onder water"
+          }
+        },
+        {
+          "type": "photo",
+          "settings": {
+            "image_filename": "surfspot-midden-amerika-strand.jpg",
+            "alt": "Leeg strand met golven in Midden-Amerika",
+            "caption": "Midden-Amerika",
+            "tall": true
+          }
+        },
+        {
+          "type": "photo",
+          "settings": {
+            "image_filename": "surfboard-draagtas-duinen.jpg",
+            "alt": "Surfboard draagtas op de rug in de duinen",
+            "caption": "Duinen"
+          }
+        },
+        {
+          "type": "photo",
+          "settings": {
+            "image_filename": "zonsondergang-surfsessie.jpg",
+            "alt": "Surfer bij zonsondergang",
+            "caption": "Zonsondergang"
+          }
+        }
       ]
     }
   ]

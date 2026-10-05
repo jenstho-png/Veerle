@@ -12,15 +12,15 @@
     when 'page'
       case page.handle
         when 'over-ons'
-          assign desc = 'Het verhaal achter ' | append: shop.name | append: ': geboren uit frustratie op lange hikes naar verborgen surfspots. Een draagtas voor je surfboard die je handen vrijhoudt.'
+          assign desc = 'Het verhaal achter ' | append: shop.name | append: '. Veerle sjouwde zich op surfreizen een ongeluk met een log board en maakte daarom zelf een draagtas die je handen vrijhoudt.'
         when 'veelgestelde-vragen'
-          assign desc = 'Antwoorden over de surfboard draagtas van ' | append: shop.name | append: ': welke boards passen, meenemen in het vliegtuig, op de fiets of scooter, verzending en retour.'
+          assign desc = 'Antwoorden over de surfboard draagtas van ' | append: shop.name | append: ': welke boards passen, meenemen in het vliegtuig, op de fiets of scooter en wat er nog komt.'
         when 'contact'
           assign desc = 'Vraag over je surfboard draagtas of een bestelling? Neem contact op met ' | append: shop.name | append: '. We reageren meestal binnen één werkdag.'
       endcase
     when 'collection'
       if collection.description == blank
-        assign desc = 'Shop surfboard draagtassen, waxblokjes en karabijnhaken van ' | append: shop.name | append: '. Sterk, waterbestendig en gemaakt om mee op pad te gaan.'
+        assign desc = 'Draagtassen voor je surfboard, waxblokjes en karabijnhaken van ' | append: shop.name | append: '. Sterk, gemaakt voor nat en zand en om mee op pad te gaan.'
       endif
   endcase
 -%}

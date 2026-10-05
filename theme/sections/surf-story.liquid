@@ -1,7 +1,7 @@
 <section class="surf surf-story{% if section.settings.reverse %} surf-story--reverse{% endif %} color-{{ section.settings.color_scheme }}" id="story-{{ section.id }}">
   <div class="surf__inner">
     <div class="surf-story__grid">
-      <div class="surf-media surf-story__media surf-reveal">
+      <div class="surf-media surf-story__media mk-in mk-in--links">
         {%- render 'surf-image',
           image: section.settings.image,
           filename: section.settings.image_filename,
@@ -9,14 +9,14 @@
           sizes: '(min-width: 990px) 50vw, 100vw'
         -%}
       </div>
-      <div class="surf-story__body surf-reveal">
+      <div class="surf-story__body mk-in mk-na-1">
         {%- if section.settings.eyebrow != blank -%}
           <p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>
         {%- endif -%}
         {%- render 'surf-headline', text: section.settings.heading, tag: section.settings.heading_tag -%}
         <div class="rte surf-lead">{{ section.settings.text }}</div>
         {%- if section.settings.signature != blank -%}
-          <p class="surf-story__sign">{{ section.settings.signature }}</p>
+          <p class="surf-story__sign"><span class="mk-handschrift">{{ section.settings.signature }}</span>{% if section.settings.signature_sub != blank %}<small>{{ section.settings.signature_sub }}</small>{% endif %}</p>
         {%- endif -%}
         {%- if section.blocks.size > 0 -%}
           <div class="surf-story__facts">
@@ -43,41 +43,125 @@
 
 {% schema %}
 {
-  "name": "Surf – verhaal",
+  "name": "Surf: verhaal",
   "tag": "div",
   "max_blocks": 4,
   "settings": [
-    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-2" },
-    { "type": "checkbox", "id": "reverse", "label": "Foto rechts", "default": false },
-    { "type": "text", "id": "eyebrow", "label": "Bovenregel", "default": "Waarom deze tas" },
-    { "type": "text", "id": "heading", "label": "Kop", "default": "Bedacht op de *lange weg* naar de spot" },
-    { "type": "select", "id": "heading_tag", "label": "Kop-niveau (SEO)", "default": "h2", "options": [ { "value": "h1", "label": "H1" }, { "value": "h2", "label": "H2" } ] },
-    { "type": "richtext", "id": "text", "label": "Tekst", "default": "<p>Op reis door Australië, Midden- en Zuid-Amerika en Azië sjouwden we ons een ongeluk met logge boards die nergens lekker vast te houden zijn. Losse touwtjes, spanbanden, standaardhoezen: niets hield het vol, en onze schouders ook niet.</p><p>Na weer zo'n hike naar een verstopte spot, met schuurplekken van de wax onder onze arm, wisten we het: dit kan comfortabeler, slimmer en duurzamer. Dus maakten we de tas zelf.</p>" },
-    { "type": "text", "id": "signature", "label": "Ondertekening", "default": "— van surfers, voor surfers" },
-    { "type": "text", "id": "btn_label", "label": "Knop", "default": "Lees ons verhaal" },
-    { "type": "url", "id": "btn_link", "label": "Knop-link" },
-    { "type": "header", "content": "Foto" },
-    { "type": "image_picker", "id": "image", "label": "Foto" },
-    { "type": "text", "id": "image_filename", "label": "Bestandsnaam (SEO)", "default": "oprichters-surfreis-board-onder-de-arm.jpg" },
-    { "type": "text", "id": "image_alt", "label": "Alt-tekst", "default": "De oprichters op surfreis met hun surfboard" }
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Kleurenschema",
+      "default": "scheme-2"
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Foto rechts",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Bovenregel",
+      "default": "Hoe het begon"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "default": "Bedacht op de lange weg naar de *spot*"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Kop-niveau (SEO)",
+      "default": "h2",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Tekst",
+      "default": "<p>Tijdens mijn reizen door Australië, Midden- en Zuid-Amerika en Azië liep ik me vaak te frustreren. Op hikes naar afgelegen surfspots sjouwde ik me een ongeluk met een log board dat nergens lekker vast te houden is. En met een board onder je arm op de scooter of fiets naar het strand rijden is ook geen pretje.</p><p>Na een flinke hike naar een verstopte spot, met pijn in mijn schouders en schuurplekken van de wax onder mijn arm, dacht ik: dit moet en kan stukken comfortabeler, slimmer en duurzamer. Een tas waarmee je je handen vrij hebt en het gewicht makkelijk draagt.</p>"
+    },
+    {
+      "type": "text",
+      "id": "signature",
+      "label": "Ondertekening (handschrift)",
+      "info": "Hooguit één handschrift-woord per pagina",
+      "default": "Veerle"
+    },
+    {
+      "type": "text",
+      "id": "signature_sub",
+      "label": "Onder de ondertekening",
+      "default": "Oprichter"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Knop",
+      "default": "Lees het hele verhaal"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Knop-link"
+    },
+    {
+      "type": "header",
+      "content": "Foto"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Foto"
+    },
+    {
+      "type": "text",
+      "id": "image_filename",
+      "label": "Bestandsnaam (SEO)",
+      "default": "oprichters-surfreis-board-onder-de-arm.jpg"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Alt-tekst",
+      "default": "De oprichters op surfreis met hun surfboard"
+    }
   ],
   "blocks": [
     {
       "type": "fact",
       "name": "Feitje",
       "settings": [
-        { "type": "text", "id": "value", "label": "Waarde", "default": "4" },
-        { "type": "text", "id": "label", "label": "Omschrijving", "default": "continenten getest" }
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Waarde",
+          "default": "4"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Omschrijving",
+          "default": "continenten getest"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Surf – verhaal",
-      "blocks": [
-        { "type": "fact", "settings": { "value": "4", "label": "continenten op de proef" } },
-        { "type": "fact", "settings": { "value": "0", "label": "schuurplekken onder je arm" } }
-      ]
+      "name": "Surf: verhaal"
     }
   ]
 }

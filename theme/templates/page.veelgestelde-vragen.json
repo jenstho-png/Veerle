@@ -4,8 +4,8 @@
       "type": "surf-faq",
       "settings": {
         "heading_tag": "h1",
-        "heading": "Veelgestelde *vragen*",
-        "eyebrow": "Hulp & info",
+        "heading": "Veelgestelde vragen",
+        "eyebrow": "Hulp en info",
         "btn_link": "shopify://pages/contact"
       },
       "blocks": {
@@ -13,35 +13,42 @@
           "type": "qa",
           "settings": {
             "question": "Welke surfboards passen in de tas?",
-            "answer": "<p>Ons kernmodel heeft een universele maat: hij past om de grotere, vollere softtops van beginners én om de meeste hardboards van gevorderde surfers.</p>"
+            "answer": "<p>We beginnen met één kernmodel in een universele maat. Die past om de grote, vollere boards waar veel beginners op surfen en om hardboards in verschillende maten. Later komen er meer varianten bij.</p>"
           }
         },
         "qa-2": {
           "type": "qa",
           "settings": {
             "question": "Kan ik de tas meenemen in het vliegtuig?",
-            "answer": "<p>Ja. De tas vouw je klein op, zodat hij gewoon in je bagage past. Huur je op je bestemming een board, dan neem je die met jouw tas mee naar de spot.</p>"
+            "answer": "<p>Ja. De tas past in je bagage. Huur je op je bestemming een board, dan neem je dat in je eigen tas mee naar de spot.</p>"
           }
         },
         "qa-3": {
           "type": "qa",
           "settings": {
             "question": "Kan ik ermee fietsen of op de scooter?",
-            "answer": "<p>Daar is hij juist voor gemaakt. Het board hangt op je rug, zodat je beide handen vrij hebt voor je stuur.</p>"
+            "answer": "<p>Daar is hij juist voor bedacht. Je board zit op je rug, dus je hebt allebei je handen vrij voor het stuur.</p>"
           }
         },
         "qa-4": {
           "type": "qa",
           "settings": {
-            "question": "Mag mijn board nat en zanderig de tas in?",
-            "answer": "<p>Ja. De stof kan tegen water, zout en zand. Spoel de tas af en toe na met zoet water en laat hem goed drogen.</p>"
+            "question": "Wat is het verschil met een boardbag?",
+            "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Daar moet je je natte, zanderige board na elke sessie weer in proppen. Onze tas is gemaakt om je board te dragen: naar de spot en weer terug.</p>"
           }
         },
         "qa-5": {
           "type": "qa",
           "settings": {
-            "question": "Wat is het verschil met een boardbag?",
-            "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Onze tas is gemaakt om je board te dragen: open, licht en met ergonomische banden voor lange tochten naar de spot.</p>"
+            "question": "Zitten er lussen of karabijnhaken aan?",
+            "answer": "<p>Het eerste model houden we bewust simpel. Lussen en karabijnhaken om extra spullen aan de tas te hangen komen op een later model. Stevige karabijnhaken komen ook los in de shop.</p>"
+          }
+        },
+        "qa-6": {
+          "type": "qa",
+          "settings": {
+            "question": "Verkopen jullie ook andere spullen?",
+            "answer": "<p>Naast de tas komen er waxblokjes en karabijnhaken. In een later stadium volgen t-shirts.</p>"
           }
         }
       },
@@ -50,7 +57,8 @@
         "qa-2",
         "qa-3",
         "qa-4",
-        "qa-5"
+        "qa-5",
+        "qa-6"
       ]
     },
     "cta": {

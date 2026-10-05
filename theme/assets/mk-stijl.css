@@ -1,0 +1,265 @@
+/* ============================================================
+   MERKSTIJL · basisstijl voor een Shopify-thema
+   Structuur, ritme, textuur en beweging. Geen eigen kleuren:
+   alle kleuren komen uit het kleurenschema van het thema
+   (--color-foreground, --color-background, --color-button),
+   per sectie. Wil je ze toch overschrijven, zet dan op :root
+   --mk-eigen-tekst, --mk-eigen-achtergrond, --mk-eigen-accent
+   en/of --mk-eigen-donker.
+   Alle klassen beginnen met mk-, zodat niets botst met het thema.
+   ============================================================ */
+
+/* ── 1. kleuren: afgeleid, nooit vast ──────────────────────── */
+:root,
+[class*="color-"] {
+  --mk-tekst: var(--mk-eigen-tekst, rgb(var(--color-foreground, 18, 18, 18)));
+  --mk-achtergrond: var(--mk-eigen-achtergrond, rgb(var(--color-background, 255, 255, 255)));
+  --mk-accent: var(--mk-eigen-accent, rgb(var(--color-button, 18, 18, 18)));
+  --mk-op-accent: var(--mk-eigen-op-accent, rgb(var(--color-button-text, 255, 255, 255)));
+  --mk-donker: var(--mk-eigen-donker, var(--mk-tekst));
+
+  /* alles hieronder rekent met de vier kleuren hierboven */
+  --mk-zacht: color-mix(in srgb, var(--mk-tekst) 62%, transparent);
+  --mk-lijn: color-mix(in srgb, var(--mk-tekst) 11%, transparent);
+  --mk-vulling: color-mix(in srgb, var(--mk-accent) 9%, var(--mk-achtergrond));
+  --mk-kaart: color-mix(in srgb, var(--mk-achtergrond) 35%, white);
+  --mk-accent-2: color-mix(in srgb, var(--mk-accent) 62%, white);
+  --mk-schaduw: color-mix(in srgb, var(--mk-tekst) 45%, transparent);
+  --mk-schaduw-zacht: color-mix(in srgb, var(--mk-tekst) 14%, transparent);
+}
+
+/* ── 2. vaste waarden (de "structuur") ─────────────────────── */
+:root {
+  /* letters: neemt de letters van het thema over */
+  --mk-font-kop: var(--font-heading-family, inherit);
+  --mk-font-tekst: var(--font-body-family, inherit);
+  --mk-font-accent: var(--mk-eigen-font-accent, var(--mk-font-kop)); /* in de thema-editor: maak een woord schuin (cursief) in een kop, dan wordt het accentwoord */
+
+
+  /* schaal: telefoon / ≥640px / ≥768px */
+  --mk-fs-hero: 46px;
+  --mk-fs-statement: 40px;
+  --mk-fs-h2: 34px;
+  --mk-fs-lead: 16.5px;
+  --mk-fs-label: 12.5px;
+  --mk-ls-hero: -2.5px;
+  --mk-ls-h2: -1.6px;
+
+  /* ruimte */
+  --mk-breed: 1200px;
+  --mk-marge: 20px;
+  --mk-sectie: 64px;
+  --mk-vlak: 90px;
+
+  /* hoeken */
+  --mk-r-klein: 8px;
+  --mk-r-bubbel: 16px;
+  --mk-r-basis: 18px;
+  --mk-r-kaart: 20px;
+  --mk-r-groot: 28px;
+  --mk-r-vlak: 36px;
+  --mk-r-rond: 9999px;
+
+  /* schaduwen: zacht, ver weg, met negatieve spreiding */
+  --mk-sh-bubbel: 0 18px 40px -18px var(--mk-schaduw), 0 0 0 1px var(--mk-lijn);
+  --mk-sh-kaart: 0 24px 50px -18px var(--mk-schaduw), 0 0 0 1px var(--mk-lijn);
+  --mk-sh-open: 0 18px 40px -26px var(--mk-schaduw);
+  --mk-sh-optillen: 0 22px 48px var(--mk-schaduw-zacht);
+  --mk-sh-knop: 0 16px 30px -14px var(--mk-schaduw);
+  --mk-sh-toestel: 0 40px 80px -30px var(--mk-schaduw), inset 0 0 0 1px rgba(255, 255, 255, .08);
+  --mk-sh-laptop: 0 50px 100px -40px var(--mk-schaduw), inset 0 0 0 1px rgba(255, 255, 255, .06);
+
+  /* beweging: één curve voor bijna alles */
+  --mk-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --mk-ease-std: cubic-bezier(0.4, 0, 0.2, 1);
+  --mk-snel: 150ms;
+  --mk-hover: 350ms;
+  --mk-wissel: 500ms;
+  --mk-melding: 600ms;
+  --mk-overvloei: 700ms;
+  --mk-opkomen: 850ms;
+}
+@media (min-width: 640px) {
+  :root { --mk-fs-hero: 66px; --mk-fs-statement: 56px; }
+}
+@media (min-width: 768px) {
+  :root {
+    --mk-fs-hero: 84px; --mk-fs-statement: 78px; --mk-fs-h2: 52px; --mk-fs-lead: 18px;
+    --mk-ls-hero: -3px; --mk-marge: 22px; --mk-sectie: 96px; --mk-vlak: 120px;
+    --mk-r-bubbel: 18px; --mk-r-groot: 32px;
+  }
+}
+
+/* ── 3. textuur: papier en korrel ──────────────────────────── */
+/* Twee naadloze tegels van 400×400, bijna helemaal transparant.
+   De adressen zet snippets/mk-stijl.liquid (asset_url). */
+.mk-papier {
+  background-image: var(--mk-tegel-licht);
+  background-size: 400px 400px;
+}
+/* korrel op een donker of gekleurd vlak, onder de inhoud */
+.mk-korrel { position: relative; isolation: isolate; }
+.mk-korrel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .55;
+  border-radius: inherit;
+  background-image: var(--mk-tegel-donker);
+  background-size: 400px 400px;
+}
+
+/* ── 4. typografie ─────────────────────────────────────────── */
+.mk-wrap { max-width: var(--mk-breed); margin-inline: auto; padding-inline: var(--mk-marge); }
+.mk-sectie { padding-block: var(--mk-sectie); }
+.mk-hero { font-family: var(--mk-font-kop); font-size: var(--mk-fs-hero); line-height: .92; font-weight: 900; letter-spacing: var(--mk-ls-hero); margin: 0; color: var(--mk-tekst); }
+.mk-statement { font-family: var(--mk-font-kop); font-size: var(--mk-fs-statement); line-height: .98; font-weight: 900; letter-spacing: -2.5px; margin: 0; color: var(--mk-tekst); }
+.mk-h2 { font-family: var(--mk-font-kop); font-size: var(--mk-fs-h2); line-height: 1.02; font-weight: 900; letter-spacing: var(--mk-ls-h2); margin: 0; color: var(--mk-tekst); }
+.mk-lead { font-family: var(--mk-font-tekst); font-size: var(--mk-fs-lead); line-height: 1.625; color: var(--mk-zacht); }
+.mk-label { font-size: var(--mk-fs-label); font-weight: 800; text-transform: uppercase; letter-spacing: 1.6px; color: var(--mk-accent); }
+/* accentwoord in een kop: verloop in de letter */
+.mk-accentwoord {
+  background-image: linear-gradient(95deg, var(--mk-accent) 10%, var(--mk-accent-2) 90%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  padding-bottom: .06em;
+}
+.mk-vlak .mk-accentwoord { background-image: linear-gradient(95deg, color-mix(in srgb, var(--mk-accent) 30%, white) 10%, color-mix(in srgb, var(--mk-accent) 55%, white) 90%); }
+.mk-hero em, .mk-statement em, .mk-h2 em {
+  font-style: normal;
+  background-image: linear-gradient(95deg, var(--mk-accent) 10%, var(--mk-accent-2) 90%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  padding-bottom: .06em;
+}
+.mk-vlak .mk-hero em, .mk-vlak .mk-statement em, .mk-vlak .mk-h2 em { background-image: linear-gradient(95deg, color-mix(in srgb, var(--mk-accent) 30%, white) 10%, color-mix(in srgb, var(--mk-accent) 55%, white) 90%); }
+/* één woord in een handschrift: spaarzaam, hooguit één per pagina */
+.mk-handschrift { font-family: var(--mk-font-accent); font-weight: 400; letter-spacing: 0; font-size: 1.22em; color: var(--mk-accent); }
+
+/* ── 5. knoppen en kaarten ─────────────────────────────────── */
+.mk-knop {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border-radius: var(--mk-r-rond); padding: 16px 28px; border: 0; cursor: pointer;
+  font: 700 16px/1 var(--mk-font-tekst); text-decoration: none;
+  transition: background-color var(--mk-snel) var(--mk-ease-std), border-color var(--mk-snel) var(--mk-ease-std), transform var(--mk-snel) var(--mk-ease-std);
+}
+.mk-knop:hover { transform: translateY(-2px); }
+.mk-knop--vol { background: var(--mk-accent); color: var(--mk-op-accent); box-shadow: var(--mk-sh-knop); }
+.mk-knop--rand { background: var(--mk-kaart); color: var(--mk-tekst); box-shadow: inset 0 0 0 1px var(--mk-lijn); }
+.mk-knop--rand:hover { box-shadow: inset 0 0 0 1px var(--mk-accent); }
+.mk-vlak .mk-knop--rand { background: rgba(255, 255, 255, .07); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); }
+.mk-knop .mk-pijl { transition: transform var(--mk-snel) var(--mk-ease-std); }
+.mk-knop:hover .mk-pijl { transform: translateX(4px); }
+
+.mk-kaart { background: var(--mk-kaart); border-radius: var(--mk-r-kaart); box-shadow: var(--mk-sh-kaart); padding: 24px; }
+.mk-optillen { transition: transform var(--mk-hover) var(--mk-ease), box-shadow var(--mk-hover); }
+.mk-optillen:hover { transform: translateY(-6px); box-shadow: var(--mk-sh-optillen); }
+
+/* donker vlak met zachte lichtvlek linksboven */
+.mk-vlak {
+  position: relative; overflow: hidden; color: #fff;
+  border-radius: var(--mk-r-vlak);
+  background: radial-gradient(120% 100% at 18% -10%,
+    color-mix(in srgb, var(--mk-donker) 70%, white) 0%,
+    var(--mk-donker) 48%,
+    color-mix(in srgb, var(--mk-donker) 60%, black) 100%);
+}
+.mk-vlak .mk-h2, .mk-vlak .mk-statement, .mk-vlak .mk-hero { color: #fff; }
+.mk-vlak .mk-lead { color: rgba(255, 255, 255, .78); }
+/* Safari knipt afgeronde hoeken niet altijd af bij kinderen met blur of transform */
+.mk-vlak.mk-korrel { -webkit-mask-image: -webkit-radial-gradient(white, black); mask-image: radial-gradient(white, black); }
+
+/* ── 6. toestellen (laptop en telefoon), volledig CSS ──────── */
+.mk-laptop-rand { position: relative; background: #0c1020; border-radius: 14px; padding: 1.1% 1.1% 1.6%; box-shadow: var(--mk-sh-laptop); }
+.mk-laptop-scherm { position: relative; overflow: hidden; aspect-ratio: 16 / 10; border-radius: 6px; background: #fff; }
+.mk-laptop-voet { position: relative; margin: 0 -5%; height: 10px; border-radius: 0 0 18px 18px; background: linear-gradient(to bottom, #d9dbe1, #a9adb8); box-shadow: 0 18px 30px -12px var(--mk-schaduw); }
+.mk-laptop-voet::after { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 16%; height: 40%; border-radius: 0 0 8px 8px; background: rgba(142, 146, 156, .6); }
+.mk-telefoon { position: relative; background: #0c1020; border-radius: 15% / 7%; padding: 3.2%; box-shadow: var(--mk-sh-toestel); }
+.mk-telefoon-scherm { position: relative; overflow: hidden; aspect-ratio: 1290 / 2796; border-radius: 12.5% / 5.8%; background: #fff; }
+.mk-telefoon-scherm::after { content: ""; position: absolute; top: 1.5%; left: 36%; width: 28%; height: 3.4%; border-radius: 9999px; background: #0c1020; }
+.mk-laptop-scherm img, .mk-telefoon-scherm img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+@media (min-width: 768px) {
+  .mk-laptop-rand { border-radius: 18px; }
+  .mk-laptop-scherm { border-radius: 8px; }
+  .mk-laptop-voet { height: 14px; }
+}
+
+/* ── 7. opkomen bij in beeld komen ─────────────────────────── */
+@keyframes mk-op { from { opacity: 0; transform: translateY(48px) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes mk-links { from { opacity: 0; transform: translateX(-44px); } to { opacity: 1; transform: none; } }
+@keyframes mk-rechts { from { opacity: 0; transform: translateX(44px); } to { opacity: 1; transform: none; } }
+@keyframes mk-zoom { from { opacity: 0; transform: scale(.84); } to { opacity: 1; transform: none; } }
+@keyframes mk-vervaag { from { opacity: 0; filter: blur(14px); transform: translateY(22px); } to { opacity: 1; filter: blur(0); transform: none; } }
+@keyframes mk-plop { 0% { opacity: 0; transform: translateY(26px) scale(.92); } 65% { transform: translateY(-4px) scale(1.02); } 100% { opacity: 1; transform: none; } }
+@keyframes mk-melding { from { opacity: 0; transform: translateY(-18px) scale(.96); } to { opacity: 1; transform: none; } }
+
+.mk-in { opacity: 0; }
+.mk-in.is-zichtbaar { animation: mk-op var(--mk-opkomen) var(--mk-ease) forwards; }
+.mk-in--links.is-zichtbaar { animation-name: mk-links; }
+.mk-in--rechts.is-zichtbaar { animation-name: mk-rechts; }
+.mk-in--zoom.is-zichtbaar { animation-name: mk-zoom; }
+.mk-in--vervaag.is-zichtbaar { animation-name: mk-vervaag; }
+.mk-in--plop.is-zichtbaar { animation-name: mk-plop; }
+.mk-na-1.is-zichtbaar { animation-delay: .1s; }
+.mk-na-2.is-zichtbaar { animation-delay: .2s; }
+.mk-na-3.is-zichtbaar { animation-delay: .3s; }
+.mk-na-4.is-zichtbaar { animation-delay: .4s; }
+.mk-melding-in { animation: mk-melding var(--mk-melding) var(--mk-ease) both; }
+/* in de thema-editor staat alles meteen goed */
+.mk-editor .mk-in { opacity: 1; animation: none; }
+
+/* ── 8. leesbalk bovenaan ──────────────────────────────────── */
+.mk-leesbalk {
+  position: fixed; top: 0; left: 0; z-index: 200; width: 100%; height: 3px;
+  transform: scaleX(0); transform-origin: 0 50%; pointer-events: none;
+  background: linear-gradient(90deg, var(--mk-accent), var(--mk-accent-2));
+}
+
+/* ── 9. sectie: berichtjes-chaos (sections/mk-chaos.liquid) ── */
+.mk-chaos { position: relative; height: 260vh; --p: 0; }
+.mk-chaos__podium { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+.mk-chaos__koppen { position: relative; z-index: 10; width: 100%; max-width: 980px; padding: 9vh 20px 0; text-align: center; display: grid; }
+.mk-chaos__koppen > * { grid-area: 1 / 1; }
+.mk-chaos__koppen p { font-size: 16px; color: var(--mk-zacht); margin: 16px auto 0; max-width: 520px; }
+.mk-chaos__voor { opacity: clamp(0, calc(1 - (var(--p) - 0.3) * 7), 1); transform: translateY(calc(clamp(0, (var(--p) - 0.3) * 7, 1) * -24px)); }
+.mk-chaos__na { opacity: clamp(0, calc((var(--p) - 0.46) * 7), 1); transform: translateY(calc((1 - clamp(0, (var(--p) - 0.46) * 7, 1)) * 24px)); }
+.mk-chaos__vlak { position: relative; flex: 1; min-height: 0; width: 100%; display: flex; align-items: flex-start; justify-content: center; padding-top: 3vh; }
+.mk-chaos__midden { position: relative; height: calc(100% - 5vh); aspect-ratio: .478; max-width: 46vw; transform: scale(calc(0.9 + clamp(0, (var(--p) - 0.3) * 1.2, 0.1))); transform-origin: 50% 0; }
+.mk-bubbel-plek {
+  position: absolute; left: 50%; top: 50%; width: 54vw; max-width: 270px;
+  --t: clamp(0, (var(--p) - 0.08 - var(--k) * 0.018) * 2.6, 1);
+  transform:
+    translate(calc(-50% + var(--x) * 1vw * (1 - var(--t))), calc(-50% + var(--y) * 1vh * (1 - var(--t))))
+    rotate(calc(var(--r) * 1deg))
+    scale(calc(1 - var(--t) * 0.8));
+  opacity: clamp(0, calc(1 - (var(--p) - 0.22 - var(--k) * 0.018) * 4), 1);
+  will-change: transform, opacity;
+}
+.mk-bubbel { display: flex; align-items: flex-start; gap: 8px; background: var(--mk-kaart); border-radius: var(--mk-r-bubbel); border-bottom-left-radius: 6px; padding: 8px 12px; box-shadow: var(--mk-sh-bubbel); }
+.mk-bubbel__ic { flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; background: var(--mk-vulling); color: var(--mk-accent); display: flex; align-items: center; justify-content: center; }
+.mk-bubbel__ic svg { width: 16px; height: 16px; fill: currentColor; }
+.mk-bubbel__van { display: block; font-size: 10px; font-weight: 700; color: var(--mk-zacht); }
+.mk-bubbel__tekst { display: block; font-size: 12px; font-weight: 600; color: var(--mk-tekst); line-height: 1.375; }
+@media (min-width: 768px) {
+  .mk-chaos__koppen { padding-top: 10vh; }
+  .mk-chaos__koppen p { font-size: 18px; }
+  .mk-chaos__midden { max-width: 250px; }
+  .mk-bubbel-plek { width: 310px; max-width: none; }
+  .mk-bubbel { gap: 10px; padding: 10px 14px; }
+  .mk-bubbel__ic { width: 32px; height: 32px; }
+  .mk-bubbel__van { font-size: 12px; }
+  .mk-bubbel__tekst { font-size: 15px; }
+}
+/* in de editor: geen hoge scroll-sectie, alles in rust */
+.mk-editor .mk-chaos { height: auto; --p: 0; }
+.mk-editor .mk-chaos__podium { position: relative; height: 100vh; }
+
+/* ── 10. minder beweging: alles staat meteen goed ──────────── */
+@media (prefers-reduced-motion: reduce) {
+  .mk-in, .mk-in.is-zichtbaar { opacity: 1; animation: none; }
+  .mk-melding-in { animation: none; }
+  .mk-chaos { height: auto; }
+  .mk-chaos__podium { position: relative; }
+}

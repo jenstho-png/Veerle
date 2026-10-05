@@ -8,7 +8,7 @@
     "theme_support_url": "https://support.shopify.com/"
   },
   {
-    "name": "Surf – merk & SEO",
+    "name": "Surf: merk & SEO",
     "settings": [
       {
         "type": "paragraph",
@@ -18,13 +18,13 @@
         "type": "textarea",
         "id": "surf_org_description",
         "label": "Korte merkomschrijving",
-        "default": "Surfboard draagtassen voor surfers die verder gaan: ergonomisch, sterk en waterbestendig. Handen vrij op weg naar de golf, te voet, op de fiets of op reis."
+        "default": "Draagtassen voor je surfboard, bedacht op surfreizen door Australië, Midden- en Zuid-Amerika en Azië. Ergonomisch, sterk en mee op reis. Voor beginners met een groot board en avonturiers op weg naar een afgelegen spot."
       },
       {
         "type": "text",
         "id": "surf_slogan",
         "label": "Slogan",
-        "default": "Handen vrij, op weg naar de golf"
+        "default": "Handen vrij op weg naar de golf"
       },
       {
         "type": "text",
@@ -61,18 +61,18 @@
         "type": "text",
         "id": "surf_knows_about",
         "label": "Expertise (komma-gescheiden)",
-        "default": "surfen, surfboard draagtas, surfboards dragen, surfreizen, surftrips, surfaccessoires, surf wax"
+        "default": "surfen, surfboard draagtas, surfboard dragen, surfreizen, surfen voor beginners, surf wax, duiken"
       },
       {
         "type": "textarea",
         "id": "surf_meta_home",
         "label": "Meta description homepage",
-        "default": "Surfboard draagtas met ergonomische banden: handen vrij op weg naar de golf. Sterk, waterbestendig en mee op reis. Voor softtops én hardboards."
+        "default": "Draagtas voor je surfboard: handen vrij op weg naar de golf. Voor de hike, de fiets of de scooter, en mee in je reisbagage. Voor softtops en hardboards."
       }
     ]
   },
   {
-    "name": "Surf – lead-popup",
+    "name": "Surf: lead-popup",
     "settings": [
       {
         "type": "checkbox",
@@ -94,13 +94,13 @@
         "type": "text",
         "id": "surf_popup_heading",
         "label": "Kop",
-        "default": "Als eerste *op pad*?"
+        "default": "Als eerste weten wanneer de tas er *is*"
       },
       {
         "type": "textarea",
         "id": "surf_popup_text",
         "label": "Tekst",
-        "default": "Schrijf je in en hoor als eerste wanneer nieuwe modellen online komen. Plus surftips voor onderweg."
+        "default": "We gaan online zodra de eerste modellen klaar zijn. Laat je e-mailadres achter, dan hoor je het als eerste."
       },
       {
         "type": "text",
@@ -119,7 +119,7 @@
         "type": "text",
         "id": "surf_popup_success",
         "label": "Bedankt-tekst",
-        "default": "Top, je staat op de lijst! Check je inbox."
+        "default": "Je staat op de lijst. We mailen je zodra de tassen online staan."
       }
     ]
   },

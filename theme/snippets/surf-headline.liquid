@@ -10,7 +10,7 @@
   {%- for part in parts -%}
     {%- assign odd = forloop.index0 | modulo: 2 -%}
     {%- if odd == 1 -%}
-      <span class="script">{{ part | escape }}</span>
+      <span class="mk-accentwoord">{{ part | escape }}</span>
     {%- else -%}
       {{- part | escape -}}
     {%- endif -%}

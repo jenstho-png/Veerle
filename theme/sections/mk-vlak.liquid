@@ -1,0 +1,64 @@
+{%- comment -%} Donker vlak met korrel, tekst en (optioneel) een beeld in een telefoon of laptop. {%- endcomment -%}
+<section class="mk-sectie color-{{ section.settings.color_scheme }}{% if section.settings.papier %} mk-papier{% endif %}"{% if section.settings.vlak_kleur != blank %} style="--mk-eigen-donker: {{ section.settings.vlak_kleur }};"{% endif %}>
+  <div class="mk-wrap">
+    <div class="mk-vlak mk-korrel mk-in mk-in--zoom">
+      <div class="mk-vlak__grid{% if section.settings.toestel == 'geen' or section.settings.beeld == blank %} mk-vlak__grid--los{% endif %}">
+        <div class="mk-vlak__tekst">
+          {%- if section.settings.label != blank -%}<p class="mk-label mk-in" style="margin: 0 0 16px; color: rgba(255,255,255,.7);">{{ section.settings.label }}</p>{%- endif -%}
+          <h2 class="mk-h2 mk-in mk-na-1">{{ section.settings.kop }}</h2>
+          {%- if section.settings.tekst != blank -%}<div class="mk-lead mk-in mk-na-2" style="margin-top: 20px; max-width: 480px;">{{ section.settings.tekst }}</div>{%- endif -%}
+          {%- if section.settings.knop != blank -%}
+            <div class="mk-in mk-na-3" style="margin-top: 32px;">
+              <a class="mk-knop mk-knop--rand" href="{{ section.settings.link | default: '#' }}">{{ section.settings.knop }} <span class="mk-pijl" aria-hidden="true">→</span></a>
+            </div>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.toestel != 'geen' and section.settings.beeld != blank -%}
+          <div class="mk-vlak__beeld" data-mk-parallax="{{ section.settings.parallax | divided_by: 100.0 }}">
+            {%- if section.settings.toestel == 'telefoon' -%}
+              <div class="mk-telefoon" data-mk-kantel="9" style="width: min(260px, 60%); margin-inline: auto;">
+                <div class="mk-telefoon-scherm">{{ section.settings.beeld | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '260px', alt: section.settings.beeld.alt }}</div>
+              </div>
+            {%- else -%}
+              <div data-mk-kantel="7">
+                <div class="mk-laptop-rand"><div class="mk-laptop-scherm">{{ section.settings.beeld | image_url: width: 1600 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 560px, 90vw', alt: section.settings.beeld.alt }}</div></div>
+                <div class="mk-laptop-voet"></div>
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mk-vlak__grid { display: grid; gap: 40px; align-items: center; padding: 56px 28px; }
+  .mk-vlak__grid--los { text-align: center; }
+  .mk-vlak__grid--los .mk-lead { margin-inline: auto; }
+  @media (min-width: 990px) {
+    .mk-vlak__grid { grid-template-columns: 1fr 1fr; padding: 88px 64px; }
+    .mk-vlak__grid--los { grid-template-columns: 1fr; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Merk: donker vlak",
+  "tag": "div",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema van de sectie", "default": "scheme-1", "info": "Bepaalt de achtergrond rond het vlak." },
+    { "type": "color", "id": "vlak_kleur", "label": "Kleur van het vlak", "info": "Kies een donkere kleur. Leeg laten = de tekstkleur van het kleurenschema." },
+    { "type": "checkbox", "id": "papier", "label": "Papiertextuur rond het vlak", "default": true },
+    { "type": "text", "id": "label", "label": "Klein label" },
+    { "type": "inline_richtext", "id": "kop", "label": "Kop", "info": "Maak een woord cursief, dan wordt het het accentwoord.", "default": "Rustig, <em>duidelijk</em> en echt." },
+    { "type": "richtext", "id": "tekst", "label": "Tekst", "default": "<p>Een korte alinea. Twee of drie zinnen is genoeg.</p>" },
+    { "type": "text", "id": "knop", "label": "Knop", "default": "Lees meer" },
+    { "type": "url", "id": "link", "label": "Link" },
+    { "type": "select", "id": "toestel", "label": "Beeld tonen in", "default": "telefoon", "options": [ { "value": "geen", "label": "Geen beeld" }, { "value": "telefoon", "label": "Telefoon" }, { "value": "laptop", "label": "Laptop" } ] },
+    { "type": "image_picker", "id": "beeld", "label": "Schermafbeelding", "info": "Telefoon: 1290 × 2796. Laptop: 16:10, bijv. 1920 × 1200." },
+    { "type": "range", "id": "parallax", "label": "Meebewegen bij scrollen", "min": -10, "max": 10, "step": 1, "unit": "%", "default": -5 }
+  ],
+  "presets": [ { "name": "Merk: donker vlak" } ]
+}
+{% endschema %}
