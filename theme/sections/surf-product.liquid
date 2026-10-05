@@ -20,7 +20,7 @@
       </div>
 
       <div class="surf-product__body mk-in mk-na-1">
-        {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{% render 'tt-logo', variant: 'golfje' %}{{ section.settings.eyebrow }}</p>{%- endif -%}
         {%- if section.settings.heading != blank -%}
           {%- render 'surf-headline', text: section.settings.heading, tag: 'h2' -%}
         {%- else -%}

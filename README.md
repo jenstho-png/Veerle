@@ -1,4 +1,4 @@
-# Surfboard draagtas: premium Shopify-thema
+# Tide-Tode: premium Shopify-thema
 
 Custom Shopify-site voor een nieuw surfmerk (werknaam **Tide-Tode**). Het merk maakt een draagtas voor je surfboard: handen vrij op weg naar de golf.
 Gebouwd volgens de CREAJT-aanpak (`docs/shopify-premium-opbouw-sjabloon.md`) en de **merkstijl** (`docs/merkstijl/`, klassen `mk-`): een Dawn-fork (v16) met eigen `surf-*`-secties, een centraal kleurensysteem, placeholder-foto's op vaste bestandsnamen, volledige SEO/GEO en responsive tot 4K.
@@ -12,9 +12,11 @@ theme/            Shopify-thema (Dawn 16 + surf-laag)
   sections/mk-*     merkstijl-secties: intro, oplichtende zin, donker vlak, berichtjes-chaos
   sections/surf-*   header, hero, verhaal, voordelen, product, stappen/voor wie,
                     statement, fotogalerij, reviews, FAQ, call-to-action, paginakop, footer
+  snippets/tt-*     logo (vectorpaden), handgeknipte iconen, favicon; gegenereerd door tools/brand/export_shopify.py
   snippets/surf-*   headline (*accentwoord*), image (placeholder), icon, seo (JSON-LD),
                     meta-description, lead-popup
-docs/             briefing, foto-lijst, opbouw-sjabloon
+docs/             briefing, foto-lijst, opbouw-sjabloon, merkstijl, brandbook/ (brand book + logorichtingen)
+tools/brand/      logo-, iconen- en brand book-generatoren
 tools/preview/    ruwe lokale preview + screenshots (liquidjs), los van Shopify
 ```
 

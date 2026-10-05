@@ -133,7 +133,7 @@
         "feature-1": {
           "type": "feature",
           "settings": {
-            "icon": "backpack",
+            "icon": "tas",
             "title": "Draagt prettig op lange tochten",
             "text": "Ergonomische banden verdelen het gewicht. Zo heb je na een lange hike nog steeds zin om het water in te gaan."
           }
@@ -141,7 +141,7 @@
         "feature-2": {
           "type": "feature",
           "settings": {
-            "icon": "shield",
+            "icon": "golf",
             "title": "Kan tegen een stootje",
             "text": "Zware, sterke stof en stevige stiksels. Gemaakt voor nat, zand, zout en ruig gebruik."
           }
@@ -149,7 +149,7 @@
         "feature-3": {
           "type": "feature",
           "settings": {
-            "icon": "plane",
+            "icon": "meeuw",
             "title": "Gaat mee in het vliegtuig",
             "text": "De tas past in je bagage. Huur je op je bestemming een board, dan draag je dat gewoon in je eigen tas."
           }
@@ -385,16 +385,68 @@
         "btn2_link": "shopify://pages/veelgestelde-vragen",
         "color_scheme": "scheme-1"
       }
+    },
+    "waarden": {
+      "type": "surf-waarden",
+      "settings": {
+        "color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "waarde-1": {
+          "type": "waarde",
+          "settings": {
+            "icon": "tas",
+            "title": "Handen vrij",
+            "text": "Je board op je rug, je handen aan het stuur."
+          }
+        },
+        "waarde-2": {
+          "type": "waarde",
+          "settings": {
+            "icon": "golf",
+            "title": "Gemaakt om te blijven",
+            "text": "Zware stof en stevige stiksels. Geen wegwerpproduct."
+          }
+        },
+        "waarde-3": {
+          "type": "waarde",
+          "settings": {
+            "icon": "meeuw",
+            "title": "Bedacht op reis",
+            "text": "Ontstaan op hikes in Australië, Midden- en Zuid-Amerika en Azië."
+          }
+        },
+        "waarde-4": {
+          "type": "waarde",
+          "settings": {
+            "icon": "board",
+            "title": "Van riders, voor riders",
+            "text": "Ontworpen door surfers die zelf sjouwden."
+          }
+        }
+      },
+      "block_order": [
+        "waarde-1",
+        "waarde-2",
+        "waarde-3",
+        "waarde-4"
+      ]
+    },
+    "teken": {
+      "type": "surf-merkverhaal",
+      "settings": {}
     }
   },
   "order": [
     "hero",
+    "waarden",
     "woorden",
     "chaos",
     "story",
     "features",
     "product",
     "voorwie",
+    "teken",
     "gallery",
     "instagram",
     "faq",

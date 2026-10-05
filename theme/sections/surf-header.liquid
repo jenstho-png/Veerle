@@ -20,7 +20,7 @@
           | image_tag: width: settings.logo_width, height: logo_h, alt: shop.name, loading: 'eager'
         }}
       {%- else -%}
-        <span class="surf-header__word">{{ shop.name }}</span>
+        {%- render 'tt-logo', variant: 'liggend', label: shop.name -%}
       {%- endif -%}
     </a>
 
@@ -90,7 +90,7 @@
 
   <div class="surf-drawer" id="SurfDrawer" hidden>
     <div class="surf-drawer__top">
-      <span class="surf-header__word">{{ shop.name }}</span>
+      {%- render 'tt-logo', variant: 'liggend', label: shop.name -%}
       <button type="button" class="surf-icon-btn" data-surf-drawer-close aria-label="Menu sluiten">{% render 'surf-icon', icon: 'close' %}</button>
     </div>
     <nav aria-label="Mobiel menu">

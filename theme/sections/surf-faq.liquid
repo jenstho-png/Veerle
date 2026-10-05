@@ -2,7 +2,7 @@
   <div class="surf__inner">
     <div class="surf-faq__grid">
       <div class="surf-faq__intro mk-in">
-        {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{% render 'tt-logo', variant: 'golfje' %}{{ section.settings.eyebrow }}</p>{%- endif -%}
         {%- render 'surf-headline', text: section.settings.heading, tag: section.settings.heading_tag -%}
         {%- if section.settings.text != blank -%}<p class="surf-lead">{{ section.settings.text }}</p>{%- endif -%}
         {%- if section.settings.btn_label != blank -%}

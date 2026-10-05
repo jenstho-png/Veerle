@@ -103,7 +103,7 @@
         "feature-1": {
           "type": "feature",
           "settings": {
-            "icon": "backpack",
+            "icon": "tas",
             "title": "Draagt prettig op lange tochten",
             "text": "Ergonomische banden verdelen het gewicht. Zo heb je na een lange hike nog steeds zin om het water in te gaan."
           }
@@ -111,7 +111,7 @@
         "feature-2": {
           "type": "feature",
           "settings": {
-            "icon": "shield",
+            "icon": "golf",
             "title": "Kan tegen een stootje",
             "text": "Zware, sterke stof en stevige stiksels. Gemaakt voor nat, zand, zout en ruig gebruik."
           }
@@ -119,7 +119,7 @@
         "feature-3": {
           "type": "feature",
           "settings": {
-            "icon": "plane",
+            "icon": "meeuw",
             "title": "Gaat mee in het vliegtuig",
             "text": "De tas past in je bagage. Huur je op je bestemming een board, dan draag je dat gewoon in je eigen tas."
           }
@@ -197,10 +197,57 @@
         "qa-5",
         "qa-6"
       ]
+    },
+    "waarden": {
+      "type": "surf-waarden",
+      "settings": {
+        "color_scheme": "scheme-2"
+      },
+      "blocks": {
+        "waarde-1": {
+          "type": "waarde",
+          "settings": {
+            "icon": "tas",
+            "title": "Handen vrij",
+            "text": "Je board op je rug, je handen aan het stuur."
+          }
+        },
+        "waarde-2": {
+          "type": "waarde",
+          "settings": {
+            "icon": "golf",
+            "title": "Kan tegen nat en zand",
+            "text": "Zware stof, stevige stiksels."
+          }
+        },
+        "waarde-3": {
+          "type": "waarde",
+          "settings": {
+            "icon": "meeuw",
+            "title": "Gaat mee op reis",
+            "text": "Past in je bagage, ook voor een huurboard."
+          }
+        },
+        "waarde-4": {
+          "type": "waarde",
+          "settings": {
+            "icon": "board",
+            "title": "Voor elk board",
+            "text": "Van softtop tot hardboard."
+          }
+        }
+      },
+      "block_order": [
+        "waarde-1",
+        "waarde-2",
+        "waarde-3",
+        "waarde-4"
+      ]
     }
   },
   "order": [
     "main",
+    "waarden",
     "features",
     "disclosures",
     "faq",

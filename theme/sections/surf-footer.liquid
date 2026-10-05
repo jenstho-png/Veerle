@@ -2,7 +2,7 @@
   <div class="surf__inner">
     <div class="surf-footer__top">
       <div class="surf-footer__brand">
-        <span class="surf-header__word">{{ shop.name }}</span>
+        {%- render 'tt-logo', variant: 'staand', label: shop.name -%}
         {%- if section.settings.text != blank -%}
           <p>{{ section.settings.text }}</p>
         {%- endif -%}
@@ -21,6 +21,24 @@
             {%- endif -%}
           {%- endfor -%}
         </ul>
+        {%- if section.settings.brief_heading != blank -%}
+          <div class="surf-brief">
+            <h2>{{ section.settings.brief_heading }}</h2>
+            {%- if section.settings.brief_text != blank -%}<p>{{ section.settings.brief_text }}</p>{%- endif -%}
+            {%- form 'customer', id: 'SurfBrief' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter,getijdenbrief">
+              {%- if form.posted_successfully? -%}
+                <p class="surf-form-msg">{{ section.settings.brief_success }}</p>
+              {%- else -%}
+                <div class="surf-signup">
+                  <label class="visually-hidden" for="SurfBriefEmail">E-mailadres</label>
+                  <input id="SurfBriefEmail" type="email" name="contact[email]" autocomplete="email" placeholder="jouw@email.nl" required>
+                  <button type="submit" class="surf-btn surf-btn--primary">Aanmelden</button>
+                </div>
+              {%- endif -%}
+            {%- endform -%}
+          </div>
+        {%- endif -%}
       </div>
 
       <div class="surf-footer__cols">
@@ -56,7 +74,7 @@
     </div>
 
     {%- if section.settings.show_word -%}
-      <div class="surf-footer__word" aria-hidden="true">{{ shop.name }}</div>
+      <div class="surf-footer__word" aria-hidden="true">{% render 'tt-logo', variant: 'woord' %}</div>
     {%- endif -%}
 
     <div class="surf-footer__bottom">
@@ -82,6 +100,24 @@
       "id": "color_scheme",
       "label": "Kleurenschema",
       "default": "scheme-3"
+    },
+    {
+      "type": "text",
+      "id": "brief_heading",
+      "label": "Nieuwsbrief: titel",
+      "default": "De getijdenbrief"
+    },
+    {
+      "type": "textarea",
+      "id": "brief_text",
+      "label": "Nieuwsbrief: tekst",
+      "default": "Een paar keer per seizoen: nieuwe tassen, spots van onderweg en wat er in de werkplaats gebeurt."
+    },
+    {
+      "type": "text",
+      "id": "brief_success",
+      "label": "Nieuwsbrief: bedankt",
+      "default": "Je staat erop. Tot de volgende getijde."
     },
     {
       "type": "textarea",

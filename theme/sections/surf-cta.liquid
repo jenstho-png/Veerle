@@ -10,6 +10,7 @@
       {%- if bg != blank -%}
         <div class="surf-media surf-cta__bg">{% render 'surf-image', image: bg, alt: section.settings.image_alt %}</div>
       {%- endif -%}
+      {%- if section.settings.show_zegel -%}<div class="surf-cta__zegel mk-in">{% render 'tt-logo', variant: 'zegel' %}</div>{%- endif -%}
       {%- if section.settings.eyebrow != blank -%}
         <p class="surf-eyebrow mk-in mk-na-1" style="color: rgba(255,255,255,.7);">{{ section.settings.eyebrow }}</p>
       {%- endif -%}
@@ -60,6 +61,7 @@
       { "value": "buttons", "label": "Knoppen" },
       { "value": "signup", "label": "E-mail inschrijving (bijv. wachtlijst)" }
     ] },
+    { "type": "checkbox", "id": "show_zegel", "label": "Zegel tonen", "default": true },
     { "type": "text", "id": "eyebrow", "label": "Klein label" },
     { "type": "text", "id": "heading", "label": "Kop", "info": "*woord* = accentwoord", "default": "Zin om je tas te pakken en op pad te gaan naar de *kust*" },
     { "type": "textarea", "id": "text", "label": "Tekst", "default": "Voor wie vroeg opstaat, de natuur in trekt en de gebaande paden verlaat voor die ene lege golf." },

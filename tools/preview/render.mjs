@@ -55,7 +55,8 @@ async function page(name, tplPath, extra = {}) {
   const hg = JSON.parse(fs.readFileSync(`${T}/sections/header-group.json`, 'utf8'));
   const fg = JSON.parse(fs.readFileSync(`${T}/sections/footer-group.json`, 'utf8'));
   Object.assign(globals.request, extra.request || {});
-  let html = await renderSection('surf-header', hg.sections['surf-header'], 0);
+  let html = '';
+  for (const k of hg.order) html += await renderSection(hg.sections[k].type, hg.sections[k], 0);
   let i = 1;
   for (const k of tpl.order) {
     const d = tpl.sections[k];

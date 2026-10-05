@@ -159,6 +159,10 @@
         "text": "We gaan online zodra de eerste modellen klaar zijn. Schrijf je in en je hoort het als eerste.",
         "btn1_label": "Zet me op de lijst"
       }
+    },
+    "teken": {
+      "type": "surf-merkverhaal",
+      "settings": {}
     }
   },
   "order": [
@@ -166,6 +170,7 @@
     "story",
     "woorden",
     "story2",
+    "teken",
     "statement",
     "komt",
     "gallery",

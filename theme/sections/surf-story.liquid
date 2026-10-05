@@ -11,7 +11,7 @@
       </div>
       <div class="surf-story__body mk-in mk-na-1">
         {%- if section.settings.eyebrow != blank -%}
-          <p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>
+          <p class="surf-eyebrow">{% render 'tt-logo', variant: 'golfje' %}{{ section.settings.eyebrow }}</p>
         {%- endif -%}
         {%- render 'surf-headline', text: section.settings.heading, tag: section.settings.heading_tag -%}
         <div class="rte surf-lead">{{ section.settings.text }}</div>

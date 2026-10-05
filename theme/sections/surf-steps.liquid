@@ -1,7 +1,7 @@
 <section class="surf surf-steps color-{{ section.settings.color_scheme }}" id="steps-{{ section.id }}">
   <div class="surf__inner">
     <div class="surf-head mk-in">
-      {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{% render 'tt-logo', variant: 'golfje' %}{{ section.settings.eyebrow }}</p>{%- endif -%}
       {%- render 'surf-headline', text: section.settings.heading, tag: 'h2' -%}
     </div>
     <ol class="surf-steps__list">

@@ -21,13 +21,13 @@
           loading: 'eager'
         -%}
         <div class="surf-pagehero__title">
-          {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+          {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{% render 'tt-logo', variant: 'golfje' %}{{ section.settings.eyebrow }}</p>{%- endif -%}
           {%- render 'surf-headline', text: title, tag: 'h1' -%}
         </div>
       </div>
     {%- else -%}
       <div class="surf-pagehero__title">
-        {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{% render 'tt-logo', variant: 'golfje' %}{{ section.settings.eyebrow }}</p>{%- endif -%}
         {%- render 'surf-headline', text: title, tag: 'h1' -%}
       </div>
     {%- endif -%}

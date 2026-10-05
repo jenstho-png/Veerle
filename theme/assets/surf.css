@@ -6,11 +6,12 @@
    Regels: docs/merkstijl/MERKSTIJL.md
    ========================================================================== */
 
-@font-face { font-family: 'Archivo'; src: url('archivo-latin-600-normal.woff2') format('woff2'); font-weight: 600; font-display: swap; }
-@font-face { font-family: 'Archivo'; src: url('archivo-latin-900-normal.woff2') format('woff2'); font-weight: 900; font-display: swap; }
+/* Fraunces (soft, vastgezet op gewicht 480): koppen. 'Tekst'-variant heeft een kleinere optische maat voor kleine koppen. */
+@font-face { font-family: 'Fraunces'; src: url('fraunces-soft-480.woff2') format('woff2'); font-weight: 400 600; font-display: swap; }
+@font-face { font-family: 'Fraunces Tekst'; src: url('fraunces-soft-480-tekst.woff2') format('woff2'); font-weight: 400 600; font-display: swap; }
+@font-face { font-family: 'Fraunces'; src: url('fraunces-soft-480-italic.woff2') format('woff2'); font-weight: 400 600; font-style: italic; font-display: swap; }
 @font-face { font-family: 'Inter'; src: url('inter-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Inter'; src: url('inter-latin-600-normal.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
-@font-face { font-family: 'Fraunces'; src: url('fraunces-latin-400-italic.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
 
 :root {
   /* palet (moodboard): rust en blauw als basis, warm en zacht alleen in details.
@@ -28,9 +29,11 @@
   --font-body-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-body-style: normal;
   --font-body-weight: 400;
-  --font-heading-family: 'Archivo', system-ui, sans-serif;
+  --font-heading-family: 'Fraunces', 'Iowan Old Style', Georgia, serif;
   --font-heading-style: normal;
-  --font-heading-weight: 900;
+  --font-heading-weight: 480;
+  --tt-klein-kop: 'Fraunces Tekst', 'Fraunces', Georgia, serif;
+  --tt-accent: var(--surf-captain);
 
   /* merkstijl: één handschrift-woord per pagina (de ondertekening) */
   --mk-eigen-font-accent: 'Fraunces', Georgia, serif;
@@ -52,17 +55,24 @@
 .surf-footer { position: relative; }
 
 /* letters: de mk-schaal */
-.surf h1, .surf h2, .surf h3, .surf blockquote { font-family: var(--mk-font-kop); font-weight: 900; color: var(--mk-tekst); margin: 0; }
-.surf h1 { font-size: var(--mk-fs-hero); line-height: .92; letter-spacing: var(--mk-ls-hero); }
-.surf h2 { font-size: var(--mk-fs-h2); line-height: 1.02; letter-spacing: var(--mk-ls-h2); }
-.surf h3 { font-size: 21px; line-height: 1.15; letter-spacing: -0.4px; }
+.surf h1, .surf h2, .surf h3, .surf blockquote { font-family: var(--mk-font-kop); font-weight: 480; color: var(--mk-tekst); margin: 0; text-wrap: balance; }
+.surf h1 { font-size: calc(var(--mk-fs-hero) * 1.04); line-height: .98; letter-spacing: -0.025em; }
+.surf h2 { font-size: calc(var(--mk-fs-h2) * 1.06); line-height: 1.04; letter-spacing: -0.02em; }
+.surf h3 { font-family: var(--tt-klein-kop); font-size: 22px; line-height: 1.2; letter-spacing: -0.01em; }
 .surf p { margin: 0; }
 .surf .rte p + p { margin-top: 1em; }
 
-/* accentwoord: *woord* in een kop wordt een verloop van de accentkleur */
-.mk-accentwoord { display: inline; }
+/* accentwoord: *woord* in een kop wordt cursief in de accentkleur (Captain op licht, Sunshine op donker) */
+.mk-accentwoord, .mk-hero em, .mk-h2 em, .mk-statement em {
+  font-style: italic; background: none !important; -webkit-text-fill-color: currentColor !important; color: var(--tt-accent) !important; padding: 0;
+}
+.color-scheme-3, .color-scheme-4, .mk-vlak, .surf-hero--full, .surf-pagehero__media, .surf-cta__box.mk-vlak { --tt-accent: var(--surf-sunshine); }
+.mk-hero, .mk-h2, .mk-statement { font-weight: 480; letter-spacing: -0.02em; }
+.mk-handschrift { font-style: italic; color: var(--tt-accent); }
 
-.surf-eyebrow { display: block; margin: 0 0 16px; font-size: var(--mk-fs-label); font-weight: 800; text-transform: uppercase; letter-spacing: 1.6px; color: var(--mk-accent); }
+.surf-eyebrow { display: flex; align-items: center; gap: 10px; margin: 0 0 18px; font: 600 11px/1 var(--mk-font-tekst); text-transform: uppercase; letter-spacing: .22em; color: var(--tt-accent); }
+.surf-head--center .surf-eyebrow { justify-content: center; }
+.surf-eyebrow .tt-golfje { width: 22px; height: auto; flex-shrink: 0; }
 .surf-lead { font-size: var(--mk-fs-lead); line-height: 1.625; color: var(--mk-zacht); max-width: 58ch; }
 
 /* ---------- Knoppen (zelfde vorm als mk-knop) ---------- */
@@ -70,13 +80,14 @@
 .surf-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   padding: 16px 28px; border: 0; border-radius: var(--mk-r-rond); cursor: pointer;
-  font: 700 16px/1 var(--mk-font-tekst); text-decoration: none;
+  font: 600 15px/1 var(--mk-font-tekst); letter-spacing: .02em; text-decoration: none;
   transition: background-color var(--mk-snel) var(--mk-ease-std), box-shadow var(--mk-snel) var(--mk-ease-std), transform var(--mk-snel) var(--mk-ease-std);
 }
 .surf-btn:hover { transform: translateY(-2px); }
 .surf-btn svg { width: 16px; height: 16px; transition: transform var(--mk-snel) var(--mk-ease-std); }
 .surf-btn:hover svg { transform: translateX(4px); }
 .surf-btn--primary { background: var(--mk-accent); color: var(--mk-op-accent); box-shadow: var(--mk-sh-knop); }
+.surf-btn--primary:hover { background: var(--surf-captain); color: #fff; }
 .surf-btn--ghost { background: var(--mk-kaart); color: var(--mk-tekst); box-shadow: inset 0 0 0 1px var(--mk-lijn); }
 .surf-btn--ghost:hover { box-shadow: inset 0 0 0 1px var(--mk-accent); }
 .surf-btn:focus-visible { outline: 2px solid var(--mk-accent); outline-offset: 3px; }
@@ -92,7 +103,7 @@
 .surf-ph svg { width: 48px; height: auto; margin-inline: auto; opacity: .7; }
 .surf-ph span { font: 600 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; word-break: break-all; opacity: .85; }
 
-.surf-wave { display: block; width: 100%; height: 14px; color: var(--mk-accent); opacity: .5; }
+.tt-golfje { display: block; color: var(--tt-accent); }
 
 /* ==========================================================================
    HEADER: zwevende pill-nav (dicht vlak, geen glas)
@@ -109,7 +120,15 @@
 .surf-header-wrap.is-hidden .surf-header { transform: translateY(-140%); }
 .surf-header__logo { display: inline-flex; align-items: center; text-decoration: none; color: inherit; flex-shrink: 0; }
 .surf-header__logo img { height: auto; display: block; }
-.surf-header__word { font: 900 22px/1 var(--mk-font-kop); letter-spacing: -0.8px; }
+/* logo-lockups (snippet tt-logo) */
+.tt-lock { display: inline-flex; align-items: center; gap: .55em; color: inherit; }
+.tt-lock--liggend .tt-maan { height: 1.5em; width: auto; }
+.tt-lock--liggend .tt-woord { height: 1.05em; width: auto; }
+.tt-lock--staand { flex-direction: column; gap: .5em; }
+.tt-lock--staand .tt-maan { height: 2.2em; width: auto; }
+.tt-lock--staand .tt-woord { height: 1.3em; width: auto; }
+.surf-header__logo .tt-lock { font-size: 26px; }
+.surf-drawer .tt-lock { font-size: 26px; }
 .surf-header__nav { display: none; }
 .surf-header__nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; }
 .surf-header__nav .item { display: flex; align-items: center; position: relative; }
@@ -157,7 +176,8 @@
 /* ==========================================================================
    HERO
    ========================================================================== */
-.surf-hero { padding-top: calc(var(--mk-sectie) + 72px); }
+.surf-hero { padding-top: calc(var(--mk-sectie) * .7); }
+.surf-header-wrap.is-overlay ~ * .surf-hero, body:has(.surf-header-wrap.is-overlay) .surf-hero { padding-top: calc(var(--mk-sectie) + 72px); }
 .surf-hero__grid { display: grid; gap: 40px; align-items: center; }
 .surf-hero__text .surf-lead { margin-top: 24px; }
 .surf-hero__trust { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 28px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--mk-zacht); }
@@ -242,7 +262,7 @@
 .surf-statement { text-align: center; }
 .surf-statement blockquote { font-size: var(--mk-fs-statement); line-height: .98; letter-spacing: -2.5px; max-width: 16ch; margin-inline: auto; }
 .surf-statement cite { display: block; margin-top: 28px; font-style: normal; font-size: var(--mk-fs-label); font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: var(--mk-zacht); }
-.surf-statement .surf-wave { max-width: 180px; margin: 0 auto 36px; }
+.surf-statement .tt-golfje { width: 64px; margin: 0 auto 32px; }
 
 /* ==========================================================================
    FOTOGALERIJ
@@ -333,7 +353,15 @@
 .surf-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
 .surf-footer a { color: inherit; text-decoration: none; font-size: 15px; opacity: .88; }
 .surf-footer a:hover { opacity: 1; text-decoration: underline; text-underline-offset: .3em; }
-.surf-footer__word { font: 900 clamp(64px, 16vw, 200px)/.85 var(--mk-font-kop); letter-spacing: -0.05em; opacity: .1; white-space: nowrap; overflow: hidden; }
+.surf-footer__word { color: var(--surf-creme); opacity: .1; margin-top: 8px; }
+.surf-footer__word .tt-woord { width: 100%; height: auto; }
+.surf-footer__brand .tt-lock { font-size: 34px; color: var(--surf-creme); }
+.surf-footer__zegel { width: 120px; color: var(--surf-sunshine); margin-top: 28px; opacity: .9; }
+.surf-brief { margin-top: 28px; max-width: 420px; }
+.surf-brief h2 { font: italic 480 26px/1.1 var(--mk-font-kop) !important; letter-spacing: -0.01em !important; text-transform: none !important; opacity: 1 !important; color: var(--surf-creme); margin-bottom: 8px !important; }
+.surf-brief p { font-size: 14px; opacity: .75; margin-bottom: 14px; }
+.surf-brief .surf-signup { margin: 0; background: rgba(245, 238, 223, .08); box-shadow: inset 0 0 0 1px rgba(245, 238, 223, .25); }
+.surf-brief .surf-btn--primary { background: var(--surf-creme); color: var(--surf-deep); }
 .surf-footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding-top: 24px; border-top: 1px solid rgba(245, 238, 223, .15); font-size: 13px; opacity: .8; }
 .surf-socials { display: flex; gap: 8px; margin-top: 24px; list-style: none; padding: 0; }
 .surf-socials a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(245, 238, 223, .25); opacity: 1; }
@@ -356,7 +384,9 @@
 /* ---------- Dawn-onderdelen in dezelfde stijl ---------- */
 .button, .shopify-payment-button__button--unbranded { border-radius: var(--mk-r-rond); font-weight: 700; }
 .button::after, .button::before, .shopify-payment-button__button--unbranded::after { border-radius: var(--mk-r-rond); }
-h1, h2, .h0, .h1, .h2 { font-weight: 900; letter-spacing: -0.03em; }
+h1, h2, h3, .h0, .h1, .h2, .h3 { font-family: var(--font-heading-family); font-weight: 480; letter-spacing: -0.02em; }
+.product__title h1 { font-size: clamp(34px, 4vw, 52px); line-height: 1.04; }
+.price { font-family: var(--font-body-family); }
 .page-width { max-width: var(--mk-breed); padding-inline: var(--mk-marge); }
 
 /* leesbalk (mk-stijl) in de zeekleur */
@@ -373,3 +403,65 @@ h1, h2, .h0, .h1, .h2 { font-weight: 900; letter-spacing: -0.03em; }
 .surf-gallery__item:nth-child(3n+1) figcaption { background: var(--surf-sunshine); color: var(--surf-deep); }
 .surf-gallery__item:nth-child(3n+2) figcaption { background: var(--surf-rose); color: var(--surf-deep); }
 .surf-gallery__item:nth-child(3n) figcaption { background: var(--surf-baby); color: var(--surf-deep); }
+
+/* ==========================================================================
+   MERK: logo, zegel, iconen en de merksecties
+   ========================================================================== */
+.tt-icoon { display: block; width: 100%; height: auto; }
+.surf-card__icon { width: 64px; height: 64px; border-radius: 0; background: none; color: var(--surf-deep); margin-bottom: 4px; }
+.surf-card__icon .tt-icoon { width: 64px; height: 64px; }
+.surf-card:nth-child(4n+2) .surf-card__icon { color: var(--surf-captain); }
+.surf-card:nth-child(4n+3) .surf-card__icon { color: var(--surf-poppy); }
+
+/* hero: zegel op de foto */
+.surf-hero__zegel { position: absolute; right: 18px; top: 18px; z-index: 2; width: clamp(96px, 11vw, 132px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; background: var(--surf-creme); color: var(--surf-deep); box-shadow: var(--mk-sh-bubbel); padding: 8px; transform: rotate(-8deg); }
+.surf-hero__zegel .tt-zegel { width: 100%; height: auto; }
+.surf-hero__badge i .tt-icoon { width: 22px; height: 22px; }
+
+/* CTA: zegel boven de kop */
+.surf-cta__zegel { width: 112px; margin: 0 auto 26px; color: var(--surf-sunshine); }
+.surf-cta__zegel .tt-zegel { width: 100%; height: auto; }
+
+/* waardenbalk */
+.surf-waarden { border-block: 1px solid var(--mk-lijn); }
+.surf-waarden__lijst { list-style: none; margin: 0; padding: 0; display: grid; gap: 28px 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+.surf-waarde { display: flex; gap: 16px; align-items: flex-start; }
+.surf-waarde .tt-icoon { width: 46px; height: 46px; flex-shrink: 0; color: var(--surf-deep); }
+.surf-waarde:nth-child(2) .tt-icoon { color: var(--surf-captain); }
+.surf-waarde:nth-child(3) .tt-icoon { color: var(--surf-poppy); }
+.surf-waarde h3 { font-size: 19px !important; margin-bottom: 4px !important; }
+.surf-waarde p { font-size: 14px; line-height: 1.5; color: var(--mk-zacht); }
+
+/* ons teken */
+.surf-merkverhaal__grid { display: grid; gap: 40px; align-items: center; }
+.surf-merkverhaal__maan { width: min(360px, 70%); justify-self: center; color: var(--surf-creme); }
+.surf-merkverhaal__maan .tt-maan { width: 100%; height: auto; }
+.surf-merkverhaal__tekst h2 { margin-bottom: 22px; }
+.surf-merkverhaal__punten { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 16px; }
+.surf-merkverhaal__punten li { display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: center; font-size: 15px; line-height: 1.55; color: var(--mk-zacht); }
+.surf-merkverhaal__punten svg { width: 40px; height: auto; color: var(--surf-sunshine); }
+.surf-merkverhaal__slot { margin-top: 30px; font: italic 480 clamp(26px, 3vw, 36px)/1.1 var(--mk-font-kop); color: var(--tt-accent); }
+@media (min-width: 990px) { .surf-merkverhaal__grid { grid-template-columns: .9fr 1.1fr; gap: 80px; } }
+
+/* accentwoord ook in de merkstijl-vlakken cursief i.p.v. verloop */
+.mk-vlak .mk-h2 em, .mk-vlak .mk-statement em, .mk-vlak .mk-hero em, .mk-chaos .mk-statement em {
+  background: none !important; -webkit-text-fill-color: currentColor !important; color: var(--tt-accent) !important; font-style: italic;
+}
+.surf-footer__cols h2 { font: 600 11px/1 var(--mk-font-tekst) !important; letter-spacing: .22em !important; text-transform: uppercase; opacity: .6; }
+
+/* merkbalk boven de header */
+.surf-balk { position: relative; z-index: 41; background: var(--surf-deep); color: var(--surf-creme); }
+.surf-balk__inner { max-width: var(--mk-breed); margin-inline: auto; padding: 9px var(--mk-marge); display: flex; justify-content: center; align-items: center; gap: 14px; font: 500 11.5px/1.3 var(--mk-font-tekst); letter-spacing: .14em; text-transform: uppercase; text-align: center; }
+.surf-balk .tt-golfje { width: 18px; color: var(--surf-sunshine); flex-shrink: 0; }
+.surf-balk a { color: inherit; text-underline-offset: .25em; }
+.surf-balk__extra { display: none; }
+@media (min-width: 990px) { .surf-balk__extra { display: contents; } }
+
+/* koppen van de merkstijl: Fraunces-spatiëring winnen van mk-stijl */
+.mk-hero, .mk-h2, .mk-statement { letter-spacing: -0.02em !important; font-weight: 480 !important; }
+@media (max-width: 600px) {
+  .surf-header { padding-left: 16px; gap: 8px; }
+  .surf-header__logo .tt-lock { font-size: 20px; }
+  .surf-header__actions a[href*="search"] { display: none; }
+  .surf-icon-btn { width: 42px; height: 42px; }
+}

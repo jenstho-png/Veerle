@@ -4,7 +4,9 @@
   "sections": {
     "surf-header": {
       "type": "surf-header",
-      "settings": {},
+      "settings": {
+        "overlay_home": false
+      },
       "blocks": {
         "tab-1": {
           "type": "tab",
@@ -46,9 +48,14 @@
         "tab-3",
         "tab-4"
       ]
+    },
+    "surf-balk": {
+      "type": "surf-balk",
+      "settings": {}
     }
   },
   "order": [
+    "surf-balk",
     "surf-header"
   ]
 }

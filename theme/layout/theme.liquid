@@ -15,6 +15,8 @@
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
       <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
+    {%- else -%}
+      {%- render 'tt-favicon' -%}
     {%- endif -%}
 
     <title>
@@ -280,7 +282,7 @@
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'surf.css' | asset_url | stylesheet_tag }}
-    {{ 'archivo-latin-900-normal.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+    {{ 'fraunces-soft-480.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
     {{ 'inter-latin-400-normal.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
     <script src="{{ 'surf.js' | asset_url }}" defer="defer"></script>
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">

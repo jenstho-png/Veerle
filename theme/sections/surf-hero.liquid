@@ -22,7 +22,7 @@
     <div class="surf-hero__grid">
       <div class="surf-hero__text">
         {%- if section.settings.eyebrow != blank -%}
-          <p class="surf-eyebrow mk-in">{{ section.settings.eyebrow }}</p>
+          <p class="surf-eyebrow mk-in">{% render 'tt-logo', variant: 'golfje' %}{{ section.settings.eyebrow }}</p>
         {%- endif -%}
         {%- render 'surf-headline', text: section.settings.heading, tag: 'h1', class: 'mk-in mk-na-1' -%}
         {%- if section.settings.text != blank -%}
@@ -57,8 +57,11 @@
             sizes: '(min-width: 990px) 45vw, 100vw',
             loading: loading
           -%}
+          {%- if section.settings.show_zegel -%}
+            <div class="surf-hero__zegel">{% render 'tt-logo', variant: 'zegel' %}</div>
+          {%- endif -%}
           {%- if section.settings.badge != blank -%}
-            <div class="surf-hero__badge"><i>{% render 'surf-icon', icon: 'hands' %}</i>{{ section.settings.badge }}</div>
+            <div class="surf-hero__badge"><i>{% render 'tt-icoon', icoon: 'tas' %}</i>{{ section.settings.badge }}</div>
           {%- endif -%}
         </div>
       {%- endif -%}
@@ -156,6 +159,12 @@
       "id": "image_alt",
       "label": "Alt-tekst",
       "default": "Surfer loopt met surfboard in draagtas op de rug naar een afgelegen surfspot"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_zegel",
+      "label": "Zegel op de foto",
+      "default": true
     },
     {
       "type": "text",
