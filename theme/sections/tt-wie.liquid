@@ -1,0 +1,141 @@
+<section class="tt tt-wie tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap">
+    {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l tt-wie__kop' -%}
+    <div class="tt-wie__grid">
+      {%- for block in section.blocks -%}
+        <a class="tt-wie__kaart" href="{{ block.settings.link | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }} data-tt-cursor="shop">
+          <div class="tt-wie__foto tt-onthul">{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, fallback: block.settings.fallback, alt: block.settings.alt, sizes: '(min-width: 750px) 48vw, 100vw' -%}</div>
+          <div class="tt-wie__tekst">
+            <h3>{{ block.settings.titel }}</h3>
+            <p>{{ block.settings.tekst }}</p>
+            <span class="tt-link">{{ block.settings.knop }}</span>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: voor wie",
+  "tag": "div",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        }
+      ],
+      "default": "creme"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
+      "default": "Voor elke|*soort* surfer."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "kaart",
+      "name": "Kaart",
+      "settings": [
+        {
+          "type": "text",
+          "id": "titel",
+          "label": "Titel",
+          "default": "Titel"
+        },
+        {
+          "type": "textarea",
+          "id": "tekst",
+          "label": "Tekst"
+        },
+        {
+          "type": "text",
+          "id": "knop",
+          "label": "Linktekst",
+          "default": "Shop de tas"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto"
+        },
+        {
+          "type": "text",
+          "id": "filename",
+          "label": "Bestandsnaam",
+          "default": ""
+        },
+        {
+          "type": "text",
+          "id": "fallback",
+          "label": "Sfeerfoto (asset)",
+          "default": "tt-foto-beginner",
+          "info": "Wordt gebruikt zolang er geen eigen foto is."
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt-tekst",
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: voor wie",
+      "blocks": [
+        {
+          "type": "kaart",
+          "settings": {
+            "titel": "Je leert surfen",
+            "tekst": "Groot softtop-board, lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.",
+            "knop": "Shop de tas",
+            "fallback": "tt-foto-beginner",
+            "filename": "tide-tode-beginner.jpg",
+            "alt": "Beginner met een softtop op het strand"
+          }
+        },
+        {
+          "type": "kaart",
+          "settings": {
+            "titel": "Je zoekt de verstopte spot",
+            "tekst": "Door de bush, over rotsen, achterop de scooter. Jouw board hangt veilig op je rug, jij houdt je handen vrij om te klimmen.",
+            "knop": "Shop de tas",
+            "fallback": "tt-foto-avontuur",
+            "filename": "tide-tode-avontuur.jpg",
+            "alt": "Surfer klimt over rotsen naar een afgelegen spot"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

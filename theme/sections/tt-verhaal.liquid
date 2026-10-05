@@ -1,18 +1,18 @@
-<section class="tt tt-verhaal tt-bg--{{ section.settings.bg }}" id="tt-verhaal-{{ section.id }}">
+<section class="tt tt-verhaal tt-bg--{{ section.settings.bg }}" id="tt-verhaal">
   <div class="tt-wrap tt-verhaal__grid">
-    <div class="tt-verhaal__rond" data-tt-groei>{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, scene: section.settings.scene, alt: section.settings.alt, sizes: '(min-width: 990px) 40vw, 80vw' -%}</div>
+    <div class="tt-verhaal__foto tt-onthul" data-tt-snelheid="-0.06">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-verhaal', alt: section.settings.alt, sizes: '(min-width: 990px) 42vw, 90vw' -%}</div>
     <div class="tt-verhaal__tekst">
       {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
-      <div class="tt-lead tt-in rte">{{ section.settings.text }}</div>
+      <div class="tt-verhaal__body tt-in">{{ section.settings.text }}</div>
       {%- if section.settings.naam != blank -%}<p class="tt-handtekening tt-in">{{ section.settings.naam }}</p>{%- endif -%}
-      {%- if section.settings.btn_label != blank -%}<a class="tt-link tt-in" href="{{ section.settings.btn_link | default: '#' }}">{{ section.settings.btn_label }}</a>{%- endif -%}
+      {%- if section.settings.link_label != blank -%}<a class="tt-link tt-in" href="{{ section.settings.link | default: '/pages/over-ons' }}">{{ section.settings.link_label }}</a>{%- endif -%}
     </div>
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "TT: verhaal",
+  "name": "TT: het verhaal",
   "tag": "div",
   "settings": [
     {
@@ -25,40 +25,32 @@
           "label": "Crème"
         },
         {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
           "value": "deep",
           "label": "Deep"
         },
         {
           "value": "baby",
           "label": "Baby"
-        },
-        {
-          "value": "rose",
-          "label": "Rose"
-        },
-        {
-          "value": "sunshine",
-          "label": "Sunshine"
-        },
-        {
-          "value": "poppy",
-          "label": "Poppy"
         }
       ],
-      "default": "rose"
+      "default": "deep"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Kop",
-      "info": "Een | is een nieuwe regel. Zet een woord tussen *sterretjes* voor het cursieve accent.",
-      "default": "Het begon met|pijnlijke schouders|in *Australië.*"
+      "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
+      "default": "“Niets hield het vol.|*Dus maakten we|hem zelf.*”"
     },
     {
       "type": "richtext",
       "id": "text",
       "label": "Tekst",
-      "default": "<p>Lange hikes naar afgelegen spots. Wax die schuurt, een board dat nergens lekker vast te houden is, met één hand sturen op de scooter. Touwtjes en spanbanden hielden het niet. Dus maakte ik de tas zelf.</p>"
+      "default": "<p>Lange hikes naar afgelegen spots in Australië, Midden-Amerika en Azië, met een log board onder je arm. De wax schuurt, je schouders doen pijn en op de scooter stuur je met één hand. Losse touwtjes, spanbanden, standaardhoezen: we hebben het allemaal geprobeerd.</p><p>Dus maakten we de tas die we zelf zochten. Van riders, voor riders.</p>"
     },
     {
       "type": "text",
@@ -68,18 +60,18 @@
     },
     {
       "type": "text",
-      "id": "btn_label",
+      "id": "link_label",
       "label": "Link",
       "default": "Lees het hele verhaal"
     },
     {
       "type": "url",
-      "id": "btn_link",
-      "label": "Link: adres"
+      "id": "link",
+      "label": "Link-adres"
     },
     {
       "type": "header",
-      "content": "Ronde foto"
+      "content": "Foto"
     },
     {
       "type": "image_picker",
@@ -89,60 +81,20 @@
     {
       "type": "text",
       "id": "filename",
-      "label": "Bestandsnaam (SEO)",
-      "default": "veerle-op-reis.jpg",
-      "info": "Upload in Content > Bestanden met precies deze naam; tot die tijd staat er een getekende scène."
-    },
-    {
-      "type": "select",
-      "id": "scene",
-      "label": "Scène zolang er geen foto is",
-      "options": [
-        {
-          "value": "zee",
-          "label": "Zee"
-        },
-        {
-          "value": "duin",
-          "label": "Duinen"
-        },
-        {
-          "value": "onder",
-          "label": "Onder water"
-        },
-        {
-          "value": "avond",
-          "label": "Zonsondergang"
-        },
-        {
-          "value": "nacht",
-          "label": "Nachtzee"
-        },
-        {
-          "value": "palm",
-          "label": "Palmschaduw"
-        },
-        {
-          "value": "boards",
-          "label": "Boards"
-        },
-        {
-          "value": "tas",
-          "label": "De tas"
-        }
-      ],
-      "default": "duin"
+      "label": "Bestandsnaam",
+      "default": "tide-tode-verhaal.jpg",
+      "info": "Of upload in Content > Bestanden met precies deze naam. Tot die tijd staat er een sfeerfoto."
     },
     {
       "type": "text",
       "id": "alt",
       "label": "Alt-tekst",
-      "default": "Veerle op reis met haar surfboard"
+      "default": "Op reis met een surfboard"
     }
   ],
   "presets": [
     {
-      "name": "TT: verhaal"
+      "name": "TT: het verhaal"
     }
   ]
 }

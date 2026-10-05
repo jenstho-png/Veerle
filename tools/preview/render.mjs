@@ -6,7 +6,7 @@ import path from 'path';
 const T = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../theme');
 const OUT = path.resolve(path.dirname(new URL(import.meta.url).pathname), 'out');
 fs.mkdirSync(OUT, { recursive: true });
-for (const f of fs.readdirSync(`${T}/assets`)) if (/\.(css|woff2|png|webp)$/.test(f) || ['mk-stijl.js', 'tt.js'].includes(f)) fs.copyFileSync(`${T}/assets/${f}`, `${OUT}/${f}`);
+for (const f of fs.readdirSync(`${T}/assets`)) if (/\.(css|woff2|png|webp|jpg)$/.test(f) || ['mk-stijl.js', 'tt.js'].includes(f)) fs.copyFileSync(`${T}/assets/${f}`, `${OUT}/${f}`);
 fs.copyFileSync(`${T}/assets/surf.js`, `${OUT}/surf.js`);
 
 const engine = new Liquid({ root: [`${T}/snippets`], extname: '.liquid', strictFilters: false, jsTruthy: false });
@@ -17,7 +17,7 @@ engine.registerTag('form', {
   *render(ctx, emitter) { ctx.push({ form: { posted_successfully: false } }); emitter.write('<form method="post">'); yield this.liquid.renderer.renderTemplates(this.tpls, ctx, emitter); emitter.write('</form>'); ctx.pop(); },
 });
 const F = {
-  asset_url: (s) => s, image_url: (i) => i?.src || i, money: (c) => `€${(c / 100).toFixed(2).replace('.', ',')}`,
+  asset_url: (s) => s, image_url: (i) => i?.src || i, money: (c) => `€${(c / 100).toFixed(2).replace('.', ',')}`, money_without_trailing_zeros: (c) => `€${(c / 100).toFixed(2).replace('.00', '').replace('.', ',')}`,
   json: (v) => JSON.stringify(v ?? null), t: (k) => k, stylesheet_tag: (u) => `<link rel="stylesheet" href="${u}">`,
   image_tag: (src, ...a) => `<img src="${src}" alt="">`, payment_type_svg_tag: () => '',
   preload_tag: (u) => `<link rel="preload" href="${u}" as="image">`,
@@ -26,7 +26,10 @@ const F = {
 for (const [k, fn] of Object.entries(F)) engine.registerFilter(k, fn);
 
 const settings = {
-  surf_popup_enable: false, social_instagram_link: 'https://instagram.com/', logo: null,
+  surf_popup_enable: false,
+  // nep-product zodat prijs en knoppen in de preview te zien zijn
+  tt_product: { title: 'De Draagtas', url: '/products/de-draagtas', available: true, media: [], featured_media: null, has_only_default_variant: true, options_with_values: [], variants: [],
+    selected_or_first_available_variant: { id: 1, price: 4000, compare_at_price: null, available: true } }, social_instagram_link: 'https://instagram.com/', logo: null,
 };
 const globals = {
   settings, shop: { name: 'Tide-Tode', url: 'https://example.com' },

@@ -1,0 +1,103 @@
+<section class="tt tt-probleem tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap tt-probleem__wrap">
+    <div class="tt-probleem__foto tt-probleem__foto--1 tt-onthul" data-tt-snelheid="0.12">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-probleem-1', alt: section.settings.alt, sizes: '(min-width: 990px) 22vw, 40vw' -%}</div>
+    <p class="tt-probleem__tekst" data-tt-vul>{{ section.settings.tekst | escape | replace: '*', '' }}</p>
+    <div class="tt-probleem__foto tt-probleem__foto--2 tt-onthul" data-tt-snelheid="-0.1">{%- render 'tt-beeld', image: section.settings.b2_image, filename: section.settings.b2_filename, fallback: 'tt-foto-probleem-2', alt: section.settings.b2_alt, sizes: '(min-width: 990px) 22vw, 40vw' -%}</div>
+    {%- if section.settings.slot != blank -%}{%- render 'tt-kop', text: section.settings.slot, tag: 'p', class: 'tt-kop--l tt-probleem__slot' -%}{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: het probleem",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        }
+      ],
+      "default": "creme"
+    },
+    {
+      "type": "textarea",
+      "id": "tekst",
+      "label": "Tekst die volloopt",
+      "default": "Wax onder je arm. Pijn in je schouders. Met één hand sturen op de scooter. Je natte, zanderige plank in een dichte hoes proppen. Elke surfer kent het."
+    },
+    {
+      "type": "text",
+      "id": "slot",
+      "label": "Slotzin",
+      "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
+      "default": "Dat kan *anders.*"
+    },
+    {
+      "type": "header",
+      "content": "Foto links"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Foto"
+    },
+    {
+      "type": "text",
+      "id": "filename",
+      "label": "Bestandsnaam",
+      "default": "tide-tode-sjouwen.jpg",
+      "info": "Of upload in Content > Bestanden met precies deze naam. Tot die tijd staat er een sfeerfoto."
+    },
+    {
+      "type": "text",
+      "id": "alt",
+      "label": "Alt-tekst",
+      "default": "Board onder de arm op weg naar het strand"
+    },
+    {
+      "type": "header",
+      "content": "Foto rechts"
+    },
+    {
+      "type": "image_picker",
+      "id": "b2_image",
+      "label": "Foto"
+    },
+    {
+      "type": "text",
+      "id": "b2_filename",
+      "label": "Bestandsnaam",
+      "default": "tide-tode-onderweg.jpg",
+      "info": "Of upload in Content > Bestanden met precies deze naam. Tot die tijd staat er een sfeerfoto."
+    },
+    {
+      "type": "text",
+      "id": "b2_alt",
+      "label": "Alt-tekst",
+      "default": "Onderweg naar de spot"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: het probleem"
+    }
+  ]
+}
+{% endschema %}

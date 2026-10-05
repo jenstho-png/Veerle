@@ -2,185 +2,89 @@
   "sections": {
     "hero": {
       "type": "tt-hero",
-      "settings": {
-        "btn2_link": "shopify://pages/over-ons"
-      }
-    },
-    "band": {
-      "type": "tt-band",
-      "settings": {},
-      "blocks": {
-        "woord-1": {
-          "type": "woord",
-          "settings": {
-            "tekst": "handen vrij",
-            "icoon": "golfje"
-          }
-        },
-        "woord-2": {
-          "type": "woord",
-          "settings": {
-            "tekst": "op weg naar zee",
-            "icoon": "schelp"
-          }
-        },
-        "woord-3": {
-          "type": "woord",
-          "settings": {
-            "tekst": "van riders, voor riders",
-            "icoon": "golfje"
-          }
-        },
-        "woord-4": {
-          "type": "woord",
-          "settings": {
-            "tekst": "nul schuurplekken",
-            "icoon": "zeester"
-          }
-        }
-      },
-      "block_order": [
-        "woord-1",
-        "woord-2",
-        "woord-3",
-        "woord-4"
-      ]
-    },
-    "manifest": {
-      "type": "tt-manifest",
       "settings": {}
     },
-    "collage": {
-      "type": "tt-collage",
+    "usp": {
+      "type": "tt-usp",
       "settings": {},
       "blocks": {
-        "beeld-1": {
-          "type": "beeld",
+        "usp-1": {
+          "type": "usp",
           "settings": {
-            "vorm": "boog",
-            "scene": "zee",
-            "filename": "tide-tode-australie-hike.jpg",
-            "alt": "Hike naar een surfspot in Australië",
-            "caption": "Australië, om zes uur 's ochtends"
+            "icoon": "voeten",
+            "tekst": "Handen vrij, ook op de scooter"
           }
         },
-        "quote-2": {
-          "type": "quote",
+        "usp-2": {
+          "type": "usp",
           "settings": {
-            "tekst": "Board op je rug, wind in je haar.",
-            "bg": "rose"
+            "icoon": "board",
+            "tekst": "Softtop én hardboard"
           }
         },
-        "beeld-3": {
-          "type": "beeld",
+        "usp-3": {
+          "type": "usp",
           "settings": {
-            "vorm": "rond",
-            "scene": "palm",
-            "filename": "tide-tode-palmschaduw-hostel.jpg",
-            "alt": "Palmschaduw op de muur van een hostel",
-            "caption": "het hostel"
+            "icoon": "golf",
+            "tekst": "Sterke, waterbestendige stof"
           }
         },
-        "zegel-4": {
-          "type": "zegel",
+        "usp-4": {
+          "type": "usp",
           "settings": {
-            "bg": "sunshine"
-          }
-        },
-        "beeld-5": {
-          "type": "beeld",
-          "settings": {
-            "vorm": "staand",
-            "scene": "onder",
-            "filename": "tide-tode-duiken.jpg",
-            "alt": "Duiken in diep blauw water",
-            "caption": "en dan even onder water"
-          }
-        },
-        "icoon-6": {
-          "type": "icoon",
-          "settings": {
-            "icoon": "schelp",
-            "bg": "baby"
-          }
-        },
-        "beeld-7": {
-          "type": "beeld",
-          "settings": {
-            "vorm": "breed",
-            "scene": "avond",
-            "filename": "tide-tode-zonsondergang.jpg",
-            "alt": "Zonsondergang na een surfsessie",
-            "caption": "golden hour"
-          }
-        },
-        "beeld-8": {
-          "type": "beeld",
-          "settings": {
-            "vorm": "vierkant",
-            "scene": "boards",
-            "filename": "tide-tode-boards.jpg",
-            "alt": "Surfboards tegen een muur",
-            "caption": "kies je board"
-          }
-        },
-        "beeld-9": {
-          "type": "beeld",
-          "settings": {
-            "vorm": "boog",
-            "scene": "duin",
-            "filename": "tide-tode-duinen.jpg",
-            "alt": "Tas op de rug in de duinen",
-            "caption": "de duinen om de hoek"
+            "icoon": "tas",
+            "tekst": "Makkelijk mee in het vliegtuig"
           }
         }
       },
       "block_order": [
-        "beeld-1",
-        "quote-2",
-        "beeld-3",
-        "zegel-4",
-        "beeld-5",
-        "icoon-6",
-        "beeld-7",
-        "beeld-8",
-        "beeld-9"
+        "usp-1",
+        "usp-2",
+        "usp-3",
+        "usp-4"
       ]
     },
-    "tas": {
-      "type": "tt-tas",
+    "koop": {
+      "type": "tt-koop",
       "settings": {},
       "blocks": {
         "punt-1": {
           "type": "punt",
           "settings": {
-            "icoon": "tas",
-            "titel": "Handen vrij",
-            "tekst": "Het board hangt op je rug. Je handen zijn voor het stuur, de rotsen of je koffie."
+            "tekst": "Past op softtops en vollere boards én op hardboards"
           }
         },
         "punt-2": {
           "type": "punt",
           "settings": {
-            "icoon": "voeten",
-            "titel": "Kilometers zonder klagen",
-            "tekst": "Ergonomische banden verdelen het gewicht. Je schouders komen net zo fris aan als jij."
+            "tekst": "Gewicht goed verdeeld over je rug, niet op één schouder"
           }
         },
         "punt-3": {
           "type": "punt",
           "settings": {
-            "icoon": "golf",
-            "titel": "Nat, zand, zout: prima",
-            "tekst": "Zware stof en stevige stiksels. Natte board erin na de sessie, klaar."
+            "tekst": "Geen natte, zanderige plank in een dichte hoes"
           }
         },
-        "punt-4": {
-          "type": "punt",
+        "detail-4": {
+          "type": "detail",
           "settings": {
-            "icoon": "meeuw",
-            "titel": "Reist mee",
-            "tekst": "Klein opgevouwen in je bagage. Huur je ter plekke een board, dan heb je je tas al."
+            "titel": "Wat past erin",
+            "tekst": "<p>Eén universele maat. Van de grote softtop waar je op leert surfen tot je hardboard voor de verstopte spot.</p>"
+          }
+        },
+        "detail-5": {
+          "type": "detail",
+          "settings": {
+            "titel": "Materiaal",
+            "tekst": "<p>Zware, waterbestendige stof, sterke stiksels en donker metalen gespen. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"
+          }
+        },
+        "detail-6": {
+          "type": "detail",
+          "settings": {
+            "titel": "Verzending en retour",
+            "tekst": "<p>We versturen door heel Europa. Past hij toch niet bij je? Je hebt 14 dagen bedenktijd.</p>"
           }
         }
       },
@@ -188,65 +92,184 @@
         "punt-1",
         "punt-2",
         "punt-3",
-        "punt-4"
+        "detail-4",
+        "detail-5",
+        "detail-6"
       ]
     },
-    "reis": {
-      "type": "tt-reis",
+    "probleem": {
+      "type": "tt-probleem",
+      "settings": {}
+    },
+    "zo": {
+      "type": "tt-zo",
       "settings": {},
       "blocks": {
-        "paneel-1": {
-          "type": "paneel",
+        "stap-1": {
+          "type": "stap",
           "settings": {
-            "scene": "duin",
-            "filename": "tide-tode-hostel-naar-strand.jpg",
-            "titel": "Van je hostel naar het strand",
-            "tekst": "Groot board, lange wandeling. Banden om en lopen maar."
+            "titel": "Leg je board erin",
+            "tekst": "Softtop of hardboard, nat of droog. Gewoon zoals hij uit het water komt.",
+            "fallback": "tt-foto-stap-1",
+            "filename": "tide-tode-stap-1.jpg",
+            "alt": "Surfboard in het zand"
           }
         },
-        "paneel-2": {
-          "type": "paneel",
+        "stap-2": {
+          "type": "stap",
           "settings": {
-            "scene": "zee",
-            "filename": "tide-tode-verstopte-spot.jpg",
-            "titel": "Over de rotsen naar die verstopte spot",
-            "tekst": "Twee handen vrij om te klimmen. Je board hangt veilig op je rug."
+            "titel": "Trek de banden aan",
+            "tekst": "Je board zit vast en schuift niet. Geen losse touwtjes of spanbanden meer.",
+            "fallback": "tt-foto-stap-2",
+            "filename": "tide-tode-stap-2.jpg",
+            "alt": "Handen trekken een band strak"
           }
         },
-        "paneel-3": {
-          "type": "paneel",
+        "stap-3": {
+          "type": "stap",
           "settings": {
-            "scene": "avond",
-            "filename": "tide-tode-scooter-kust.jpg",
-            "titel": "Op de scooter langs de kust",
-            "tekst": "Stuur met twee handen. De tas doet de rest."
-          }
-        },
-        "paneel-4": {
-          "type": "paneel",
-          "settings": {
-            "scene": "boards",
-            "filename": "tide-tode-op-reis.jpg",
-            "titel": "Naar de andere kant van de wereld",
-            "tekst": "Opgevouwen in je bagage. Huur ter plekke een board en je tas is er al."
+            "titel": "Op je rug en gaan",
+            "tekst": "Door de duinen, over de rotsen of achterop de scooter. Jij hebt je handen vrij.",
+            "fallback": "tt-foto-stap-3",
+            "filename": "tide-tode-stap-3.jpg",
+            "alt": "Surfer loopt met board naar zee"
           }
         }
       },
       "block_order": [
-        "paneel-1",
-        "paneel-2",
-        "paneel-3",
-        "paneel-4"
+        "stap-1",
+        "stap-2",
+        "stap-3"
+      ]
+    },
+    "muur": {
+      "type": "tt-muur",
+      "settings": {},
+      "blocks": {
+        "foto-1": {
+          "type": "foto",
+          "settings": {
+            "vorm": "hoog",
+            "fallback": "tt-foto-mood-1",
+            "onderschrift": "de hike naar de spot",
+            "alt": "Pad door de duinen naar zee"
+          }
+        },
+        "foto-2": {
+          "type": "foto",
+          "settings": {
+            "vorm": "vierkant",
+            "fallback": "tt-foto-mood-2",
+            "alt": "Boards in het zand"
+          }
+        },
+        "foto-3": {
+          "type": "foto",
+          "settings": {
+            "vorm": "boog",
+            "fallback": "tt-foto-mood-3",
+            "onderschrift": "golden hour",
+            "alt": "Zee bij zonsondergang"
+          }
+        },
+        "foto-4": {
+          "type": "foto",
+          "settings": {
+            "vorm": "liggend",
+            "fallback": "tt-foto-mood-4",
+            "alt": "Rustige golven"
+          }
+        },
+        "foto-5": {
+          "type": "foto",
+          "settings": {
+            "vorm": "staand",
+            "fallback": "tt-foto-mood-5",
+            "onderschrift": "op weg naar zee",
+            "alt": "Surfer op weg naar zee"
+          }
+        },
+        "foto-6": {
+          "type": "foto",
+          "settings": {
+            "vorm": "hoog",
+            "fallback": "tt-foto-mood-6",
+            "alt": "Board tegen een muur"
+          }
+        },
+        "foto-7": {
+          "type": "foto",
+          "settings": {
+            "vorm": "staand",
+            "fallback": "tt-foto-mood-7",
+            "onderschrift": "van riders voor riders",
+            "alt": "Surfers op het strand"
+          }
+        },
+        "foto-8": {
+          "type": "foto",
+          "settings": {
+            "vorm": "boog",
+            "fallback": "tt-foto-mood-8",
+            "alt": "Kust van bovenaf"
+          }
+        },
+        "foto-9": {
+          "type": "foto",
+          "settings": {
+            "vorm": "vierkant",
+            "fallback": "tt-foto-mood-9",
+            "onderschrift": "door de duinen",
+            "alt": "Hek tussen het duingras"
+          }
+        }
+      },
+      "block_order": [
+        "foto-1",
+        "foto-2",
+        "foto-3",
+        "foto-4",
+        "foto-5",
+        "foto-6",
+        "foto-7",
+        "foto-8",
+        "foto-9"
+      ]
+    },
+    "wie": {
+      "type": "tt-wie",
+      "settings": {},
+      "blocks": {
+        "kaart-1": {
+          "type": "kaart",
+          "settings": {
+            "titel": "Je leert surfen",
+            "tekst": "Groot softtop-board, lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.",
+            "knop": "Shop de tas",
+            "fallback": "tt-foto-beginner",
+            "filename": "tide-tode-beginner.jpg",
+            "alt": "Beginner met een softtop op het strand"
+          }
+        },
+        "kaart-2": {
+          "type": "kaart",
+          "settings": {
+            "titel": "Je zoekt de verstopte spot",
+            "tekst": "Door de bush, over rotsen, achterop de scooter. Jouw board hangt veilig op je rug, jij houdt je handen vrij om te klimmen.",
+            "knop": "Shop de tas",
+            "fallback": "tt-foto-avontuur",
+            "filename": "tide-tode-avontuur.jpg",
+            "alt": "Surfer klimt over rotsen naar een afgelegen spot"
+          }
+        }
+      },
+      "block_order": [
+        "kaart-1",
+        "kaart-2"
       ]
     },
     "verhaal": {
       "type": "tt-verhaal",
-      "settings": {
-        "btn_link": "shopify://pages/over-ons"
-      }
-    },
-    "teken": {
-      "type": "tt-teken",
       "settings": {}
     },
     "faq": {
@@ -255,7 +278,7 @@
         "btn_link": "shopify://pages/contact",
         "color_scheme": "scheme-1",
         "eyebrow": "",
-        "heading": "Nog *vragen?*"
+        "heading": "Nog *twijfels?*"
       },
       "blocks": {
         "qa-1": {
@@ -317,13 +340,13 @@
   },
   "order": [
     "hero",
-    "band",
-    "manifest",
-    "collage",
-    "tas",
-    "reis",
+    "usp",
+    "koop",
+    "probleem",
+    "zo",
+    "muur",
+    "wie",
     "verhaal",
-    "teken",
     "faq",
     "slot"
   ]

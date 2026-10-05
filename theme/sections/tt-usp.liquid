@@ -1,0 +1,158 @@
+<section class="tt tt-usp tt-bg--{{ section.settings.bg }}" aria-label="Waarom deze tas">
+  <div class="tt-usp__spoor" data-tt-usp>
+    {%- for n in (1..2) -%}
+      <ul class="tt-usp__lijst"{% if n == 2 %} aria-hidden="true"{% endif %}>
+        {%- for block in section.blocks -%}
+          <li {{ block.shopify_attributes }}>{% render 'tt-icoon', icoon: block.settings.icoon %}<span>{{ block.settings.tekst }}</span></li>
+        {%- endfor -%}
+      </ul>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: voordelen-strook",
+  "tag": "div",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        }
+      ],
+      "default": "zand"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "usp",
+      "name": "Voordeel",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icoon",
+          "label": "Icoon",
+          "options": [
+            {
+              "value": "tas",
+              "label": "De tas"
+            },
+            {
+              "value": "golf",
+              "label": "Golf"
+            },
+            {
+              "value": "golfjes",
+              "label": "Getij"
+            },
+            {
+              "value": "board",
+              "label": "Board"
+            },
+            {
+              "value": "schelp",
+              "label": "Schelp"
+            },
+            {
+              "value": "zon",
+              "label": "Zon"
+            },
+            {
+              "value": "maan",
+              "label": "Maan"
+            },
+            {
+              "value": "zeester",
+              "label": "Zeester"
+            },
+            {
+              "value": "palmblad",
+              "label": "Palmblad"
+            },
+            {
+              "value": "meeuw",
+              "label": "Meeuw"
+            },
+            {
+              "value": "wax",
+              "label": "Wax"
+            },
+            {
+              "value": "karabijn",
+              "label": "Karabijnhaak"
+            },
+            {
+              "value": "tij",
+              "label": "Spiraal"
+            },
+            {
+              "value": "voeten",
+              "label": "Onderweg"
+            }
+          ],
+          "default": "golf"
+        },
+        {
+          "type": "text",
+          "id": "tekst",
+          "label": "Tekst",
+          "default": "Handen vrij"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: voordelen-strook",
+      "blocks": [
+        {
+          "type": "usp",
+          "settings": {
+            "icoon": "voeten",
+            "tekst": "Handen vrij, ook op de scooter"
+          }
+        },
+        {
+          "type": "usp",
+          "settings": {
+            "icoon": "board",
+            "tekst": "Softtop én hardboard"
+          }
+        },
+        {
+          "type": "usp",
+          "settings": {
+            "icoon": "golf",
+            "tekst": "Sterke, waterbestendige stof"
+          }
+        },
+        {
+          "type": "usp",
+          "settings": {
+            "icoon": "tas",
+            "tekst": "Makkelijk mee in het vliegtuig"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

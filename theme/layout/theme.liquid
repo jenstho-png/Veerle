@@ -291,7 +291,6 @@
         var d = document.documentElement;
         d.classList.add('tt-js');
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || (window.Shopify && window.Shopify.designMode)) d.classList.add('tt-stil');
-        try { if (sessionStorage.getItem('ttIntro')) d.classList.add('tt-intro-gezien'); sessionStorage.setItem('ttIntro', '1'); } catch (e) {}
       })();
     </script>
     <script src="{{ 'tt.js' | asset_url }}" defer="defer"></script>
@@ -329,7 +328,6 @@
   </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
-    <div class="tt-intro" aria-hidden="true"><div class="tt-intro__binnen">{% render 'tt-logo', variant: 'maan' %}{% render 'tt-logo', variant: 'woord' %}</div></div>
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>

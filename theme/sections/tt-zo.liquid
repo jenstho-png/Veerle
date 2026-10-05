@@ -1,0 +1,136 @@
+<section class="tt tt-zo tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap">
+    <div class="tt-zo__kop">{%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}</div>
+    <ol class="tt-zo__stappen">
+      {%- for block in section.blocks -%}
+        <li class="tt-zo__stap" {{ block.shopify_attributes }} style="--d: {{ forloop.index0 | times: 0.12 }}s">
+          <div class="tt-zo__foto tt-onthul">{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, fallback: block.settings.fallback, alt: block.settings.alt, sizes: '(min-width: 990px) 30vw, 80vw' -%}<span class="tt-zo__nr">{{ forloop.index }}</span></div>
+          <h3>{{ block.settings.titel }}</h3>
+          <p>{{ block.settings.tekst }}</p>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: zo werkt het",
+  "tag": "div",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        }
+      ],
+      "default": "zand"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
+      "default": "Board erin.|Banden om.|*Gaan.*"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stap",
+      "name": "Stap",
+      "settings": [
+        {
+          "type": "text",
+          "id": "titel",
+          "label": "Titel",
+          "default": "Stap"
+        },
+        {
+          "type": "textarea",
+          "id": "tekst",
+          "label": "Tekst",
+          "default": ""
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto"
+        },
+        {
+          "type": "text",
+          "id": "filename",
+          "label": "Bestandsnaam",
+          "default": ""
+        },
+        {
+          "type": "text",
+          "id": "fallback",
+          "label": "Sfeerfoto (asset)",
+          "default": "tt-foto-stap-1",
+          "info": "Wordt gebruikt zolang er geen eigen foto is."
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt-tekst",
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: zo werkt het",
+      "blocks": [
+        {
+          "type": "stap",
+          "settings": {
+            "titel": "Leg je board erin",
+            "tekst": "Softtop of hardboard, nat of droog. Gewoon zoals hij uit het water komt.",
+            "fallback": "tt-foto-stap-1",
+            "filename": "tide-tode-stap-1.jpg",
+            "alt": "Surfboard in het zand"
+          }
+        },
+        {
+          "type": "stap",
+          "settings": {
+            "titel": "Trek de banden aan",
+            "tekst": "Je board zit vast en schuift niet. Geen losse touwtjes of spanbanden meer.",
+            "fallback": "tt-foto-stap-2",
+            "filename": "tide-tode-stap-2.jpg",
+            "alt": "Handen trekken een band strak"
+          }
+        },
+        {
+          "type": "stap",
+          "settings": {
+            "titel": "Op je rug en gaan",
+            "tekst": "Door de duinen, over de rotsen of achterop de scooter. Jij hebt je handen vrij.",
+            "fallback": "tt-foto-stap-3",
+            "filename": "tide-tode-stap-3.jpg",
+            "alt": "Surfer loopt met board naar zee"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

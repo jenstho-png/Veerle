@@ -5,188 +5,132 @@
       "settings": {
         "pagina": true,
         "heading": "Uit frustratie|*geboren.*",
-        "text": "Over sjouwen, schurende wax en de droom om iets eigens te beginnen. Het verhaal van Veerle en de tas die ze zelf wilde hebben.",
-        "btn1_label": "",
-        "btn2_label": "",
-        "scene": "duin",
-        "klein1_scene": "onder",
-        "klein2_scene": "palm",
-        "cursor": "Veerle"
+        "text": "Een tas die we zelf zochten op elke surftrip, en nergens konden vinden.",
+        "btn_label": "Shop de draagtas",
+        "link_label": "",
+        "kaart": false,
+        "image": "",
+        "filename": "tide-tode-over-ons.jpg",
+        "alt": "Surfers op weg naar zee"
       }
     },
     "verhaal": {
       "type": "tt-verhaal",
       "settings": {
-        "heading": "Ik heb van alles|*geprobeerd.*",
-        "text": "<p>Australië, Midden- en Zuid-Amerika, Azië: hoe mooier de spot, hoe langer de weg ernaartoe. Zeker als je net begint, heb je een groot board dat lastig te dragen is. Losse touwtjes, spanbanden, standaardhoezen: niets hield het vol als het ruig werd, of het schuurde mijn schouders kapot.</p><p>Een dichte boardbag dan? Dan moet je je natte, zanderige board telkens in een strakke tas proppen. Toen ik steeds meer ging surfen, zag ik dat deze tas nog niet bestond. Iemand moest hem gaan maken.</p>",
-        "btn_label": "",
-        "bg": "creme"
+        "link_label": ""
       }
     },
-    "manifest": {
-      "type": "tt-manifest",
-      "settings": {
-        "tekst": "Iets zelf ondernemen was altijd al *mijn droom.* Ik kom uit een ondernemersgezin, en dit was het idee waar ik op had gewacht. In februari 2025 kwam mijn vriend erbij, net zo gek op surfen. Sindsdien bouwen we het *samen.*",
-        "bg": "baby"
-      }
-    },
-    "teken": {
-      "type": "tt-teken",
+    "probleem": {
+      "type": "tt-probleem",
       "settings": {}
     },
-    "band": {
-      "type": "tt-band",
+    "muur": {
+      "type": "tt-muur",
       "settings": {
-        "rijen": 1,
-        "bg": "creme"
+        "heading": "Van riders,|*voor riders.*",
+        "bg": "zand"
       },
       "blocks": {
-        "woord-1": {
-          "type": "woord",
+        "foto-1": {
+          "type": "foto",
           "settings": {
-            "tekst": "geen wegwerpproduct",
-            "icoon": "golfje"
+            "vorm": "hoog",
+            "fallback": "tt-foto-mood-1",
+            "onderschrift": "de hike naar de spot",
+            "alt": "Pad door de duinen naar zee"
           }
         },
-        "woord-2": {
-          "type": "woord",
-          "settings": {
-            "tekst": "eerlijke prijs",
-            "icoon": "schelp"
-          }
-        },
-        "woord-3": {
-          "type": "woord",
-          "settings": {
-            "tekst": "jaren mee",
-            "icoon": "golfje"
-          }
-        }
-      },
-      "block_order": [
-        "woord-1",
-        "woord-2",
-        "woord-3"
-      ]
-    },
-    "collage": {
-      "type": "tt-collage",
-      "settings": {
-        "heading": "Wat er|nog *komt.*",
-        "text": "Eerst de tas. Daarna meer modellen en maten, waxblokjes, stevige karabijnhaken en later t-shirts. Wat er daarna op ons pad komt? Dat zien we dan."
-      },
-      "blocks": {
-        "beeld-1": {
-          "type": "beeld",
-          "settings": {
-            "vorm": "boog",
-            "scene": "zee",
-            "filename": "tide-tode-australie-hike.jpg",
-            "alt": "Hike naar een surfspot in Australië",
-            "caption": "Australië, om zes uur 's ochtends"
-          }
-        },
-        "quote-2": {
-          "type": "quote",
-          "settings": {
-            "tekst": "Board op je rug, wind in je haar.",
-            "bg": "rose"
-          }
-        },
-        "beeld-3": {
-          "type": "beeld",
-          "settings": {
-            "vorm": "rond",
-            "scene": "palm",
-            "filename": "tide-tode-palmschaduw-hostel.jpg",
-            "alt": "Palmschaduw op de muur van een hostel",
-            "caption": "het hostel"
-          }
-        },
-        "zegel-4": {
-          "type": "zegel",
-          "settings": {
-            "bg": "sunshine"
-          }
-        },
-        "beeld-5": {
-          "type": "beeld",
-          "settings": {
-            "vorm": "staand",
-            "scene": "onder",
-            "filename": "tide-tode-duiken.jpg",
-            "alt": "Duiken in diep blauw water",
-            "caption": "en dan even onder water"
-          }
-        },
-        "icoon-6": {
-          "type": "icoon",
-          "settings": {
-            "icoon": "schelp",
-            "bg": "baby"
-          }
-        },
-        "beeld-7": {
-          "type": "beeld",
-          "settings": {
-            "vorm": "breed",
-            "scene": "avond",
-            "filename": "tide-tode-zonsondergang.jpg",
-            "alt": "Zonsondergang na een surfsessie",
-            "caption": "golden hour"
-          }
-        },
-        "beeld-8": {
-          "type": "beeld",
+        "foto-2": {
+          "type": "foto",
           "settings": {
             "vorm": "vierkant",
-            "scene": "boards",
-            "filename": "tide-tode-boards.jpg",
-            "alt": "Surfboards tegen een muur",
-            "caption": "kies je board"
+            "fallback": "tt-foto-mood-2",
+            "alt": "Boards in het zand"
           }
         },
-        "beeld-9": {
-          "type": "beeld",
+        "foto-3": {
+          "type": "foto",
           "settings": {
             "vorm": "boog",
-            "scene": "duin",
-            "filename": "tide-tode-duinen.jpg",
-            "alt": "Tas op de rug in de duinen",
-            "caption": "de duinen om de hoek"
+            "fallback": "tt-foto-mood-3",
+            "onderschrift": "golden hour",
+            "alt": "Zee bij zonsondergang"
+          }
+        },
+        "foto-4": {
+          "type": "foto",
+          "settings": {
+            "vorm": "liggend",
+            "fallback": "tt-foto-mood-4",
+            "alt": "Rustige golven"
+          }
+        },
+        "foto-5": {
+          "type": "foto",
+          "settings": {
+            "vorm": "staand",
+            "fallback": "tt-foto-mood-5",
+            "onderschrift": "op weg naar zee",
+            "alt": "Surfer op weg naar zee"
+          }
+        },
+        "foto-6": {
+          "type": "foto",
+          "settings": {
+            "vorm": "hoog",
+            "fallback": "tt-foto-mood-6",
+            "alt": "Board tegen een muur"
+          }
+        },
+        "foto-7": {
+          "type": "foto",
+          "settings": {
+            "vorm": "staand",
+            "fallback": "tt-foto-mood-7",
+            "onderschrift": "van riders voor riders",
+            "alt": "Surfers op het strand"
+          }
+        },
+        "foto-8": {
+          "type": "foto",
+          "settings": {
+            "vorm": "boog",
+            "fallback": "tt-foto-mood-8",
+            "alt": "Kust van bovenaf"
+          }
+        },
+        "foto-9": {
+          "type": "foto",
+          "settings": {
+            "vorm": "vierkant",
+            "fallback": "tt-foto-mood-9",
+            "onderschrift": "door de duinen",
+            "alt": "Hek tussen het duingras"
           }
         }
       },
       "block_order": [
-        "beeld-1",
-        "quote-2",
-        "beeld-3",
-        "zegel-4",
-        "beeld-5",
-        "icoon-6",
-        "beeld-7",
-        "beeld-8",
-        "beeld-9"
+        "foto-1",
+        "foto-2",
+        "foto-3",
+        "foto-4",
+        "foto-5",
+        "foto-6",
+        "foto-7",
+        "foto-8",
+        "foto-9"
       ]
     },
-    "cta": {
-      "type": "surf-cta",
-      "settings": {
-        "mode": "signup",
-        "heading": "Blijf op de *hoogte*",
-        "text": "We gaan online zodra de eerste modellen klaar zijn. Schrijf je in en je hoort het als eerste.",
-        "btn1_label": "Zet me op de lijst",
-        "eyebrow": ""
-      }
+    "slot": {
+      "type": "tt-slot",
+      "settings": {}
     }
   },
   "order": [
     "hero",
     "verhaal",
-    "manifest",
-    "teken",
-    "band",
-    "collage",
-    "cta"
+    "probleem",
+    "muur",
+    "slot"
   ]
 }
