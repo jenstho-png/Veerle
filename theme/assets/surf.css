@@ -64,7 +64,7 @@
 
 /* accentwoord: *woord* in een kop wordt cursief in de accentkleur (Captain op licht, Sunshine op donker) */
 .mk-accentwoord, .mk-hero em, .mk-h2 em, .mk-statement em {
-  font-style: italic; background: none !important; -webkit-text-fill-color: currentColor !important; color: var(--tt-accent) !important; padding: 0;
+  font-style: normal; background: none !important; -webkit-text-fill-color: currentColor !important; color: var(--tt-accent) !important; padding: 0;
 }
 .color-scheme-3, .color-scheme-4, .mk-vlak, .surf-hero--full, .surf-pagehero__media, .surf-cta__box.mk-vlak { --tt-accent: var(--surf-sunshine); }
 .mk-hero, .mk-h2, .mk-statement { font-weight: 480; letter-spacing: -0.02em; }
@@ -358,7 +358,7 @@
 .surf-footer__brand .tt-lock { font-size: 34px; color: var(--surf-creme); }
 .surf-footer__zegel { width: 120px; color: var(--surf-sunshine); margin-top: 28px; opacity: .9; }
 .surf-brief { margin-top: 28px; max-width: 420px; }
-.surf-brief h2 { font: italic 480 26px/1.1 var(--mk-font-kop) !important; letter-spacing: -0.01em !important; text-transform: none !important; opacity: 1 !important; color: var(--surf-creme); margin-bottom: 8px !important; }
+.surf-brief h2 { font: 480 26px/1.1 var(--mk-font-kop) !important; letter-spacing: -0.01em !important; text-transform: none !important; opacity: 1 !important; color: var(--surf-creme); margin-bottom: 8px !important; }
 .surf-brief p { font-size: 14px; opacity: .75; margin-bottom: 14px; }
 .surf-brief .surf-signup { margin: 0; background: rgba(245, 238, 223, .08); box-shadow: inset 0 0 0 1px rgba(245, 238, 223, .25); }
 .surf-brief .surf-btn--primary { background: var(--surf-creme); color: var(--surf-deep); }
@@ -440,12 +440,12 @@ h1, h2, h3, .h0, .h1, .h2, .h3 { font-family: var(--font-heading-family); font-w
 .surf-merkverhaal__punten { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 16px; }
 .surf-merkverhaal__punten li { display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: center; font-size: 15px; line-height: 1.55; color: var(--mk-zacht); }
 .surf-merkverhaal__punten svg { width: 40px; height: auto; color: var(--surf-sunshine); }
-.surf-merkverhaal__slot { margin-top: 30px; font: italic 480 clamp(26px, 3vw, 36px)/1.1 var(--mk-font-kop); color: var(--tt-accent); }
+.surf-merkverhaal__slot { margin-top: 30px; font: 480 clamp(26px, 3vw, 36px)/1.1 var(--mk-font-kop); color: var(--tt-accent); }
 @media (min-width: 990px) { .surf-merkverhaal__grid { grid-template-columns: .9fr 1.1fr; gap: 80px; } }
 
 /* accentwoord ook in de merkstijl-vlakken cursief i.p.v. verloop */
 .mk-vlak .mk-h2 em, .mk-vlak .mk-statement em, .mk-vlak .mk-hero em, .mk-chaos .mk-statement em {
-  background: none !important; -webkit-text-fill-color: currentColor !important; color: var(--tt-accent) !important; font-style: italic;
+  background: none !important; -webkit-text-fill-color: currentColor !important; color: var(--tt-accent) !important; font-style: normal;
 }
 .surf-footer__cols h2 { font: 600 11px/1 var(--mk-font-tekst) !important; letter-spacing: .22em !important; text-transform: uppercase; opacity: .6; }
 

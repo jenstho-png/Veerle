@@ -39,7 +39,9 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 
 /* ---------- typografie ---------- */
 .tt-kop { font-family: var(--tt-display); font-weight: 480; letter-spacing: -0.035em; line-height: .92; text-wrap: balance; }
-.tt-kop em { font-style: italic; color: var(--tt-acc, var(--tt-captain)); letter-spacing: -0.025em; }
+/* accent: rechtop in de accentkleur. Cursief alleen in de hero en de slotzin (spaarzaam, brandbook) */
+.tt-kop em { font-style: normal; color: var(--tt-acc, var(--tt-captain)); }
+.tt-hero .tt-kop em, .tt-slot .tt-kop em { font-style: italic; letter-spacing: -0.025em; }
 .tt-kop--xl { font-size: clamp(62px, 9.6vw, 176px); line-height: .86; letter-spacing: -0.05em; }
 .tt-kop--l { font-size: clamp(50px, 7.4vw, 124px); line-height: .9; letter-spacing: -0.045em; }
 .tt-kop--m { font-size: clamp(40px, 4.8vw, 78px); line-height: .96; }
@@ -64,7 +66,7 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 .tt-knop--licht { --tt-knop-bg: var(--tt-creme); --tt-knop-fg: var(--tt-deep); }
 .tt-knop--vol { width: 100%; padding-block: 23px; font-size: 16px; }
 .tt-knop[disabled] { opacity: .45; cursor: not-allowed; }
-.tt-link { position: relative; display: inline-block; font: italic 480 21px/1.2 var(--tt-display); color: inherit; text-decoration: none; padding-bottom: 3px; }
+.tt-link { position: relative; display: inline-block; font: 500 15px/1.2 var(--tt-tekst); letter-spacing: .01em; color: inherit; text-decoration: none; padding-bottom: 3px; }
 .tt-link::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: currentColor; transform-origin: right; transition: transform .7s var(--tt-ease); }
 .tt-link:hover::after, a:hover .tt-link::after { transform: scaleX(0); }
 .tt-knop:focus-visible, .tt-link:focus-visible, .tt a:focus-visible { outline: 2px solid var(--tt-poppy); outline-offset: 4px; }
@@ -206,7 +208,7 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 .tt-zo__stap:nth-child(3) { margin-top: clamp(20px, 4vw, 70px); }
 .tt-zo__foto { aspect-ratio: 3 / 4; border-radius: 6px; }
 .tt-zo__stap:nth-child(2) .tt-zo__foto { border-radius: 999px 999px 6px 6px; }
-.tt-zo__nr { position: absolute; z-index: 5; left: 18px; bottom: 6px; font: italic 480 clamp(70px, 8vw, 120px)/1 var(--tt-display); color: var(--tt-creme); letter-spacing: -.04em; }
+.tt-zo__nr { position: absolute; z-index: 5; left: 18px; bottom: 6px; font: 480 clamp(64px, 7vw, 108px)/1 var(--tt-display); color: var(--tt-creme); letter-spacing: -.04em; }
 .tt-zo__stap h3 { margin-top: 22px; font: 480 clamp(24px, 2.2vw, 32px)/1.1 var(--tt-display); letter-spacing: -.02em; }
 .tt-zo__stap p { margin-top: 10px !important; font: 400 15.5px/1.6 var(--tt-tekst); color: var(--tt-zacht); max-width: 34ch; }
 @media (max-width: 749px) {
@@ -230,7 +232,7 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 .tt-muur__item--vierkant .tt-onthul { aspect-ratio: 1; }
 .tt-muur__item--liggend .tt-onthul { aspect-ratio: 4 / 3; }
 .tt-muur__item--boog .tt-onthul { aspect-ratio: 3 / 4; border-radius: 999px 999px 6px 6px; }
-.tt-muur__item figcaption { margin-top: 12px; font: italic 480 18px/1.2 var(--tt-display); color: var(--tt-zacht); }
+.tt-muur__item figcaption { margin-top: 12px; font: 500 13px/1.3 var(--tt-tekst); color: var(--tt-zacht); }
 .tt-muur__item:hover img { transform: scale(1.04); }
 @media (max-width: 749px) {
   .tt-muur__kolommen { grid-template-columns: 1fr 1fr; }
@@ -244,7 +246,7 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
    VOOR WIE
    ========================================================================== */
 .tt-wie { padding-block: calc(var(--tt-ruimte) * .7) var(--tt-ruimte); }
-.tt-wie__kop { margin-bottom: clamp(48px, 6vw, 90px); }
+.tt .tt-wie__kop { margin-bottom: clamp(48px, 6vw, 90px); }
 .tt-wie__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2.4vw, 36px); }
 .tt-wie__kaart { display: block; color: inherit; text-decoration: none; }
 .tt-wie__kaart:nth-child(2) { margin-top: clamp(40px, 8vw, 140px); }
@@ -316,7 +318,7 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 
 /* cursor-bubbel boven beelden */
 .tt-cursor { position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none; }
-.tt-cursor span { display: grid; place-items: center; width: 92px; height: 92px; margin: -46px 0 0 -46px; border-radius: 50%; background: var(--tt-creme); color: var(--tt-ink); font: italic 480 17px/1 var(--tt-display); transform: scale(0); transition: transform .5s var(--tt-ease); }
+.tt-cursor span { display: grid; place-items: center; width: 92px; height: 92px; margin: -46px 0 0 -46px; border-radius: 50%; background: var(--tt-creme); color: var(--tt-ink); font: 600 12px/1 var(--tt-tekst); letter-spacing: .12em; text-transform: uppercase; transform: scale(0); transition: transform .5s var(--tt-ease); }
 .tt-cursor.is-aan span { transform: scale(1); }
 @media (hover: hover) and (pointer: fine) { [data-tt-cursor] { cursor: none; } }
 
@@ -327,7 +329,7 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 /* ==========================================================================
    MERKELEMENTEN: stickers, zegel, golfjes, iconen
    ========================================================================== */
-.tt-sticker { position: absolute; z-index: 6; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px 10px 14px; border-radius: 999px; font: italic 480 18px/1 var(--tt-display); letter-spacing: -.01em; white-space: nowrap; box-shadow: 0 10px 24px -14px rgba(10, 25, 45, .5); rotate: -4deg; transition: rotate .6s var(--tt-ease), scale .6s var(--tt-ease); }
+.tt-sticker { position: absolute; z-index: 6; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px 10px 14px; border-radius: 999px; font: 600 12px/1 var(--tt-tekst); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; box-shadow: 0 10px 24px -14px rgba(10, 25, 45, .5); rotate: 0deg; transition: rotate .6s var(--tt-ease), scale .6s var(--tt-ease); }
 .tt-sticker .tt-icoon { width: 22px; height: 22px; flex-shrink: 0; }
 .tt-sticker--sunshine { background: var(--tt-sunshine); color: var(--tt-deep); }
 .tt-sticker--rose { background: var(--tt-rose); color: var(--tt-deep); }
@@ -335,14 +337,14 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 .tt-sticker--baby { background: var(--tt-baby); color: var(--tt-deep); }
 .tt-sticker--deep { background: var(--tt-deep); color: var(--tt-creme); }
 .tt-sticker--creme { background: var(--tt-creme); color: var(--tt-deep); }
-.tt-sticker--rond { flex-direction: column; justify-content: center; gap: 4px; width: 104px; height: 104px; padding: 0; border-radius: 50%; font-size: 21px; rotate: 9deg; text-align: center; }
+.tt-sticker--rond { flex-direction: column; justify-content: center; gap: 4px; width: 104px; height: 104px; padding: 0 10px; border-radius: 50%; font-size: 11px; line-height: 1.25; white-space: normal; rotate: -8deg; text-align: center; }
 .tt-sticker--rond .tt-icoon { width: 26px; height: 26px; }
 .tt-sticker--rechtsboven { top: 18px; right: 18px; }
 .tt-sticker--onder { left: 50%; bottom: -18px; translate: -50% 0; }
 .tt-muur__item, .tt-wie__foto, .tt-probleem__foto, .tt-verhaal__foto { position: relative; }
 .tt-muur__item .tt-sticker { left: -10px; top: 22px; }
-.tt-muur__kolom--2 .tt-muur__item .tt-sticker { left: auto; right: -10px; rotate: 5deg; }
-.tt-muur__item:hover .tt-sticker, .tt-wie__kaart:hover .tt-sticker { rotate: 0deg; scale: 1.06; }
+.tt-muur__kolom--2 .tt-muur__item .tt-sticker { left: auto; right: -10px; }
+.tt-muur__item:hover .tt-sticker, .tt-wie__kaart:hover .tt-sticker { scale: 1.06; }
 .tt-probleem__foto > .tt-onthul, .tt-wie__foto > .tt-onthul, .tt-verhaal__foto > .tt-onthul { width: 100%; height: 100%; border-radius: inherit; }
 .tt-wie__foto { border-radius: 6px; }
 
@@ -366,8 +368,8 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 
 /* zo werkt het: iconen in een zonnetje */
 .tt-zo__stap { position: relative; }
-.tt-zo__icoon { position: absolute; z-index: 6; top: -22px; right: 18px; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--tt-sunshine); color: var(--tt-deep); rotate: 8deg; box-shadow: 0 12px 24px -14px rgba(10, 25, 45, .5); }
-.tt-zo__icoon--2 { background: var(--tt-rose); rotate: -6deg; }
+.tt-zo__icoon { position: absolute; z-index: 6; top: -22px; right: 18px; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--tt-sunshine); color: var(--tt-deep); box-shadow: 0 12px 24px -14px rgba(10, 25, 45, .5); }
+.tt-zo__icoon--2 { background: var(--tt-rose); }
 .tt-zo__icoon--3 { background: var(--tt-baby); }
 .tt-zo__icoon .tt-icoon { width: 36px; height: 36px; }
 
@@ -423,7 +425,7 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 .tt-pop__beeld { position: relative; min-height: 100%; overflow: hidden; }
 .tt-pop__beeld .tt-beeld__img { position: absolute; inset: 0; }
 .tt-pop.is-open .tt-pop__beeld img { animation: tt-hero-zoom 2.4s var(--tt-ease) both; }
-.tt-pop__sticker { left: 22px; bottom: 22px; width: 118px; height: 118px; font-size: 22px; }
+.tt-pop__sticker { left: 22px; bottom: 22px; width: 112px; height: 112px; font-size: 12px; }
 .tt-pop.is-open .tt-pop__sticker { animation: tt-plak .9s var(--tt-ease) .35s both; }
 @keyframes tt-plak { from { opacity: 0; transform: scale(1.6) rotate(-20deg); } }
 .tt-pop__inhoud { position: relative; padding: clamp(36px, 5vw, 60px) clamp(28px, 4.4vw, 52px) clamp(28px, 4vw, 44px); }
@@ -435,7 +437,7 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 .tt-pop__veld:focus { outline: 2px solid var(--tt-captain); outline-offset: 2px; }
 .tt-pop__klein { margin-top: 12px !important; font: 400 12.5px/1.4 var(--tt-tekst); text-align: center; opacity: .6; }
 .tt-pop__fout { margin-top: 10px !important; font-size: 14px; color: #b3402a; }
-.tt-pop__nee { display: block; margin: 14px auto 0; background: none; border: 0; padding: 4px; font: italic 480 16px/1.2 var(--tt-display); color: var(--tt-ink); opacity: .6; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.tt-pop__nee { display: block; margin: 14px auto 0; background: none; border: 0; padding: 4px; font: 400 13.5px/1.2 var(--tt-tekst); color: var(--tt-ink); opacity: .6; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .tt-pop__nee:hover { opacity: 1; }
 .tt-pop__sluit { position: absolute; top: 16px; right: 16px; width: 42px; height: 42px; border-radius: 50%; border: 0; background: rgba(24, 50, 90, .07); cursor: pointer; transition: transform .5s var(--tt-ease), background .3s; }
 .tt-pop__sluit:hover { transform: rotate(90deg); background: rgba(24, 50, 90, .14); }
@@ -445,12 +447,12 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 .tt-pop__klaar p { font: 400 16px/1.6 var(--tt-tekst); }
 .tt-pop__code { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 22px; border-radius: 16px; border: 1.5px dashed var(--tt-deep); background: var(--tt-sunshine); color: var(--tt-deep); cursor: pointer; }
 .tt-pop__code strong { font: 600 22px/1 var(--tt-tekst); letter-spacing: .08em; }
-.tt-pop__code span { font: italic 480 16px/1 var(--tt-display); }
+.tt-pop__code span { font: 600 12px/1 var(--tt-tekst); letter-spacing: .12em; text-transform: uppercase; }
 .tt-pop .tt-knop { margin-top: 0; }
 .tt-pop-open, .tt-pop-open body { overflow: hidden; }
 
 /* sticker die na wegklikken blijft staan */
-.tt-pop__teaser { position: fixed; z-index: 85; right: 18px; bottom: 18px; width: 96px; height: 96px; border: 0; cursor: pointer; font-size: 18px; animation: tt-plak .9s var(--tt-ease) both, tt-wiebel 6s ease-in-out 1.5s infinite; }
+.tt-pop__teaser { position: fixed; z-index: 85; right: 18px; bottom: 18px; width: 96px; height: 96px; border: 0; cursor: pointer; font-size: 11px; animation: tt-plak .9s var(--tt-ease) both; }
 .tt-pop__teaser[hidden] { display: none; }
 .tt-pop__teaser:hover { scale: 1.08; }
 @keyframes tt-wiebel { 0%, 86%, 100% { rotate: 9deg; } 90% { rotate: -4deg; } 94% { rotate: 14deg; } }
@@ -460,12 +462,12 @@ body:has(.tt-balk.is-aan) .tt-pop__teaser { bottom: 96px; }
   .tt-pop { align-items: end; padding: 0; }
   .tt-pop__kaart { grid-template-columns: 1fr; border-radius: 24px 24px 0 0; max-height: 92svh; transform: translateY(100%); }
   .tt-pop__beeld { height: 190px; min-height: 0; }
-  .tt-pop__sticker { width: 92px; height: 92px; font-size: 18px; left: 18px; bottom: -30px; z-index: 7; }
+  .tt-pop__sticker { width: 92px; height: 92px; font-size: 10px; left: 18px; bottom: -30px; z-index: 7; }
   .tt-pop__maan { display: none; }
   .tt-pop__inhoud { padding-top: 44px; }
   .tt-pop__beeld { overflow: visible; }
   .tt-pop__beeld > img { border-radius: 24px 24px 0 0; }
-  .tt-pop__teaser { width: 80px; height: 80px; font-size: 15px; right: 12px; bottom: 12px; }
+  .tt-pop__teaser { width: 80px; height: 80px; font-size: 10px; right: 12px; bottom: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .tt-pop__kaart, .tt-pop { transition: none; }
