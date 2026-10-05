@@ -1,6 +1,6 @@
 <section class="tt tt-verhaal tt-bg--{{ section.settings.bg }}" id="tt-verhaal">
   <div class="tt-wrap tt-verhaal__grid">
-    <div class="tt-verhaal__foto tt-onthul" data-tt-snelheid="-0.06">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-verhaal', alt: section.settings.alt, sizes: '(min-width: 990px) 42vw, 90vw' -%}</div>
+    <div class="tt-verhaal__foto" data-tt-snelheid="-0.06"><div class="tt-onthul">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-verhaal', alt: section.settings.alt, sizes: '(min-width: 990px) 42vw, 90vw' -%}</div><div class="tt-verhaal__zegel" data-tt-draai="-0.05">{% render 'tt-logo', variant: 'zegel' %}</div></div>
     <div class="tt-verhaal__tekst">
       {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
       <div class="tt-verhaal__body tt-in">{{ section.settings.text }}</div>
@@ -35,6 +35,14 @@
         {
           "value": "baby",
           "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
         }
       ],
       "default": "deep"

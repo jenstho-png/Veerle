@@ -1,5 +1,8 @@
 <section class="tt tt-muur tt-bg--{{ section.settings.bg }}">
   <div class="tt-muur__kop tt-wrap">
+    <span class="tt-zweef tt-zweef--1" data-tt-snelheid="0.3" aria-hidden="true">{% render 'tt-icoon', icoon: 'zeester' %}</span>
+    <span class="tt-zweef tt-zweef--2" data-tt-snelheid="-0.2" aria-hidden="true">{% render 'tt-icoon', icoon: 'schelp' %}</span>
+    <span class="tt-zweef tt-zweef--3" data-tt-snelheid="0.45" aria-hidden="true">{% render 'tt-icoon', icoon: 'zon' %}</span>
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
     {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
   </div>
@@ -12,6 +15,7 @@
           {%- if kol == k -%}
             <figure class="tt-muur__item tt-muur__item--{{ block.settings.vorm }}" {{ block.shopify_attributes }}>
               <div class="tt-onthul">{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, fallback: block.settings.fallback, alt: block.settings.alt, sizes: '(min-width: 990px) 30vw, 46vw' -%}</div>
+              {%- render 'tt-sticker', tekst: block.settings.sticker, kleur: block.settings.sticker_kleur, icoon: block.settings.sticker_icoon -%}
               {%- if block.settings.onderschrift != blank -%}<figcaption>{{ block.settings.onderschrift }}</figcaption>{%- endif -%}
             </figure>
           {%- endif -%}
@@ -47,6 +51,14 @@
         {
           "value": "baby",
           "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
         }
       ],
       "default": "creme"
@@ -104,6 +116,111 @@
           "label": "Onderschrift"
         },
         {
+          "type": "text",
+          "id": "sticker",
+          "label": "Sticker"
+        },
+        {
+          "type": "select",
+          "id": "sticker_kleur",
+          "label": "Stickerkleur",
+          "options": [
+            {
+              "value": "sunshine",
+              "label": "Sunshine"
+            },
+            {
+              "value": "rose",
+              "label": "Rose"
+            },
+            {
+              "value": "poppy",
+              "label": "Poppy"
+            },
+            {
+              "value": "baby",
+              "label": "Baby"
+            },
+            {
+              "value": "deep",
+              "label": "Deep"
+            },
+            {
+              "value": "creme",
+              "label": "Crème"
+            }
+          ],
+          "default": "sunshine"
+        },
+        {
+          "type": "select",
+          "id": "sticker_icoon",
+          "label": "Stickericoon",
+          "options": [
+            {
+              "value": "",
+              "label": "Geen"
+            },
+            {
+              "value": "tas",
+              "label": "De tas"
+            },
+            {
+              "value": "golf",
+              "label": "Golf"
+            },
+            {
+              "value": "golfjes",
+              "label": "Getij"
+            },
+            {
+              "value": "board",
+              "label": "Board"
+            },
+            {
+              "value": "schelp",
+              "label": "Schelp"
+            },
+            {
+              "value": "zon",
+              "label": "Zon"
+            },
+            {
+              "value": "maan",
+              "label": "Maan"
+            },
+            {
+              "value": "zeester",
+              "label": "Zeester"
+            },
+            {
+              "value": "palmblad",
+              "label": "Palmblad"
+            },
+            {
+              "value": "meeuw",
+              "label": "Meeuw"
+            },
+            {
+              "value": "wax",
+              "label": "Wax"
+            },
+            {
+              "value": "karabijn",
+              "label": "Karabijnhaak"
+            },
+            {
+              "value": "tij",
+              "label": "Spiraal"
+            },
+            {
+              "value": "voeten",
+              "label": "Onderweg"
+            }
+          ],
+          "default": ""
+        },
+        {
           "type": "image_picker",
           "id": "image",
           "label": "Foto"
@@ -147,6 +264,9 @@
           "type": "foto",
           "settings": {
             "vorm": "vierkant",
+            "sticker": "handen vrij",
+            "sticker_kleur": "sunshine",
+            "sticker_icoon": "zon",
             "fallback": "tt-foto-mood-2",
             "alt": "Boards in het zand"
           }
@@ -181,6 +301,9 @@
           "type": "foto",
           "settings": {
             "vorm": "hoog",
+            "sticker": "zout, zand, nat: prima",
+            "sticker_kleur": "rose",
+            "sticker_icoon": "schelp",
             "fallback": "tt-foto-mood-6",
             "alt": "Board tegen een muur"
           }
@@ -198,6 +321,9 @@
           "type": "foto",
           "settings": {
             "vorm": "boog",
+            "sticker": "Tide~Tode",
+            "sticker_kleur": "deep",
+            "sticker_icoon": "maan",
             "fallback": "tt-foto-mood-8",
             "alt": "Kust van bovenaf"
           }

@@ -44,6 +44,9 @@
           "type": "foto",
           "settings": {
             "vorm": "vierkant",
+            "sticker": "handen vrij",
+            "sticker_kleur": "sunshine",
+            "sticker_icoon": "zon",
             "fallback": "tt-foto-mood-2",
             "alt": "Boards in het zand"
           }
@@ -78,6 +81,9 @@
           "type": "foto",
           "settings": {
             "vorm": "hoog",
+            "sticker": "zout, zand, nat: prima",
+            "sticker_kleur": "rose",
+            "sticker_icoon": "schelp",
             "fallback": "tt-foto-mood-6",
             "alt": "Board tegen een muur"
           }
@@ -95,6 +101,9 @@
           "type": "foto",
           "settings": {
             "vorm": "boog",
+            "sticker": "Tide~Tode",
+            "sticker_kleur": "deep",
+            "sticker_icoon": "maan",
             "fallback": "tt-foto-mood-8",
             "alt": "Kust van bovenaf"
           }
@@ -124,11 +133,16 @@
     "slot": {
       "type": "tt-slot",
       "settings": {}
+    },
+    "merk": {
+      "type": "tt-merk",
+      "settings": {}
     }
   },
   "order": [
     "hero",
     "verhaal",
+    "merk",
     "probleem",
     "muur",
     "slot"

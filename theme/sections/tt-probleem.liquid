@@ -1,8 +1,8 @@
 <section class="tt tt-probleem tt-bg--{{ section.settings.bg }}">
   <div class="tt-wrap tt-probleem__wrap">
-    <div class="tt-probleem__foto tt-probleem__foto--1 tt-onthul" data-tt-snelheid="0.12">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-probleem-1', alt: section.settings.alt, sizes: '(min-width: 990px) 22vw, 40vw' -%}</div>
+    <div class="tt-probleem__foto tt-probleem__foto--1" data-tt-snelheid="0.12"><div class="tt-onthul">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-probleem-1', alt: section.settings.alt, sizes: '(min-width: 990px) 22vw, 40vw' -%}</div>{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'sunshine', icoon: 'voeten', class: 'tt-sticker--onder' -%}</div>
     <p class="tt-probleem__tekst" data-tt-vul>{{ section.settings.tekst | escape | replace: '*', '' }}</p>
-    <div class="tt-probleem__foto tt-probleem__foto--2 tt-onthul" data-tt-snelheid="-0.1">{%- render 'tt-beeld', image: section.settings.b2_image, filename: section.settings.b2_filename, fallback: 'tt-foto-probleem-2', alt: section.settings.b2_alt, sizes: '(min-width: 990px) 22vw, 40vw' -%}</div>
+    <div class="tt-probleem__foto tt-probleem__foto--2" data-tt-snelheid="-0.1"><div class="tt-onthul">{%- render 'tt-beeld', image: section.settings.b2_image, filename: section.settings.b2_filename, fallback: 'tt-foto-probleem-2', alt: section.settings.b2_alt, sizes: '(min-width: 990px) 22vw, 40vw' -%}</div><span class="tt-probleem__icoon">{% render 'tt-icoon', icoon: 'zon' %}</span></div>
     {%- if section.settings.slot != blank -%}{%- render 'tt-kop', text: section.settings.slot, tag: 'p', class: 'tt-kop--l tt-probleem__slot' -%}{%- endif -%}
   </div>
 </section>
@@ -32,9 +32,23 @@
         {
           "value": "baby",
           "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
         }
       ],
-      "default": "creme"
+      "default": "rose"
+    },
+    {
+      "type": "text",
+      "id": "sticker",
+      "label": "Sticker op de linkerfoto",
+      "default": "1 uur lopen"
     },
     {
       "type": "textarea",

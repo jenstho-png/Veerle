@@ -24,8 +24,15 @@
 .tt-bg--creme { --tt-bg: var(--tt-creme); --tt-fg: var(--tt-ink); --tt-acc: var(--tt-captain); }
 .tt-bg--zand { --tt-bg: var(--tt-zand); --tt-fg: var(--tt-ink); --tt-acc: var(--tt-captain); }
 .tt-bg--baby { --tt-bg: var(--tt-baby); --tt-fg: var(--tt-ink); --tt-acc: var(--tt-deep); }
+.tt-bg--rose { --tt-bg: var(--tt-rose); --tt-fg: var(--tt-ink); --tt-acc: var(--tt-deep); }
+.tt-bg--sunshine { --tt-bg: var(--tt-sunshine); --tt-fg: var(--tt-ink); --tt-acc: var(--tt-deep); }
 .tt-bg--deep { --tt-bg: var(--tt-deep); --tt-fg: var(--tt-creme); --tt-acc: var(--tt-sunshine); --tt-knop-bg: var(--tt-creme); --tt-knop-fg: var(--tt-deep); }
 [class*="tt-bg--"] { background-color: var(--tt-bg); color: var(--tt-fg); }
+
+/* korrel over kleurvlakken (brandbook: nooit over het product) */
+.tt[class*="tt-bg--"]:not(.tt-bg--creme)::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background-image: var(--tt-korrel); background-size: 220px; opacity: .16; mix-blend-mode: multiply; }
+.tt.tt-bg--deep::before { mix-blend-mode: screen; opacity: .1; }
+.tt > * { position: relative; z-index: 1; }
 
 /* filmkorrel over de hele pagina, heel licht */
 body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; pointer-events: none; background-image: var(--tt-korrel); background-size: 220px; opacity: .07; mix-blend-mode: multiply; }
@@ -316,6 +323,92 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 @media (prefers-reduced-motion: reduce) {
   .tt-usp__spoor { animation: none !important; }
 }
+
+/* ==========================================================================
+   MERKELEMENTEN: stickers, zegel, golfjes, iconen
+   ========================================================================== */
+.tt-sticker { position: absolute; z-index: 6; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px 10px 14px; border-radius: 999px; font: italic 480 18px/1 var(--tt-display); letter-spacing: -.01em; white-space: nowrap; box-shadow: 0 10px 24px -14px rgba(10, 25, 45, .5); rotate: -4deg; transition: rotate .6s var(--tt-ease), scale .6s var(--tt-ease); }
+.tt-sticker .tt-icoon { width: 22px; height: 22px; flex-shrink: 0; }
+.tt-sticker--sunshine { background: var(--tt-sunshine); color: var(--tt-deep); }
+.tt-sticker--rose { background: var(--tt-rose); color: var(--tt-deep); }
+.tt-sticker--poppy { background: var(--tt-poppy); color: var(--tt-creme); }
+.tt-sticker--baby { background: var(--tt-baby); color: var(--tt-deep); }
+.tt-sticker--deep { background: var(--tt-deep); color: var(--tt-creme); }
+.tt-sticker--creme { background: var(--tt-creme); color: var(--tt-deep); }
+.tt-sticker--rond { flex-direction: column; justify-content: center; gap: 4px; width: 104px; height: 104px; padding: 0; border-radius: 50%; font-size: 21px; rotate: 9deg; text-align: center; }
+.tt-sticker--rond .tt-icoon { width: 26px; height: 26px; }
+.tt-sticker--rechtsboven { top: 18px; right: 18px; }
+.tt-sticker--onder { left: 50%; bottom: -18px; translate: -50% 0; }
+.tt-muur__item, .tt-wie__foto, .tt-probleem__foto, .tt-verhaal__foto { position: relative; }
+.tt-muur__item .tt-sticker { left: -10px; top: 22px; }
+.tt-muur__kolom--2 .tt-muur__item .tt-sticker { left: auto; right: -10px; rotate: 5deg; }
+.tt-muur__item:hover .tt-sticker, .tt-wie__kaart:hover .tt-sticker { rotate: 0deg; scale: 1.06; }
+.tt-probleem__foto > .tt-onthul, .tt-wie__foto > .tt-onthul, .tt-verhaal__foto > .tt-onthul { width: 100%; height: 100%; border-radius: inherit; }
+.tt-wie__foto { border-radius: 6px; }
+
+/* golfje als opsommingsteken en scheiding */
+.tt-koop__punten li span { background: none !important; width: 30px !important; height: 22px !important; color: var(--tt-captain) !important; }
+.tt-koop__punten .tt-golfje { width: 26px; height: auto; }
+.tt-usp__golf { padding-inline: 0 !important; color: var(--tt-sunshine); }
+.tt-usp__golf .tt-golfje { width: 26px; height: auto; }
+.tt-usp.tt-bg--deep .tt-icoon { color: var(--tt-sunshine); }
+.tt-usp { overflow-x: clip; overflow-y: visible; z-index: 3; }
+.tt-usp__zegel { position: absolute !important; right: clamp(20px, 6vw, 110px); top: -72px; width: 140px; height: 140px; border-radius: 50%; padding: 8px; background: var(--tt-sunshine); color: var(--tt-deep); box-shadow: 0 20px 40px -20px rgba(10, 25, 45, .6); }
+.tt-usp__zegel > svg { width: 100%; height: 100%; display: block; }
+.tt-usp .tt-usp__spoor { overflow: hidden; }
+.tt-usp { contain: none; }
+@media (min-width: 1100px) { .tt-usp__lijst { gap: 0; padding-right: calc(var(--tt-marge) + 170px) !important; } }
+@media (max-width: 749px) { .tt-usp__zegel { width: 78px; height: 78px; top: -42px; right: 14px; padding: 5px; } }
+
+/* probleem: icoon dat zweeft */
+.tt-probleem__icoon { position: absolute; z-index: 6; right: -26px; top: -30px; width: 64px; height: 64px; color: var(--tt-poppy); rotate: 12deg; }
+.tt-probleem__icoon .tt-icoon { width: 100%; height: 100%; }
+
+/* zo werkt het: iconen in een zonnetje */
+.tt-zo__stap { position: relative; }
+.tt-zo__icoon { position: absolute; z-index: 6; top: -22px; right: 18px; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--tt-sunshine); color: var(--tt-deep); rotate: 8deg; box-shadow: 0 12px 24px -14px rgba(10, 25, 45, .5); }
+.tt-zo__icoon--2 { background: var(--tt-rose); rotate: -6deg; }
+.tt-zo__icoon--3 { background: var(--tt-baby); }
+.tt-zo__icoon .tt-icoon { width: 36px; height: 36px; }
+
+/* fotomuur: iconen die rond de kop zweven */
+.tt-muur__kop { position: relative; }
+.tt-zweef { position: absolute !important; width: clamp(44px, 5vw, 78px); pointer-events: none; }
+.tt-zweef .tt-icoon { width: 100%; height: auto; display: block; }
+.tt-zweef--1 { right: 30%; top: -40px; color: var(--tt-poppy); rotate: -14deg; }
+.tt-zweef--2 { right: 8%; top: 100%; color: var(--tt-rose); rotate: 18deg; }
+.tt-zweef--3 { left: 46%; top: 70%; color: var(--tt-sunshine); }
+@media (max-width: 749px) { .tt-zweef--3 { display: none; } .tt-zweef--1 { right: 6%; top: -30px; } }
+
+/* verhaal: zegel op de foto */
+.tt-verhaal__zegel { position: absolute; z-index: 6; right: -34px; bottom: 40px; width: 130px; height: 130px; padding: 8px; border-radius: 50%; background: var(--tt-sunshine); color: var(--tt-deep); }
+.tt-verhaal__zegel > svg { width: 100%; height: 100%; display: block; }
+@media (max-width: 989px) { .tt-verhaal__zegel { right: -16%; width: 104px; height: 104px; } }
+
+/* slot: maan boven de kop */
+.tt-slot__maan { width: clamp(70px, 8vw, 110px); color: var(--tt-sunshine); }
+.tt-slot__maan svg { width: 100%; height: auto; display: block; }
+.tt-slot__inhoud { gap: 32px; }
+
+/* ==========================================================================
+   MERK
+   ========================================================================== */
+.tt-merk { padding-top: var(--tt-ruimte); text-align: center; }
+.tt-merk__wrap { display: grid; justify-items: center; gap: 34px; }
+.tt-merk__maan { width: clamp(150px, 17vw, 250px); color: var(--tt-sunshine); }
+.tt-merk__maan svg { width: 100%; height: auto; display: block; }
+.tt-merk .tt-kop { max-width: 15ch; }
+.tt-merk .tt-lead { margin-inline: auto; max-width: 52ch; }
+.tt-merk__iconen { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 26px; margin-top: 10px !important; }
+.tt-merk__iconen li { width: 40px; height: 40px; color: var(--tt-baby); }
+.tt-merk__iconen li:nth-child(3n+2) { color: var(--tt-rose); }
+.tt-merk__iconen li:nth-child(3n) { color: var(--tt-sunshine); }
+.tt-merk__iconen .tt-icoon { width: 100%; height: 100%; }
+.tt-merk__woord { margin-top: clamp(70px, 9vw, 140px); overflow: hidden; color: var(--tt-creme); }
+.tt-merk__spoor { display: flex; align-items: center; gap: 4vw; width: max-content; padding-block: 1vw clamp(50px, 6vw, 90px); }
+.tt-merk__spoor .tt-woord { height: clamp(110px, 17vw, 270px); width: auto; display: block; flex-shrink: 0; }
+.tt-merk__tussen { width: clamp(60px, 8vw, 130px); color: var(--tt-sunshine); flex-shrink: 0; }
+.tt-merk__tussen svg { width: 100%; height: auto; display: block; }
 
 /* hero schuift onder de zwevende menubalk door */
 .tt-hero:not(.tt-hero--pagina), .tt-hero--pagina { margin-top: -76px; }

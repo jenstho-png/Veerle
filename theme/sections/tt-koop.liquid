@@ -11,10 +11,10 @@
       {%- assign media = p.media | where: 'media_type', 'image' -%}
       {%- if media.size > 0 -%}
         {%- for m in media limit: 4 -%}
-          <div class="tt-koop__foto tt-onthul"{% if forloop.first %} data-tt-cursor="zoom"{% endif %}>{{ m.preview_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 55vw, 100vw', widths: '600, 900, 1200, 1800', alt: m.alt | default: p.title, class: 'tt-beeld__img' }}</div>
+          <div class="tt-koop__foto tt-onthul"{% if forloop.first %} data-tt-cursor="zoom"{% endif %}>{%- if forloop.first -%}{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}{%- endif -%}{{ m.preview_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 55vw, 100vw', widths: '600, 900, 1200, 1800', alt: m.alt | default: p.title, class: 'tt-beeld__img' }}</div>
         {%- endfor -%}
       {%- else -%}
-        <div class="tt-koop__foto tt-onthul">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-product-1', alt: section.settings.alt, sizes: '(min-width: 990px) 55vw, 100vw' -%}</div>
+        <div class="tt-koop__foto tt-onthul">{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-product-1', alt: section.settings.alt, sizes: '(min-width: 990px) 55vw, 100vw' -%}</div>
         <div class="tt-koop__foto tt-onthul">{%- render 'tt-beeld', image: section.settings.b2_image, filename: section.settings.b2_filename, fallback: 'tt-foto-product-2', alt: section.settings.b2_alt, sizes: '(min-width: 990px) 55vw, 100vw' -%}</div>
       {%- endif -%}
     </div>
@@ -29,7 +29,7 @@
         </p>
         {%- if section.settings.text != blank -%}<p class="tt-koop__pitch tt-in">{{ section.settings.text }}</p>{%- endif -%}
         <ul class="tt-koop__punten tt-in">
-          {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span aria-hidden="true">✓</span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
+          {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span aria-hidden="true">{% render 'tt-logo', variant: 'golfje' %}</span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
         </ul>
         <div class="tt-koop__form tt-in">
           {%- if p != blank -%}
@@ -101,6 +101,14 @@
         {
           "value": "baby",
           "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
         }
       ],
       "default": "creme"
@@ -129,6 +137,12 @@
       "id": "prijs_tekst",
       "label": "Tekst als er nog geen product is",
       "default": "Binnenkort"
+    },
+    {
+      "type": "text",
+      "id": "sticker",
+      "label": "Sticker op de eerste foto",
+      "default": "nieuw"
     },
     {
       "type": "header",

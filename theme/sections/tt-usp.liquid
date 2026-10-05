@@ -4,10 +4,12 @@
       <ul class="tt-usp__lijst"{% if n == 2 %} aria-hidden="true"{% endif %}>
         {%- for block in section.blocks -%}
           <li {{ block.shopify_attributes }}>{% render 'tt-icoon', icoon: block.settings.icoon %}<span>{{ block.settings.tekst }}</span></li>
+          <li class="tt-usp__golf" aria-hidden="true">{% render 'tt-logo', variant: 'golfje' %}</li>
         {%- endfor -%}
       </ul>
     {%- endfor -%}
   </div>
+  {%- if section.settings.zegel -%}<div class="tt-usp__zegel" data-tt-draai="0.05">{% render 'tt-logo', variant: 'zegel' %}</div>{%- endif -%}
 </section>
 
 {% schema %}
@@ -36,9 +38,23 @@
         {
           "value": "baby",
           "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
         }
       ],
-      "default": "zand"
+      "default": "deep"
+    },
+    {
+      "type": "checkbox",
+      "id": "zegel",
+      "label": "Zegel tonen (half over de foto erboven)",
+      "default": true
     }
   ],
   "blocks": [

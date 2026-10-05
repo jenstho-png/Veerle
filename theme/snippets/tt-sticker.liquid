@@ -1,0 +1,12 @@
+{%- comment -%}
+  Sticker in de zomerkleuren, zoals op de hanglabels uit het brandbook.
+  Gebruik: {% render 'tt-sticker', tekst: 'handen vrij', kleur: 'sunshine', icoon: 'zon', vorm: 'rond', class: '' %}
+  Kleuren: sunshine, rose, poppy, baby, deep, creme · Vormen: rond, pil
+{%- endcomment -%}
+{%- if tekst != blank -%}
+  {%- assign vorm = vorm | default: 'pil' -%}
+  <span class="tt-sticker tt-sticker--{{ kleur | default: 'sunshine' }} tt-sticker--{{ vorm }} {{ class }}" aria-hidden="true">
+    {%- if icoon != blank -%}{% render 'tt-icoon', icoon: icoon %}{%- endif -%}
+    <span>{{ tekst }}</span>
+  </span>
+{%- endif -%}

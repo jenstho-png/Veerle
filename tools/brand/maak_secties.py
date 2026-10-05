@@ -7,8 +7,9 @@ plaatsvervanger tot Veerle eigen foto's uploadt.
 """
 import json, pathlib
 T = pathlib.Path(__file__).parent.parent.parent / 'theme' / 'sections'
-BG = [{"value": v, "label": l} for v, l in [("creme", "Crème"), ("zand", "Zand"), ("deep", "Deep"), ("baby", "Baby")]]
+BG = [{"value": v, "label": l} for v, l in [("creme", "Crème"), ("zand", "Zand"), ("deep", "Deep"), ("baby", "Baby"), ("rose", "Rose"), ("sunshine", "Sunshine")]]
 ICONEN = [{"value": k, "label": n} for k, n in [("tas", "De tas"), ("golf", "Golf"), ("golfjes", "Getij"), ("board", "Board"), ("schelp", "Schelp"), ("zon", "Zon"), ("maan", "Maan"), ("zeester", "Zeester"), ("palmblad", "Palmblad"), ("meeuw", "Meeuw"), ("wax", "Wax"), ("karabijn", "Karabijnhaak"), ("tij", "Spiraal"), ("voeten", "Onderweg")]]
+KLEUREN = [{"value": v, "label": l} for v, l in [("sunshine", "Sunshine"), ("rose", "Rose"), ("poppy", "Poppy"), ("baby", "Baby"), ("deep", "Deep"), ("creme", "Crème")]]
 KOP_INFO = "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent."
 
 
@@ -107,14 +108,16 @@ schrijf('tt-usp', """
       <ul class="tt-usp__lijst"{% if n == 2 %} aria-hidden="true"{% endif %}>
         {%- for block in section.blocks -%}
           <li {{ block.shopify_attributes }}>{% render 'tt-icoon', icoon: block.settings.icoon %}<span>{{ block.settings.tekst }}</span></li>
+          <li class="tt-usp__golf" aria-hidden="true">{% render 'tt-logo', variant: 'golfje' %}</li>
         {%- endfor -%}
       </ul>
     {%- endfor -%}
   </div>
+  {%- if section.settings.zegel -%}<div class="tt-usp__zegel" data-tt-draai="0.05">{% render 'tt-logo', variant: 'zegel' %}</div>{%- endif -%}
 </section>
 """, {
     "name": "TT: voordelen-strook", "tag": "div", "max_blocks": 6,
-    "settings": [bg("zand")],
+    "settings": [bg("deep"), {"type": "checkbox", "id": "zegel", "label": "Zegel tonen (half over de foto erboven)", "default": True}],
     "blocks": [{"type": "usp", "name": "Voordeel", "settings": [
         {"type": "select", "id": "icoon", "label": "Icoon", "options": ICONEN, "default": "golf"},
         {"type": "text", "id": "tekst", "label": "Tekst", "default": "Handen vrij"}]}],
@@ -134,10 +137,10 @@ schrijf('tt-koop', PRIJS + """
       {%- assign media = p.media | where: 'media_type', 'image' -%}
       {%- if media.size > 0 -%}
         {%- for m in media limit: 4 -%}
-          <div class="tt-koop__foto tt-onthul"{% if forloop.first %} data-tt-cursor="zoom"{% endif %}>{{ m.preview_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 55vw, 100vw', widths: '600, 900, 1200, 1800', alt: m.alt | default: p.title, class: 'tt-beeld__img' }}</div>
+          <div class="tt-koop__foto tt-onthul"{% if forloop.first %} data-tt-cursor="zoom"{% endif %}>{%- if forloop.first -%}{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}{%- endif -%}{{ m.preview_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 55vw, 100vw', widths: '600, 900, 1200, 1800', alt: m.alt | default: p.title, class: 'tt-beeld__img' }}</div>
         {%- endfor -%}
       {%- else -%}
-        <div class="tt-koop__foto tt-onthul">""" + B('', fb1, ", sizes: '(min-width: 990px) 55vw, 100vw'") + """</div>
+        <div class="tt-koop__foto tt-onthul">{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}""" + B('', fb1, ", sizes: '(min-width: 990px) 55vw, 100vw'") + """</div>
         <div class="tt-koop__foto tt-onthul">""" + B('b2_', fb2, ", sizes: '(min-width: 990px) 55vw, 100vw'") + """</div>
       {%- endif -%}
     </div>
@@ -152,7 +155,7 @@ schrijf('tt-koop', PRIJS + """
         </p>
         {%- if section.settings.text != blank -%}<p class="tt-koop__pitch tt-in">{{ section.settings.text }}</p>{%- endif -%}
         <ul class="tt-koop__punten tt-in">
-          {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span aria-hidden="true">✓</span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
+          {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span aria-hidden="true">{% render 'tt-logo', variant: 'golfje' %}</span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
         </ul>
         <div class="tt-koop__form tt-in">
           {%- if p != blank -%}
@@ -205,6 +208,7 @@ schrijf('tt-koop', PRIJS + """
         kop("De draagtas.|*Board op je rug.*"),
         {"type": "textarea", "id": "text", "label": "Korte pitch", "default": "Niet meer met je board onder je arm door de duinen. Leg je plank erin, trek de banden aan en hang hem op je rug. Je schouders blijven heel, je wax blijft op je board en je hebt je handen vrij."},
         {"type": "text", "id": "prijs_tekst", "label": "Tekst als er nog geen product is", "default": "Binnenkort"},
+        {"type": "text", "id": "sticker", "label": "Sticker op de eerste foto", "default": "nieuw"},
         {"type": "header", "content": "Vertrouwen onder de knop"},
         {"type": "text", "id": "v1", "label": "Regel 1", "default": "Verzending door heel Europa"},
         {"type": "text", "id": "v2", "label": "Regel 2", "default": "14 dagen bedenktijd"},
@@ -228,16 +232,17 @@ s2, fb2 = beeld('b2_', 'Foto rechts', 'tt-foto-probleem-2', 'tide-tode-onderweg.
 schrijf('tt-probleem', """
 <section class="tt tt-probleem tt-bg--{{ section.settings.bg }}">
   <div class="tt-wrap tt-probleem__wrap">
-    <div class="tt-probleem__foto tt-probleem__foto--1 tt-onthul" data-tt-snelheid="0.12">""" + B('', fb1, ", sizes: '(min-width: 990px) 22vw, 40vw'") + """</div>
+    <div class="tt-probleem__foto tt-probleem__foto--1" data-tt-snelheid="0.12"><div class="tt-onthul">""" + B('', fb1, ", sizes: '(min-width: 990px) 22vw, 40vw'") + """</div>{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'sunshine', icoon: 'voeten', class: 'tt-sticker--onder' -%}</div>
     <p class="tt-probleem__tekst" data-tt-vul>{{ section.settings.tekst | escape | replace: '*', '' }}</p>
-    <div class="tt-probleem__foto tt-probleem__foto--2 tt-onthul" data-tt-snelheid="-0.1">""" + B('b2_', fb2, ", sizes: '(min-width: 990px) 22vw, 40vw'") + """</div>
+    <div class="tt-probleem__foto tt-probleem__foto--2" data-tt-snelheid="-0.1"><div class="tt-onthul">""" + B('b2_', fb2, ", sizes: '(min-width: 990px) 22vw, 40vw'") + """</div><span class="tt-probleem__icoon">{% render 'tt-icoon', icoon: 'zon' %}</span></div>
     {%- if section.settings.slot != blank -%}{%- render 'tt-kop', text: section.settings.slot, tag: 'p', class: 'tt-kop--l tt-probleem__slot' -%}{%- endif -%}
   </div>
 </section>
 """, {
     "name": "TT: het probleem", "tag": "div",
     "settings": [
-        bg("creme"),
+        bg("rose"),
+        {"type": "text", "id": "sticker", "label": "Sticker op de linkerfoto", "default": "1 uur lopen"},
         {"type": "textarea", "id": "tekst", "label": "Tekst die volloopt", "default": "Wax onder je arm. Pijn in je schouders. Met één hand sturen op de scooter. Je natte, zanderige plank in een dichte hoes proppen. Elke surfer kent het."},
         {"type": "text", "id": "slot", "label": "Slotzin", "info": KOP_INFO, "default": "Dat kan *anders.*"},
     ] + s1 + s2,
@@ -252,6 +257,7 @@ schrijf('tt-zo', """
       {%- for block in section.blocks -%}
         <li class="tt-zo__stap" {{ block.shopify_attributes }} style="--d: {{ forloop.index0 | times: 0.12 }}s">
           <div class="tt-zo__foto tt-onthul">""" + BB(extra=", sizes: '(min-width: 990px) 30vw, 80vw'") + """<span class="tt-zo__nr">{{ forloop.index }}</span></div>
+          {%- if block.settings.icoon != blank -%}<span class="tt-zo__icoon tt-zo__icoon--{{ forloop.index }}">{% render 'tt-icoon', icoon: block.settings.icoon %}</span>{%- endif -%}
           <h3>{{ block.settings.titel }}</h3>
           <p>{{ block.settings.tekst }}</p>
         </li>
@@ -264,16 +270,20 @@ schrijf('tt-zo', """
     "settings": [bg("zand"), kop("Board erin.|Banden om.|*Gaan.*")],
     "blocks": [{"type": "stap", "name": "Stap", "settings": [
         {"type": "text", "id": "titel", "label": "Titel", "default": "Stap"},
-        {"type": "textarea", "id": "tekst", "label": "Tekst", "default": ""}] + blok_beeld('tt-foto-stap-1', '', '')}],
+        {"type": "textarea", "id": "tekst", "label": "Tekst", "default": ""},
+        {"type": "select", "id": "icoon", "label": "Icoon", "options": ICONEN, "default": "board"}] + blok_beeld('tt-foto-stap-1', '', '')}],
     "presets": [{"name": "TT: zo werkt het", "blocks": [
-        {"type": "stap", "settings": {"titel": "Leg je board erin", "tekst": "Softtop of hardboard, nat of droog. Gewoon zoals hij uit het water komt.", "fallback": "tt-foto-stap-1", "filename": "tide-tode-stap-1.jpg", "alt": "Surfboard in het zand"}},
-        {"type": "stap", "settings": {"titel": "Trek de banden aan", "tekst": "Je board zit vast en schuift niet. Geen losse touwtjes of spanbanden meer.", "fallback": "tt-foto-stap-2", "filename": "tide-tode-stap-2.jpg", "alt": "Handen trekken een band strak"}},
-        {"type": "stap", "settings": {"titel": "Op je rug en gaan", "tekst": "Door de duinen, over de rotsen of achterop de scooter. Jij hebt je handen vrij.", "fallback": "tt-foto-stap-3", "filename": "tide-tode-stap-3.jpg", "alt": "Surfer loopt met board naar zee"}}]}]})
+        {"type": "stap", "settings": {"titel": "Leg je board erin", "tekst": "Softtop of hardboard, nat of droog. Gewoon zoals hij uit het water komt.", "icoon": "board", "fallback": "tt-foto-stap-1", "filename": "tide-tode-stap-1.jpg", "alt": "Surfboard in het zand"}},
+        {"type": "stap", "settings": {"titel": "Trek de banden aan", "tekst": "Je board zit vast en schuift niet. Geen losse touwtjes of spanbanden meer.", "icoon": "karabijn", "fallback": "tt-foto-stap-2", "filename": "tide-tode-stap-2.jpg", "alt": "Handen trekken een band strak"}},
+        {"type": "stap", "settings": {"titel": "Op je rug en gaan", "tekst": "Door de duinen, over de rotsen of achterop de scooter. Jij hebt je handen vrij.", "icoon": "voeten", "fallback": "tt-foto-stap-3", "filename": "tide-tode-stap-3.jpg", "alt": "Surfer loopt met board naar zee"}}]}]})
 
 # ---------- MOOD: Pinterest-muur ----------
 schrijf('tt-muur', """
 <section class="tt tt-muur tt-bg--{{ section.settings.bg }}">
   <div class="tt-muur__kop tt-wrap">
+    <span class="tt-zweef tt-zweef--1" data-tt-snelheid="0.3" aria-hidden="true">{% render 'tt-icoon', icoon: 'zeester' %}</span>
+    <span class="tt-zweef tt-zweef--2" data-tt-snelheid="-0.2" aria-hidden="true">{% render 'tt-icoon', icoon: 'schelp' %}</span>
+    <span class="tt-zweef tt-zweef--3" data-tt-snelheid="0.45" aria-hidden="true">{% render 'tt-icoon', icoon: 'zon' %}</span>
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
     {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
   </div>
@@ -286,6 +296,7 @@ schrijf('tt-muur', """
           {%- if kol == k -%}
             <figure class="tt-muur__item tt-muur__item--{{ block.settings.vorm }}" {{ block.shopify_attributes }}>
               <div class="tt-onthul">""" + BB(extra=", sizes: '(min-width: 990px) 30vw, 46vw'") + """</div>
+              {%- render 'tt-sticker', tekst: block.settings.sticker, kleur: block.settings.sticker_kleur, icoon: block.settings.sticker_icoon -%}
               {%- if block.settings.onderschrift != blank -%}<figcaption>{{ block.settings.onderschrift }}</figcaption>{%- endif -%}
             </figure>
           {%- endif -%}
@@ -300,16 +311,19 @@ schrijf('tt-muur', """
                  {"type": "textarea", "id": "text", "label": "Tekst", "default": "Australië, Midden-Amerika, Azië of gewoon de duinen om de hoek. De tas gaat mee, zodat jij alleen nog aan die ene golf hoeft te denken."}],
     "blocks": [{"type": "foto", "name": "Foto", "settings": [
         {"type": "select", "id": "vorm", "label": "Vorm", "options": [{"value": "staand", "label": "Staand"}, {"value": "hoog", "label": "Hoog"}, {"value": "vierkant", "label": "Vierkant"}, {"value": "boog", "label": "Boog"}, {"value": "liggend", "label": "Liggend"}], "default": "staand"},
-        {"type": "text", "id": "onderschrift", "label": "Onderschrift"}] + blok_beeld('tt-foto-mood-1', '', '')}],
+        {"type": "text", "id": "onderschrift", "label": "Onderschrift"},
+        {"type": "text", "id": "sticker", "label": "Sticker"},
+        {"type": "select", "id": "sticker_kleur", "label": "Stickerkleur", "options": KLEUREN, "default": "sunshine"},
+        {"type": "select", "id": "sticker_icoon", "label": "Stickericoon", "options": [{"value": "", "label": "Geen"}] + ICONEN, "default": ""}] + blok_beeld('tt-foto-mood-1', '', '')}],
     "presets": [{"name": "TT: fotomuur", "blocks": [
         {"type": "foto", "settings": {"vorm": "hoog", "fallback": "tt-foto-mood-1", "onderschrift": "de hike naar de spot", "alt": "Pad door de duinen naar zee"}},
-        {"type": "foto", "settings": {"vorm": "vierkant", "fallback": "tt-foto-mood-2", "alt": "Boards in het zand"}},
+        {"type": "foto", "settings": {"vorm": "vierkant", "sticker": "handen vrij", "sticker_kleur": "sunshine", "sticker_icoon": "zon", "fallback": "tt-foto-mood-2", "alt": "Boards in het zand"}},
         {"type": "foto", "settings": {"vorm": "boog", "fallback": "tt-foto-mood-3", "onderschrift": "golden hour", "alt": "Zee bij zonsondergang"}},
         {"type": "foto", "settings": {"vorm": "liggend", "fallback": "tt-foto-mood-4", "alt": "Rustige golven"}},
         {"type": "foto", "settings": {"vorm": "staand", "fallback": "tt-foto-mood-5", "onderschrift": "op weg naar zee", "alt": "Surfer op weg naar zee"}},
-        {"type": "foto", "settings": {"vorm": "hoog", "fallback": "tt-foto-mood-6", "alt": "Board tegen een muur"}},
+        {"type": "foto", "settings": {"vorm": "hoog", "sticker": "zout, zand, nat: prima", "sticker_kleur": "rose", "sticker_icoon": "schelp", "fallback": "tt-foto-mood-6", "alt": "Board tegen een muur"}},
         {"type": "foto", "settings": {"vorm": "staand", "fallback": "tt-foto-mood-7", "onderschrift": "van riders voor riders", "alt": "Surfers op het strand"}},
-        {"type": "foto", "settings": {"vorm": "boog", "fallback": "tt-foto-mood-8", "alt": "Kust van bovenaf"}},
+        {"type": "foto", "settings": {"vorm": "boog", "sticker": "Tide~Tode", "sticker_kleur": "deep", "sticker_icoon": "maan", "fallback": "tt-foto-mood-8", "alt": "Kust van bovenaf"}},
         {"type": "foto", "settings": {"vorm": "vierkant", "fallback": "tt-foto-mood-9", "onderschrift": "door de duinen", "alt": "Hek tussen het duingras"}}]}]})
 
 # ---------- VOOR WIE ----------
@@ -320,7 +334,7 @@ schrijf('tt-wie', """
     <div class="tt-wie__grid">
       {%- for block in section.blocks -%}
         <a class="tt-wie__kaart" href="{{ block.settings.link | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }} data-tt-cursor="shop">
-          <div class="tt-wie__foto tt-onthul">""" + BB(extra=", sizes: '(min-width: 750px) 48vw, 100vw'") + """</div>
+          <div class="tt-wie__foto"><div class="tt-onthul">""" + BB(extra=", sizes: '(min-width: 750px) 48vw, 100vw'") + """</div>{%- render 'tt-sticker', tekst: block.settings.sticker, kleur: block.settings.sticker_kleur, vorm: 'rond', icoon: block.settings.sticker_icoon, class: 'tt-sticker--rechtsboven' -%}</div>
           <div class="tt-wie__tekst">
             <h3>{{ block.settings.titel }}</h3>
             <p>{{ block.settings.tekst }}</p>
@@ -333,22 +347,25 @@ schrijf('tt-wie', """
 </section>
 """, {
     "name": "TT: voor wie", "tag": "div", "max_blocks": 3,
-    "settings": [bg("creme"), kop("Voor elke|*soort* surfer.")],
+    "settings": [bg("baby"), kop("Voor elke|*soort* surfer.")],
     "blocks": [{"type": "kaart", "name": "Kaart", "settings": [
         {"type": "text", "id": "titel", "label": "Titel", "default": "Titel"},
         {"type": "textarea", "id": "tekst", "label": "Tekst"},
         {"type": "text", "id": "knop", "label": "Linktekst", "default": "Shop de tas"},
-        {"type": "url", "id": "link", "label": "Link"}] + blok_beeld('tt-foto-beginner', '', '')}],
+        {"type": "url", "id": "link", "label": "Link"},
+        {"type": "text", "id": "sticker", "label": "Sticker"},
+        {"type": "select", "id": "sticker_kleur", "label": "Stickerkleur", "options": KLEUREN, "default": "sunshine"},
+        {"type": "select", "id": "sticker_icoon", "label": "Stickericoon", "options": [{"value": "", "label": "Geen"}] + ICONEN, "default": ""}] + blok_beeld('tt-foto-beginner', '', '')}],
     "presets": [{"name": "TT: voor wie", "blocks": [
-        {"type": "kaart", "settings": {"titel": "Je leert surfen", "tekst": "Groot softtop-board, lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.", "knop": "Shop de tas", "fallback": "tt-foto-beginner", "filename": "tide-tode-beginner.jpg", "alt": "Beginner met een softtop op het strand"}},
-        {"type": "kaart", "settings": {"titel": "Je zoekt de verstopte spot", "tekst": "Door de bush, over rotsen, achterop de scooter. Jouw board hangt veilig op je rug, jij houdt je handen vrij om te klimmen.", "knop": "Shop de tas", "fallback": "tt-foto-avontuur", "filename": "tide-tode-avontuur.jpg", "alt": "Surfer klimt over rotsen naar een afgelegen spot"}}]}]})
+        {"type": "kaart", "settings": {"titel": "Je leert surfen", "tekst": "Groot softtop-board, lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.", "knop": "Shop de tas", "sticker": "softtop", "sticker_kleur": "sunshine", "sticker_icoon": "board", "fallback": "tt-foto-beginner", "filename": "tide-tode-beginner.jpg", "alt": "Beginner met een softtop op het strand"}},
+        {"type": "kaart", "settings": {"titel": "Je zoekt de verstopte spot", "tekst": "Door de bush, over rotsen, achterop de scooter. Jouw board hangt veilig op je rug, jij houdt je handen vrij om te klimmen.", "knop": "Shop de tas", "sticker": "hardboard", "sticker_kleur": "poppy", "sticker_icoon": "golf", "fallback": "tt-foto-avontuur", "filename": "tide-tode-avontuur.jpg", "alt": "Surfer klimt over rotsen naar een afgelegen spot"}}]}]})
 
 # ---------- VERHAAL ----------
 s, fb = beeld('', 'Foto', 'tt-foto-verhaal', 'tide-tode-verhaal.jpg', 'Op reis met een surfboard')
 schrijf('tt-verhaal', """
 <section class="tt tt-verhaal tt-bg--{{ section.settings.bg }}" id="tt-verhaal">
   <div class="tt-wrap tt-verhaal__grid">
-    <div class="tt-verhaal__foto tt-onthul" data-tt-snelheid="-0.06">""" + B('', fb, ", sizes: '(min-width: 990px) 42vw, 90vw'") + """</div>
+    <div class="tt-verhaal__foto" data-tt-snelheid="-0.06"><div class="tt-onthul">""" + B('', fb, ", sizes: '(min-width: 990px) 42vw, 90vw'") + """</div><div class="tt-verhaal__zegel" data-tt-draai="-0.05">{% render 'tt-logo', variant: 'zegel' %}</div></div>
     <div class="tt-verhaal__tekst">
       {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
       <div class="tt-verhaal__body tt-in">{{ section.settings.text }}</div>
@@ -375,6 +392,7 @@ schrijf('tt-slot', PRIJS + """
 <section class="tt tt-slot">
   <div class="tt-slot__foto" data-tt-snelheid="0.12">""" + B('', fb, ", sizes: '100vw'") + """</div>
   <div class="tt-slot__inhoud tt-wrap">
+    <div class="tt-slot__maan tt-in">{% render 'tt-logo', variant: 'maan' %}</div>
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--xl' -%}
     <div class="tt-knoppen tt-in">
       <a class="tt-knop tt-knop--licht" href="{% if section.settings.btn_link != blank %}{{ section.settings.btn_link }}{% elsif p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}{% if p != blank %} · {{ v.price | money_without_trailing_zeros }}{% endif %}<span aria-hidden="true">→</span></a>
@@ -390,5 +408,33 @@ schrijf('tt-slot', PRIJS + """
         {"type": "url", "id": "btn_link", "label": "Knop-link"},
     ] + s,
     "presets": [{"name": "TT: slot"}]})
+
+# ---------- MERK: de maan draagt het getij ----------
+schrijf('tt-merk', """
+<section class="tt tt-merk tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap tt-merk__wrap">
+    <div class="tt-merk__maan" data-tt-snelheid="0.12">{% render 'tt-logo', variant: 'maan' %}</div>
+    {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+    {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    <ul class="tt-merk__iconen tt-in" aria-hidden="true">
+      {%- assign lijst = section.settings.iconen | split: ',' -%}
+      {%- for i in lijst -%}<li>{% render 'tt-icoon', icoon: i %}</li>{%- endfor -%}
+    </ul>
+  </div>
+  <div class="tt-merk__woord" aria-hidden="true">
+    <div class="tt-merk__spoor" data-tt-schuif>
+      {%- for n in (1..3) -%}{% render 'tt-logo', variant: 'woord' %}<span class="tt-merk__tussen">{% render 'tt-logo', variant: 'maan-simpel' %}</span>{%- endfor -%}
+    </div>
+  </div>
+</section>
+""", {
+    "name": "TT: merk", "tag": "div",
+    "settings": [
+        bg("deep"),
+        kop("Zoals de maan|het getij draagt,|dragen wij *je board.*"),
+        {"type": "textarea", "id": "text", "label": "Tekst", "default": "Het getij bestaat omdat de maan aan de zee trekt. Elke dag, overal ter wereld, zonder dat iemand er iets voor hoeft te doen. Daarom staat er een maan in ons teken, met drie golfjes in haar arm."},
+        {"type": "text", "id": "iconen", "label": "Iconen (komma's, zonder spaties)", "default": "golf,schelp,zon,zeester,board,tas,palmblad,meeuw"},
+    ],
+    "presets": [{"name": "TT: merk"}]})
 
 print('klaar')

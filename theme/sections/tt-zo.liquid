@@ -5,6 +5,7 @@
       {%- for block in section.blocks -%}
         <li class="tt-zo__stap" {{ block.shopify_attributes }} style="--d: {{ forloop.index0 | times: 0.12 }}s">
           <div class="tt-zo__foto tt-onthul">{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, fallback: block.settings.fallback, alt: block.settings.alt, sizes: '(min-width: 990px) 30vw, 80vw' -%}<span class="tt-zo__nr">{{ forloop.index }}</span></div>
+          {%- if block.settings.icoon != blank -%}<span class="tt-zo__icoon tt-zo__icoon--{{ forloop.index }}">{% render 'tt-icoon', icoon: block.settings.icoon %}</span>{%- endif -%}
           <h3>{{ block.settings.titel }}</h3>
           <p>{{ block.settings.tekst }}</p>
         </li>
@@ -39,6 +40,14 @@
         {
           "value": "baby",
           "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
         }
       ],
       "default": "zand"
@@ -67,6 +76,70 @@
           "id": "tekst",
           "label": "Tekst",
           "default": ""
+        },
+        {
+          "type": "select",
+          "id": "icoon",
+          "label": "Icoon",
+          "options": [
+            {
+              "value": "tas",
+              "label": "De tas"
+            },
+            {
+              "value": "golf",
+              "label": "Golf"
+            },
+            {
+              "value": "golfjes",
+              "label": "Getij"
+            },
+            {
+              "value": "board",
+              "label": "Board"
+            },
+            {
+              "value": "schelp",
+              "label": "Schelp"
+            },
+            {
+              "value": "zon",
+              "label": "Zon"
+            },
+            {
+              "value": "maan",
+              "label": "Maan"
+            },
+            {
+              "value": "zeester",
+              "label": "Zeester"
+            },
+            {
+              "value": "palmblad",
+              "label": "Palmblad"
+            },
+            {
+              "value": "meeuw",
+              "label": "Meeuw"
+            },
+            {
+              "value": "wax",
+              "label": "Wax"
+            },
+            {
+              "value": "karabijn",
+              "label": "Karabijnhaak"
+            },
+            {
+              "value": "tij",
+              "label": "Spiraal"
+            },
+            {
+              "value": "voeten",
+              "label": "Onderweg"
+            }
+          ],
+          "default": "board"
         },
         {
           "type": "image_picker",
@@ -104,6 +177,7 @@
           "settings": {
             "titel": "Leg je board erin",
             "tekst": "Softtop of hardboard, nat of droog. Gewoon zoals hij uit het water komt.",
+            "icoon": "board",
             "fallback": "tt-foto-stap-1",
             "filename": "tide-tode-stap-1.jpg",
             "alt": "Surfboard in het zand"
@@ -114,6 +188,7 @@
           "settings": {
             "titel": "Trek de banden aan",
             "tekst": "Je board zit vast en schuift niet. Geen losse touwtjes of spanbanden meer.",
+            "icoon": "karabijn",
             "fallback": "tt-foto-stap-2",
             "filename": "tide-tode-stap-2.jpg",
             "alt": "Handen trekken een band strak"
@@ -124,6 +199,7 @@
           "settings": {
             "titel": "Op je rug en gaan",
             "tekst": "Door de duinen, over de rotsen of achterop de scooter. Jij hebt je handen vrij.",
+            "icoon": "voeten",
             "fallback": "tt-foto-stap-3",
             "filename": "tide-tode-stap-3.jpg",
             "alt": "Surfer loopt met board naar zee"

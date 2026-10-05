@@ -104,6 +104,15 @@
       const p = (r.top + r.height / 2 - vh / 2) / vh;
       el.style.translate = `0 ${(p * parseFloat(el.dataset.ttSnelheid) * -300).toFixed(1)}px`;
     });
+    document.querySelectorAll('[data-tt-draai]').forEach((el) => {
+      el.style.rotate = `${(scrollY * parseFloat(el.dataset.ttDraai)).toFixed(1)}deg`;
+    });
+    document.querySelectorAll('[data-tt-schuif]').forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > vh) return;
+      const deel = el.scrollWidth / 3;
+      el.style.transform = `translate3d(${(-((vh - r.top) * 0.45) % deel).toFixed(1)}px,0,0)`;
+    });
     document.querySelectorAll('[data-tt-vul]').forEach((p) => {
       const r = p.getBoundingClientRect();
       const woorden = p.querySelectorAll('.tt-w');
