@@ -45,16 +45,21 @@ Aanpassingen ten opzichte van de eerste versie, om aan de regels te voldoen:
 | Duiken als passie | Galerij "Van verstopte spot tot diep blauw" met plek voor duikbeelden |
 | Gevoel: zin om je tas te pakken en te gaan surfen | Hero "Handen vrij, op weg naar de golf", CTA "Pak je tas, de zee wacht" |
 
-## Kleuren (tokens in `theme/assets/surf.css`, schema's in `config/settings_data.json`)
-| Schema | Rol | Achtergrond | Tekst |
-|---|---|---|---|
-| scheme-1 | Zand (standaard) | `#F4EEE4` | `#142029` |
-| scheme-2 | Schuim | `#E9F1F3` | `#142029` |
-| scheme-3 | Diepzee (donker) | `#0D2433` | `#F4EEE4` |
-| scheme-4 | Oceaan | `#1D5A78` | `#FFFFFF` |
-| scheme-5 | Wit (kaarten) | `#FFFFFF` | `#142029` |
+## Kleuren (moodboard "Marble Blue"-palet, tokens in `theme/assets/surf.css`)
+Rust en blauw als basis; warm en zacht alleen in details.
 
-Accent = knopkleur per schema: oceaan `#1D5A78` op licht, licht getij `#8CC3D8` op diepzee, zand op oceaan.
+| Naam | Hex | Rol |
+|---|---|---|
+| Crème | `#F5EEDF` | basis: achtergrond (scheme-1) |
+| Deep | `#1F3F6B` | hoofdkleur: koppen, donkere vlakken (scheme-3) |
+| Ink | `#18325A` | tekst |
+| Captain | `#3D6FB6` | accent: knoppen, accentwoord (scheme-4 als vlak) |
+| Baby | `#C4DAF0` | zachte vlakken (scheme-2) |
+| Poppy | `#EE7B4F` | warme pit, spaarzaam (winkelwagenbolletje, badge-icoon) |
+| Rose | `#F2BDBD` | alleen klein (stickers, galerij-labels) |
+| Sunshine | `#F2D06B` | alleen klein (stickers, galerij-labels) |
+
+Hexcodes zijn geschat uit het moodboard; vervang ze door de echte codes zodra die er zijn. Alle tekst/knop-combinaties halen WCAG AA.
 
 ## Lancering
 De site gaat pas live als er meerdere modellen klaarliggen. Tot die tijd:

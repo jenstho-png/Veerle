@@ -121,7 +121,7 @@
       </ul>
     </nav>
     {%- if section.settings.cta_label != blank -%}
-      <a href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}" class="surf-btn surf-btn--primary" style="background: var(--surf-sand); color: var(--surf-deep);">
+      <a href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}" class="surf-btn surf-btn--primary" style="background: var(--surf-creme); color: var(--surf-deep);">
         {{- section.settings.cta_label }}
         {% render 'surf-icon', icon: 'arrow' -%}
       </a>

@@ -13,13 +13,17 @@
 @font-face { font-family: 'Fraunces'; src: url('fraunces-latin-400-italic.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
 
 :root {
-  /* zee-palet (de kleurenschema's in Shopify gebruiken dezelfde waarden) */
-  --surf-deep: #0d2433;
-  --surf-ocean: #1d5a78;
-  --surf-tide: #4f97b6;
-  --surf-foam: #e9f1f3;
-  --surf-sand: #f4eee4;
-  --surf-brass: #a9834a;
+  /* palet (moodboard): rust en blauw als basis, warm en zacht alleen in details.
+     De kleurenschema's in Shopify gebruiken dezelfde waarden. */
+  --surf-creme: #f5eedf;     /* basis: achtergrond */
+  --surf-deep: #1f3f6b;      /* hoofdkleur: koppen, donkere vlakken */
+  --surf-ink: #18325a;       /* tekst */
+  --surf-captain: #3d6fb6;   /* accent: knoppen, accentwoord */
+  --surf-baby: #c4daf0;      /* zacht vlak */
+  --surf-poppy: #ee7b4f;     /* warme pit, spaarzaam */
+  --surf-rose: #f2bdbd;      /* alleen klein */
+  --surf-sunshine: #f2d06b;  /* alleen klein */
+  --surf-overlay: 24, 50, 90; /* donkere laag over foto's (rgb van ink) */
 
   --font-body-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-body-style: normal;
@@ -83,7 +87,7 @@
 .surf-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .surf-ph {
   position: absolute; inset: 0; display: grid; place-content: center; gap: 12px; text-align: center; padding: 20px;
-  color: var(--surf-ocean); background: linear-gradient(160deg, var(--surf-foam), #d6e6eb);
+  color: var(--surf-captain); background: linear-gradient(160deg, #dde9f5, var(--surf-baby));
 }
 .surf-ph svg { width: 48px; height: auto; margin-inline: auto; opacity: .7; }
 .surf-ph span { font: 600 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; word-break: break-all; opacity: .85; }
@@ -131,11 +135,11 @@
 .surf-drawer[hidden] { display: none; }
 .surf-drawer {
   pointer-events: auto; position: fixed; inset: 0; z-index: 60; padding: 20px var(--mk-marge);
-  background: var(--surf-deep); color: var(--surf-sand); overflow-y: auto; display: flex; flex-direction: column; gap: 24px;
+  background: var(--surf-deep); color: var(--surf-creme); overflow-y: auto; display: flex; flex-direction: column; gap: 24px;
 }
 .surf-drawer__top { display: flex; justify-content: space-between; align-items: center; }
 .surf-drawer ul { list-style: none; margin: 0; padding: 0; }
-.surf-drawer > nav > ul > li { border-bottom: 1px solid rgba(244, 238, 228, .15); }
+.surf-drawer > nav > ul > li { border-bottom: 1px solid rgba(245, 238, 223, .15); }
 .surf-drawer a, .surf-drawer summary {
   display: flex; justify-content: space-between; align-items: center; padding: 16px 0;
   font: 900 28px/1.05 var(--mk-font-kop); letter-spacing: -1px; color: inherit; text-decoration: none; list-style: none; cursor: pointer;
@@ -143,7 +147,7 @@
 .surf-drawer summary::-webkit-details-marker { display: none; }
 .surf-drawer summary svg { width: 14px; }
 .surf-drawer details ul a { font: 600 17px/1.3 var(--mk-font-tekst); letter-spacing: 0; padding: 8px 0 8px 16px; opacity: .85; }
-.surf-drawer .surf-btn { margin-top: auto; background: var(--surf-sand); color: var(--surf-deep); }
+.surf-drawer .surf-btn { margin-top: auto; background: var(--surf-creme); color: var(--surf-deep); }
 @media (min-width: 990px) {
   .surf-header__nav { display: block; }
   .surf-header__cta { display: inline-flex; }
@@ -169,7 +173,7 @@
 .surf-hero__badge svg { width: 18px; height: 18px; }
 .surf-hero--full { min-height: 100svh; display: grid; align-items: end; color: #fff; }
 .surf-hero--full .surf-hero__bg { position: absolute; inset: 0; border-radius: 0; }
-.surf-hero--full .surf-hero__bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13, 36, 51, .1) 30%, rgba(13, 36, 51, .75)); }
+.surf-hero--full .surf-hero__bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(var(--surf-overlay), .1) 30%, rgba(var(--surf-overlay), .75)); }
 .surf-hero--full .surf__inner { position: relative; z-index: 1; }
 .surf-hero--full h1, .surf-hero--full .surf-lead { color: #fff; }
 @media (min-width: 990px) {
@@ -286,10 +290,10 @@
 .surf-cta__box .surf-lead { margin: 20px auto 0; }
 .surf-cta__box.mk-vlak h2 { color: #fff; }
 .surf-cta__box.mk-vlak .surf-lead { color: rgba(255, 255, 255, .78); }
-.surf-cta__box.mk-vlak .surf-btn--primary { background: var(--surf-sand); color: var(--surf-deep); }
+.surf-cta__box.mk-vlak .surf-btn--primary { background: var(--surf-creme); color: var(--surf-deep); }
 .surf-cta__box.mk-vlak .surf-btn--ghost { background: rgba(255, 255, 255, .07); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); }
 .surf-cta__bg { position: absolute !important; inset: 0; z-index: 0 !important; border-radius: 0; }
-.surf-cta__bg::after { content: ''; position: absolute; inset: 0; background: rgba(13, 36, 51, .6); }
+.surf-cta__bg::after { content: ''; position: absolute; inset: 0; background: rgba(var(--surf-overlay), .6); }
 .surf-cta .surf-btns { justify-content: center; }
 @media (min-width: 768px) { .surf-cta__box { padding: 120px 64px; } }
 
@@ -311,7 +315,7 @@
    ========================================================================== */
 .surf-pagehero { padding-top: 32px; }
 .surf-pagehero__media { aspect-ratio: 21 / 9; min-height: 320px; border-radius: var(--mk-r-vlak); }
-.surf-pagehero__media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 35%, rgba(13, 36, 51, .72)); }
+.surf-pagehero__media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 35%, rgba(var(--surf-overlay), .72)); }
 .surf-pagehero__title { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: clamp(24px, 4vw, 56px); }
 .surf-pagehero__media .surf-pagehero__title h1, .surf-pagehero__media .surf-eyebrow { color: #fff; }
 .surf-pagehero__sub { padding: 28px clamp(24px, 4vw, 56px) 0; }
@@ -330,9 +334,9 @@
 .surf-footer a { color: inherit; text-decoration: none; font-size: 15px; opacity: .88; }
 .surf-footer a:hover { opacity: 1; text-decoration: underline; text-underline-offset: .3em; }
 .surf-footer__word { font: 900 clamp(64px, 16vw, 200px)/.85 var(--mk-font-kop); letter-spacing: -0.05em; opacity: .1; white-space: nowrap; overflow: hidden; }
-.surf-footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding-top: 24px; border-top: 1px solid rgba(244, 238, 228, .15); font-size: 13px; opacity: .8; }
+.surf-footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding-top: 24px; border-top: 1px solid rgba(245, 238, 223, .15); font-size: 13px; opacity: .8; }
 .surf-socials { display: flex; gap: 8px; margin-top: 24px; list-style: none; padding: 0; }
-.surf-socials a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(244, 238, 228, .25); opacity: 1; }
+.surf-socials a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(245, 238, 223, .25); opacity: 1; }
 .surf-socials svg { width: 18px; height: 18px; }
 .surf-pay { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
 @media (min-width: 990px) { .surf-footer__top { grid-template-columns: 1fr 1.6fr; } }
@@ -340,14 +344,14 @@
 /* ==========================================================================
    LEAD-POPUP
    ========================================================================== */
-.surf-popup { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; background: rgba(13, 36, 51, .55); }
+.surf-popup { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; background: rgba(var(--surf-overlay), .55); }
 .surf-popup[hidden] { display: none; }
-.surf-popup__card { position: relative; width: min(100%, 520px); padding: clamp(32px, 5vw, 56px); border-radius: var(--mk-r-groot); text-align: center; background: var(--surf-sand); color: #142029; box-shadow: var(--mk-sh-kaart); animation: mk-melding var(--mk-melding) var(--mk-ease) both; }
+.surf-popup__card { position: relative; width: min(100%, 520px); padding: clamp(32px, 5vw, 56px); border-radius: var(--mk-r-groot); text-align: center; background: var(--surf-creme); color: var(--surf-ink); box-shadow: var(--mk-sh-kaart); animation: mk-melding var(--mk-melding) var(--mk-ease) both; }
 .surf-popup__card h2 { font: 900 clamp(30px, 3.4vw, 40px)/1.02 var(--mk-font-kop); letter-spacing: -1.6px; margin: 0 0 16px; }
 .surf-popup__card p { font-size: 16px; line-height: 1.6; opacity: .85; margin: 0; }
 .surf-popup__close { position: absolute; top: 12px; right: 12px; }
 .surf-popup .surf-signup { background: #fff; }
-.surf-popup .surf-btn--primary { background: var(--surf-ocean); color: #fff; }
+.surf-popup .surf-btn--primary { background: var(--surf-captain); color: #fff; }
 
 /* ---------- Dawn-onderdelen in dezelfde stijl ---------- */
 .button, .shopify-payment-button__button--unbranded { border-radius: var(--mk-r-rond); font-weight: 700; }
@@ -356,5 +360,16 @@ h1, h2, .h0, .h1, .h2 { font-weight: 900; letter-spacing: -0.03em; }
 .page-width { max-width: var(--mk-breed); padding-inline: var(--mk-marge); }
 
 /* leesbalk (mk-stijl) in de zeekleur */
-.mk-leesbalk { background: linear-gradient(90deg, var(--surf-ocean), var(--surf-tide)); }
+.mk-leesbalk { background: linear-gradient(90deg, var(--surf-captain), var(--surf-baby)); }
 .surf-product__body .surf-lead { margin-top: 20px; }
+
+/* ---------- Palet-details: warm en zacht alleen klein ---------- */
+/* zachtere tekst iets donkerder dan de merkstijl-standaard, voor leesbaarheid op crème en baby */
+[class*="color-"] { --mk-zacht: color-mix(in srgb, var(--mk-tekst) 80%, transparent); }
+/* poppy: winkelwagenbolletje en het icoon in de hero-badge */
+.surf-count { background: var(--surf-poppy); color: var(--surf-deep); }
+.surf-hero__badge i { background: color-mix(in srgb, var(--surf-poppy) 18%, white); color: var(--surf-poppy); }
+/* rose, sunshine, baby: locatielabels in de galerij als stickers */
+.surf-gallery__item:nth-child(3n+1) figcaption { background: var(--surf-sunshine); color: var(--surf-deep); }
+.surf-gallery__item:nth-child(3n+2) figcaption { background: var(--surf-rose); color: var(--surf-deep); }
+.surf-gallery__item:nth-child(3n) figcaption { background: var(--surf-baby); color: var(--surf-deep); }
