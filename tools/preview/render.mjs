@@ -31,6 +31,8 @@ const settings = {
   tt_product: { title: 'De Draagtas', url: '/products/de-draagtas', available: true, media: [], featured_media: null, has_only_default_variant: true, options_with_values: [], variants: [],
     selected_or_first_available_variant: { id: 1, price: 4000, compare_at_price: null, available: true } }, social_instagram_link: 'https://instagram.com/', logo: null,
 };
+// standaardwaarden uit settings_schema (alleen wat nog niet gezet is)
+for (const g of JSON.parse(fs.readFileSync(`${T}/config/settings_schema.json`, 'utf8'))) for (const x of g.settings || []) if (x.id && 'default' in x && !(x.id in settings)) settings[x.id] = x.default;
 const globals = {
   settings, shop: { name: 'Tide-Tode', url: 'https://example.com' },
   routes: { root_url: '/', search_url: '/search', cart_url: '/cart', account_url: '/account', all_products_collection_url: '/collections/all' },
@@ -67,6 +69,7 @@ async function page(name, tplPath, extra = {}) {
     html += await renderSection(d.type, d, i++);
   }
   html += await renderSection('surf-footer', fg.sections['surf-footer'], 99);
+  if (extra.popup) html += await engine.renderFile('surf-lead-popup', { ...globals, settings: { ...settings, surf_popup_enable: true, surf_popup_code: extra.code || '' }, template: { name: 'index' } });
   const schemes = JSON.parse(fs.readFileSync(`${T}/config/settings_data.json`, 'utf8')).presets.Dawn.color_schemes;
   const hex = (h) => [1, 3, 5].map((n) => parseInt(h.slice(n, n + 2), 16)).join(',');
   const css = Object.entries(schemes).map(([id, { settings: c }]) => `.color-${id}{--color-background:${hex(c.background)};--color-foreground:${hex(c.text)};--color-button:${hex(c.button)};--color-button-text:${hex(c.button_label)};background-color:rgb(var(--color-background));color:rgb(var(--color-foreground))}`).join('\n');
@@ -77,6 +80,7 @@ async function page(name, tplPath, extra = {}) {
 }
 
 await page('home', 'index.json');
+await page('popup', 'index.json', { popup: true, code: 'TIDE10' });
 await page('over-ons', 'page.over-ons.json', { request: { page_type: 'page' } });
 await page('faq', 'page.veelgestelde-vragen.json', { request: { page_type: 'page' } });
 console.log('rendered');

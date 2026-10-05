@@ -36,38 +36,65 @@
   /* Lead-popup */
   const popup = document.getElementById('SurfPopup');
   if (!popup) return;
+  const teaser = document.querySelector('[data-surf-popup-open]');
   const KEY = 'surfPopup';
   const WEEK = 7 * 24 * 60 * 60 * 1000;
   const store = {
     get() { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; } },
     set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) { /* privé-venster */ } },
   };
+  let vorige = null;
   const show = () => {
     if (!popup.hidden) return;
+    vorige = document.activeElement;
     popup.hidden = false;
+    requestAnimationFrame(() => popup.classList.add('is-open'));
+    document.documentElement.classList.add('tt-pop-open');
+    if (teaser) teaser.hidden = true;
     store.set({ ...store.get(), seen: Date.now() });
-    popup.querySelector('input[type=email], [data-surf-popup-close]').focus();
+    popup.querySelector('input[type=email], [data-surf-popup-close]').focus({ preventScroll: true });
   };
-  const hide = () => { popup.hidden = true; };
+  const hide = () => {
+    if (popup.hidden) return;
+    popup.classList.remove('is-open');
+    document.documentElement.classList.remove('tt-pop-open');
+    setTimeout(() => { popup.hidden = true; }, 450);
+    if (teaser && !store.get().done) teaser.hidden = false;
+    if (vorige && vorige.focus) vorige.focus({ preventScroll: true });
+  };
 
-  popup.querySelector('[data-surf-popup-close]').addEventListener('click', hide);
+  popup.querySelectorAll('[data-surf-popup-close]').forEach((b) => b.addEventListener('click', hide));
   popup.addEventListener('click', (e) => { if (e.target === popup) hide(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
   popup.querySelector('form')?.addEventListener('submit', () => store.set({ ...store.get(), done: true }));
+  teaser?.addEventListener('click', show);
+
+  /* Code kopiëren */
+  popup.querySelectorAll('[data-tt-kopieer]').forEach((b) => b.addEventListener('click', () => {
+    const tekst = b.querySelector('[data-tt-kopieer-tekst]');
+    const klaar = () => { tekst.textContent = 'Gekopieerd!'; setTimeout(() => { tekst.textContent = 'Kopieer code'; }, 2000); };
+    if (navigator.clipboard) navigator.clipboard.writeText(b.dataset.ttKopieer).then(klaar, () => {}); else klaar();
+  }));
 
   /* Na succesvolle inschrijving (pagina herlaadt met #SurfPopupForm) direct de bevestiging tonen */
   if (popup.querySelector('[data-surf-popup-success]')) {
     store.set({ ...store.get(), done: true });
-    popup.hidden = false;
+    show();
     return;
   }
 
   const state = store.get();
-  if (state.done || (state.seen && Date.now() - state.seen < WEEK)) return;
+  if (state.done) return;
   if (window.Shopify && window.Shopify.designMode) return;
+  if (state.seen && Date.now() - state.seen < WEEK) { if (teaser) teaser.hidden = false; return; }
 
-  const delay = Math.max(5, Number(popup.dataset.delay) || 120) * 1000;
+  const delay = Math.max(5, Number(popup.dataset.delay) || 25) * 1000;
   setTimeout(show, delay);
+  /* of eerder: halverwege de pagina */
+  const halverwege = () => {
+    if (scrollY + innerHeight > document.documentElement.scrollHeight * 0.5) { removeEventListener('scroll', halverwege); show(); }
+  };
+  setTimeout(() => addEventListener('scroll', halverwege, { passive: true }), 4000);
   if (window.matchMedia('(pointer: fine)').matches) {
     setTimeout(() => {
       document.addEventListener('mouseout', (e) => {

@@ -412,3 +412,62 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 
 /* hero schuift onder de zwevende menubalk door */
 .tt-hero:not(.tt-hero--pagina), .tt-hero--pagina { margin-top: -76px; }
+
+/* ==========================================================================
+   POP-UP met hook
+   ========================================================================== */
+.tt-pop { z-index: 2147483100; background: rgba(16, 32, 56, 0); backdrop-filter: blur(0); transition: background .5s var(--tt-ease), backdrop-filter .5s var(--tt-ease); }
+.tt-pop.is-open { background: rgba(16, 32, 56, .55); backdrop-filter: blur(3px); }
+.tt-pop__kaart { position: relative; display: grid; grid-template-columns: 380px 1fr; width: min(100%, 860px); max-height: calc(100svh - 32px); overflow: auto; border-radius: 24px; background: var(--tt-creme); color: var(--tt-ink); box-shadow: 0 50px 100px -40px rgba(10, 25, 45, .7); opacity: 0; transform: translateY(40px) scale(.97); transition: opacity .5s var(--tt-ease), transform .7s var(--tt-ease); }
+.tt-pop.is-open .tt-pop__kaart { opacity: 1; transform: none; }
+.tt-pop__beeld { position: relative; min-height: 100%; overflow: hidden; }
+.tt-pop__beeld .tt-beeld__img { position: absolute; inset: 0; }
+.tt-pop.is-open .tt-pop__beeld img { animation: tt-hero-zoom 2.4s var(--tt-ease) both; }
+.tt-pop__sticker { left: 22px; bottom: 22px; width: 118px; height: 118px; font-size: 22px; }
+.tt-pop.is-open .tt-pop__sticker { animation: tt-plak .9s var(--tt-ease) .35s both; }
+@keyframes tt-plak { from { opacity: 0; transform: scale(1.6) rotate(-20deg); } }
+.tt-pop__inhoud { position: relative; padding: clamp(36px, 5vw, 60px) clamp(28px, 4.4vw, 52px) clamp(28px, 4vw, 44px); }
+.tt-pop__maan { width: 44px; color: var(--tt-captain); margin-bottom: 18px; }
+.tt-pop__maan svg { width: 100%; height: auto; display: block; }
+.tt-pop__kop { font-size: clamp(36px, 4.2vw, 52px); line-height: .96; }
+.tt-pop__tekst { margin-top: 18px !important; font: 400 16px/1.6 var(--tt-tekst); color: color-mix(in srgb, var(--tt-ink) 74%, transparent); }
+.tt-pop__veld { width: 100%; margin: 26px 0 12px; padding: 20px 24px; border-radius: 999px; border: 1px solid rgba(24, 50, 90, .2); background: #fff; font: 400 16px/1 var(--tt-tekst); color: var(--tt-ink); }
+.tt-pop__veld:focus { outline: 2px solid var(--tt-captain); outline-offset: 2px; }
+.tt-pop__klein { margin-top: 12px !important; font: 400 12.5px/1.4 var(--tt-tekst); text-align: center; opacity: .6; }
+.tt-pop__fout { margin-top: 10px !important; font-size: 14px; color: #b3402a; }
+.tt-pop__nee { display: block; margin: 14px auto 0; background: none; border: 0; padding: 4px; font: italic 480 16px/1.2 var(--tt-display); color: var(--tt-ink); opacity: .6; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.tt-pop__nee:hover { opacity: 1; }
+.tt-pop__sluit { position: absolute; top: 16px; right: 16px; width: 42px; height: 42px; border-radius: 50%; border: 0; background: rgba(24, 50, 90, .07); cursor: pointer; transition: transform .5s var(--tt-ease), background .3s; }
+.tt-pop__sluit:hover { transform: rotate(90deg); background: rgba(24, 50, 90, .14); }
+.tt-pop__sluit span, .tt-pop__sluit span::after { position: absolute; left: 13px; right: 13px; top: 50%; height: 1.5px; background: var(--tt-ink); rotate: 45deg; }
+.tt-pop__sluit span::after { content: ''; left: 0; right: 0; top: 0; rotate: 90deg; }
+.tt-pop__klaar { display: grid; gap: 16px; margin-top: 18px; }
+.tt-pop__klaar p { font: 400 16px/1.6 var(--tt-tekst); }
+.tt-pop__code { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 22px; border-radius: 16px; border: 1.5px dashed var(--tt-deep); background: var(--tt-sunshine); color: var(--tt-deep); cursor: pointer; }
+.tt-pop__code strong { font: 600 22px/1 var(--tt-tekst); letter-spacing: .08em; }
+.tt-pop__code span { font: italic 480 16px/1 var(--tt-display); }
+.tt-pop .tt-knop { margin-top: 0; }
+.tt-pop-open, .tt-pop-open body { overflow: hidden; }
+
+/* sticker die na wegklikken blijft staan */
+.tt-pop__teaser { position: fixed; z-index: 85; right: 18px; bottom: 18px; width: 96px; height: 96px; border: 0; cursor: pointer; font-size: 18px; animation: tt-plak .9s var(--tt-ease) both, tt-wiebel 6s ease-in-out 1.5s infinite; }
+.tt-pop__teaser[hidden] { display: none; }
+.tt-pop__teaser:hover { scale: 1.08; }
+@keyframes tt-wiebel { 0%, 86%, 100% { rotate: 9deg; } 90% { rotate: -4deg; } 94% { rotate: 14deg; } }
+body:has(.tt-balk.is-aan) .tt-pop__teaser { bottom: 96px; }
+
+@media (max-width: 749px) {
+  .tt-pop { align-items: end; padding: 0; }
+  .tt-pop__kaart { grid-template-columns: 1fr; border-radius: 24px 24px 0 0; max-height: 92svh; transform: translateY(100%); }
+  .tt-pop__beeld { height: 190px; min-height: 0; }
+  .tt-pop__sticker { width: 92px; height: 92px; font-size: 18px; left: 18px; bottom: -30px; z-index: 7; }
+  .tt-pop__maan { display: none; }
+  .tt-pop__inhoud { padding-top: 44px; }
+  .tt-pop__beeld { overflow: visible; }
+  .tt-pop__beeld > img { border-radius: 24px 24px 0 0; }
+  .tt-pop__teaser { width: 80px; height: 80px; font-size: 15px; right: 12px; bottom: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tt-pop__kaart, .tt-pop { transition: none; }
+  .tt-pop__teaser, .tt-pop__sticker, .tt-pop.is-open .tt-pop__beeld img { animation: none; }
+}

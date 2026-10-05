@@ -95,29 +95,31 @@
         "type": "range",
         "id": "surf_popup_delay",
         "label": "Tonen na (seconden)",
-        "min": 10,
-        "max": 300,
-        "step": 10,
+        "min": 5,
+        "max": 180,
+        "step": 5,
         "unit": "s",
-        "default": 120
+        "default": 25,
+        "info": "Of eerder: hij komt ook op de helft van de pagina, of als iemand de pagina wil verlaten (desktop)."
       },
       {
         "type": "text",
         "id": "surf_popup_heading",
         "label": "Kop",
-        "default": "Als eerste weten wanneer de tas er *is*"
+        "default": "Pak je tas|*met 10% korting.*",
+        "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent."
       },
       {
         "type": "textarea",
         "id": "surf_popup_text",
         "label": "Tekst",
-        "default": "We gaan online zodra de eerste modellen klaar zijn. Laat je e-mailadres achter, dan hoor je het als eerste."
+        "default": "Schrijf je in voor de getijdenbrief en krijg 10% korting op je eerste tas. Je hoort ook als eerste wanneer er nieuwe tassen en accessoires zijn."
       },
       {
         "type": "text",
         "id": "surf_popup_button",
         "label": "Knop",
-        "default": "Zet me op de lijst"
+        "default": "Stuur mij de korting"
       },
       {
         "type": "text",
@@ -130,7 +132,31 @@
         "type": "text",
         "id": "surf_popup_success",
         "label": "Bedankt-tekst",
-        "default": "Je staat op de lijst. We mailen je zodra de tassen online staan."
+        "default": "Welkom aan boord! Dit is je code. Vul hem in bij het afrekenen."
+      },
+      {
+        "type": "text",
+        "id": "surf_popup_code",
+        "label": "Kortingscode",
+        "info": "Maak de code eerst aan in Shopify > Kortingen. Leeg = geen code tonen (bijvoorbeeld bij alleen een wachtlijst)."
+      },
+      {
+        "type": "text",
+        "id": "surf_popup_teaser",
+        "label": "Sticker-tekst",
+        "default": "10% korting",
+        "info": "Staat op de foto, en blijft na wegklikken rechtsonder staan om de pop-up weer te openen. Leeg = geen sticker."
+      },
+      {
+        "type": "text",
+        "id": "surf_popup_nee",
+        "label": "Nee-link",
+        "default": "Nee, bedankt"
+      },
+      {
+        "type": "image_picker",
+        "id": "surf_popup_image",
+        "label": "Foto"
       }
     ]
   },

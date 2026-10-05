@@ -1,48 +1,50 @@
 {%- comment -%}
-  E-mail capture. Maakt een klant/abonnee aan met tag (bv. 'early-access').
-  Verschijnt na X seconden of bij exit-intent (desktop); daarna 7 dagen niet opnieuw.
-  Na inschrijving nooit meer. Mail-opvolging: Shopify Email / Flow op de tag.
+  Pop-up met hook (korting of early access). Maakt een klant/abonnee aan met tag.
+  Verschijnt na X seconden, na de helft van de pagina, of bij exit-intent (desktop); daarna 7 dagen niet opnieuw.
+  Na wegklikken blijft rechtsonder een sticker staan die hem weer opent. Na inschrijving nooit meer.
+  De kortingscode zelf maak je aan in Shopify > Kortingen; vul hem in bij Thema-instellingen > Surf: lead-popup.
 {%- endcomment -%}
 {%- if settings.surf_popup_enable and template.name != 'cart' and template.name != 'password' -%}
-  <div
-    class="surf-popup"
-    id="SurfPopup"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="SurfPopupTitle"
-    data-delay="{{ settings.surf_popup_delay }}"
-    hidden
-  >
-    <div class="surf-popup__card">
-      <button type="button" class="surf-icon-btn surf-popup__close" data-surf-popup-close aria-label="Sluiten">
-        {%- render 'surf-icon', icon: 'close' -%}
-      </button>
-      {%- render 'surf-headline', text: settings.surf_popup_heading, tag: 'h2', class: '' -%}
-      {%- if settings.surf_popup_text != blank -%}
-        <p>{{ settings.surf_popup_text }}</p>
-      {%- endif -%}
-      {%- form 'customer', id: 'SurfPopupForm' -%}
-        <input type="hidden" name="contact[tags]" value="newsletter,{{ settings.surf_popup_tag | escape }}">
-        {%- if form.posted_successfully? -%}
-          <p class="surf-form-msg" data-surf-popup-success>{{ settings.surf_popup_success }}</p>
-        {%- else -%}
-          <div class="surf-signup">
-            <label class="visually-hidden" for="SurfPopupEmail">E-mailadres</label>
-            <input
-              id="SurfPopupEmail"
-              type="email"
-              name="contact[email]"
-              autocomplete="email"
-              placeholder="jouw@email.nl"
-              required
-            >
-            <button type="submit" class="surf-btn surf-btn--primary">{{ settings.surf_popup_button }}</button>
-          </div>
-          {%- if form.errors -%}
-            <p class="surf-form-msg">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
-          {%- endif -%}
+  <div class="surf-popup tt-pop" id="SurfPopup" role="dialog" aria-modal="true" aria-labelledby="SurfPopupTitle" data-delay="{{ settings.surf_popup_delay }}" hidden>
+    <div class="tt-pop__kaart">
+      <div class="tt-pop__beeld">
+        {%- render 'tt-beeld', image: settings.surf_popup_image, fallback: 'tt-foto-mood-7', alt: '', sizes: '(min-width: 750px) 380px, 100vw' -%}
+        {%- if settings.surf_popup_teaser != blank -%}
+          <span class="tt-sticker tt-sticker--sunshine tt-sticker--rond tt-pop__sticker" aria-hidden="true">{% render 'tt-icoon', icoon: 'zon' %}<span>{{ settings.surf_popup_teaser }}</span></span>
         {%- endif -%}
-      {%- endform -%}
+      </div>
+      <div class="tt-pop__inhoud">
+        <button type="button" class="tt-pop__sluit" data-surf-popup-close aria-label="Sluiten"><span aria-hidden="true"></span></button>
+        <div class="tt-pop__maan" aria-hidden="true">{% render 'tt-logo', variant: 'maan-simpel' %}</div>
+        {%- render 'tt-kop', text: settings.surf_popup_heading, tag: 'h2', class: 'tt-pop__kop' -%}
+        {%- form 'customer', id: 'SurfPopupForm', class: 'tt-pop__form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter,{{ settings.surf_popup_tag | escape }}">
+          {%- if form.posted_successfully? -%}
+            <div class="tt-pop__klaar" data-surf-popup-success>
+              <p>{{ settings.surf_popup_success }}</p>
+              {%- if settings.surf_popup_code != blank -%}
+                <button type="button" class="tt-pop__code" data-tt-kopieer="{{ settings.surf_popup_code | escape }}">
+                  <strong>{{ settings.surf_popup_code }}</strong><span data-tt-kopieer-tekst>Kopieer code</span>
+                </button>
+              {%- endif -%}
+              <a class="tt-knop tt-knop--vol" href="{% if settings.tt_product != blank %}{{ settings.tt_product.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}"><span>Shop de draagtas</span></a>
+            </div>
+          {%- else -%}
+            {%- if settings.surf_popup_text != blank -%}<p class="tt-pop__tekst">{{ settings.surf_popup_text }}</p>{%- endif -%}
+            <label class="visually-hidden" for="SurfPopupEmail">E-mailadres</label>
+            <input class="tt-pop__veld" id="SurfPopupEmail" type="email" name="contact[email]" autocomplete="email" placeholder="jouw@email.nl" required>
+            <button type="submit" class="tt-knop tt-knop--vol"><span>{{ settings.surf_popup_button }}</span></button>
+            {%- if form.errors -%}<p class="tt-pop__fout">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>{%- endif -%}
+            <p class="tt-pop__klein">Geen spam. Uitschrijven kan altijd met één klik.</p>
+            <button type="button" class="tt-pop__nee" data-surf-popup-close>{{ settings.surf_popup_nee }}</button>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
     </div>
   </div>
+  {%- if settings.surf_popup_teaser != blank -%}
+    <button type="button" class="tt-pop__teaser tt-sticker tt-sticker--sunshine tt-sticker--rond" data-surf-popup-open hidden>
+      {%- render 'tt-icoon', icoon: 'zon' -%}<span>{{ settings.surf_popup_teaser }}</span>
+    </button>
+  {%- endif -%}
 {%- endif -%}
