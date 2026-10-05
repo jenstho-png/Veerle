@@ -3,7 +3,7 @@
     "pagehero": {
       "type": "surf-pagehero",
       "settings": {
-        "eyebrow": "Contact",
+        "eyebrow": "",
         "heading": "Stuur ons een *bericht*",
         "text": "Vraag over de tas, je bestelling of een samenwerking? We reageren meestal binnen één werkdag."
       }

@@ -26,7 +26,7 @@ A = 'aria-hidden="true" focusable="false"'
 snippet = f"""{{%- comment -%}}
   Tide-Tode logo als vectorpaden (gegenereerd door tools/brand/export_shopify.py, niet met de hand aanpassen).
   Gebruik: {{% render 'tt-logo', variant: 'liggend', class: '', label: shop.name %}}
-  Varianten: woord, maan, maan-simpel, zegel, golfje, liggend, staand.
+  Varianten: woord, maan, maan-simpel, maan-simpel-pad (alleen paden, voor binnen een svg), zegel, golfje, liggend, staand.
   De kleur volgt currentColor.
 {{%- endcomment -%}}
 {{%- liquid
@@ -45,6 +45,8 @@ snippet = f"""{{%- comment -%}}
     <svg class="tt-maan {{{{ class }}}}" viewBox="0 0 200 200" {{{{ aria }}}}>{maan_simpel}</svg>
   {{%- when 'zegel' -%}}
     <svg class="tt-zegel {{{{ class }}}}" viewBox="0 0 200 200" {{{{ aria }}}}>{zegel}</svg>
+  {{%- when 'maan-simpel-pad' -%}}
+    {maan_simpel}
   {{%- when 'golfje' -%}}
     <svg class="tt-golfje {{{{ class }}}}" viewBox="{golfje_vb}" {A}>{golfje}</svg>
   {{%- when 'staand' -%}}

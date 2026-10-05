@@ -1,0 +1,187 @@
+<section class="tt tt-reis tt-bg--{{ section.settings.bg }}" data-tt-pin style="--n: {{ section.blocks.size | plus: 1 }}" id="tt-reis-{{ section.id }}">
+  <div class="tt-reis__pin">
+    <div class="tt-reis__spoor" data-tt-spoor>
+      <div class="tt-reis__intro">
+        {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+        {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+        <span class="tt-reis__pijl tt-in" aria-hidden="true">{% render 'tt-logo', variant: 'golfje' %}<i>→</i></span>
+      </div>
+      {%- for block in section.blocks -%}
+        <article class="tt-reis__paneel" {{ block.shopify_attributes }}>
+          <div class="tt-reis__beeld" data-tt-cursor="{{ block.settings.titel | split: ' ' | last }}">{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, scene: block.settings.scene, alt: block.settings.titel, sizes: '(min-width: 990px) 34vw, 80vw' -%}</div>
+          <span class="tt-reis__nr">{{ forloop.index | prepend: '0' }}</span>
+          <h3>{{ block.settings.titel }}</h3>
+          <p>{{ block.settings.tekst }}</p>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: waar ga jij heen",
+  "tag": "div",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        },
+        {
+          "value": "poppy",
+          "label": "Poppy"
+        }
+      ],
+      "default": "creme"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Een | is een nieuwe regel. Zet een woord tussen *sterretjes* voor het cursieve accent.",
+      "default": "Waar ga|*jij* heen?"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Tekst",
+      "default": "Eén tas voor elke weg naar het water."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "paneel",
+      "name": "Paneel",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto"
+        },
+        {
+          "type": "text",
+          "id": "filename",
+          "label": "Bestandsnaam (SEO)",
+          "default": "tide-tode-onderweg.jpg"
+        },
+        {
+          "type": "select",
+          "id": "scene",
+          "label": "Scène zolang er geen foto is",
+          "options": [
+            {
+              "value": "zee",
+              "label": "Zee"
+            },
+            {
+              "value": "duin",
+              "label": "Duinen"
+            },
+            {
+              "value": "onder",
+              "label": "Onder water"
+            },
+            {
+              "value": "avond",
+              "label": "Zonsondergang"
+            },
+            {
+              "value": "nacht",
+              "label": "Nachtzee"
+            },
+            {
+              "value": "palm",
+              "label": "Palmschaduw"
+            },
+            {
+              "value": "boards",
+              "label": "Boards"
+            },
+            {
+              "value": "tas",
+              "label": "De tas"
+            }
+          ],
+          "default": "zee"
+        },
+        {
+          "type": "text",
+          "id": "titel",
+          "label": "Titel",
+          "default": "Naar het strand"
+        },
+        {
+          "type": "textarea",
+          "id": "tekst",
+          "label": "Tekst"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: waar ga jij heen",
+      "blocks": [
+        {
+          "type": "paneel",
+          "settings": {
+            "scene": "duin",
+            "filename": "tide-tode-hostel-naar-strand.jpg",
+            "titel": "Van je hostel naar het strand",
+            "tekst": "Groot board, lange wandeling. Banden om en lopen maar."
+          }
+        },
+        {
+          "type": "paneel",
+          "settings": {
+            "scene": "zee",
+            "filename": "tide-tode-verstopte-spot.jpg",
+            "titel": "Over de rotsen naar die verstopte spot",
+            "tekst": "Twee handen vrij om te klimmen. Je board hangt veilig op je rug."
+          }
+        },
+        {
+          "type": "paneel",
+          "settings": {
+            "scene": "avond",
+            "filename": "tide-tode-scooter-kust.jpg",
+            "titel": "Op de scooter langs de kust",
+            "tekst": "Stuur met twee handen. De tas doet de rest."
+          }
+        },
+        {
+          "type": "paneel",
+          "settings": {
+            "scene": "boards",
+            "filename": "tide-tode-op-reis.jpg",
+            "titel": "Naar de andere kant van de wereld",
+            "tekst": "Opgevouwen in je bagage. Huur ter plekke een board en je tas is er al."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

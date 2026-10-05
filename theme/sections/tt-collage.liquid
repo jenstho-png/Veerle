@@ -1,0 +1,466 @@
+<section class="tt tt-collage tt-bg--{{ section.settings.bg }}" id="tt-collage-{{ section.id }}">
+  <div class="tt-wrap">
+    <div class="tt-collage__kop">
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+      {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <div class="tt-collage__raster">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign i = forloop.index0 | modulo: 4
+          case i
+            when 0
+              assign v = '-0.08'
+            when 1
+              assign v = '0.06'
+            when 2
+              assign v = '-0.14'
+            else
+              assign v = '0.1'
+          endcase
+        -%}
+        {%- case block.type -%}
+          {%- when 'beeld' -%}
+            <figure class="tt-stuk tt-stuk--{{ block.settings.vorm }}" data-tt-snelheid="{{ v }}" {{ block.shopify_attributes }}>
+              <div class="tt-stuk__beeld tt-onthul" data-tt-cursor="{{ block.settings.caption | default: 'onderweg' }}">{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, scene: block.settings.scene, alt: block.settings.alt, sizes: '(min-width: 990px) 30vw, 50vw' -%}</div>
+              {%- if block.settings.caption != blank -%}<figcaption>{{ block.settings.caption }}</figcaption>{%- endif -%}
+            </figure>
+          {%- when 'quote' -%}
+            <blockquote class="tt-stuk tt-stuk--quote tt-bg--{{ block.settings.bg }}" data-tt-snelheid="{{ v }}" {{ block.shopify_attributes }}><p>{{ block.settings.tekst }}</p></blockquote>
+          {%- when 'zegel' -%}
+            <div class="tt-stuk tt-stuk--zegel tt-bg--{{ block.settings.bg }}" data-tt-draai="0.08" {{ block.shopify_attributes }}>{% render 'tt-logo', variant: 'zegel' %}</div>
+          {%- when 'icoon' -%}
+            <div class="tt-stuk tt-stuk--icoon tt-bg--{{ block.settings.bg }}" data-tt-snelheid="{{ v }}" {{ block.shopify_attributes }}>{% render 'tt-icoon', icoon: block.settings.icoon %}</div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: collage",
+  "tag": "div",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        },
+        {
+          "value": "poppy",
+          "label": "Poppy"
+        }
+      ],
+      "default": "creme"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Een | is een nieuwe regel. Zet een woord tussen *sterretjes* voor het cursieve accent.",
+      "default": "Overal waar|het water *roept.*"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Tekst",
+      "default": "Australië, Midden-Amerika, Azië, de duinen om de hoek. De tas ging overal mee, zodat jij alleen nog aan die ene golf hoeft te denken."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "beeld",
+      "name": "Foto",
+      "settings": [
+        {
+          "type": "select",
+          "id": "vorm",
+          "label": "Vorm",
+          "options": [
+            {
+              "value": "boog",
+              "label": "Boog"
+            },
+            {
+              "value": "rond",
+              "label": "Rond"
+            },
+            {
+              "value": "staand",
+              "label": "Staand"
+            },
+            {
+              "value": "vierkant",
+              "label": "Vierkant"
+            },
+            {
+              "value": "breed",
+              "label": "Breed"
+            }
+          ],
+          "default": "boog"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto"
+        },
+        {
+          "type": "text",
+          "id": "filename",
+          "label": "Bestandsnaam (SEO)",
+          "default": "tide-tode-onderweg.jpg"
+        },
+        {
+          "type": "select",
+          "id": "scene",
+          "label": "Scène zolang er geen foto is",
+          "options": [
+            {
+              "value": "zee",
+              "label": "Zee"
+            },
+            {
+              "value": "duin",
+              "label": "Duinen"
+            },
+            {
+              "value": "onder",
+              "label": "Onder water"
+            },
+            {
+              "value": "avond",
+              "label": "Zonsondergang"
+            },
+            {
+              "value": "nacht",
+              "label": "Nachtzee"
+            },
+            {
+              "value": "palm",
+              "label": "Palmschaduw"
+            },
+            {
+              "value": "boards",
+              "label": "Boards"
+            },
+            {
+              "value": "tas",
+              "label": "De tas"
+            }
+          ],
+          "default": "zee"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt-tekst"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Onderschrift"
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "name": "Zin",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tekst",
+          "label": "Tekst",
+          "default": "Board op je rug, wind in je haar."
+        },
+        {
+          "type": "select",
+          "id": "bg",
+          "label": "Kleur",
+          "options": [
+            {
+              "value": "creme",
+              "label": "Crème"
+            },
+            {
+              "value": "deep",
+              "label": "Deep"
+            },
+            {
+              "value": "baby",
+              "label": "Baby"
+            },
+            {
+              "value": "rose",
+              "label": "Rose"
+            },
+            {
+              "value": "sunshine",
+              "label": "Sunshine"
+            },
+            {
+              "value": "poppy",
+              "label": "Poppy"
+            }
+          ],
+          "default": "rose"
+        }
+      ]
+    },
+    {
+      "type": "zegel",
+      "name": "Zegel",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "select",
+          "id": "bg",
+          "label": "Kleur",
+          "options": [
+            {
+              "value": "creme",
+              "label": "Crème"
+            },
+            {
+              "value": "deep",
+              "label": "Deep"
+            },
+            {
+              "value": "baby",
+              "label": "Baby"
+            },
+            {
+              "value": "rose",
+              "label": "Rose"
+            },
+            {
+              "value": "sunshine",
+              "label": "Sunshine"
+            },
+            {
+              "value": "poppy",
+              "label": "Poppy"
+            }
+          ],
+          "default": "sunshine"
+        }
+      ]
+    },
+    {
+      "type": "icoon",
+      "name": "Icoon",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icoon",
+          "label": "Icoon",
+          "options": [
+            {
+              "value": "tas",
+              "label": "De tas"
+            },
+            {
+              "value": "golf",
+              "label": "Golf"
+            },
+            {
+              "value": "golfjes",
+              "label": "Getij"
+            },
+            {
+              "value": "board",
+              "label": "Board"
+            },
+            {
+              "value": "schelp",
+              "label": "Schelp"
+            },
+            {
+              "value": "zon",
+              "label": "Zon"
+            },
+            {
+              "value": "maan",
+              "label": "Maan"
+            },
+            {
+              "value": "zeester",
+              "label": "Zeester"
+            },
+            {
+              "value": "koraal",
+              "label": "Koraal"
+            },
+            {
+              "value": "palmblad",
+              "label": "Palmblad"
+            },
+            {
+              "value": "meeuw",
+              "label": "Meeuw"
+            },
+            {
+              "value": "wax",
+              "label": "Wax"
+            },
+            {
+              "value": "karabijn",
+              "label": "Karabijnhaak"
+            },
+            {
+              "value": "tij",
+              "label": "Spiraal"
+            },
+            {
+              "value": "voeten",
+              "label": "Onderweg"
+            }
+          ],
+          "default": "schelp"
+        },
+        {
+          "type": "select",
+          "id": "bg",
+          "label": "Kleur",
+          "options": [
+            {
+              "value": "creme",
+              "label": "Crème"
+            },
+            {
+              "value": "deep",
+              "label": "Deep"
+            },
+            {
+              "value": "baby",
+              "label": "Baby"
+            },
+            {
+              "value": "rose",
+              "label": "Rose"
+            },
+            {
+              "value": "sunshine",
+              "label": "Sunshine"
+            },
+            {
+              "value": "poppy",
+              "label": "Poppy"
+            }
+          ],
+          "default": "baby"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: collage",
+      "blocks": [
+        {
+          "type": "beeld",
+          "settings": {
+            "vorm": "boog",
+            "scene": "zee",
+            "filename": "tide-tode-australie-hike.jpg",
+            "alt": "Hike naar een surfspot in Australië",
+            "caption": "Australië, om zes uur 's ochtends"
+          }
+        },
+        {
+          "type": "quote",
+          "settings": {
+            "tekst": "Board op je rug, wind in je haar.",
+            "bg": "rose"
+          }
+        },
+        {
+          "type": "beeld",
+          "settings": {
+            "vorm": "rond",
+            "scene": "palm",
+            "filename": "tide-tode-palmschaduw-hostel.jpg",
+            "alt": "Palmschaduw op de muur van een hostel",
+            "caption": "het hostel"
+          }
+        },
+        {
+          "type": "zegel",
+          "settings": {
+            "bg": "sunshine"
+          }
+        },
+        {
+          "type": "beeld",
+          "settings": {
+            "vorm": "staand",
+            "scene": "onder",
+            "filename": "tide-tode-duiken.jpg",
+            "alt": "Duiken in diep blauw water",
+            "caption": "en dan even onder water"
+          }
+        },
+        {
+          "type": "icoon",
+          "settings": {
+            "icoon": "schelp",
+            "bg": "baby"
+          }
+        },
+        {
+          "type": "beeld",
+          "settings": {
+            "vorm": "breed",
+            "scene": "avond",
+            "filename": "tide-tode-zonsondergang.jpg",
+            "alt": "Zonsondergang na een surfsessie",
+            "caption": "golden hour"
+          }
+        },
+        {
+          "type": "beeld",
+          "settings": {
+            "vorm": "vierkant",
+            "scene": "boards",
+            "filename": "tide-tode-boards.jpg",
+            "alt": "Surfboards tegen een muur",
+            "caption": "kies je board"
+          }
+        },
+        {
+          "type": "beeld",
+          "settings": {
+            "vorm": "boog",
+            "scene": "duin",
+            "filename": "tide-tode-duinen.jpg",
+            "alt": "Tas op de rug in de duinen",
+            "caption": "de duinen om de hoek"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

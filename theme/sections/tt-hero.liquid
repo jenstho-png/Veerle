@@ -1,0 +1,304 @@
+<section class="tt tt-hero tt-bg--{{ section.settings.bg }}{% if section.settings.pagina %} tt-hero--pagina{% endif %}" id="tt-hero-{{ section.id }}">
+  <div class="tt-hero__grid tt-wrap">
+    <div class="tt-hero__tekst">
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h1', class: 'tt-kop--xl' -%}
+      {%- if section.settings.text != blank -%}<p class="tt-lead tt-in" style="--d: .5s">{{ section.settings.text }}</p>{%- endif -%}
+      <div class="tt-knoppen tt-in" style="--d: .65s">
+        {%- if section.settings.btn1_label != blank -%}<a class="tt-knop" href="{{ section.settings.btn1_link | default: routes.all_products_collection_url }}">{{ section.settings.btn1_label }}<span aria-hidden="true">→</span></a>{%- endif -%}
+        {%- if section.settings.btn2_label != blank -%}<a class="tt-link" href="{{ section.settings.btn2_link | default: '#' }}">{{ section.settings.btn2_label }}</a>{%- endif -%}
+      </div>
+    </div>
+    <div class="tt-hero__beelden">
+      <div class="tt-hero__boog tt-onthul" data-tt-snelheid="-0.06" data-tt-cursor="{{ section.settings.cursor }}">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, scene: section.settings.scene, alt: section.settings.alt, sizes: '(min-width: 990px) 40vw, 90vw', loading: 'eager' -%}</div>
+      <div class="tt-hero__rond tt-onthul" data-tt-snelheid="0.14" style="--d: .35s">{%- render 'tt-beeld', image: section.settings.klein1_image, filename: section.settings.klein1_filename, scene: section.settings.klein1_scene, alt: section.settings.klein1_alt, sizes: '200px' -%}</div>
+      <div class="tt-hero__staand tt-onthul" data-tt-snelheid="-0.18" style="--d: .5s">{%- render 'tt-beeld', image: section.settings.klein2_image, filename: section.settings.klein2_filename, scene: section.settings.klein2_scene, alt: section.settings.klein2_alt, sizes: '200px' -%}</div>
+      {%- if section.settings.zegel -%}<div class="tt-hero__zegel" data-tt-draai="0.12">{% render 'tt-logo', variant: 'zegel' %}</div>{%- endif -%}
+    </div>
+  </div>
+  {%- unless section.settings.pagina -%}<div class="tt-hero__scroll" aria-hidden="true"><span>scroll</span><i></i></div>{%- endunless -%}
+</section>
+
+{% schema %}
+{
+  "name": "TT: hero",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        },
+        {
+          "value": "poppy",
+          "label": "Poppy"
+        }
+      ],
+      "default": "creme"
+    },
+    {
+      "type": "checkbox",
+      "id": "pagina",
+      "label": "Compacte versie (voor subpagina's)",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Een | is een nieuwe regel. Zet een woord tussen *sterretjes* voor het cursieve accent.",
+      "default": "Jij surft.|Wij *dragen.*"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Tekst",
+      "default": "De draagtas die je board op je rug zet. Voor de hike naar die verstopte spot, de scooter naar het strand en elke reis daartussen."
+    },
+    {
+      "type": "text",
+      "id": "btn1_label",
+      "label": "Knop",
+      "default": "Bekijk de tas"
+    },
+    {
+      "type": "url",
+      "id": "btn1_link",
+      "label": "Knop-link"
+    },
+    {
+      "type": "text",
+      "id": "btn2_label",
+      "label": "Tweede link",
+      "default": "Hoe het begon"
+    },
+    {
+      "type": "url",
+      "id": "btn2_link",
+      "label": "Tweede link: adres"
+    },
+    {
+      "type": "checkbox",
+      "id": "zegel",
+      "label": "Zegel tonen",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cursor",
+      "label": "Cursortekst op de grote foto",
+      "default": "op pad"
+    },
+    {
+      "type": "header",
+      "content": "Grote foto (boog)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Foto"
+    },
+    {
+      "type": "text",
+      "id": "filename",
+      "label": "Bestandsnaam (SEO)",
+      "default": "tide-tode-hike-naar-de-spot.jpg",
+      "info": "Upload in Content > Bestanden met precies deze naam; tot die tijd staat er een getekende scène."
+    },
+    {
+      "type": "select",
+      "id": "scene",
+      "label": "Scène zolang er geen foto is",
+      "options": [
+        {
+          "value": "zee",
+          "label": "Zee"
+        },
+        {
+          "value": "duin",
+          "label": "Duinen"
+        },
+        {
+          "value": "onder",
+          "label": "Onder water"
+        },
+        {
+          "value": "avond",
+          "label": "Zonsondergang"
+        },
+        {
+          "value": "nacht",
+          "label": "Nachtzee"
+        },
+        {
+          "value": "palm",
+          "label": "Palmschaduw"
+        },
+        {
+          "value": "boards",
+          "label": "Boards"
+        },
+        {
+          "value": "tas",
+          "label": "De tas"
+        }
+      ],
+      "default": "zee"
+    },
+    {
+      "type": "text",
+      "id": "alt",
+      "label": "Alt-tekst",
+      "default": "Surfer met board op de rug onderweg naar de zee"
+    },
+    {
+      "type": "header",
+      "content": "Kleine ronde foto"
+    },
+    {
+      "type": "image_picker",
+      "id": "klein1_image",
+      "label": "Foto"
+    },
+    {
+      "type": "text",
+      "id": "klein1_filename",
+      "label": "Bestandsnaam (SEO)",
+      "default": "tide-tode-palmschaduw.jpg",
+      "info": "Upload in Content > Bestanden met precies deze naam; tot die tijd staat er een getekende scène."
+    },
+    {
+      "type": "select",
+      "id": "klein1_scene",
+      "label": "Scène zolang er geen foto is",
+      "options": [
+        {
+          "value": "zee",
+          "label": "Zee"
+        },
+        {
+          "value": "duin",
+          "label": "Duinen"
+        },
+        {
+          "value": "onder",
+          "label": "Onder water"
+        },
+        {
+          "value": "avond",
+          "label": "Zonsondergang"
+        },
+        {
+          "value": "nacht",
+          "label": "Nachtzee"
+        },
+        {
+          "value": "palm",
+          "label": "Palmschaduw"
+        },
+        {
+          "value": "boards",
+          "label": "Boards"
+        },
+        {
+          "value": "tas",
+          "label": "De tas"
+        }
+      ],
+      "default": "palm"
+    },
+    {
+      "type": "text",
+      "id": "klein1_alt",
+      "label": "Alt-tekst",
+      "default": "Palmschaduw op een witte muur"
+    },
+    {
+      "type": "header",
+      "content": "Kleine staande foto"
+    },
+    {
+      "type": "image_picker",
+      "id": "klein2_image",
+      "label": "Foto"
+    },
+    {
+      "type": "text",
+      "id": "klein2_filename",
+      "label": "Bestandsnaam (SEO)",
+      "default": "tide-tode-boards-tegen-de-muur.jpg",
+      "info": "Upload in Content > Bestanden met precies deze naam; tot die tijd staat er een getekende scène."
+    },
+    {
+      "type": "select",
+      "id": "klein2_scene",
+      "label": "Scène zolang er geen foto is",
+      "options": [
+        {
+          "value": "zee",
+          "label": "Zee"
+        },
+        {
+          "value": "duin",
+          "label": "Duinen"
+        },
+        {
+          "value": "onder",
+          "label": "Onder water"
+        },
+        {
+          "value": "avond",
+          "label": "Zonsondergang"
+        },
+        {
+          "value": "nacht",
+          "label": "Nachtzee"
+        },
+        {
+          "value": "palm",
+          "label": "Palmschaduw"
+        },
+        {
+          "value": "boards",
+          "label": "Boards"
+        },
+        {
+          "value": "tas",
+          "label": "De tas"
+        }
+      ],
+      "default": "boards"
+    },
+    {
+      "type": "text",
+      "id": "klein2_alt",
+      "label": "Alt-tekst",
+      "default": "Surfboards tegen een muur"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: hero"
+    }
+  ]
+}
+{% endschema %}

@@ -5,7 +5,7 @@
       "settings": {
         "heading_tag": "h1",
         "heading": "Veelgestelde vragen",
-        "eyebrow": "Hulp en info",
+        "eyebrow": "",
         "btn_link": "shopify://pages/contact"
       },
       "blocks": {
@@ -65,7 +65,8 @@
       "type": "surf-cta",
       "settings": {
         "btn2_label": "Contact",
-        "btn2_link": "shopify://pages/contact"
+        "btn2_link": "shopify://pages/contact",
+        "eyebrow": ""
       }
     }
   },

@@ -285,6 +285,16 @@
     {{ 'fraunces-soft-480.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
     {{ 'inter-latin-400-normal.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
     <script src="{{ 'surf.js' | asset_url }}" defer="defer"></script>
+    {{ 'tt.css' | asset_url | stylesheet_tag }}
+    <script>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('tt-js');
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || (window.Shopify && window.Shopify.designMode)) d.classList.add('tt-stil');
+        try { if (sessionStorage.getItem('ttIntro')) d.classList.add('tt-intro-gezien'); sessionStorage.setItem('ttIntro', '1'); } catch (e) {}
+      })();
+    </script>
+    <script src="{{ 'tt.js' | asset_url }}" defer="defer"></script>
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
 
     {%- if settings.cart_type == 'drawer' -%}
@@ -319,6 +329,7 @@
   </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
+    <div class="tt-intro" aria-hidden="true"><div class="tt-intro__binnen">{% render 'tt-logo', variant: 'maan' %}{% render 'tt-logo', variant: 'woord' %}</div></div>
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>

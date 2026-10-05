@@ -1,0 +1,79 @@
+<section class="tt tt-manifest tt-bg--{{ section.settings.bg }}" id="tt-manifest-{{ section.id }}">
+  <div class="tt-wrap tt-manifest__binnen">
+    <p class="tt-manifest__tekst" data-tt-vul>
+      {%- assign delen = section.settings.tekst | split: '*' -%}
+      {%- for deel in delen -%}
+        {%- assign odd = forloop.index0 | modulo: 2 -%}
+        {%- if odd == 1 -%}<em>{{ deel | escape }}</em>{%- else -%}{{ deel | escape }}{%- endif -%}
+      {%- endfor -%}
+    </p>
+    {%- if section.settings.naam != blank -%}
+      <p class="tt-manifest__naam tt-in">{% render 'tt-logo', variant: 'maan-simpel' %}<span><em>{{ section.settings.naam }}</em>{{ section.settings.rol }}</span></p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: manifest",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        },
+        {
+          "value": "poppy",
+          "label": "Poppy"
+        }
+      ],
+      "default": "creme"
+    },
+    {
+      "type": "textarea",
+      "id": "tekst",
+      "label": "Tekst",
+      "info": "*woord* = cursief accent. De woorden kleuren in terwijl je scrolt.",
+      "default": "Niet iedereen rolt uit bed *de golf in.* Sommigen lopen eerst een uur door de duinen, klimmen over rotsen, met een board dat nergens lekker vast te houden is. Voor hen maakten we *Tide-Tode.*"
+    },
+    {
+      "type": "text",
+      "id": "naam",
+      "label": "Naam",
+      "default": "Veerle"
+    },
+    {
+      "type": "text",
+      "id": "rol",
+      "label": "Rol",
+      "default": "oprichter, surfer, sjouwer"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: manifest"
+    }
+  ]
+}
+{% endschema %}

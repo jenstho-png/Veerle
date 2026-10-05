@@ -23,7 +23,7 @@
     "pagehero": {
       "type": "surf-pagehero",
       "settings": {
-        "eyebrow": "Shop"
+        "eyebrow": ""
       }
     }
   },

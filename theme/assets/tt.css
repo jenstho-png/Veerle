@@ -1,0 +1,274 @@
+/* ==========================================================================
+   Tide-Tode · redactioneel ontwerp (tt-secties)
+   Rustige luxe: grote Fraunces-koppen, veel lucht, bogen en cirkels,
+   korrel, en beweging die met het scrollen meeloopt.
+   ========================================================================== */
+:root {
+  --tt-creme: #f5eedf; --tt-deep: #1f3f6b; --tt-ink: #18325a; --tt-captain: #3d6fb6;
+  --tt-baby: #c4daf0; --tt-poppy: #ee7b4f; --tt-rose: #f2bdbd; --tt-sunshine: #f2d06b;
+  --tt-zacht: rgba(24, 50, 90, .72); --tt-lijn: rgba(24, 50, 90, .16);
+  --tt-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --tt-tekst: 'Inter', system-ui, -apple-system, sans-serif;
+  --tt-ease: cubic-bezier(.16, 1, .3, 1);
+  --tt-breed: 1320px;
+  --tt-marge: clamp(20px, 4vw, 56px);
+}
+
+.tt { position: relative; color: var(--tt-fg); background: var(--tt-bg); overflow: clip; }
+.tt-wrap { width: 100%; max-width: var(--tt-breed); margin-inline: auto; padding-inline: var(--tt-marge); }
+.tt p { margin: 0; }
+.tt h1, .tt h2, .tt h3 { margin: 0; color: inherit; }
+
+/* achtergronden */
+.tt-bg--creme { --tt-bg: var(--tt-creme); --tt-fg: var(--tt-ink); --tt-acc: var(--tt-captain); --tt-knop-bg: var(--tt-deep); --tt-knop-fg: var(--tt-creme); }
+.tt-bg--deep { --tt-bg: var(--tt-deep); --tt-fg: var(--tt-creme); --tt-acc: var(--tt-sunshine); --tt-zacht: rgba(245, 238, 223, .74); --tt-lijn: rgba(245, 238, 223, .2); --tt-knop-bg: var(--tt-creme); --tt-knop-fg: var(--tt-deep); }
+.tt-bg--baby { --tt-bg: var(--tt-baby); --tt-fg: var(--tt-ink); --tt-acc: var(--tt-deep); --tt-knop-bg: var(--tt-deep); --tt-knop-fg: var(--tt-creme); }
+.tt-bg--rose { --tt-bg: var(--tt-rose); --tt-fg: var(--tt-ink); --tt-acc: var(--tt-deep); --tt-knop-bg: var(--tt-deep); --tt-knop-fg: var(--tt-creme); }
+.tt-bg--sunshine { --tt-bg: var(--tt-sunshine); --tt-fg: var(--tt-ink); --tt-acc: var(--tt-deep); --tt-knop-bg: var(--tt-deep); --tt-knop-fg: var(--tt-creme); }
+.tt-bg--poppy { --tt-bg: var(--tt-poppy); --tt-fg: var(--tt-creme); --tt-acc: var(--tt-deep); --tt-knop-bg: var(--tt-creme); --tt-knop-fg: var(--tt-deep); }
+[class*="tt-bg--"] { background-color: var(--tt-bg); color: var(--tt-fg); }
+.tt[class*="tt-bg--"] { background-image: var(--mk-tegel-licht); background-size: 400px 400px; }
+.tt.tt-bg--deep { background-image: none; isolation: isolate; }
+.tt.tt-bg--deep::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .55; background-image: var(--mk-tegel-donker); background-size: 400px 400px; }
+
+/* ---------- typografie ---------- */
+.tt-kop { font-family: var(--tt-display); font-weight: 480; letter-spacing: -0.03em; line-height: .94; text-wrap: balance; }
+.tt-kop em { font-style: italic; color: var(--tt-acc); letter-spacing: -0.02em; }
+.tt-kop--xl { font-size: clamp(60px, 10.6vw, 172px); line-height: .88; letter-spacing: -0.045em; }
+.tt-kop--l { font-size: clamp(48px, 7.6vw, 118px); line-height: .9; }
+.tt-kop--m { font-size: clamp(38px, 5vw, 76px); line-height: .98; }
+.tt-regel { display: block; overflow: hidden; padding: .04em .06em .1em 0; margin-bottom: -.1em; }
+.tt-regel > span { display: inline-block; }
+.tt-lead { font: 400 clamp(17px, 1.35vw, 20px)/1.6 var(--tt-tekst); color: var(--tt-zacht); max-width: 46ch; }
+.tt-klein { font-size: 13px; color: var(--tt-zacht); }
+.tt-handtekening { font: italic 480 clamp(34px, 3.6vw, 48px)/1 var(--tt-display); color: var(--tt-acc); }
+
+/* ---------- knoppen ---------- */
+.tt-knoppen { display: flex; flex-wrap: wrap; align-items: center; gap: 22px 28px; margin-top: 38px; }
+.tt-knop {
+  display: inline-flex; align-items: center; gap: 14px; padding: 20px 30px; border-radius: 999px; border: 0; cursor: pointer;
+  background: var(--tt-knop-bg, var(--tt-deep)); color: var(--tt-knop-fg, var(--tt-creme));
+  font: 600 15px/1 var(--tt-tekst); letter-spacing: .02em; text-decoration: none;
+  transition: transform .5s var(--tt-ease), background-color .3s, color .3s; will-change: transform;
+}
+.tt-knop span { display: inline-block; transition: transform .5s var(--tt-ease); }
+.tt-knop:hover span { transform: translateX(6px); }
+.tt-knop:hover { background: var(--tt-captain); color: #fff; }
+.tt-knop--licht { background: var(--tt-creme); color: var(--tt-deep); }
+.tt-knop[disabled] { opacity: .5; cursor: not-allowed; }
+.tt-link { position: relative; font: italic 480 22px/1.2 var(--tt-display); color: inherit; text-decoration: none; padding-bottom: 4px; }
+.tt-link::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1.5px; background: currentColor; transform-origin: right; transition: transform .6s var(--tt-ease); }
+.tt-link:hover::after { transform: scaleX(0); }
+.tt-knop:focus-visible, .tt-link:focus-visible { outline: 2px solid var(--tt-poppy); outline-offset: 4px; }
+
+/* ---------- beelden ---------- */
+.tt-beeld__img, .tt-scene { display: block; width: 100%; height: 100%; object-fit: cover; }
+.tt-beeld__naam { display: none; position: absolute; left: 10px; bottom: 10px; z-index: 5; padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,.85); font: 600 10px/1.2 ui-monospace, monospace; color: var(--tt-ink); }
+.shopify-design-mode .tt-beeld__naam { display: block; }
+
+/* onthullen: een gordijn in Deep trekt omhoog, het beeld zoomt rustig uit */
+.tt-onthul { position: relative; overflow: hidden; isolation: isolate; }
+.tt-onthul::after { content: ''; position: absolute; inset: -1px; z-index: 4; background: var(--tt-gordijn, var(--tt-deep)); transform-origin: 50% 0; transform: scaleY(0); pointer-events: none; }
+.tt-onthul > img, .tt-onthul > svg { transition: transform 1.8s var(--tt-ease) var(--d, 0s); }
+
+/* korrel over vlakken en beelden die nog getekend zijn */
+.tt-onthul::before, .tt-stuk--quote::before, .tt-reis__beeld::before { content: ''; position: absolute; inset: 0; z-index: 3; background-image: var(--mk-tegel-donker); background-size: 300px; opacity: .22; mix-blend-mode: multiply; pointer-events: none; border-radius: inherit; }
+
+/* ==========================================================================
+   Animatie-beginstanden (alleen met JS en zonder 'minder beweging')
+   ========================================================================== */
+.tt-js:not(.tt-stil) [data-tt-regels] .tt-regel > span { transform: translateY(108%) rotate(3deg); transform-origin: 0 100%; transition: transform 1.2s var(--tt-ease) calc(var(--i) * .1s + .05s); }
+.tt-js:not(.tt-stil) [data-tt-regels].is-in .tt-regel > span { transform: none; }
+.tt-js:not(.tt-stil) .tt-in { opacity: 0; transform: translateY(26px); transition: opacity 1s var(--tt-ease) var(--d, .15s), transform 1.2s var(--tt-ease) var(--d, .15s); }
+.tt-js:not(.tt-stil) .tt-in.is-in { opacity: 1; transform: none; }
+.tt-js:not(.tt-stil) .tt-onthul::after { transform: scaleY(1); transition: transform 1.3s var(--tt-ease) var(--d, 0s); }
+.tt-js:not(.tt-stil) .tt-onthul.is-in::after { transform: scaleY(0); }
+.tt-js:not(.tt-stil) .tt-onthul > img, .tt-js:not(.tt-stil) .tt-onthul > svg { transform: scale(1.25); }
+.tt-js:not(.tt-stil) .tt-onthul.is-in > img, .tt-js:not(.tt-stil) .tt-onthul.is-in > svg { transform: none; }
+
+/* ==========================================================================
+   INTRO: korte opening met de maan (één keer per bezoek)
+   ========================================================================== */
+.tt-intro { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; background: var(--tt-deep); color: var(--tt-creme); animation: tt-intro-weg 1s var(--tt-ease) 1.55s forwards; pointer-events: none; }
+.tt-intro__binnen { display: grid; justify-items: center; gap: 22px; }
+.tt-intro .tt-maan { width: 92px; height: auto; animation: tt-intro-maan 1.2s var(--tt-ease) both; }
+.tt-intro .tt-woord { width: min(340px, 70vw); height: auto; clip-path: inset(0 100% 0 0); animation: tt-intro-woord 1.1s var(--tt-ease) .3s forwards; }
+@keyframes tt-intro-maan { from { opacity: 0; transform: rotate(-40deg) scale(.6); } to { opacity: 1; transform: none; } }
+@keyframes tt-intro-woord { to { clip-path: inset(0 0 0 0); } }
+@keyframes tt-intro-weg { to { clip-path: inset(0 0 100% 0); visibility: hidden; } }
+.tt-intro-gezien .tt-intro, .shopify-design-mode .tt-intro { display: none; }
+@media (prefers-reduced-motion: reduce) { .tt-intro { display: none; } }
+
+/* ==========================================================================
+   CURSOR: ronde bubbel met tekst boven beelden (alleen muis)
+   ========================================================================== */
+.tt-cursor { position: fixed; left: 0; top: 0; z-index: 150; pointer-events: none; }
+.tt-cursor span { position: absolute; left: -54px; top: -54px; width: 108px; height: 108px; border-radius: 50%; display: grid; place-items: center; text-align: center; padding: 12px; background: var(--tt-creme); color: var(--tt-deep); font: italic 480 19px/1 var(--tt-display); transform: scale(0); transition: transform .5s var(--tt-ease); box-shadow: 0 16px 40px -14px rgba(13, 30, 55, .45); }
+.tt-cursor.is-aan span { transform: scale(1); }
+[data-tt-cursor] { cursor: none; }
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.tt-hero { min-height: min(calc(100svh - 110px), 900px); display: grid; align-items: center; padding-block: clamp(28px, 4vw, 56px) clamp(72px, 8vw, 110px); }
+.tt-hero__grid { display: grid; gap: 48px; align-items: center; }
+.tt-hero__tekst { position: relative; z-index: 2; }
+.tt-hero__tekst .tt-lead { margin-top: 30px; }
+.tt-hero__beelden { position: relative; min-height: 520px; }
+.tt-hero__boog { position: absolute; left: 50%; top: 0; width: min(420px, 74%); aspect-ratio: 3 / 4.2; transform: translateX(-50%); border-radius: 999px 999px 32px 32px; box-shadow: 0 50px 90px -40px rgba(13, 30, 55, .55); }
+.tt-hero__rond { position: absolute; left: 0; bottom: 6%; width: min(170px, 34%); aspect-ratio: 1; border-radius: 50%; box-shadow: 0 30px 60px -30px rgba(13, 30, 55, .5); z-index: 2; border: 6px solid var(--tt-bg); }
+.tt-hero__staand { position: absolute; right: 0; bottom: -4%; width: min(150px, 28%); aspect-ratio: 3 / 4; border-radius: 22px; box-shadow: 0 30px 60px -30px rgba(13, 30, 55, .5); z-index: 2; border: 6px solid var(--tt-bg); }
+.tt-hero__zegel { position: absolute; right: 8%; top: -3%; z-index: 3; width: clamp(110px, 11vw, 150px); aspect-ratio: 1; border-radius: 50%; padding: 8px; background: var(--tt-sunshine); color: var(--tt-deep); box-shadow: 0 20px 40px -18px rgba(13, 30, 55, .45); }
+.tt-hero__zegel .tt-zegel { width: 100%; height: auto; }
+.tt-hero__scroll { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); display: grid; justify-items: center; gap: 8px; font: 600 10px/1 var(--tt-tekst); letter-spacing: .3em; text-transform: uppercase; color: var(--tt-zacht); }
+.tt-hero__scroll i { width: 1.5px; height: 46px; background: linear-gradient(var(--tt-fg), transparent); transform-origin: top; animation: tt-scroll 2.4s var(--tt-ease) infinite; }
+@keyframes tt-scroll { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+.tt-hero--pagina { min-height: 0; padding-block: clamp(48px, 7vw, 96px); }
+.tt-hero--pagina .tt-kop--xl { font-size: clamp(56px, 9vw, 140px); }
+@media (min-width: 990px) {
+  .tt-hero__grid { grid-template-columns: 1.15fr .85fr; gap: 24px; }
+  .tt-hero__beelden { min-height: 640px; }
+}
+@media (prefers-reduced-motion: reduce) { .tt-hero__scroll i { animation: none; } }
+
+/* ==========================================================================
+   WOORDBAND
+   ========================================================================== */
+.tt-band { padding-block: clamp(36px, 5vw, 64px); border-block: 1px solid var(--tt-lijn); }
+.tt-band__rij { overflow: hidden; }
+.tt-band__rij + .tt-band__rij { margin-top: 6px; }
+.tt-band__spoor { display: flex; align-items: center; gap: .35em; width: max-content; white-space: nowrap; will-change: transform; font: italic 480 clamp(64px, 10.5vw, 160px)/1.05 var(--tt-display); letter-spacing: -0.035em; }
+.tt-band__item--lijn { color: transparent; -webkit-text-stroke: 1.4px var(--tt-fg); }
+.tt-band__teken { display: inline-grid; place-items: center; width: .62em; color: var(--tt-acc); }
+.tt-band__teken svg { width: 100%; height: auto; }
+.tt-band__rij:nth-child(2) .tt-band__item { color: var(--tt-acc); }
+.tt-band__rij:nth-child(2) .tt-band__item--lijn { color: transparent; -webkit-text-stroke-color: var(--tt-acc); }
+
+/* ==========================================================================
+   MANIFEST: woorden kleuren in tijdens het scrollen
+   ========================================================================== */
+.tt-manifest { padding-block: clamp(96px, 14vw, 200px); }
+.tt-manifest__binnen { max-width: 1180px; }
+.tt-manifest__tekst { font: 400 clamp(34px, 5.2vw, 80px)/1.08 var(--tt-display); letter-spacing: -0.025em; text-wrap: pretty; }
+.tt-manifest__tekst em { font-style: italic; color: var(--tt-acc); }
+.tt-js:not(.tt-stil) .tt-w { opacity: .14; transition: opacity .35s linear; }
+.tt-js:not(.tt-stil) .tt-w.is-vol { opacity: 1; }
+.tt-manifest__naam { display: flex; align-items: center; gap: 16px; margin-top: 56px; font-size: 14px; color: var(--tt-zacht); }
+.tt-manifest__naam .tt-maan { width: 44px; height: auto; color: var(--tt-acc); }
+.tt-manifest__naam em { display: block; font: italic 480 26px/1 var(--tt-display); color: var(--tt-fg); margin-bottom: 4px; }
+
+/* ==========================================================================
+   COLLAGE: moodboard
+   ========================================================================== */
+.tt-collage { padding-block: clamp(80px, 11vw, 160px); }
+.tt-collage__kop { display: grid; gap: 22px; margin-bottom: clamp(48px, 7vw, 96px); }
+.tt-collage__kop .tt-lead { max-width: 52ch; }
+.tt-collage__raster { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; grid-auto-flow: dense; }
+.tt-stuk { margin: 0; position: relative; display: grid; gap: 10px; align-content: start; will-change: transform; }
+.tt-stuk__beeld { position: relative; overflow: hidden; }
+.tt-stuk figcaption { font: italic 480 17px/1.2 var(--tt-display); color: var(--tt-zacht); padding-left: 4px; }
+.tt-stuk--boog .tt-stuk__beeld { aspect-ratio: 3 / 4.2; border-radius: 999px 999px 24px 24px; }
+.tt-stuk--rond .tt-stuk__beeld { aspect-ratio: 1; border-radius: 50%; }
+.tt-stuk--staand .tt-stuk__beeld { aspect-ratio: 3 / 4.6; border-radius: 26px; }
+.tt-stuk--vierkant .tt-stuk__beeld { aspect-ratio: 1; border-radius: 26px; }
+.tt-stuk--breed { grid-column: span 2; }
+.tt-stuk--breed .tt-stuk__beeld { aspect-ratio: 16 / 9; border-radius: 26px; }
+.tt-stuk--quote { margin: 0; border-radius: 26px; padding: 28px 24px; display: grid; place-items: center; text-align: center; aspect-ratio: 1; overflow: hidden; isolation: isolate; }
+.tt-stuk--quote p { position: relative; z-index: 4; font: italic 480 clamp(24px, 2.6vw, 36px)/1.12 var(--tt-display); letter-spacing: -0.01em; }
+.tt-stuk--zegel { border-radius: 50%; aspect-ratio: 1; padding: 10%; place-items: center; color: var(--tt-deep); }
+.tt-stuk--zegel .tt-zegel { width: 100%; height: auto; }
+.tt-stuk--icoon { border-radius: 50%; aspect-ratio: 1; display: grid; place-items: center; color: var(--tt-deep); }
+.tt-stuk--icoon .tt-icoon { width: 52%; height: auto; }
+@media (min-width: 760px) {
+  .tt-collage__raster { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 22px; align-items: start; }
+  .tt-stuk--boog { grid-column: span 4; }
+  .tt-stuk--rond { grid-column: span 3; margin-top: 18%; }
+  .tt-stuk--staand { grid-column: span 3; margin-top: 30%; }
+  .tt-stuk--vierkant { grid-column: span 3; }
+  .tt-stuk--breed { grid-column: span 6; margin-top: 6%; }
+  .tt-stuk--quote { grid-column: span 3; margin-top: 10%; }
+  .tt-stuk--zegel { grid-column: span 2; margin-top: 24%; }
+  .tt-stuk--icoon { grid-column: span 2; margin-top: 8%; }
+}
+
+/* ==========================================================================
+   DE TAS: beeld blijft staan, de lijst scrolt
+   ========================================================================== */
+.tt-tas { padding-block: clamp(80px, 11vw, 160px); }
+.tt-tas__grid { display: grid; gap: 56px; }
+.tt-tas__plak { position: relative; }
+.tt-tas__beeld { aspect-ratio: 3 / 4; border-radius: 999px 999px 32px 32px; box-shadow: 0 50px 90px -40px rgba(13, 30, 55, .5); max-width: 520px; margin-inline: auto; }
+.tt-tas__prijs { position: absolute; right: 2%; top: 8%; rotate: -10deg; z-index: 5; width: 118px; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; background: var(--tt-poppy); color: var(--tt-creme); font: italic 480 30px/1 var(--tt-display); box-shadow: 0 20px 40px -18px rgba(13, 30, 55, .45); }
+.tt-tas__info .tt-lead { margin-top: 26px; }
+.tt-tas__lijst { list-style: none; margin: 48px 0 0; padding: 0; display: grid; }
+.tt-tas__lijst li { display: grid; grid-template-columns: 72px 1fr; gap: 22px; align-items: start; padding: 30px 0; border-top: 1px solid var(--tt-lijn); }
+.tt-tas__lijst li:last-child { border-bottom: 1px solid var(--tt-lijn); }
+.tt-tas__icoon { width: 64px; color: var(--tt-deep); }
+.tt-tas__lijst li:nth-child(2) .tt-tas__icoon { color: var(--tt-captain); }
+.tt-tas__lijst li:nth-child(3) .tt-tas__icoon { color: var(--tt-poppy); }
+.tt-tas__lijst h3 { font: 480 clamp(24px, 2.2vw, 32px)/1.1 var(--tt-display); letter-spacing: -0.015em; margin-bottom: 8px; }
+.tt-tas__lijst p { font-size: 16px; line-height: 1.6; color: var(--tt-zacht); max-width: 44ch; }
+.tt-tas__koop { display: flex; flex-wrap: wrap; align-items: center; gap: 22px 28px; margin: 40px 0 16px; }
+@media (min-width: 990px) {
+  .tt-tas__grid { grid-template-columns: 1fr 1fr; gap: 96px; align-items: start; }
+  .tt-tas__plak { position: sticky; top: 110px; }
+}
+
+/* ==========================================================================
+   WAAR GA JIJ HEEN: horizontaal schuiven tijdens het scrollen
+   ========================================================================== */
+.tt-reis { height: calc(var(--n) * 80vh + 20vh); }
+.tt-reis__pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: flex; align-items: center; }
+.tt-reis__spoor { display: flex; align-items: center; gap: clamp(24px, 4vw, 56px); padding-inline: var(--tt-marge); will-change: transform; }
+.tt-reis__intro { flex: 0 0 min(80vw, 460px); display: grid; gap: 22px; }
+.tt-reis__pijl { display: inline-flex; align-items: center; gap: 12px; color: var(--tt-acc); font-size: 28px; }
+.tt-reis__pijl .tt-golfje { width: 46px; }
+.tt-reis__paneel { flex: 0 0 min(78vw, 440px); display: grid; gap: 12px; position: relative; }
+.tt-reis__beeld { position: relative; aspect-ratio: 4 / 5; border-radius: 28px; overflow: hidden; box-shadow: 0 40px 80px -40px rgba(13, 30, 55, .5); }
+.tt-reis__paneel:nth-of-type(2n) .tt-reis__beeld { border-radius: 999px 999px 28px 28px; }
+.tt-reis__nr { position: absolute; top: 14px; left: 18px; z-index: 5; font: italic 480 54px/1 var(--tt-display); color: var(--tt-creme); text-shadow: 0 4px 20px rgba(13, 30, 55, .35); }
+.tt-reis__paneel h3 { font: 480 clamp(24px, 2.2vw, 32px)/1.1 var(--tt-display); letter-spacing: -0.015em; margin-top: 8px; }
+.tt-reis__paneel p { font-size: 16px; line-height: 1.55; color: var(--tt-zacht); max-width: 38ch; }
+.tt-stil .tt-reis { height: auto; padding-block: 80px; }
+.tt-stil .tt-reis__pin { position: relative; height: auto; overflow-x: auto; scroll-snap-type: x mandatory; }
+.tt-stil .tt-reis__paneel { scroll-snap-align: start; }
+
+/* ==========================================================================
+   VERHAAL
+   ========================================================================== */
+.tt-verhaal { padding-block: clamp(80px, 11vw, 160px); }
+.tt-verhaal__grid { display: grid; gap: 56px; align-items: center; }
+.tt-verhaal__rond { aspect-ratio: 1; border-radius: 50%; overflow: hidden; width: min(520px, 90%); justify-self: center; position: relative; box-shadow: 0 50px 90px -40px rgba(13, 30, 55, .5); will-change: transform; }
+.tt-verhaal__tekst { display: grid; gap: 26px; }
+@media (min-width: 990px) { .tt-verhaal__grid { grid-template-columns: .9fr 1.1fr; gap: 96px; } }
+
+/* ==========================================================================
+   ONS TEKEN: de maan tekent zichzelf
+   ========================================================================== */
+.tt-teken { padding-block: clamp(96px, 13vw, 180px); }
+.tt-teken__grid { display: grid; gap: 56px; align-items: center; }
+.tt-teken__maan { width: min(420px, 74%); justify-self: center; color: var(--tt-creme); }
+.tt-teken__maan svg { width: 100%; height: auto; overflow: visible; }
+.tt-teken__lijn path { fill: none !important; stroke: var(--tt-sunshine); stroke-width: .9; }
+.tt-teken__tekst { display: grid; gap: 26px; }
+.tt-teken__slot { font: italic 480 clamp(30px, 3.4vw, 46px)/1.1 var(--tt-display); color: var(--tt-acc); }
+.tt-js:not(.tt-stil) .tt-teken__lijn path { stroke-dasharray: var(--len, 1200); stroke-dashoffset: var(--len, 1200); transition: stroke-dashoffset 2.6s var(--tt-ease); }
+.tt-js:not(.tt-stil) [data-tt-teken].is-in .tt-teken__lijn path { stroke-dashoffset: 0; }
+.tt-js:not(.tt-stil) .tt-teken__vul { opacity: 0; transition: opacity 1.4s var(--tt-ease) 1.5s; }
+.tt-js:not(.tt-stil) [data-tt-teken].is-in .tt-teken__vul { opacity: 1; }
+@media (min-width: 990px) { .tt-teken__grid { grid-template-columns: .8fr 1.2fr; gap: 96px; } }
+
+/* ==========================================================================
+   SLOT
+   ========================================================================== */
+.tt-slot { min-height: 100svh; display: grid; align-items: center; color: var(--tt-creme); background: var(--tt-deep); --tt-acc: var(--tt-sunshine); --tt-zacht: rgba(245, 238, 223, .82); padding-block: 120px; }
+.tt-slot__achter { position: absolute; inset: -12% 0; z-index: 0; }
+.tt-slot__achter > img, .tt-slot__achter > svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tt-slot__achter::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(24, 50, 90, .1), rgba(24, 50, 90, .55)); }
+.tt-slot__binnen { position: relative; z-index: 2; }
+.tt-slot__binnen .tt-lead { margin-top: 28px; }
+.tt-slot__zegel { position: absolute; right: var(--tt-marge); bottom: 48px; z-index: 2; width: clamp(110px, 12vw, 170px); color: var(--tt-sunshine); }
+.tt-slot__zegel .tt-zegel { width: 100%; height: auto; }
+
+/* ---------- header boven de tt-hero: rustiger ---------- */
+.tt-thuis .surf-balk { background: var(--tt-deep); }

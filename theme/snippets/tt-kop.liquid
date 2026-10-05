@@ -1,0 +1,17 @@
+{%- comment -%}
+  Kop die regel voor regel inschuift.  |  = nieuwe regel   *woord* = cursief accent
+  Gebruik: {% render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--xl' %}
+{%- endcomment -%}
+{%- assign tag = tag | default: 'h2' -%}
+{%- assign regels = text | split: '|' -%}
+<{{ tag }} class="tt-kop {{ class }}" data-tt-regels>
+  {%- for regel in regels -%}
+    <span class="tt-regel"><span style="--i: {{ forloop.index0 }}">
+      {%- assign delen = regel | strip | split: '*' -%}
+      {%- for deel in delen -%}
+        {%- assign odd = forloop.index0 | modulo: 2 -%}
+        {%- if odd == 1 -%}<em>{{ deel | escape }}</em>{%- else -%}{{ deel | escape }}{%- endif -%}
+      {%- endfor -%}
+    </span></span>
+  {%- endfor -%}
+</{{ tag }}>

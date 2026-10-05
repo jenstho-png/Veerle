@@ -97,7 +97,8 @@
     "features": {
       "type": "surf-features",
       "settings": {
-        "color_scheme": "scheme-2"
+        "color_scheme": "scheme-2",
+        "eyebrow": ""
       },
       "blocks": {
         "feature-1": {
@@ -143,7 +144,8 @@
     "faq": {
       "type": "surf-faq",
       "settings": {
-        "btn_link": "shopify://pages/contact"
+        "btn_link": "shopify://pages/contact",
+        "eyebrow": ""
       },
       "blocks": {
         "qa-1": {

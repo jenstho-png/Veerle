@@ -1,330 +1,261 @@
 {
   "sections": {
     "hero": {
-      "type": "surf-hero",
+      "type": "tt-hero",
       "settings": {
         "btn2_link": "shopify://pages/over-ons"
-      },
-      "blocks": {
-        "usp-1": {
-          "type": "usp",
-          "settings": {
-            "text": "Voor softtops én hardboards"
-          }
-        },
-        "usp-2": {
-          "type": "usp",
-          "settings": {
-            "text": "Gaat mee in je reisbagage"
-          }
-        }
-      },
-      "block_order": [
-        "usp-1",
-        "usp-2"
-      ]
-    },
-    "woorden": {
-      "type": "mk-woorden",
-      "settings": {
-        "color_scheme": "scheme-1",
-        "tekst": "Niet iedereen kan uit bed rollen en het water in rennen met een surfplank onder de arm. Voor alle anderen maakten we deze tas."
       }
     },
-    "chaos": {
-      "type": "mk-chaos",
-      "settings": {
-        "color_scheme": "scheme-2",
-        "kop_voor": "Herken je dit <em>gesjouw</em>?",
-        "sub_voor": "Zo ging het bij ons op elke surfreis.",
-        "kop_na": "Alles op je <em>rug</em>.",
-        "sub_na": "Je board zit vast, het gewicht valt op je schouders en je hebt je handen vrij."
-      },
+    "band": {
+      "type": "tt-band",
+      "settings": {},
       "blocks": {
-        "bericht-1": {
-          "type": "bericht",
+        "woord-1": {
+          "type": "woord",
           "settings": {
-            "tekst": "Nog twee kilometer naar de spot en mijn schouders zijn nu al op",
-            "van": "Hike · Australië",
-            "icoon": "chat",
-            "x": -30,
-            "y": -16,
-            "r": -5
+            "tekst": "handen vrij",
+            "icoon": "golfje"
           }
         },
-        "bericht-2": {
-          "type": "bericht",
+        "woord-2": {
+          "type": "woord",
           "settings": {
-            "tekst": "Die wax schuurt mijn arm helemaal open",
-            "van": "Onderweg",
-            "icoon": "chat",
-            "x": 29,
-            "y": -19,
-            "r": 4
+            "tekst": "op weg naar zee",
+            "icoon": "schelp"
           }
         },
-        "bericht-3": {
-          "type": "bericht",
+        "woord-3": {
+          "type": "woord",
           "settings": {
-            "tekst": "Met één hand sturen, board onder de andere arm",
-            "van": "Scooter · Azië",
-            "icoon": "telefoon",
-            "x": -33,
-            "y": 8,
-            "r": 3
+            "tekst": "van riders, voor riders",
+            "icoon": "golfje"
           }
         },
-        "bericht-4": {
-          "type": "bericht",
+        "woord-4": {
+          "type": "woord",
           "settings": {
-            "tekst": "Spanband geknapt. Alweer.",
-            "van": "Midden-Amerika",
-            "icoon": "pakket",
-            "x": 31,
-            "y": 6,
-            "r": -4
-          }
-        },
-        "bericht-5": {
-          "type": "bericht",
-          "settings": {
-            "tekst": "Natte, zanderige plank weer in die strakke boardbag proppen",
-            "van": "Na de sessie",
-            "icoon": "beeld",
-            "x": -24,
-            "y": 29,
-            "r": -3
-          }
-        },
-        "bericht-6": {
-          "type": "bericht",
-          "settings": {
-            "tekst": "Huurboard opgehaald, nu nog naar het strand zien te komen",
-            "van": "Hostel · 06:30",
-            "icoon": "chat",
-            "x": 26,
-            "y": 30,
-            "r": 5
+            "tekst": "nul schuurplekken",
+            "icoon": "zeester"
           }
         }
       },
       "block_order": [
-        "bericht-1",
-        "bericht-2",
-        "bericht-3",
-        "bericht-4",
-        "bericht-5",
-        "bericht-6"
+        "woord-1",
+        "woord-2",
+        "woord-3",
+        "woord-4"
       ]
     },
-    "story": {
-      "type": "surf-story",
-      "settings": {
-        "btn_link": "shopify://pages/over-ons",
-        "color_scheme": "scheme-1"
-      }
+    "manifest": {
+      "type": "tt-manifest",
+      "settings": {}
     },
-    "features": {
-      "type": "surf-features",
-      "settings": {
-        "color_scheme": "scheme-2"
-      },
+    "collage": {
+      "type": "tt-collage",
+      "settings": {},
       "blocks": {
-        "feature-1": {
-          "type": "feature",
+        "beeld-1": {
+          "type": "beeld",
           "settings": {
-            "icon": "tas",
-            "title": "Draagt prettig op lange tochten",
-            "text": "Ergonomische banden verdelen het gewicht. Zo heb je na een lange hike nog steeds zin om het water in te gaan."
-          }
-        },
-        "feature-2": {
-          "type": "feature",
-          "settings": {
-            "icon": "golf",
-            "title": "Kan tegen een stootje",
-            "text": "Zware, sterke stof en stevige stiksels. Gemaakt voor nat, zand, zout en ruig gebruik."
-          }
-        },
-        "feature-3": {
-          "type": "feature",
-          "settings": {
-            "icon": "meeuw",
-            "title": "Gaat mee in het vliegtuig",
-            "text": "De tas past in je bagage. Huur je op je bestemming een board, dan draag je dat gewoon in je eigen tas."
-          }
-        },
-        "feature-4": {
-          "type": "feature",
-          "settings": {
-            "icon": "board",
-            "title": "Voor beginners en avonturiers",
-            "text": "Past om de grote, vollere boards van beginners en om hardboards in verschillende maten."
-          }
-        }
-      },
-      "block_order": [
-        "feature-1",
-        "feature-2",
-        "feature-3",
-        "feature-4"
-      ]
-    },
-    "product": {
-      "type": "surf-product",
-      "settings": {
-        "color_scheme": "scheme-1"
-      },
-      "blocks": {
-        "check-1": {
-          "type": "check",
-          "settings": {
-            "text": "Universele maat voor beginnersboards en hardboards"
-          }
-        },
-        "check-2": {
-          "type": "check",
-          "settings": {
-            "text": "Verstelbare draagbanden, je handen blijven vrij"
-          }
-        },
-        "check-3": {
-          "type": "check",
-          "settings": {
-            "text": "Sterke stof die tegen nat en zand kan"
-          }
-        },
-        "check-4": {
-          "type": "check",
-          "settings": {
-            "text": "Past in je reisbagage"
-          }
-        }
-      },
-      "block_order": [
-        "check-1",
-        "check-2",
-        "check-3",
-        "check-4"
-      ]
-    },
-    "voorwie": {
-      "type": "surf-steps",
-      "settings": {
-        "color_scheme": "scheme-2"
-      },
-      "blocks": {
-        "step-1": {
-          "type": "step",
-          "settings": {
-            "title": "De beginner",
-            "text": "Je hebt een groot, onhandig board en loopt of fietst vanaf je hotel of hostel naar het strand. De tas draagt het board, jij hoeft alleen nog te lopen."
-          }
-        },
-        "step-2": {
-          "type": "step",
-          "settings": {
-            "title": "De avonturier",
-            "text": "Je staat vroeg op en trekt door de bush of over rotsen naar een afgelegen spot. Met je handen vrij klim en loop je een stuk makkelijker."
-          }
-        },
-        "step-3": {
-          "type": "step",
-          "settings": {
-            "title": "De reiziger",
-            "text": "Op roadtrip door Europa of met het vliegtuig naar de andere kant van de wereld. De tas gaat mee in je bagage."
-          }
-        }
-      },
-      "block_order": [
-        "step-1",
-        "step-2",
-        "step-3"
-      ]
-    },
-    "gallery": {
-      "type": "surf-gallery",
-      "settings": {
-        "color_scheme": "scheme-1"
-      },
-      "blocks": {
-        "photo-1": {
-          "type": "photo",
-          "settings": {
-            "image_filename": "surfspot-australie-hike.jpg",
+            "vorm": "boog",
+            "scene": "zee",
+            "filename": "tide-tode-australie-hike.jpg",
             "alt": "Hike naar een surfspot in Australië",
-            "caption": "Australië",
-            "tall": true
+            "caption": "Australië, om zes uur 's ochtends"
           }
         },
-        "photo-2": {
-          "type": "photo",
+        "quote-2": {
+          "type": "quote",
           "settings": {
-            "image_filename": "surfboard-scooter-azie.jpg",
-            "alt": "Met surfboard op de scooter in Azië",
-            "caption": "Azië"
+            "tekst": "Board op je rug, wind in je haar.",
+            "bg": "rose"
           }
         },
-        "photo-3": {
-          "type": "photo",
+        "beeld-3": {
+          "type": "beeld",
           "settings": {
-            "image_filename": "duiken-onderwater-blauw.jpg",
-            "alt": "Duiken in helder blauw water",
-            "caption": "Onder water"
+            "vorm": "rond",
+            "scene": "palm",
+            "filename": "tide-tode-palmschaduw-hostel.jpg",
+            "alt": "Palmschaduw op de muur van een hostel",
+            "caption": "het hostel"
           }
         },
-        "photo-4": {
-          "type": "photo",
+        "zegel-4": {
+          "type": "zegel",
           "settings": {
-            "image_filename": "surfspot-midden-amerika-strand.jpg",
-            "alt": "Leeg strand met golven in Midden-Amerika",
-            "caption": "Midden-Amerika",
-            "tall": true
+            "bg": "sunshine"
           }
         },
-        "photo-5": {
-          "type": "photo",
+        "beeld-5": {
+          "type": "beeld",
           "settings": {
-            "image_filename": "surfboard-draagtas-duinen.jpg",
-            "alt": "Surfboard draagtas op de rug in de duinen",
-            "caption": "Duinen"
+            "vorm": "staand",
+            "scene": "onder",
+            "filename": "tide-tode-duiken.jpg",
+            "alt": "Duiken in diep blauw water",
+            "caption": "en dan even onder water"
           }
         },
-        "photo-6": {
-          "type": "photo",
+        "icoon-6": {
+          "type": "icoon",
           "settings": {
-            "image_filename": "zonsondergang-surfsessie.jpg",
-            "alt": "Surfer bij zonsondergang",
-            "caption": "Zonsondergang"
+            "icoon": "schelp",
+            "bg": "baby"
+          }
+        },
+        "beeld-7": {
+          "type": "beeld",
+          "settings": {
+            "vorm": "breed",
+            "scene": "avond",
+            "filename": "tide-tode-zonsondergang.jpg",
+            "alt": "Zonsondergang na een surfsessie",
+            "caption": "golden hour"
+          }
+        },
+        "beeld-8": {
+          "type": "beeld",
+          "settings": {
+            "vorm": "vierkant",
+            "scene": "boards",
+            "filename": "tide-tode-boards.jpg",
+            "alt": "Surfboards tegen een muur",
+            "caption": "kies je board"
+          }
+        },
+        "beeld-9": {
+          "type": "beeld",
+          "settings": {
+            "vorm": "boog",
+            "scene": "duin",
+            "filename": "tide-tode-duinen.jpg",
+            "alt": "Tas op de rug in de duinen",
+            "caption": "de duinen om de hoek"
           }
         }
       },
       "block_order": [
-        "photo-1",
-        "photo-2",
-        "photo-3",
-        "photo-4",
-        "photo-5",
-        "photo-6"
+        "beeld-1",
+        "quote-2",
+        "beeld-3",
+        "zegel-4",
+        "beeld-5",
+        "icoon-6",
+        "beeld-7",
+        "beeld-8",
+        "beeld-9"
       ]
     },
-    "instagram": {
-      "type": "mk-vlak",
+    "tas": {
+      "type": "tt-tas",
+      "settings": {},
+      "blocks": {
+        "punt-1": {
+          "type": "punt",
+          "settings": {
+            "icoon": "tas",
+            "titel": "Handen vrij",
+            "tekst": "Het board hangt op je rug. Je handen zijn voor het stuur, de rotsen of je koffie."
+          }
+        },
+        "punt-2": {
+          "type": "punt",
+          "settings": {
+            "icoon": "voeten",
+            "titel": "Kilometers zonder klagen",
+            "tekst": "Ergonomische banden verdelen het gewicht. Je schouders komen net zo fris aan als jij."
+          }
+        },
+        "punt-3": {
+          "type": "punt",
+          "settings": {
+            "icoon": "golf",
+            "titel": "Nat, zand, zout: prima",
+            "tekst": "Zware stof en stevige stiksels. Natte board erin na de sessie, klaar."
+          }
+        },
+        "punt-4": {
+          "type": "punt",
+          "settings": {
+            "icoon": "meeuw",
+            "titel": "Reist mee",
+            "tekst": "Klein opgevouwen in je bagage. Huur je ter plekke een board, dan heb je je tas al."
+          }
+        }
+      },
+      "block_order": [
+        "punt-1",
+        "punt-2",
+        "punt-3",
+        "punt-4"
+      ]
+    },
+    "reis": {
+      "type": "tt-reis",
+      "settings": {},
+      "blocks": {
+        "paneel-1": {
+          "type": "paneel",
+          "settings": {
+            "scene": "duin",
+            "filename": "tide-tode-hostel-naar-strand.jpg",
+            "titel": "Van je hostel naar het strand",
+            "tekst": "Groot board, lange wandeling. Banden om en lopen maar."
+          }
+        },
+        "paneel-2": {
+          "type": "paneel",
+          "settings": {
+            "scene": "zee",
+            "filename": "tide-tode-verstopte-spot.jpg",
+            "titel": "Over de rotsen naar die verstopte spot",
+            "tekst": "Twee handen vrij om te klimmen. Je board hangt veilig op je rug."
+          }
+        },
+        "paneel-3": {
+          "type": "paneel",
+          "settings": {
+            "scene": "avond",
+            "filename": "tide-tode-scooter-kust.jpg",
+            "titel": "Op de scooter langs de kust",
+            "tekst": "Stuur met twee handen. De tas doet de rest."
+          }
+        },
+        "paneel-4": {
+          "type": "paneel",
+          "settings": {
+            "scene": "boards",
+            "filename": "tide-tode-op-reis.jpg",
+            "titel": "Naar de andere kant van de wereld",
+            "tekst": "Opgevouwen in je bagage. Huur ter plekke een board en je tas is er al."
+          }
+        }
+      },
+      "block_order": [
+        "paneel-1",
+        "paneel-2",
+        "paneel-3",
+        "paneel-4"
+      ]
+    },
+    "verhaal": {
+      "type": "tt-verhaal",
       "settings": {
-        "color_scheme": "scheme-1",
-        "vlak_kleur": "#3D6FB6",
-        "label": "Volg de reis",
-        "kop": "Onderweg met de <em>tas</em>",
-        "tekst": "<p>Op Instagram delen we de spots waar we komen, de tas in actie en wat er nieuw bijkomt.</p>",
-        "knop": "Volg ons op Instagram",
-        "toestel": "telefoon"
+        "btn_link": "shopify://pages/over-ons"
       }
+    },
+    "teken": {
+      "type": "tt-teken",
+      "settings": {}
     },
     "faq": {
       "type": "surf-faq",
       "settings": {
         "btn_link": "shopify://pages/contact",
-        "color_scheme": "scheme-2"
+        "color_scheme": "scheme-1",
+        "eyebrow": "",
+        "heading": "Nog *vragen?*"
       },
       "blocks": {
         "qa-1": {
@@ -379,77 +310,21 @@
         "qa-6"
       ]
     },
-    "cta": {
-      "type": "surf-cta",
-      "settings": {
-        "btn2_link": "shopify://pages/veelgestelde-vragen",
-        "color_scheme": "scheme-1"
-      }
-    },
-    "waarden": {
-      "type": "surf-waarden",
-      "settings": {
-        "color_scheme": "scheme-1"
-      },
-      "blocks": {
-        "waarde-1": {
-          "type": "waarde",
-          "settings": {
-            "icon": "tas",
-            "title": "Handen vrij",
-            "text": "Je board op je rug, je handen aan het stuur."
-          }
-        },
-        "waarde-2": {
-          "type": "waarde",
-          "settings": {
-            "icon": "golf",
-            "title": "Gemaakt om te blijven",
-            "text": "Zware stof en stevige stiksels. Geen wegwerpproduct."
-          }
-        },
-        "waarde-3": {
-          "type": "waarde",
-          "settings": {
-            "icon": "meeuw",
-            "title": "Bedacht op reis",
-            "text": "Ontstaan op hikes in Australië, Midden- en Zuid-Amerika en Azië."
-          }
-        },
-        "waarde-4": {
-          "type": "waarde",
-          "settings": {
-            "icon": "board",
-            "title": "Van riders, voor riders",
-            "text": "Ontworpen door surfers die zelf sjouwden."
-          }
-        }
-      },
-      "block_order": [
-        "waarde-1",
-        "waarde-2",
-        "waarde-3",
-        "waarde-4"
-      ]
-    },
-    "teken": {
-      "type": "surf-merkverhaal",
+    "slot": {
+      "type": "tt-slot",
       "settings": {}
     }
   },
   "order": [
     "hero",
-    "waarden",
-    "woorden",
-    "chaos",
-    "story",
-    "features",
-    "product",
-    "voorwie",
+    "band",
+    "manifest",
+    "collage",
+    "tas",
+    "reis",
+    "verhaal",
     "teken",
-    "gallery",
-    "instagram",
     "faq",
-    "cta"
+    "slot"
   ]
 }

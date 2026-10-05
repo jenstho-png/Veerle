@@ -1,0 +1,149 @@
+<section class="tt tt-verhaal tt-bg--{{ section.settings.bg }}" id="tt-verhaal-{{ section.id }}">
+  <div class="tt-wrap tt-verhaal__grid">
+    <div class="tt-verhaal__rond" data-tt-groei>{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, scene: section.settings.scene, alt: section.settings.alt, sizes: '(min-width: 990px) 40vw, 80vw' -%}</div>
+    <div class="tt-verhaal__tekst">
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
+      <div class="tt-lead tt-in rte">{{ section.settings.text }}</div>
+      {%- if section.settings.naam != blank -%}<p class="tt-handtekening tt-in">{{ section.settings.naam }}</p>{%- endif -%}
+      {%- if section.settings.btn_label != blank -%}<a class="tt-link tt-in" href="{{ section.settings.btn_link | default: '#' }}">{{ section.settings.btn_label }}</a>{%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: verhaal",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        },
+        {
+          "value": "poppy",
+          "label": "Poppy"
+        }
+      ],
+      "default": "rose"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Een | is een nieuwe regel. Zet een woord tussen *sterretjes* voor het cursieve accent.",
+      "default": "Het begon met|pijnlijke schouders|in *Australië.*"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Tekst",
+      "default": "<p>Lange hikes naar afgelegen spots. Wax die schuurt, een board dat nergens lekker vast te houden is, met één hand sturen op de scooter. Touwtjes en spanbanden hielden het niet. Dus maakte ik de tas zelf.</p>"
+    },
+    {
+      "type": "text",
+      "id": "naam",
+      "label": "Ondertekening",
+      "default": "Veerle"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Link",
+      "default": "Lees het hele verhaal"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Link: adres"
+    },
+    {
+      "type": "header",
+      "content": "Ronde foto"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Foto"
+    },
+    {
+      "type": "text",
+      "id": "filename",
+      "label": "Bestandsnaam (SEO)",
+      "default": "veerle-op-reis.jpg",
+      "info": "Upload in Content > Bestanden met precies deze naam; tot die tijd staat er een getekende scène."
+    },
+    {
+      "type": "select",
+      "id": "scene",
+      "label": "Scène zolang er geen foto is",
+      "options": [
+        {
+          "value": "zee",
+          "label": "Zee"
+        },
+        {
+          "value": "duin",
+          "label": "Duinen"
+        },
+        {
+          "value": "onder",
+          "label": "Onder water"
+        },
+        {
+          "value": "avond",
+          "label": "Zonsondergang"
+        },
+        {
+          "value": "nacht",
+          "label": "Nachtzee"
+        },
+        {
+          "value": "palm",
+          "label": "Palmschaduw"
+        },
+        {
+          "value": "boards",
+          "label": "Boards"
+        },
+        {
+          "value": "tas",
+          "label": "De tas"
+        }
+      ],
+      "default": "duin"
+    },
+    {
+      "type": "text",
+      "id": "alt",
+      "label": "Alt-tekst",
+      "default": "Veerle op reis met haar surfboard"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: verhaal"
+    }
+  ]
+}
+{% endschema %}

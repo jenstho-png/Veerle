@@ -1,154 +1,172 @@
 {
   "sections": {
-    "pagehero": {
-      "type": "surf-pagehero",
+    "hero": {
+      "type": "tt-hero",
       "settings": {
-        "eyebrow": "Ons verhaal",
-        "heading": "Uit frustratie geboren, met liefde voor de *zee*",
-        "text": "Over sjouwen, schurende wax en de droom om iets eigens te beginnen.",
-        "image_filename": "over-ons-surfreis-oprichters.jpg",
-        "image_alt": "De oprichters op surfreis met hun surfboards"
+        "pagina": true,
+        "heading": "Uit frustratie|*geboren.*",
+        "text": "Over sjouwen, schurende wax en de droom om iets eigens te beginnen. Het verhaal van Veerle en de tas die ze zelf wilde hebben.",
+        "btn1_label": "",
+        "btn2_label": "",
+        "scene": "duin",
+        "klein1_scene": "onder",
+        "klein2_scene": "palm",
+        "cursor": "Veerle"
       }
     },
-    "story": {
-      "type": "surf-story",
+    "verhaal": {
+      "type": "tt-verhaal",
       "settings": {
-        "eyebrow": "Hoe het begon",
-        "heading": "Ik heb van alles geprobeerd",
+        "heading": "Ik heb van alles|*geprobeerd.*",
+        "text": "<p>Australië, Midden- en Zuid-Amerika, Azië: hoe mooier de spot, hoe langer de weg ernaartoe. Zeker als je net begint, heb je een groot board dat lastig te dragen is. Losse touwtjes, spanbanden, standaardhoezen: niets hield het vol als het ruig werd, of het schuurde mijn schouders kapot.</p><p>Een dichte boardbag dan? Dan moet je je natte, zanderige board telkens in een strakke tas proppen. Toen ik steeds meer ging surfen, zag ik dat deze tas nog niet bestond. Iemand moest hem gaan maken.</p>",
         "btn_label": "",
-        "image_filename": "surfboard-onder-de-arm-hike.jpg",
-        "image_alt": "Surfer draagt een board onder de arm tijdens een hike",
-        "text": "<p>Australië, Midden- en Zuid-Amerika, Azië: hoe mooier de spot, hoe langer de weg ernaartoe. Zeker als je net begint met surfen heb je een groot board dat lastig te dragen is. Je sjouwt je een ongeluk met een log ding dat nergens lekker vast te houden is.</p><p>Ik heb van alles geprobeerd: losse touwtjes, spanbanden, standaardhoezen en allerlei onhandige draagoplossingen. Ze hielden het niet als het ruig werd, of ze schuurden mijn schouders kapot. Een grote boardbag dan? Dan moet je je natte, zanderige board telkens in een strakke tas proppen.</p><p>Toen ik steeds meer ging surfen en steeds meer in de scene terechtkwam, zag ik dat deze tas nog niet bestond. Iemand moest hem gaan maken.</p>",
-        "signature": "Veerle"
+        "bg": "creme"
       }
     },
-    "woorden": {
-      "type": "mk-woorden",
+    "manifest": {
+      "type": "tt-manifest",
       "settings": {
-        "color_scheme": "scheme-1",
-        "tekst": "Iets zelf ondernemen is altijd al mijn droom geweest. Ik kom uit een ondernemersgezin, en dit was het idee waar ik op had gewacht."
+        "tekst": "Iets zelf ondernemen was altijd al *mijn droom.* Ik kom uit een ondernemersgezin, en dit was het idee waar ik op had gewacht. In februari 2025 kwam mijn vriend erbij, net zo gek op surfen. Sindsdien bouwen we het *samen.*",
+        "bg": "baby"
       }
     },
-    "story2": {
-      "type": "surf-story",
-      "settings": {
-        "reverse": true,
-        "color_scheme": "scheme-1",
-        "eyebrow": "Samen",
-        "heading": "Van riders, voor *riders*",
-        "signature": "",
-        "btn_label": "Bekijk de tas",
-        "btn_link": "shopify://collections/all",
-        "image_filename": "surfboard-draagtas-details-messing.jpg",
-        "image_alt": "Close-up van de stiksels en messing details van de draagtas",
-        "text": "<p>In februari 2025 leerde ik mijn vriend kennen, die net zo gek is op surfen en de struggle meteen begreep. Dat gaf me een extra zetje om hier iets moois van te maken. Sindsdien bouwen we het samen op.</p><p>We willen geen wegwerpproduct en geen snelle strandtrend. Wel een sterk merk met een eerlijke, toegankelijke prijs: een tas waar je jaren mee vooruit kunt. Robuuste stof, sterke stiksels, messing of donker metaal, en toch een mooie look.</p>"
-      }
-    },
-    "statement": {
-      "type": "surf-statement",
+    "teken": {
+      "type": "tt-teken",
       "settings": {}
     },
-    "komt": {
-      "type": "surf-steps",
+    "band": {
+      "type": "tt-band",
       "settings": {
-        "color_scheme": "scheme-2",
-        "eyebrow": "Wat er nog komt",
-        "heading": "Eerst de tas, dan de rest"
+        "rijen": 1,
+        "bg": "creme"
       },
       "blocks": {
-        "step-1": {
-          "type": "step",
+        "woord-1": {
+          "type": "woord",
           "settings": {
-            "title": "Meer modellen",
-            "text": "We starten met één kernmodel in een universele maat. Meer varianten en maten volgen."
+            "tekst": "geen wegwerpproduct",
+            "icoon": "golfje"
           }
         },
-        "step-2": {
-          "type": "step",
+        "woord-2": {
+          "type": "woord",
           "settings": {
-            "title": "Accessoires",
-            "text": "Waxblokjes en stevige karabijnhaken om je tas en spullen aan vast te haken."
+            "tekst": "eerlijke prijs",
+            "icoon": "schelp"
           }
         },
-        "step-3": {
-          "type": "step",
+        "woord-3": {
+          "type": "woord",
           "settings": {
-            "title": "Kleding",
-            "text": "Later voegen we t-shirts toe. Wat er daarna op ons pad komt, zien we dan. De toekomst kun je niet voorspellen."
+            "tekst": "jaren mee",
+            "icoon": "golfje"
           }
         }
       },
       "block_order": [
-        "step-1",
-        "step-2",
-        "step-3"
+        "woord-1",
+        "woord-2",
+        "woord-3"
       ]
     },
-    "gallery": {
-      "type": "surf-gallery",
+    "collage": {
+      "type": "tt-collage",
       "settings": {
-        "eyebrow": "Onze passie",
-        "text": "Golfsurfen, windsurfen, wakeboarden, waterskiën en vooral duiken. Als het in of op de zee is, zijn we er."
+        "heading": "Wat er|nog *komt.*",
+        "text": "Eerst de tas. Daarna meer modellen en maten, waxblokjes, stevige karabijnhaken en later t-shirts. Wat er daarna op ons pad komt? Dat zien we dan."
       },
       "blocks": {
-        "photo-1": {
-          "type": "photo",
+        "beeld-1": {
+          "type": "beeld",
           "settings": {
-            "image_filename": "surfspot-australie-hike.jpg",
+            "vorm": "boog",
+            "scene": "zee",
+            "filename": "tide-tode-australie-hike.jpg",
             "alt": "Hike naar een surfspot in Australië",
-            "caption": "Australië",
-            "tall": true
+            "caption": "Australië, om zes uur 's ochtends"
           }
         },
-        "photo-2": {
-          "type": "photo",
+        "quote-2": {
+          "type": "quote",
           "settings": {
-            "image_filename": "surfboard-scooter-azie.jpg",
-            "alt": "Met surfboard op de scooter in Azië",
-            "caption": "Azië"
+            "tekst": "Board op je rug, wind in je haar.",
+            "bg": "rose"
           }
         },
-        "photo-3": {
-          "type": "photo",
+        "beeld-3": {
+          "type": "beeld",
           "settings": {
-            "image_filename": "duiken-onderwater-blauw.jpg",
-            "alt": "Duiken in helder blauw water",
-            "caption": "Onder water"
+            "vorm": "rond",
+            "scene": "palm",
+            "filename": "tide-tode-palmschaduw-hostel.jpg",
+            "alt": "Palmschaduw op de muur van een hostel",
+            "caption": "het hostel"
           }
         },
-        "photo-4": {
-          "type": "photo",
+        "zegel-4": {
+          "type": "zegel",
           "settings": {
-            "image_filename": "surfspot-midden-amerika-strand.jpg",
-            "alt": "Leeg strand met golven in Midden-Amerika",
-            "caption": "Midden-Amerika",
-            "tall": true
+            "bg": "sunshine"
           }
         },
-        "photo-5": {
-          "type": "photo",
+        "beeld-5": {
+          "type": "beeld",
           "settings": {
-            "image_filename": "surfboard-draagtas-duinen.jpg",
-            "alt": "Surfboard draagtas op de rug in de duinen",
-            "caption": "Duinen"
+            "vorm": "staand",
+            "scene": "onder",
+            "filename": "tide-tode-duiken.jpg",
+            "alt": "Duiken in diep blauw water",
+            "caption": "en dan even onder water"
           }
         },
-        "photo-6": {
-          "type": "photo",
+        "icoon-6": {
+          "type": "icoon",
           "settings": {
-            "image_filename": "zonsondergang-surfsessie.jpg",
-            "alt": "Surfer bij zonsondergang",
-            "caption": "Zonsondergang"
+            "icoon": "schelp",
+            "bg": "baby"
+          }
+        },
+        "beeld-7": {
+          "type": "beeld",
+          "settings": {
+            "vorm": "breed",
+            "scene": "avond",
+            "filename": "tide-tode-zonsondergang.jpg",
+            "alt": "Zonsondergang na een surfsessie",
+            "caption": "golden hour"
+          }
+        },
+        "beeld-8": {
+          "type": "beeld",
+          "settings": {
+            "vorm": "vierkant",
+            "scene": "boards",
+            "filename": "tide-tode-boards.jpg",
+            "alt": "Surfboards tegen een muur",
+            "caption": "kies je board"
+          }
+        },
+        "beeld-9": {
+          "type": "beeld",
+          "settings": {
+            "vorm": "boog",
+            "scene": "duin",
+            "filename": "tide-tode-duinen.jpg",
+            "alt": "Tas op de rug in de duinen",
+            "caption": "de duinen om de hoek"
           }
         }
       },
       "block_order": [
-        "photo-1",
-        "photo-2",
-        "photo-3",
-        "photo-4",
-        "photo-5",
-        "photo-6"
+        "beeld-1",
+        "quote-2",
+        "beeld-3",
+        "zegel-4",
+        "beeld-5",
+        "icoon-6",
+        "beeld-7",
+        "beeld-8",
+        "beeld-9"
       ]
     },
     "cta": {
@@ -157,23 +175,18 @@
         "mode": "signup",
         "heading": "Blijf op de *hoogte*",
         "text": "We gaan online zodra de eerste modellen klaar zijn. Schrijf je in en je hoort het als eerste.",
-        "btn1_label": "Zet me op de lijst"
+        "btn1_label": "Zet me op de lijst",
+        "eyebrow": ""
       }
-    },
-    "teken": {
-      "type": "surf-merkverhaal",
-      "settings": {}
     }
   },
   "order": [
-    "pagehero",
-    "story",
-    "woorden",
-    "story2",
+    "hero",
+    "verhaal",
+    "manifest",
     "teken",
-    "statement",
-    "komt",
-    "gallery",
+    "band",
+    "collage",
     "cta"
   ]
 }
