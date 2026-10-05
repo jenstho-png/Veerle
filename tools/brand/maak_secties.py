@@ -90,11 +90,11 @@ schrijf('tt-hero', PRIJS + """
     "settings": [
         {"type": "checkbox", "id": "pagina", "label": "Lagere versie (voor subpagina's)", "default": False},
         {"type": "product", "id": "product", "label": "Product", "info": "Leeg = het product uit Thema-instellingen > Tide-Tode."},
-        kop("Jij surft.|Wij *dragen.*"),
-        {"type": "textarea", "id": "text", "label": "Tekst", "default": "De draagtas die je board op je rug zet. Handen vrij voor de hike, de scooter en elke reis daartussen."},
+        kop("Jij surft.|Wij dragen|*je board.*"),
+        {"type": "textarea", "id": "text", "label": "Tekst", "default": "Een draagtas voor je surfboard. Je board gaat op je rug, zodat je je handen vrij hebt op weg naar het strand. Lopend, op de fiets of op de scooter."},
         {"type": "text", "id": "btn_label", "label": "Knop", "default": "Shop de draagtas"},
         {"type": "url", "id": "btn_link", "label": "Knop-link", "info": "Leeg = het product."},
-        {"type": "text", "id": "link_label", "label": "Tweede link", "default": "Waarom we hem maakten"},
+        {"type": "text", "id": "link_label", "label": "Tweede link", "default": "Hoe het begon"},
         {"type": "url", "id": "link_url", "label": "Tweede link: adres"},
         {"type": "checkbox", "id": "kaart", "label": "Productkaartje rechtsonder", "default": True},
     ] + s,
@@ -123,7 +123,7 @@ schrijf('tt-usp', """
         {"type": "text", "id": "tekst", "label": "Tekst", "default": "Handen vrij"}]}],
     "presets": [{"name": "TT: voordelen-strook", "blocks": [
         {"type": "usp", "settings": {"icoon": "voeten", "tekst": "Handen vrij, ook op de scooter"}},
-        {"type": "usp", "settings": {"icoon": "board", "tekst": "Softtop én hardboard"}},
+        {"type": "usp", "settings": {"icoon": "board", "tekst": "Past op softtop én hardboard"}},
         {"type": "usp", "settings": {"icoon": "golf", "tekst": "Sterke, waterbestendige stof"}},
         {"type": "usp", "settings": {"icoon": "tas", "tekst": "Makkelijk mee in het vliegtuig"}}]}]})
 
@@ -206,7 +206,7 @@ schrijf('tt-koop', PRIJS + """
         bg("creme"),
         {"type": "product", "id": "product", "label": "Product", "info": "Leeg = het product uit Thema-instellingen > Tide-Tode."},
         kop("De draagtas.|*Board op je rug.*"),
-        {"type": "textarea", "id": "text", "label": "Korte pitch", "default": "Niet meer met je board onder je arm door de duinen. Leg je plank erin, trek de banden aan en hang hem op je rug. Je schouders blijven heel, je wax blijft op je board en je hebt je handen vrij."},
+        {"type": "textarea", "id": "text", "label": "Korte pitch", "default": "Niet meer met je board onder je arm door de duinen. Leg je plank erin, trek de banden aan en hang hem op je rug. Geen wax meer op je arm, geen pijnlijke schouders, en je hebt allebei je handen vrij."},
         {"type": "text", "id": "prijs_tekst", "label": "Tekst als er nog geen product is", "default": "Binnenkort"},
         {"type": "text", "id": "sticker", "label": "Sticker op de eerste foto", "default": "nieuw"},
         {"type": "header", "content": "Vertrouwen onder de knop"},
@@ -221,9 +221,9 @@ schrijf('tt-koop', PRIJS + """
     "presets": [{"name": "TT: kopen", "blocks": [
         {"type": "punt", "settings": {"tekst": "Past op softtops en vollere boards én op hardboards"}},
         {"type": "punt", "settings": {"tekst": "Gewicht goed verdeeld over je rug, niet op één schouder"}},
-        {"type": "punt", "settings": {"tekst": "Geen natte, zanderige plank in een dichte hoes"}},
+        {"type": "punt", "settings": {"tekst": "Je natte board hoeft niet vol zand in een dichte hoes"}},
         {"type": "detail", "settings": {"titel": "Wat past erin", "tekst": "<p>Eén universele maat. Van de grote softtop waar je op leert surfen tot je hardboard voor de verstopte spot.</p>"}},
-        {"type": "detail", "settings": {"titel": "Materiaal", "tekst": "<p>Zware, waterbestendige stof, sterke stiksels en donker metalen gespen. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"}},
+        {"type": "detail", "settings": {"titel": "Materiaal", "tekst": "<p>Zware, waterbestendige stof, sterke stiksels en stevige gespen. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"}},
         {"type": "detail", "settings": {"titel": "Verzending en retour", "tekst": "<p>We versturen door heel Europa. Past hij toch niet bij je? Je hebt 14 dagen bedenktijd.</p>"}}]}]})
 
 # ---------- PROBLEEM: tekst die volloopt, met losse foto's ----------
@@ -242,7 +242,7 @@ schrijf('tt-probleem', """
     "name": "TT: het probleem", "tag": "div",
     "settings": [
         bg("rose"),
-        {"type": "text", "id": "sticker", "label": "Sticker op de linkerfoto", "default": "1 uur lopen"},
+        {"type": "text", "id": "sticker", "label": "Sticker op de linkerfoto", "default": "herkenbaar?"},
         {"type": "textarea", "id": "tekst", "label": "Tekst die volloopt", "default": "Wax onder je arm. Pijn in je schouders. Met één hand sturen op de scooter. Je natte, zanderige plank in een dichte hoes proppen. Elke surfer kent het."},
         {"type": "text", "id": "slot", "label": "Slotzin", "info": KOP_INFO, "default": "Dat kan *anders.*"},
     ] + s1 + s2,
@@ -347,7 +347,7 @@ schrijf('tt-wie', """
 </section>
 """, {
     "name": "TT: voor wie", "tag": "div", "max_blocks": 3,
-    "settings": [bg("baby"), kop("Voor elke|*soort* surfer.")],
+    "settings": [bg("baby"), kop("Voor beginners|*én* avonturiers.")],
     "blocks": [{"type": "kaart", "name": "Kaart", "settings": [
         {"type": "text", "id": "titel", "label": "Titel", "default": "Titel"},
         {"type": "textarea", "id": "tekst", "label": "Tekst"},
@@ -379,7 +379,7 @@ schrijf('tt-verhaal', """
     "settings": [
         bg("deep"),
         kop("“Niets hield het vol.|*Dus maakten we|hem zelf.*”"),
-        {"type": "richtext", "id": "text", "label": "Tekst", "default": "<p>Lange hikes naar afgelegen spots in Australië, Midden-Amerika en Azië, met een log board onder je arm. De wax schuurt, je schouders doen pijn en op de scooter stuur je met één hand. Losse touwtjes, spanbanden, standaardhoezen: we hebben het allemaal geprobeerd.</p><p>Dus maakten we de tas die we zelf zochten. Van riders, voor riders.</p>"},
+        {"type": "richtext", "id": "text", "label": "Tekst", "default": "<p>Lange hikes naar afgelegen spots in Australië, Midden-Amerika en Azië, met een longboard onder je arm. De wax schuurt, je schouders doen pijn en op de scooter stuur je met één hand. Losse touwtjes, spanbanden, standaardhoezen: we hebben het allemaal geprobeerd.</p><p>Dus maakten we de tas die we zelf zochten. Van riders, voor riders.</p>"},
         {"type": "text", "id": "naam", "label": "Ondertekening", "default": "Veerle"},
         {"type": "text", "id": "link_label", "label": "Link", "default": "Lees het hele verhaal"},
         {"type": "url", "id": "link", "label": "Link-adres"},
@@ -431,8 +431,8 @@ schrijf('tt-merk', """
     "name": "TT: merk", "tag": "div",
     "settings": [
         bg("deep"),
-        kop("Zoals de maan|het getij draagt,|dragen wij *je board.*"),
-        {"type": "textarea", "id": "text", "label": "Tekst", "default": "Het getij bestaat omdat de maan aan de zee trekt. Elke dag, overal ter wereld, zonder dat iemand er iets voor hoeft te doen. Daarom staat er een maan in ons teken, met drie golfjes in haar arm."},
+        kop("De maan draagt|de zee. Wij dragen|*je board.*"),
+        {"type": "textarea", "id": "text", "label": "Tekst", "default": "De maan trekt aan de zee en maakt zo eb en vloed: het getij, of in het Engels de tide. Zij draagt de zee, wij dragen je board. Daarom staat er een maan in ons logo, met drie golfjes in haar arm."},
         {"type": "text", "id": "iconen", "label": "Iconen (komma's, zonder spaties)", "default": "golf,schelp,zon,zeester,board,tas,palmblad,meeuw"},
     ],
     "presets": [{"name": "TT: merk"}]})

@@ -19,7 +19,7 @@
           "type": "usp",
           "settings": {
             "icoon": "board",
-            "tekst": "Softtop én hardboard"
+            "tekst": "Past op softtop én hardboard"
           }
         },
         "usp-3": {
@@ -63,7 +63,7 @@
         "punt-3": {
           "type": "punt",
           "settings": {
-            "tekst": "Geen natte, zanderige plank in een dichte hoes"
+            "tekst": "Je natte board hoeft niet vol zand in een dichte hoes"
           }
         },
         "detail-4": {
@@ -77,7 +77,7 @@
           "type": "detail",
           "settings": {
             "titel": "Materiaal",
-            "tekst": "<p>Zware, waterbestendige stof, sterke stiksels en donker metalen gespen. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"
+            "tekst": "<p>Zware, waterbestendige stof, sterke stiksels en stevige gespen. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"
           }
         },
         "detail-6": {
