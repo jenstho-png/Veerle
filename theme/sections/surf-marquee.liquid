@@ -1,0 +1,42 @@
+<section class="surf-marquee color-{{ section.settings.color_scheme }}" aria-label="Voordelen" style="--surf-speed: {{ section.settings.speed }}s;">
+  <div class="surf-marquee__track">
+    {%- for n in (1..2) -%}
+      <div class="surf-marquee__group"{% if n == 2 %} aria-hidden="true"{% endif %}>
+        {%- for rep in (1..2) -%}
+          {%- for block in section.blocks -%}
+            <span class="surf-marquee__item" {% if n == 1 and rep == 1 %}{{ block.shopify_attributes }}{% endif %}>
+              {{- block.settings.text -}}
+              {%- render 'surf-icon', icon: 'wave' -%}
+            </span>
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Surf – USP-band",
+  "tag": "div",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-3" },
+    { "type": "range", "id": "speed", "label": "Snelheid (seconden per ronde)", "min": 15, "max": 90, "step": 5, "default": 40 }
+  ],
+  "blocks": [
+    { "type": "item", "name": "Tekst", "settings": [ { "type": "text", "id": "text", "label": "Tekst", "default": "Handen vrij" } ] }
+  ],
+  "presets": [
+    {
+      "name": "Surf – USP-band",
+      "blocks": [
+        { "type": "item", "settings": { "text": "Handen vrij" } },
+        { "type": "item", "settings": { "text": "Bestand tegen nat en zand" } },
+        { "type": "item", "settings": { "text": "Past in je reisbagage" } },
+        { "type": "item", "settings": { "text": "Fiets & scooter-proof" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

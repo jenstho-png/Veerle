@@ -2,53 +2,53 @@
   "name": "t:sections.header.name",
   "type": "header",
   "sections": {
-    "announcement-bar": {
-      "type": "announcement-bar",
-      "settings": {
-        "color_scheme": "scheme-1",
-        "show_line_separator": true,
-        "show_social": false,
-        "auto_rotate": false,
-        "change_slides_speed": 5,
-        "enable_country_selector": false,
-        "enable_language_selector": false
-      },
+    "surf-header": {
+      "type": "surf-header",
+      "settings": {},
       "blocks": {
-        "announcement-bar-0": {
-          "type": "announcement",
+        "tab-1": {
+          "type": "tab",
           "settings": {
-            "text": "Welcome to our store",
-            "text_alignment": "center",
-            "color_scheme": "scheme-1",
-            "link": ""
+            "label": "Shop",
+            "link": "shopify://collections/all",
+            "dd1_label": "De draagtas",
+            "dd1_link": "shopify://collections/all",
+            "dd2_label": "Accessoires",
+            "dd2_link": "shopify://collections/all",
+            "dd_all_label": "Alles bekijken"
+          }
+        },
+        "tab-2": {
+          "type": "tab",
+          "settings": {
+            "label": "Ons verhaal",
+            "link": "shopify://pages/over-ons"
+          }
+        },
+        "tab-3": {
+          "type": "tab",
+          "settings": {
+            "label": "FAQ",
+            "link": "shopify://pages/veelgestelde-vragen"
+          }
+        },
+        "tab-4": {
+          "type": "tab",
+          "settings": {
+            "label": "Contact",
+            "link": "shopify://pages/contact"
           }
         }
       },
       "block_order": [
-        "announcement-bar-0"
+        "tab-1",
+        "tab-2",
+        "tab-3",
+        "tab-4"
       ]
-    },
-    "header": {
-      "type": "header",
-      "settings": {
-        "color_scheme": "scheme-1",
-        "menu_color_scheme": "scheme-1",
-        "logo_position": "middle-left",
-        "menu": "main-menu",
-        "menu_type_desktop": "dropdown",
-        "sticky_header_type": "on-scroll-up",
-        "show_line_separator": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "mobile_logo_position": "center",
-        "margin_bottom": 0,
-        "padding_top": 20,
-        "padding_bottom": 20
-      }
     }
   },
   "order": [
-    "announcement-bar",
-    "header"
+    "surf-header"
   ]
 }

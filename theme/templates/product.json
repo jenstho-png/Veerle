@@ -93,11 +93,110 @@
         "padding_top": 36,
         "padding_bottom": 28
       }
+    },
+    "features": {
+      "type": "surf-features",
+      "settings": {
+        "color_scheme": "scheme-2",
+        "heading": "Waarom surfers *hem dragen*"
+      },
+      "blocks": {
+        "feature-1": {
+          "type": "feature",
+          "settings": {
+            "icon": "backpack",
+            "title": "Draagt als een rugzak",
+            "text": "Ergonomische banden verdelen het gewicht over je rug. Lange hikes zonder pijnlijke schouders."
+          }
+        },
+        "feature-2": {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "title": "Zwaar weer-bestendig",
+            "text": "Robuuste stof en dubbele stiksels die tegen nat, zand, zout en een flinke stoot kunnen."
+          }
+        },
+        "feature-3": {
+          "type": "feature",
+          "settings": {
+            "icon": "bike",
+            "title": "Handen vrij op de weg",
+            "text": "Board op je rug, handen aan het stuur. Op de fiets of scooter naar de spot, zonder gegoochel."
+          }
+        },
+        "feature-4": {
+          "type": "feature",
+          "settings": {
+            "icon": "plane",
+            "title": "Reist met je mee",
+            "text": "Opgevouwen klein genoeg voor je bagage. Huur je ter plekke een board? Je tas is er al."
+          }
+        }
+      },
+      "block_order": [
+        "feature-1",
+        "feature-2",
+        "feature-3",
+        "feature-4"
+      ]
+    },
+    "faq": {
+      "type": "surf-faq",
+      "settings": {
+        "btn_link": "shopify://pages/contact"
+      },
+      "blocks": {
+        "qa-1": {
+          "type": "qa",
+          "settings": {
+            "question": "Welke surfboards passen in de tas?",
+            "answer": "<p>Ons kernmodel heeft een universele maat: hij past om de grotere, vollere softtops van beginners én om de meeste hardboards van gevorderde surfers.</p>"
+          }
+        },
+        "qa-2": {
+          "type": "qa",
+          "settings": {
+            "question": "Kan ik de tas meenemen in het vliegtuig?",
+            "answer": "<p>Ja. De tas vouw je klein op, zodat hij gewoon in je bagage past. Huur je op je bestemming een board, dan neem je die met jouw tas mee naar de spot.</p>"
+          }
+        },
+        "qa-3": {
+          "type": "qa",
+          "settings": {
+            "question": "Kan ik ermee fietsen of op de scooter?",
+            "answer": "<p>Daar is hij juist voor gemaakt. Het board hangt op je rug, zodat je beide handen vrij hebt voor je stuur.</p>"
+          }
+        },
+        "qa-4": {
+          "type": "qa",
+          "settings": {
+            "question": "Mag mijn board nat en zanderig de tas in?",
+            "answer": "<p>Ja. De stof kan tegen water, zout en zand. Spoel de tas af en toe na met zoet water en laat hem goed drogen.</p>"
+          }
+        },
+        "qa-5": {
+          "type": "qa",
+          "settings": {
+            "question": "Wat is het verschil met een boardbag?",
+            "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Onze tas is gemaakt om je board te dragen: open, licht en met ergonomische banden voor lange tochten naar de spot.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "qa-1",
+        "qa-2",
+        "qa-3",
+        "qa-4",
+        "qa-5"
+      ]
     }
   },
   "order": [
     "main",
+    "features",
     "disclosures",
+    "faq",
     "related-products"
   ]
 }

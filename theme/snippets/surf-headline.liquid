@@ -1,0 +1,18 @@
+{%- comment -%}
+  Rendert een kop waarin *woorden tussen sterretjes* in het accentfont komen.
+  Gebruik: {% render 'surf-headline', text: section.settings.heading, tag: 'h2', class: '' %}
+{%- endcomment -%}
+{%- liquid
+  assign tag = tag | default: 'h2'
+  assign parts = text | split: '*'
+-%}
+<{{ tag }}{% if class != blank %} class="{{ class }}"{% endif %}>
+  {%- for part in parts -%}
+    {%- assign odd = forloop.index0 | modulo: 2 -%}
+    {%- if odd == 1 -%}
+      <span class="script">{{ part | escape }}</span>
+    {%- else -%}
+      {{- part | escape -}}
+    {%- endif -%}
+  {%- endfor -%}
+</{{ tag }}>

@@ -1,0 +1,146 @@
+{
+  "sections": {
+    "pagehero": {
+      "type": "surf-pagehero",
+      "settings": {
+        "eyebrow": "Ons verhaal",
+        "heading": "Van *frustratie* naar draagtas",
+        "text": "Hoe een paar pijnlijke schouders op surfreis uitgroeiden tot een eigen merk.",
+        "image_filename": "over-ons-surfreis-oprichters.jpg",
+        "image_alt": "De oprichters met hun surfboards op reis"
+      }
+    },
+    "story": {
+      "type": "surf-story",
+      "settings": {
+        "eyebrow": "Hoe het begon",
+        "heading": "Sjouwen, schuren en *improviseren*",
+        "btn_label": "",
+        "image_filename": "surfboard-onder-de-arm-hike.jpg",
+        "image_alt": "Surfer draagt board onder de arm tijdens een hike",
+        "signature": "",
+        "text": "<p>Australië, Midden- en Zuid-Amerika, Azië: hoe mooier de spot, hoe langer de weg ernaartoe. En hoe meer we sjouwden. Een groot board onder je arm, wax die schuurt, schouders die protesteren. Op de scooter of fiets met één hand sturen. En een dichte boardbag? Daar wil je je natte, zanderige plank niet telkens in proppen.</p><p>We probeerden alles: losse touwtjes, spanbanden, standaardhoezen. Niets hield het vol als het ruig werd. Ondernemen zat er altijd al in, want ik kom uit een ondernemersgezin. Toen ik in februari 2025 mijn vriend leerde kennen, die net zo gek is op surfen en precies dezelfde frustratie kende, viel alles op zijn plek. Die tas bestond nog niet, dus gingen we hem maken.</p>"
+      }
+    },
+    "story2": {
+      "type": "surf-story",
+      "settings": {
+        "reverse": true,
+        "color_scheme": "scheme-1",
+        "eyebrow": "Wat we geloven",
+        "heading": "Van riders, *voor riders*",
+        "text": "<p>Geen snelle strandtrend, maar een eerlijk product dat jaren meegaat. Robuuste stof, sterke stiksels, messing of donker-metalen details en een ontwerp zonder poespas.</p><p>We beginnen met één kernmodel in een universele maat. Daarna volgen meer varianten, waxblokjes, karabijnhaken en later ook shirts. Wat er verder op ons pad komt? Dat merken we vanzelf.</p>",
+        "signature": "",
+        "btn_label": "Shop de tas",
+        "btn_link": "shopify://collections/all",
+        "image_filename": "surfboard-draagtas-details-messing.jpg",
+        "image_alt": "Close-up van de stiksels en messing details van de draagtas"
+      },
+      "blocks": {
+        "fact-1": {
+          "type": "fact",
+          "settings": {
+            "value": "1",
+            "label": "kernmodel, universele maat"
+          }
+        },
+        "fact-2": {
+          "type": "fact",
+          "settings": {
+            "value": "∞",
+            "label": "verborgen spots te ontdekken"
+          }
+        }
+      },
+      "block_order": [
+        "fact-1",
+        "fact-2"
+      ]
+    },
+    "statement": {
+      "type": "surf-statement",
+      "settings": {
+        "quote": "Zin om je tas te pakken en *op pad* te gaan.",
+        "cite": "Avontuurlijk · Kwalitatief · No-nonsense"
+      }
+    },
+    "gallery": {
+      "type": "surf-gallery",
+      "settings": {},
+      "blocks": {
+        "photo-1": {
+          "type": "photo",
+          "settings": {
+            "image_filename": "surfspot-australie-hike.jpg",
+            "alt": "Hike naar een surfspot in Australië",
+            "caption": "Australië",
+            "tall": true
+          }
+        },
+        "photo-2": {
+          "type": "photo",
+          "settings": {
+            "image_filename": "surfboard-scooter-azie.jpg",
+            "alt": "Met surfboard op de scooter in Azië",
+            "caption": "Azië"
+          }
+        },
+        "photo-3": {
+          "type": "photo",
+          "settings": {
+            "image_filename": "duiken-onderwater-blauw.jpg",
+            "alt": "Duiken in helder blauw water",
+            "caption": "Onder water"
+          }
+        },
+        "photo-4": {
+          "type": "photo",
+          "settings": {
+            "image_filename": "surfspot-costa-rica-strand.jpg",
+            "alt": "Leeg strand met golven in Midden-Amerika",
+            "caption": "Midden-Amerika",
+            "tall": true
+          }
+        },
+        "photo-5": {
+          "type": "photo",
+          "settings": {
+            "image_filename": "surfboard-draagtas-duinen.jpg",
+            "alt": "Surfboard draagtas op de rug in de duinen",
+            "caption": "Duinen"
+          }
+        },
+        "photo-6": {
+          "type": "photo",
+          "settings": {
+            "image_filename": "zonsondergang-surfsessie.jpg",
+            "alt": "Surfer bij zonsondergang",
+            "caption": "Golden hour"
+          }
+        }
+      },
+      "block_order": [
+        "photo-1",
+        "photo-2",
+        "photo-3",
+        "photo-4",
+        "photo-5",
+        "photo-6"
+      ]
+    },
+    "cta": {
+      "type": "surf-cta",
+      "settings": {
+        "btn2_link": "shopify://pages/veelgestelde-vragen"
+      }
+    }
+  },
+  "order": [
+    "pagehero",
+    "story",
+    "story2",
+    "statement",
+    "gallery",
+    "cta"
+  ]
+}

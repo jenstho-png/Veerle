@@ -1,0 +1,72 @@
+<section class="surf surf-gallery color-{{ section.settings.color_scheme }}" id="gallery-{{ section.id }}">
+  <div class="surf__inner">
+    <div class="surf-head surf-reveal">
+      {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      {%- render 'surf-headline', text: section.settings.heading, tag: 'h2' -%}
+      {%- if section.settings.text != blank -%}<p class="surf-lead">{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <div class="surf-gallery__grid">
+      {%- for block in section.blocks -%}
+        <figure class="surf-media surf-gallery__item{% if block.settings.tall %} surf-gallery__item--tall{% endif %} surf-reveal" {{ block.shopify_attributes }}>
+          {%- render 'surf-image',
+            image: block.settings.image,
+            filename: block.settings.image_filename,
+            alt: block.settings.alt,
+            sizes: '(min-width: 750px) 25vw, 50vw'
+          -%}
+          {%- if block.settings.caption != blank -%}<figcaption>{{ block.settings.caption }}</figcaption>{%- endif -%}
+        </figure>
+      {%- endfor -%}
+    </div>
+    {%- if section.settings.btn_label != blank -%}
+      <div class="surf-btns">
+        <a href="{{ section.settings.btn_link | default: settings.social_instagram_link | default: '#' }}" class="surf-btn surf-btn--ghost" target="_blank" rel="noopener">
+          {%- render 'surf-icon', icon: 'instagram' -%}
+          {{ section.settings.btn_label -}}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Surf – fotogalerij",
+  "tag": "div",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-1" },
+    { "type": "text", "id": "eyebrow", "label": "Bovenregel", "default": "Onderweg" },
+    { "type": "text", "id": "heading", "label": "Kop", "default": "Van verstopte spot tot *diep blauw*" },
+    { "type": "textarea", "id": "text", "label": "Tekst", "default": "Surfen, duiken, reizen: de zee is ons speelveld. Een greep uit de plekken waar de tas al is geweest." },
+    { "type": "text", "id": "btn_label", "label": "Knop", "default": "Volg ons op Instagram" },
+    { "type": "url", "id": "btn_link", "label": "Knop-link", "info": "Leeg = Instagram-link uit de thema-instellingen" }
+  ],
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "Foto",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Foto" },
+        { "type": "text", "id": "image_filename", "label": "Bestandsnaam (SEO)", "default": "surfreis-foto.jpg" },
+        { "type": "text", "id": "alt", "label": "Alt-tekst" },
+        { "type": "text", "id": "caption", "label": "Locatie-label" },
+        { "type": "checkbox", "id": "tall", "label": "Hoge foto", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Surf – fotogalerij",
+      "blocks": [
+        { "type": "photo", "settings": { "image_filename": "surfspot-australie-hike.jpg", "alt": "Hike naar een surfspot in Australië", "caption": "Australië", "tall": true } },
+        { "type": "photo", "settings": { "image_filename": "surfboard-scooter-azie.jpg", "alt": "Met surfboard op de scooter in Azië", "caption": "Azië" } },
+        { "type": "photo", "settings": { "image_filename": "duiken-onderwater-blauw.jpg", "alt": "Duiken in helder blauw water", "caption": "Onder water" } },
+        { "type": "photo", "settings": { "image_filename": "surfspot-costa-rica-strand.jpg", "alt": "Leeg strand met golven in Midden-Amerika", "caption": "Midden-Amerika", "tall": true } },
+        { "type": "photo", "settings": { "image_filename": "surfboard-draagtas-duinen.jpg", "alt": "Surfboard draagtas op de rug in de duinen", "caption": "Duinen" } },
+        { "type": "photo", "settings": { "image_filename": "zonsondergang-surfsessie.jpg", "alt": "Surfer bij zonsondergang", "caption": "Golden hour" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

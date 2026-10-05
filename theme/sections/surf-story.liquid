@@ -1,0 +1,84 @@
+<section class="surf surf-story{% if section.settings.reverse %} surf-story--reverse{% endif %} color-{{ section.settings.color_scheme }}" id="story-{{ section.id }}">
+  <div class="surf__inner">
+    <div class="surf-story__grid">
+      <div class="surf-media surf-story__media surf-reveal">
+        {%- render 'surf-image',
+          image: section.settings.image,
+          filename: section.settings.image_filename,
+          alt: section.settings.image_alt,
+          sizes: '(min-width: 990px) 50vw, 100vw'
+        -%}
+      </div>
+      <div class="surf-story__body surf-reveal">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- render 'surf-headline', text: section.settings.heading, tag: section.settings.heading_tag -%}
+        <div class="rte surf-lead">{{ section.settings.text }}</div>
+        {%- if section.settings.signature != blank -%}
+          <p class="surf-story__sign">{{ section.settings.signature }}</p>
+        {%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <div class="surf-story__facts">
+            {%- for block in section.blocks -%}
+              <div {{ block.shopify_attributes }}>
+                <strong>{{ block.settings.value }}</strong>
+                <span>{{ block.settings.label }}</span>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.btn_label != blank -%}
+          <div class="surf-btns">
+            <a href="{{ section.settings.btn_link | default: '#' }}" class="surf-btn surf-btn--ghost">
+              {{- section.settings.btn_label }}
+              {% render 'surf-icon', icon: 'arrow' -%}
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Surf – verhaal",
+  "tag": "div",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-2" },
+    { "type": "checkbox", "id": "reverse", "label": "Foto rechts", "default": false },
+    { "type": "text", "id": "eyebrow", "label": "Bovenregel", "default": "Waarom deze tas" },
+    { "type": "text", "id": "heading", "label": "Kop", "default": "Bedacht op de *lange weg* naar de spot" },
+    { "type": "select", "id": "heading_tag", "label": "Kop-niveau (SEO)", "default": "h2", "options": [ { "value": "h1", "label": "H1" }, { "value": "h2", "label": "H2" } ] },
+    { "type": "richtext", "id": "text", "label": "Tekst", "default": "<p>Op reis door Australië, Midden- en Zuid-Amerika en Azië sjouwden we ons een ongeluk met logge boards die nergens lekker vast te houden zijn. Losse touwtjes, spanbanden, standaardhoezen: niets hield het vol, en onze schouders ook niet.</p><p>Na weer zo'n hike naar een verstopte spot, met schuurplekken van de wax onder onze arm, wisten we het: dit kan comfortabeler, slimmer en duurzamer. Dus maakten we de tas zelf.</p>" },
+    { "type": "text", "id": "signature", "label": "Ondertekening", "default": "— van surfers, voor surfers" },
+    { "type": "text", "id": "btn_label", "label": "Knop", "default": "Lees ons verhaal" },
+    { "type": "url", "id": "btn_link", "label": "Knop-link" },
+    { "type": "header", "content": "Foto" },
+    { "type": "image_picker", "id": "image", "label": "Foto" },
+    { "type": "text", "id": "image_filename", "label": "Bestandsnaam (SEO)", "default": "oprichters-surfreis-board-onder-de-arm.jpg" },
+    { "type": "text", "id": "image_alt", "label": "Alt-tekst", "default": "De oprichters op surfreis met hun surfboard" }
+  ],
+  "blocks": [
+    {
+      "type": "fact",
+      "name": "Feitje",
+      "settings": [
+        { "type": "text", "id": "value", "label": "Waarde", "default": "4" },
+        { "type": "text", "id": "label", "label": "Omschrijving", "default": "continenten getest" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Surf – verhaal",
+      "blocks": [
+        { "type": "fact", "settings": { "value": "4", "label": "continenten op de proef" } },
+        { "type": "fact", "settings": { "value": "0", "label": "schuurplekken onder je arm" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

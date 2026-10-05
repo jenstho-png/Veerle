@@ -1,13 +1,5 @@
 {
   "sections": {
-    "banner": {
-      "type": "main-collection-banner",
-      "settings": {
-        "show_collection_description": true,
-        "show_collection_image": false,
-        "color_scheme": "scheme-1"
-      }
-    },
     "product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
@@ -27,10 +19,16 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "pagehero": {
+      "type": "surf-pagehero",
+      "settings": {
+        "eyebrow": "Shop"
+      }
     }
   },
   "order": [
-    "banner",
+    "pagehero",
     "product-grid"
   ]
 }

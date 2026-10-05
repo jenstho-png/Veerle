@@ -1,0 +1,82 @@
+{%- liquid
+  assign bg = section.settings.image
+  if bg == blank and section.settings.image_filename != blank
+    assign bg = images[section.settings.image_filename]
+  endif
+-%}
+<section class="surf surf-cta color-{{ section.settings.color_scheme }}" id="cta-{{ section.id }}">
+  <div class="surf__inner">
+    <div class="surf-cta__box color-{{ section.settings.box_scheme }}{% if bg != blank %} has-bg{% endif %} surf-reveal">
+      {%- if bg != blank -%}
+        <div class="surf-media surf-cta__bg">{% render 'surf-image', image: bg, alt: section.settings.image_alt %}</div>
+      {%- endif -%}
+      {%- if section.settings.stamp != blank -%}
+        <svg class="surf-stamp" viewBox="0 0 110 110" aria-hidden="true">
+          <defs><path id="stamp-{{ section.id }}" d="M55 55m-42 0a42 42 0 1 1 84 0a42 42 0 1 1-84 0"/></defs>
+          <text><textPath href="#stamp-{{ section.id }}">{{ section.settings.stamp | escape }}</textPath></text>
+          <g transform="translate(43 43)" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M0 9c3 0 3-4 6-4s3 4 6 4 3-4 6-4 3 4 6 4M0 17c3 0 3-4 6-4s3 4 6 4 3-4 6-4 3 4 6 4"/></g>
+        </svg>
+      {%- endif -%}
+      {%- render 'surf-headline', text: section.settings.heading, tag: 'h2' -%}
+      {%- if section.settings.text != blank -%}<p class="surf-lead">{{ section.settings.text }}</p>{%- endif -%}
+
+      {%- if section.settings.mode == 'signup' -%}
+        {%- form 'customer', id: section.id -%}
+          <input type="hidden" name="contact[tags]" value="newsletter,{{ section.settings.tag | escape }}">
+          {%- if form.posted_successfully? -%}
+            <p class="surf-form-msg">{{ section.settings.success }}</p>
+          {%- else -%}
+            <div class="surf-signup">
+              <label class="visually-hidden" for="SurfCtaEmail-{{ section.id }}">E-mailadres</label>
+              <input id="SurfCtaEmail-{{ section.id }}" type="email" name="contact[email]" autocomplete="email" placeholder="jouw@email.nl" required>
+              <button type="submit" class="surf-btn surf-btn--primary">{{ section.settings.btn1_label }}</button>
+            </div>
+            {%- if form.errors -%}<p class="surf-form-msg">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>{%- endif -%}
+          {%- endif -%}
+        {%- endform -%}
+      {%- else -%}
+        <div class="surf-btns">
+          {%- if section.settings.btn1_label != blank -%}
+            <a href="{{ section.settings.btn1_link | default: routes.all_products_collection_url }}" class="surf-btn surf-btn--primary">
+              {{- section.settings.btn1_label }}
+              {% render 'surf-icon', icon: 'arrow' -%}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.btn2_label != blank -%}
+            <a href="{{ section.settings.btn2_link | default: '#' }}" class="surf-btn surf-btn--ghost">{{ section.settings.btn2_label }}</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Surf – call-to-action",
+  "tag": "div",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema sectie", "default": "scheme-1" },
+    { "type": "color_scheme", "id": "box_scheme", "label": "Kleurenschema blok", "default": "scheme-4" },
+    { "type": "select", "id": "mode", "label": "Type", "default": "buttons", "options": [
+      { "value": "buttons", "label": "Knoppen" },
+      { "value": "signup", "label": "E-mail inschrijving (bijv. early access)" }
+    ] },
+    { "type": "text", "id": "stamp", "label": "Stempeltekst (rond)", "default": "Handen vrij · Op pad · Handen vrij · Op pad · " },
+    { "type": "text", "id": "heading", "label": "Kop", "default": "Pak je tas, *de zee* wacht" },
+    { "type": "textarea", "id": "text", "label": "Tekst", "default": "Voor de vroege vogels, de verre hikers en iedereen die net begint." },
+    { "type": "text", "id": "btn1_label", "label": "Knop 1 / inschrijfknop", "default": "Shop de tas" },
+    { "type": "url", "id": "btn1_link", "label": "Link 1" },
+    { "type": "text", "id": "btn2_label", "label": "Knop 2", "default": "Veelgestelde vragen" },
+    { "type": "url", "id": "btn2_link", "label": "Link 2" },
+    { "type": "header", "content": "Inschrijving" },
+    { "type": "text", "id": "tag", "label": "Klant-tag", "default": "early-access" },
+    { "type": "text", "id": "success", "label": "Bedankt-tekst", "default": "Top, je staat op de lijst! We laten het je als eerste weten." },
+    { "type": "header", "content": "Achtergrondfoto (optioneel)" },
+    { "type": "image_picker", "id": "image", "label": "Foto" },
+    { "type": "text", "id": "image_filename", "label": "Bestandsnaam (SEO)" },
+    { "type": "text", "id": "image_alt", "label": "Alt-tekst", "default": "Golven bij een afgelegen surfspot" }
+  ],
+  "presets": [ { "name": "Surf – call-to-action" } ]
+}
+{% endschema %}

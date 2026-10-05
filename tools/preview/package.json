@@ -1,0 +1,14 @@
+{
+  "name": "surf-theme-preview",
+  "private": true,
+  "type": "module",
+  "description": "Lokale ruwe preview van de surf-secties (liquidjs + shims). Geen vervanging voor `shopify theme dev`.",
+  "scripts": {
+    "render": "node render.mjs",
+    "shots": "node render.mjs && node screenshot.mjs"
+  },
+  "dependencies": {
+    "liquidjs": "^10.21.0",
+    "playwright-core": "^1.55.0"
+  }
+}

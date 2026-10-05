@@ -2,27 +2,65 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
-    "footer": {
-      "type": "footer",
-      "blocks": {},
-      "block_order": [],
-      "settings": {
-        "color_scheme": "scheme-1",
-        "newsletter_enable": true,
-        "newsletter_heading": "Subscribe to our emails",
-        "enable_follow_on_shop": true,
-        "show_social": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "payment_enable": true,
-        "show_policy": true,
-        "margin_top": 0,
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
+    "surf-footer": {
+      "type": "surf-footer",
+      "settings": {},
+      "blocks": {
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "heading": "Shop",
+            "l1_label": "De draagtas",
+            "l1_link": "shopify://collections/all",
+            "l2_label": "Accessoires",
+            "l2_link": "shopify://collections/all",
+            "l3_label": "Alle producten",
+            "l3_link": "shopify://collections/all"
+          }
+        },
+        "menu-2": {
+          "type": "menu",
+          "settings": {
+            "heading": "Info",
+            "l1_label": "Ons verhaal",
+            "l1_link": "shopify://pages/over-ons",
+            "l2_label": "Veelgestelde vragen",
+            "l2_link": "shopify://pages/veelgestelde-vragen",
+            "l3_label": "Contact",
+            "l3_link": "shopify://pages/contact"
+          }
+        },
+        "menu-3": {
+          "type": "menu",
+          "settings": {
+            "heading": "Service",
+            "l1_label": "Verzending",
+            "l1_link": "/policies/shipping-policy",
+            "l2_label": "Retourneren",
+            "l2_link": "/policies/refund-policy",
+            "l3_label": "Privacy",
+            "l3_link": "/policies/privacy-policy",
+            "l4_label": "Voorwaarden",
+            "l4_link": "/policies/terms-of-service"
+          }
+        },
+        "contact-4": {
+          "type": "contact",
+          "settings": {
+            "heading": "Contact",
+            "note": "We reageren binnen één werkdag."
+          }
+        }
+      },
+      "block_order": [
+        "menu-1",
+        "menu-2",
+        "menu-3",
+        "contact-4"
+      ]
     }
   },
   "order": [
-    "footer"
+    "surf-footer"
   ]
 }

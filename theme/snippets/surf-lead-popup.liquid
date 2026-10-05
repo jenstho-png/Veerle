@@ -1,0 +1,48 @@
+{%- comment -%}
+  E-mail capture. Maakt een klant/abonnee aan met tag (bv. 'early-access').
+  Verschijnt na X seconden of bij exit-intent (desktop); daarna 7 dagen niet opnieuw.
+  Na inschrijving nooit meer. Mail-opvolging: Shopify Email / Flow op de tag.
+{%- endcomment -%}
+{%- if settings.surf_popup_enable and template.name != 'cart' and template.name != 'password' -%}
+  <div
+    class="surf-popup"
+    id="SurfPopup"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="SurfPopupTitle"
+    data-delay="{{ settings.surf_popup_delay }}"
+    hidden
+  >
+    <div class="surf-popup__card">
+      <button type="button" class="surf-icon-btn surf-popup__close" data-surf-popup-close aria-label="Sluiten">
+        {%- render 'surf-icon', icon: 'close' -%}
+      </button>
+      {%- render 'surf-headline', text: settings.surf_popup_heading, tag: 'h2', class: '' -%}
+      {%- if settings.surf_popup_text != blank -%}
+        <p>{{ settings.surf_popup_text }}</p>
+      {%- endif -%}
+      {%- form 'customer', id: 'SurfPopupForm' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter,{{ settings.surf_popup_tag | escape }}">
+        {%- if form.posted_successfully? -%}
+          <p class="surf-form-msg" data-surf-popup-success>{{ settings.surf_popup_success }}</p>
+        {%- else -%}
+          <div class="surf-signup">
+            <label class="visually-hidden" for="SurfPopupEmail">E-mailadres</label>
+            <input
+              id="SurfPopupEmail"
+              type="email"
+              name="contact[email]"
+              autocomplete="email"
+              placeholder="jouw@email.nl"
+              required
+            >
+            <button type="submit" class="surf-btn surf-btn--primary">{{ settings.surf_popup_button }}</button>
+          </div>
+          {%- if form.errors -%}
+            <p class="surf-form-msg">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+{%- endif -%}

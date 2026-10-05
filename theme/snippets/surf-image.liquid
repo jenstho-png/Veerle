@@ -1,0 +1,31 @@
+{%- comment -%}
+  Foto-systeem met vaste bestandsnaam.
+  1. Is er een foto gekozen in de editor → die wordt getoond.
+  2. Anders: staat er in Content → Bestanden een bestand met `filename` → dat wordt getoond.
+  3. Anders: een nette placeholder met de gewenste bestandsnaam.
+
+  Gebruik:
+  {% render 'surf-image', image: section.settings.image, filename: section.settings.image_filename,
+     alt: 'Omschrijving', sizes: '(min-width: 990px) 50vw, 100vw', loading: 'lazy' %}
+{%- endcomment -%}
+{%- liquid
+  assign img = image
+  if img == blank and filename != blank
+    assign img = images[filename]
+  endif
+  assign loading = loading | default: 'lazy'
+  assign sizes = sizes | default: '100vw'
+  assign alt_text = alt | default: img.alt | default: shop.name
+-%}
+{%- if img != blank -%}
+  {%- if loading == 'eager' -%}
+    {{ img | image_url: width: 2400 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: sizes, widths: '480, 750, 1100, 1500, 1800, 2400', alt: alt_text }}
+  {%- else -%}
+    {{ img | image_url: width: 2400 | image_tag: loading: 'lazy', sizes: sizes, widths: '480, 750, 1100, 1500, 1800, 2400', alt: alt_text }}
+  {%- endif -%}
+{%- else -%}
+  <div class="surf-ph" role="img" aria-label="{{ alt_text | escape }}">
+    <svg viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 16c4 0 4-6 8-6s4 6 8 6 4-6 8-6 4 6 8 6 4-6 8-6 4 6 6 6"/><path d="M8 8l6-6 4 4 3-3 6 6" stroke-linejoin="round"/></svg>
+    <span>{{ filename | default: 'foto-volgt.jpg' }}</span>
+  </div>
+{%- endif -%}

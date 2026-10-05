@@ -1,0 +1,20 @@
+<section class="surf surf-statement color-{{ section.settings.color_scheme }}" id="statement-{{ section.id }}">
+  <div class="surf__inner surf-reveal">
+    <svg class="surf-wave" viewBox="0 0 180 14" fill="none" stroke="currentColor" stroke-width="1.5" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7c7.5 0 7.5-6 15-6s7.5 6 15 6 7.5-6 15-6 7.5 6 15 6 7.5-6 15-6 7.5 6 15 6 7.5-6 15-6 7.5 6 15 6 7.5-6 15-6 7.5 6 15 6 7.5-6 15-6 7.5 6 15 6"/></svg>
+    {%- render 'surf-headline', text: section.settings.quote, tag: 'blockquote' -%}
+    {%- if section.settings.cite != blank -%}<cite>{{ section.settings.cite }}</cite>{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Surf – statement",
+  "tag": "div",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-3" },
+    { "type": "text", "id": "quote", "label": "Quote", "info": "*woord* = accentfont", "default": "Niet iedereen rolt uit bed de *golf* in." },
+    { "type": "text", "id": "cite", "label": "Onderschrift", "default": "Daarom maakten we deze tas" }
+  ],
+  "presets": [ { "name": "Surf – statement" } ]
+}
+{% endschema %}

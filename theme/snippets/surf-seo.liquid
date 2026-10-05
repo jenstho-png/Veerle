@@ -1,0 +1,152 @@
+{%- comment -%}
+  Structured data (JSON-LD) voor Google én AI-engines (GEO).
+  - OnlineStore (Organization) met aanbod, socials en contact → overal
+  - WebSite met zoekactie → overal
+  - BreadcrumbList → alle pagina's behalve home
+  Product (main-product), Article (main-article) en FAQPage (surf-faq) staan in hun eigen secties.
+  NOOIT een aggregateRating toevoegen zonder echte reviews.
+{%- endcomment -%}
+{%- liquid
+  assign org_id = shop.url | append: '/#organization'
+  assign site_id = shop.url | append: '/#website'
+  assign same_as = ''
+  assign social_keys = 'social_instagram_link,social_tiktok_link,social_facebook_link,social_youtube_link,social_pinterest_link' | split: ','
+  for key in social_keys
+    assign link = settings[key]
+    if link != blank
+      assign same_as = same_as | append: link | append: '|'
+    endif
+  endfor
+  assign same_as = same_as | split: '|'
+  assign knows = settings.surf_knows_about | split: ','
+-%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "OnlineStore",
+        "@id": {{ org_id | json }},
+        "name": {{ shop.name | json }},
+        "url": {{ shop.url | json }},
+        "description": {{ settings.surf_org_description | default: shop.description | json }},
+        {%- if settings.surf_slogan != blank %}"slogan": {{ settings.surf_slogan | json }},{% endif -%}
+        {%- if settings.surf_founding_date != blank %}"foundingDate": {{ settings.surf_founding_date | json }},{% endif -%}
+        {%- if settings.logo != blank %}
+        "logo": {
+          "@type": "ImageObject",
+          "url": {{ settings.logo | image_url: width: 600 | prepend: 'https:' | json }},
+          "width": 600
+        },
+        {%- endif %}
+        "email": {{ settings.surf_email | default: shop.email | json }},
+        {%- if settings.surf_phone != blank %}"telephone": {{ settings.surf_phone | json }},{% endif %}
+        "address": {
+          "@type": "PostalAddress",
+          {%- if settings.surf_city != blank %}"addressLocality": {{ settings.surf_city | json }},{% endif -%}
+          {%- if settings.surf_region != blank %}"addressRegion": {{ settings.surf_region | json }},{% endif %}
+          "addressCountry": {{ settings.surf_country | default: 'NL' | json }}
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "email": {{ settings.surf_email | default: shop.email | json }},
+          "availableLanguage": ["nl", "en"]
+        },
+        {%- if same_as.size > 0 %}"sameAs": {{ same_as | json }},{% endif -%}
+        {%- if knows.size > 0 %}
+        "knowsAbout": [
+          {%- for k in knows -%}
+            {{ k | strip | json }}{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ],
+        {%- endif %}
+        "makesOffer": [
+          {%- for p in collections.all.products limit: 12 -%}
+            {
+              "@type": "Offer",
+              "url": {{ shop.url | append: p.url | json }},
+              "price": {{ p.price | divided_by: 100.0 | json }},
+              "priceCurrency": {{ cart.currency.iso_code | json }},
+              "availability": "https://schema.org/{% if p.available %}InStock{% else %}OutOfStock{% endif %}",
+              "itemOffered": {
+                "@type": "Product",
+                "name": {{ p.title | json }},
+                "description": {{ p.description | strip_html | truncate: 200 | json }}
+              }
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": {{ site_id | json }},
+        "name": {{ shop.name | json }},
+        "url": {{ shop.url | json }},
+        "inLanguage": {{ request.locale.iso_code | json }},
+        "publisher": { "@id": {{ org_id | json }} },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": {{ shop.url | append: routes.search_url | append: '?q={search_term_string}' | json }}
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+      {%- if request.page_type != 'index' -%}
+        {%- liquid
+          assign crumb_name = page_title
+          assign mid_name = blank
+          assign mid_url = blank
+          case request.page_type
+            when 'product'
+              assign crumb_name = product.title
+              if collection
+                assign mid_name = collection.title
+                assign mid_url = collection.url
+              else
+                assign mid_name = 'Shop'
+                assign mid_url = routes.all_products_collection_url
+              endif
+            when 'collection'
+              assign crumb_name = collection.title
+            when 'page'
+              assign crumb_name = page.title
+            when 'blog'
+              assign crumb_name = blog.title
+            when 'article'
+              assign crumb_name = article.title
+              assign mid_name = blog.title
+              assign mid_url = blog.url
+          endcase
+        -%}
+      ,{
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": {{ shop.url | json }}
+          },
+          {%- if mid_name != blank -%}
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": {{ mid_name | json }},
+            "item": {{ shop.url | append: mid_url | json }}
+          },
+          {%- endif -%}
+          {
+            "@type": "ListItem",
+            "position": {% if mid_name != blank %}3{% else %}2{% endif %},
+            "name": {{ crumb_name | json }},
+            "item": {{ canonical_url | json }}
+          }
+        ]
+      }
+      {%- endif %}
+    ]
+  }
+</script>

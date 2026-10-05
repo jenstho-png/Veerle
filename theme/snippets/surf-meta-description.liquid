@@ -1,0 +1,29 @@
+{%- comment -%}
+  Unieke meta description per belangrijke pagina. Valt terug op Shopify's eigen omschrijving
+  (die je per product/pagina in de admin onder "Zoekmachinevermelding" kunt invullen).
+{%- endcomment -%}
+{%- liquid
+  assign desc = page_description
+  case request.page_type
+    when 'index'
+      if settings.surf_meta_home != blank
+        assign desc = settings.surf_meta_home
+      endif
+    when 'page'
+      case page.handle
+        when 'over-ons'
+          assign desc = 'Het verhaal achter ' | append: shop.name | append: ': geboren uit frustratie op lange hikes naar verborgen surfspots. Een draagtas voor je surfboard die je handen vrijhoudt.'
+        when 'veelgestelde-vragen'
+          assign desc = 'Antwoorden over de surfboard draagtas van ' | append: shop.name | append: ': welke boards passen, meenemen in het vliegtuig, op de fiets of scooter, verzending en retour.'
+        when 'contact'
+          assign desc = 'Vraag over je surfboard draagtas of een bestelling? Neem contact op met ' | append: shop.name | append: '. We reageren meestal binnen één werkdag.'
+      endcase
+    when 'collection'
+      if collection.description == blank
+        assign desc = 'Shop surfboard draagtassen, waxblokjes en karabijnhaken van ' | append: shop.name | append: '. Sterk, waterbestendig en gemaakt om mee op pad te gaan.'
+      endif
+  endcase
+-%}
+{%- if desc != blank -%}
+  <meta name="description" content="{{ desc | strip_html | strip_newlines | truncate: 160 | escape }}">
+{%- endif -%}

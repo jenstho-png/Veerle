@@ -1,11 +1,127 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "Dawn",
+    "theme_name": "Surf (Dawn-fork)",
     "theme_version": "16.0.0",
-    "theme_author": "Shopify",
+    "theme_author": "CREAJT",
     "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
     "theme_support_url": "https://support.shopify.com/"
+  },
+  {
+    "name": "Surf – merk & SEO",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Deze gegevens voeden de structured data (Google + AI-engines). Merknaam = winkelnaam in Instellingen → Algemeen."
+      },
+      {
+        "type": "textarea",
+        "id": "surf_org_description",
+        "label": "Korte merkomschrijving",
+        "default": "Surfboard draagtassen voor surfers die verder gaan: ergonomisch, sterk en waterbestendig. Handen vrij op weg naar de golf, te voet, op de fiets of op reis."
+      },
+      {
+        "type": "text",
+        "id": "surf_slogan",
+        "label": "Slogan",
+        "default": "Handen vrij, op weg naar de golf"
+      },
+      {
+        "type": "text",
+        "id": "surf_founding_date",
+        "label": "Oprichtingsdatum (JJJJ of JJJJ-MM-DD)"
+      },
+      {
+        "type": "text",
+        "id": "surf_email",
+        "label": "Contact e-mail"
+      },
+      {
+        "type": "text",
+        "id": "surf_phone",
+        "label": "Telefoon"
+      },
+      {
+        "type": "text",
+        "id": "surf_city",
+        "label": "Plaats"
+      },
+      {
+        "type": "text",
+        "id": "surf_region",
+        "label": "Provincie/regio"
+      },
+      {
+        "type": "text",
+        "id": "surf_country",
+        "label": "Land (ISO-code)",
+        "default": "NL"
+      },
+      {
+        "type": "text",
+        "id": "surf_knows_about",
+        "label": "Expertise (komma-gescheiden)",
+        "default": "surfen, surfboard draagtas, surfboards dragen, surfreizen, surftrips, surfaccessoires, surf wax"
+      },
+      {
+        "type": "textarea",
+        "id": "surf_meta_home",
+        "label": "Meta description homepage",
+        "default": "Surfboard draagtas met ergonomische banden: handen vrij op weg naar de golf. Sterk, waterbestendig en mee op reis. Voor softtops én hardboards."
+      }
+    ]
+  },
+  {
+    "name": "Surf – lead-popup",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "surf_popup_enable",
+        "label": "Popup aan",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "surf_popup_delay",
+        "label": "Tonen na (seconden)",
+        "min": 10,
+        "max": 300,
+        "step": 10,
+        "unit": "s",
+        "default": 120
+      },
+      {
+        "type": "text",
+        "id": "surf_popup_heading",
+        "label": "Kop",
+        "default": "Als eerste *op pad*?"
+      },
+      {
+        "type": "textarea",
+        "id": "surf_popup_text",
+        "label": "Tekst",
+        "default": "Schrijf je in en hoor als eerste wanneer nieuwe modellen online komen. Plus surftips voor onderweg."
+      },
+      {
+        "type": "text",
+        "id": "surf_popup_button",
+        "label": "Knop",
+        "default": "Zet me op de lijst"
+      },
+      {
+        "type": "text",
+        "id": "surf_popup_tag",
+        "label": "Klant-tag",
+        "default": "early-access",
+        "info": "Gebruik deze tag in Shopify Flow / Shopify Email voor de welkomstmail"
+      },
+      {
+        "type": "text",
+        "id": "surf_popup_success",
+        "label": "Bedankt-tekst",
+        "default": "Top, je staat op de lijst! Check je inbox."
+      }
+    ]
   },
   {
     "name": "t:settings_schema.logo.name",

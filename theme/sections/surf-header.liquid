@@ -1,0 +1,168 @@
+{%- liquid
+  assign overlay = false
+  if section.settings.overlay_home and request.page_type == 'index'
+    assign overlay = true
+  endif
+-%}
+<div
+  class="surf-header-wrap color-{{ section.settings.color_scheme }}{% if overlay %} is-overlay{% endif %}"
+  data-surf-header
+  data-hide="{{ section.settings.hide_on_scroll }}"
+  style="background: transparent;"
+>
+  <header class="surf-header">
+    <a href="{{ routes.root_url }}" class="surf-header__logo" aria-label="{{ shop.name }} – home">
+      {%- if settings.logo != blank -%}
+        {%- assign logo_h = settings.logo_width | divided_by: settings.logo.aspect_ratio | round -%}
+        {{
+          settings.logo
+          | image_url: width: 600
+          | image_tag: width: settings.logo_width, height: logo_h, alt: shop.name, loading: 'eager'
+        }}
+      {%- else -%}
+        <span class="surf-header__word">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <nav class="surf-header__nav" aria-label="Hoofdmenu">
+      <ul>
+        {%- for block in section.blocks -%}
+          <li class="item" {{ block.shopify_attributes }}>
+            {%- liquid
+              assign subs = 0
+              for i in (1..5)
+                assign lk = 'dd' | append: i | append: '_label'
+                if block.settings[lk] != blank
+                  assign subs = subs | plus: 1
+                endif
+              endfor
+            -%}
+            {%- if subs > 0 -%}
+              <details>
+                <summary>{{ block.settings.label }} {% render 'surf-icon', icon: 'chevron' %}</summary>
+                <ul class="surf-dd">
+                  {%- for i in (1..5) -%}
+                    {%- assign lk = 'dd' | append: i | append: '_label' -%}
+                    {%- assign uk = 'dd' | append: i | append: '_link' -%}
+                    {%- if block.settings[lk] != blank -%}
+                      <li><a href="{{ block.settings[uk] | default: '#' }}">{{ block.settings[lk] }}</a></li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- if block.settings.link != blank and block.settings.dd_all_label != blank -%}
+                    <li><a href="{{ block.settings.link }}">{{ block.settings.dd_all_label }}</a></li>
+                  {%- endif -%}
+                </ul>
+              </details>
+            {%- else -%}
+              <a
+                href="{{ block.settings.link | default: '#' }}"
+                {% if block.settings.link == request.path %}
+                  aria-current="page"
+                {% endif %}
+              >
+                {{- block.settings.label -}}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="surf-header__actions">
+      <a href="{{ routes.search_url }}" class="surf-icon-btn" aria-label="Zoeken">{% render 'surf-icon', icon: 'search' %}</a>
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" class="surf-icon-btn" aria-label="Account">{% render 'surf-icon', icon: 'user' %}</a>
+      {%- endif -%}
+      <a href="{{ routes.cart_url }}" class="surf-icon-btn" id="cart-icon-bubble" aria-label="Winkelwagen ({{ cart.item_count }})">
+        {%- render 'surf-icon', icon: 'cart' -%}
+        {%- if cart.item_count > 0 -%}<span class="surf-count" aria-hidden="true">{{ cart.item_count }}</span>{%- endif -%}
+      </a>
+      {%- if section.settings.cta_label != blank -%}
+        <a href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}" class="surf-btn surf-btn--primary surf-header__cta">
+          {{- section.settings.cta_label -}}
+        </a>
+      {%- endif -%}
+      <button type="button" class="surf-icon-btn surf-burger" data-surf-drawer-open aria-controls="SurfDrawer" aria-expanded="false" aria-label="Menu openen">
+        {%- render 'surf-icon', icon: 'menu' -%}
+      </button>
+    </div>
+  </header>
+
+  <div class="surf-drawer" id="SurfDrawer" hidden>
+    <div class="surf-drawer__top">
+      <span class="surf-header__word">{{ shop.name }}</span>
+      <button type="button" class="surf-icon-btn" data-surf-drawer-close aria-label="Menu sluiten">{% render 'surf-icon', icon: 'close' %}</button>
+    </div>
+    <nav aria-label="Mobiel menu">
+      <ul>
+        {%- for block in section.blocks -%}
+          <li>
+            {%- if block.settings.dd1_label != blank -%}
+              <details>
+                <summary>{{ block.settings.label }} {% render 'surf-icon', icon: 'chevron' %}</summary>
+                <ul>
+                  {%- for i in (1..5) -%}
+                    {%- assign lk = 'dd' | append: i | append: '_label' -%}
+                    {%- assign uk = 'dd' | append: i | append: '_link' -%}
+                    {%- if block.settings[lk] != blank -%}
+                      <li><a href="{{ block.settings[uk] | default: '#' }}">{{ block.settings[lk] }}</a></li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- if block.settings.link != blank and block.settings.dd_all_label != blank -%}
+                    <li><a href="{{ block.settings.link }}">{{ block.settings.dd_all_label }}</a></li>
+                  {%- endif -%}
+                </ul>
+              </details>
+            {%- else -%}
+              <a href="{{ block.settings.link | default: '#' }}">{{ block.settings.label }}</a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+    {%- if section.settings.cta_label != blank -%}
+      <a href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}" class="surf-btn surf-btn--primary" style="background: var(--surf-sand); color: var(--surf-deep);">
+        {{- section.settings.cta_label }}
+        {% render 'surf-icon', icon: 'arrow' -%}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Surf – header",
+  "class": "surf-header-section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-1" },
+    { "type": "checkbox", "id": "overlay_home", "label": "Zweef over de hero op de homepage", "default": true },
+    { "type": "checkbox", "id": "hide_on_scroll", "label": "Verbergen bij naar beneden scrollen", "default": true },
+    { "type": "text", "id": "cta_label", "label": "Knop rechts", "default": "Shop de tas" },
+    { "type": "url", "id": "cta_link", "label": "Knop-link" }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Menu-item",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Shop" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "header", "content": "Dropdown (optioneel)" },
+        { "type": "text", "id": "dd1_label", "label": "Item 1" },
+        { "type": "url", "id": "dd1_link", "label": "Link 1" },
+        { "type": "text", "id": "dd2_label", "label": "Item 2" },
+        { "type": "url", "id": "dd2_link", "label": "Link 2" },
+        { "type": "text", "id": "dd3_label", "label": "Item 3" },
+        { "type": "url", "id": "dd3_link", "label": "Link 3" },
+        { "type": "text", "id": "dd4_label", "label": "Item 4" },
+        { "type": "url", "id": "dd4_link", "label": "Link 4" },
+        { "type": "text", "id": "dd5_label", "label": "Item 5" },
+        { "type": "url", "id": "dd5_link", "label": "Link 5" },
+        { "type": "text", "id": "dd_all_label", "label": "Label 'alles bekijken'", "info": "Linkt naar de hoofdlink van dit item" }
+      ]
+    }
+  ],
+  "enabled_on": { "groups": ["header"] }
+}
+{% endschema %}

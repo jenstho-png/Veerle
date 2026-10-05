@@ -1,0 +1,55 @@
+{%- liquid
+  assign title = section.settings.heading
+  if title == blank
+    assign title = page.title | default: collection.title | default: blog.title | default: page_title
+  endif
+  assign hero_alt = section.settings.image_alt | default: title
+  assign has_media = true
+  if section.settings.image == blank and section.settings.image_filename == blank
+    assign has_media = false
+  endif
+-%}
+<section class="surf surf--tight surf-pagehero{% unless has_media %} surf-pagehero--plain{% endunless %} color-{{ section.settings.color_scheme }}" id="pagehero-{{ section.id }}">
+  <div class="surf__inner">
+    {%- if has_media -%}
+      <div class="surf-media surf-pagehero__media">
+        {%- render 'surf-image',
+          image: section.settings.image,
+          filename: section.settings.image_filename,
+          alt: hero_alt,
+          sizes: '100vw',
+          loading: 'eager'
+        -%}
+        <div class="surf-pagehero__title">
+          {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+          {%- render 'surf-headline', text: title, tag: 'h1' -%}
+        </div>
+      </div>
+    {%- else -%}
+      <div class="surf-pagehero__title">
+        {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        {%- render 'surf-headline', text: title, tag: 'h1' -%}
+      </div>
+    {%- endif -%}
+    {%- if section.settings.text != blank -%}
+      <p class="surf-lead surf-pagehero__sub">{{ section.settings.text }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Surf – paginakop",
+  "tag": "div",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Kleurenschema", "default": "scheme-1" },
+    { "type": "text", "id": "eyebrow", "label": "Bovenregel" },
+    { "type": "text", "id": "heading", "label": "Titel", "info": "Leeg = paginatitel. *woord* = accentfont" },
+    { "type": "textarea", "id": "text", "label": "Subtekst" },
+    { "type": "image_picker", "id": "image", "label": "Foto" },
+    { "type": "text", "id": "image_filename", "label": "Bestandsnaam (SEO)" },
+    { "type": "text", "id": "image_alt", "label": "Alt-tekst" }
+  ],
+  "presets": [ { "name": "Surf – paginakop" } ]
+}
+{% endschema %}
