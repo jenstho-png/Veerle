@@ -465,3 +465,8 @@ h1, h2, h3, .h0, .h1, .h2, .h3 { font-family: var(--font-heading-family); font-w
   .surf-header__actions a[href*="search"] { display: none; }
   .surf-icon-btn { width: 42px; height: 42px; }
 }
+
+/* CREAjt-credit (donkere footer) */
+.surf-footer__credit { display: inline-flex; align-items: center; gap: 8px; font: 500 13px/1 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: rgba(255, 255, 255, .7); text-decoration: none; opacity: .85; transition: opacity .2s; }
+.surf-footer__credit:hover, .surf-footer__credit:focus-visible { opacity: 1; }
+.surf-footer__credit img { height: 18px; width: auto; display: block; filter: brightness(0) invert(1); }

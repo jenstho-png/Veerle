@@ -86,6 +86,12 @@
           {%- endfor -%}
         </ul>
       {%- endif -%}
+      {%- if section.settings.show_credit -%}
+        <a class="surf-footer__credit" href="https://www.creajt.nl/?ref=tide-tode" target="_blank" rel="noopener" title="Website gerealiseerd door CREAjt, creatief bureau uit Nijmegen">
+          <span>Gerealiseerd door</span>
+          <img src="https://www.creajt.nl/logo-trim.png" alt="CREAjt" width="64" height="18" loading="lazy">
+        </a>
+      {%- endif -%}
     </div>
   </div>
 </footer>
@@ -100,6 +106,12 @@
       "id": "color_scheme",
       "label": "Kleurenschema",
       "default": "scheme-3"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_credit",
+      "label": "'Gerealiseerd door CREAjt' tonen",
+      "default": true
     },
     {
       "type": "text",

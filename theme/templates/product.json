@@ -98,7 +98,8 @@
       "type": "surf-faq",
       "settings": {
         "btn_link": "shopify://pages/contact",
-        "eyebrow": ""
+        "eyebrow": "",
+        "heading": "Veelgestelde vragen"
       },
       "blocks": {
         "qa-1": {
@@ -204,9 +205,8 @@
         "stap-1": {
           "type": "stap",
           "settings": {
-            "titel": "Leg je board erin",
-            "tekst": "Softtop of hardboard, nat of droog. Gewoon zoals hij uit het water komt.",
-            "icoon": "board",
+            "titel": "Leg je board in de tas",
+            "tekst": "Softtop of hardboard, nat of droog. Je hoeft hem niet eerst schoon te maken.",
             "fallback": "tt-foto-stap-1",
             "filename": "tide-tode-stap-1.jpg",
             "alt": "Surfboard in het zand"
@@ -216,8 +216,7 @@
           "type": "stap",
           "settings": {
             "titel": "Trek de banden aan",
-            "tekst": "Je board zit vast en schuift niet. Geen losse touwtjes of spanbanden meer.",
-            "icoon": "karabijn",
+            "tekst": "Twee banden houden je board op zijn plek, ook als je klimt of fietst.",
             "fallback": "tt-foto-stap-2",
             "filename": "tide-tode-stap-2.jpg",
             "alt": "Handen trekken een band strak"
@@ -226,9 +225,8 @@
         "stap-3": {
           "type": "stap",
           "settings": {
-            "titel": "Op je rug en gaan",
-            "tekst": "Door de duinen, over de rotsen of achterop de scooter. Jij hebt je handen vrij.",
-            "icoon": "voeten",
+            "titel": "Hang hem op je rug",
+            "tekst": "Zoals een rugzak. Je hebt je handen vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
             "fallback": "tt-foto-stap-3",
             "filename": "tide-tode-stap-3.jpg",
             "alt": "Surfer loopt met board naar zee"
@@ -258,9 +256,6 @@
           "type": "foto",
           "settings": {
             "vorm": "vierkant",
-            "sticker": "handen vrij",
-            "sticker_kleur": "sunshine",
-            "sticker_icoon": "zon",
             "fallback": "tt-foto-mood-2",
             "alt": "Boards in het zand"
           }
@@ -295,9 +290,6 @@
           "type": "foto",
           "settings": {
             "vorm": "hoog",
-            "sticker": "zout, zand, nat: prima",
-            "sticker_kleur": "rose",
-            "sticker_icoon": "schelp",
             "fallback": "tt-foto-mood-6",
             "alt": "Board tegen een muur"
           }
@@ -315,9 +307,6 @@
           "type": "foto",
           "settings": {
             "vorm": "boog",
-            "sticker": "Tide~Tode",
-            "sticker_kleur": "deep",
-            "sticker_icoon": "maan",
             "fallback": "tt-foto-mood-8",
             "alt": "Kust van bovenaf"
           }

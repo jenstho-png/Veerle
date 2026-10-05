@@ -3,7 +3,7 @@
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l tt-wie__kop' -%}
     <div class="tt-wie__grid">
       {%- for block in section.blocks -%}
-        <a class="tt-wie__kaart" href="{{ block.settings.link | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }} data-tt-cursor="shop">
+        <a class="tt-wie__kaart" href="{{ block.settings.link | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
           <div class="tt-wie__foto"><div class="tt-onthul">{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, fallback: block.settings.fallback, alt: block.settings.alt, sizes: '(min-width: 750px) 48vw, 100vw' -%}</div>{%- render 'tt-sticker', tekst: block.settings.sticker, kleur: block.settings.sticker_kleur, vorm: 'rond', icoon: block.settings.sticker_icoon, class: 'tt-sticker--rechtsboven' -%}</div>
           <div class="tt-wie__tekst">
             <h3>{{ block.settings.titel }}</h3>
@@ -52,14 +52,14 @@
           "label": "Sunshine"
         }
       ],
-      "default": "baby"
+      "default": "zand"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Kop",
       "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
-      "default": "Voor beginners|*én* avonturiers."
+      "default": "Voor beginners en avonturiers"
     }
   ],
   "blocks": [
@@ -228,12 +228,9 @@
         {
           "type": "kaart",
           "settings": {
-            "titel": "Je leert surfen",
+            "titel": "Als je leert surfen",
             "tekst": "Groot softtop-board, lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.",
             "knop": "Shop de tas",
-            "sticker": "softtop",
-            "sticker_kleur": "sunshine",
-            "sticker_icoon": "board",
             "fallback": "tt-foto-beginner",
             "filename": "tide-tode-beginner.jpg",
             "alt": "Beginner met een softtop op het strand"
@@ -242,12 +239,9 @@
         {
           "type": "kaart",
           "settings": {
-            "titel": "Je zoekt de verstopte spot",
+            "titel": "Als je de rustige spots opzoekt",
             "tekst": "Door de bush, over rotsen, achterop de scooter. Jouw board hangt veilig op je rug, jij houdt je handen vrij om te klimmen.",
             "knop": "Shop de tas",
-            "sticker": "hardboard",
-            "sticker_kleur": "poppy",
-            "sticker_icoon": "golf",
             "fallback": "tt-foto-avontuur",
             "filename": "tide-tode-avontuur.jpg",
             "alt": "Surfer klimt over rotsen naar een afgelegen spot"

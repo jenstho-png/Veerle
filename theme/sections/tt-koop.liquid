@@ -11,7 +11,7 @@
       {%- assign media = p.media | where: 'media_type', 'image' -%}
       {%- if media.size > 0 -%}
         {%- for m in media limit: 4 -%}
-          <div class="tt-koop__foto tt-onthul"{% if forloop.first %} data-tt-cursor="zoom"{% endif %}>{%- if forloop.first -%}{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}{%- endif -%}{{ m.preview_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 55vw, 100vw', widths: '600, 900, 1200, 1800', alt: m.alt | default: p.title, class: 'tt-beeld__img' }}</div>
+          <div class="tt-koop__foto tt-onthul"{% if forloop.first %}{% endif %}>{%- if forloop.first -%}{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}{%- endif -%}{{ m.preview_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 55vw, 100vw', widths: '600, 900, 1200, 1800', alt: m.alt | default: p.title, class: 'tt-beeld__img' }}</div>
         {%- endfor -%}
       {%- else -%}
         <div class="tt-koop__foto tt-onthul">{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-product-1', alt: section.settings.alt, sizes: '(min-width: 990px) 55vw, 100vw' -%}</div>
@@ -124,13 +124,13 @@
       "id": "heading",
       "label": "Kop",
       "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
-      "default": "De draagtas.|*Board op je rug.*"
+      "default": "De Tide-Tode draagtas"
     },
     {
       "type": "textarea",
       "id": "text",
       "label": "Korte pitch",
-      "default": "Niet meer met je board onder je arm door de duinen. Leg je plank erin, trek de banden aan en hang hem op je rug. Geen wax meer op je arm, geen pijnlijke schouders, en je hebt allebei je handen vrij."
+      "default": "Voor iedereen die zijn board een eind moet dragen. Je legt je board in de tas, trekt de banden aan en hangt hem op je rug. Het gewicht zit verdeeld over je schouders en de wax blijft van je arm af."
     },
     {
       "type": "text",
@@ -142,7 +142,7 @@
       "type": "text",
       "id": "sticker",
       "label": "Sticker op de eerste foto",
-      "default": "nieuw"
+      "default": ""
     },
     {
       "type": "header",

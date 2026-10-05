@@ -4,8 +4,8 @@
       "type": "tt-hero",
       "settings": {
         "pagina": true,
-        "heading": "Uit frustratie|*geboren.*",
-        "text": "Een tas die we zelf zochten op elke surftrip, en nergens konden vinden.",
+        "heading": "Hoe Tide-Tode|begon",
+        "text": "Een tas die we zelf zochten op elke surftrip en nergens konden vinden.",
         "btn_label": "Shop de draagtas",
         "link_label": "",
         "kaart": false,
@@ -18,18 +18,14 @@
       "type": "tt-verhaal",
       "settings": {
         "link_label": "",
-        "heading": "“Dit moet|*comfortabeler|kunnen.*”",
+        "heading": "“Dit moet stukken|comfortabeler kunnen.”",
         "text": "<p>Tijdens mijn reizen door Australië, Midden- en Zuid-Amerika en Azië liep ik me vaak te frustreren. Op hikes naar afgelegen surfspots sjouwde ik een longboard mee dat nergens lekker vast te houden is. En met een board onder je arm op de scooter of fiets naar het strand rijden is ook geen pretje.</p><p>Na een flinke hike naar een verstopte spot, met pijn in mijn schouders en schuurplekken van de wax onder mijn arm, dacht ik: dit moet stukken comfortabeler kunnen. Een tas waarmee je je handen vrij hebt en het gewicht makkelijk draagt.</p><p>Losse touwtjes, spanbanden en standaardhoezen hielden het geen van allen vol. In februari 2025 kwam er een vriend bij die net zo gek is op surfen en precies dezelfde frustratie kende. Toen zijn we het gewoon gaan maken.</p>"
       }
-    },
-    "probleem": {
-      "type": "tt-probleem",
-      "settings": {}
     },
     "muur": {
       "type": "tt-muur",
       "settings": {
-        "heading": "Onderweg|met *de tas.*",
+        "heading": "Onderweg",
         "bg": "zand"
       },
       "blocks": {
@@ -46,9 +42,6 @@
           "type": "foto",
           "settings": {
             "vorm": "vierkant",
-            "sticker": "handen vrij",
-            "sticker_kleur": "sunshine",
-            "sticker_icoon": "zon",
             "fallback": "tt-foto-mood-2",
             "alt": "Boards in het zand"
           }
@@ -83,9 +76,6 @@
           "type": "foto",
           "settings": {
             "vorm": "hoog",
-            "sticker": "zout, zand, nat: prima",
-            "sticker_kleur": "rose",
-            "sticker_icoon": "schelp",
             "fallback": "tt-foto-mood-6",
             "alt": "Board tegen een muur"
           }
@@ -103,9 +93,6 @@
           "type": "foto",
           "settings": {
             "vorm": "boog",
-            "sticker": "Tide~Tode",
-            "sticker_kleur": "deep",
-            "sticker_icoon": "maan",
             "fallback": "tt-foto-mood-8",
             "alt": "Kust van bovenaf"
           }
@@ -145,7 +132,6 @@
     "hero",
     "verhaal",
     "merk",
-    "probleem",
     "muur",
     "slot"
   ]

@@ -108,9 +108,8 @@
         "stap-1": {
           "type": "stap",
           "settings": {
-            "titel": "Leg je board erin",
-            "tekst": "Softtop of hardboard, nat of droog. Gewoon zoals hij uit het water komt.",
-            "icoon": "board",
+            "titel": "Leg je board in de tas",
+            "tekst": "Softtop of hardboard, nat of droog. Je hoeft hem niet eerst schoon te maken.",
             "fallback": "tt-foto-stap-1",
             "filename": "tide-tode-stap-1.jpg",
             "alt": "Surfboard in het zand"
@@ -120,8 +119,7 @@
           "type": "stap",
           "settings": {
             "titel": "Trek de banden aan",
-            "tekst": "Je board zit vast en schuift niet. Geen losse touwtjes of spanbanden meer.",
-            "icoon": "karabijn",
+            "tekst": "Twee banden houden je board op zijn plek, ook als je klimt of fietst.",
             "fallback": "tt-foto-stap-2",
             "filename": "tide-tode-stap-2.jpg",
             "alt": "Handen trekken een band strak"
@@ -130,9 +128,8 @@
         "stap-3": {
           "type": "stap",
           "settings": {
-            "titel": "Op je rug en gaan",
-            "tekst": "Door de duinen, over de rotsen of achterop de scooter. Jij hebt je handen vrij.",
-            "icoon": "voeten",
+            "titel": "Hang hem op je rug",
+            "tekst": "Zoals een rugzak. Je hebt je handen vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
             "fallback": "tt-foto-stap-3",
             "filename": "tide-tode-stap-3.jpg",
             "alt": "Surfer loopt met board naar zee"
@@ -162,9 +159,6 @@
           "type": "foto",
           "settings": {
             "vorm": "vierkant",
-            "sticker": "handen vrij",
-            "sticker_kleur": "sunshine",
-            "sticker_icoon": "zon",
             "fallback": "tt-foto-mood-2",
             "alt": "Boards in het zand"
           }
@@ -199,9 +193,6 @@
           "type": "foto",
           "settings": {
             "vorm": "hoog",
-            "sticker": "zout, zand, nat: prima",
-            "sticker_kleur": "rose",
-            "sticker_icoon": "schelp",
             "fallback": "tt-foto-mood-6",
             "alt": "Board tegen een muur"
           }
@@ -219,9 +210,6 @@
           "type": "foto",
           "settings": {
             "vorm": "boog",
-            "sticker": "Tide~Tode",
-            "sticker_kleur": "deep",
-            "sticker_icoon": "maan",
             "fallback": "tt-foto-mood-8",
             "alt": "Kust van bovenaf"
           }
@@ -255,12 +243,9 @@
         "kaart-1": {
           "type": "kaart",
           "settings": {
-            "titel": "Je leert surfen",
+            "titel": "Als je leert surfen",
             "tekst": "Groot softtop-board, lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.",
             "knop": "Shop de tas",
-            "sticker": "softtop",
-            "sticker_kleur": "sunshine",
-            "sticker_icoon": "board",
             "fallback": "tt-foto-beginner",
             "filename": "tide-tode-beginner.jpg",
             "alt": "Beginner met een softtop op het strand"
@@ -269,12 +254,9 @@
         "kaart-2": {
           "type": "kaart",
           "settings": {
-            "titel": "Je zoekt de verstopte spot",
+            "titel": "Als je de rustige spots opzoekt",
             "tekst": "Door de bush, over rotsen, achterop de scooter. Jouw board hangt veilig op je rug, jij houdt je handen vrij om te klimmen.",
             "knop": "Shop de tas",
-            "sticker": "hardboard",
-            "sticker_kleur": "poppy",
-            "sticker_icoon": "golf",
             "fallback": "tt-foto-avontuur",
             "filename": "tide-tode-avontuur.jpg",
             "alt": "Surfer klimt over rotsen naar een afgelegen spot"
@@ -284,157 +266,6 @@
       "block_order": [
         "kaart-1",
         "kaart-2"
-      ]
-    },
-    "verhaal": {
-      "type": "tt-verhaal",
-      "settings": {}
-    },
-    "faq": {
-      "type": "surf-faq",
-      "settings": {
-        "btn_link": "shopify://pages/contact",
-        "color_scheme": "scheme-1",
-        "eyebrow": "",
-        "heading": "Nog *twijfels?*"
-      },
-      "blocks": {
-        "qa-1": {
-          "type": "qa",
-          "settings": {
-            "question": "Welke surfboards passen in de tas?",
-            "answer": "<p>We beginnen met één kernmodel in een universele maat. Die past om de grote, vollere boards waar veel beginners op surfen en om hardboards in verschillende maten. Later komen er meer varianten bij.</p>"
-          }
-        },
-        "qa-2": {
-          "type": "qa",
-          "settings": {
-            "question": "Kan ik de tas meenemen in het vliegtuig?",
-            "answer": "<p>Ja. De tas past in je bagage. Huur je op je bestemming een board, dan neem je dat in je eigen tas mee naar de spot.</p>"
-          }
-        },
-        "qa-3": {
-          "type": "qa",
-          "settings": {
-            "question": "Kan ik ermee fietsen of op de scooter?",
-            "answer": "<p>Daar is hij juist voor bedacht. Je board zit op je rug, dus je hebt allebei je handen vrij voor het stuur.</p>"
-          }
-        },
-        "qa-4": {
-          "type": "qa",
-          "settings": {
-            "question": "Wat is het verschil met een boardbag?",
-            "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Daar moet je je natte, zanderige board na elke sessie weer in proppen. Onze tas is gemaakt om je board te dragen: naar de spot en weer terug.</p>"
-          }
-        },
-        "qa-5": {
-          "type": "qa",
-          "settings": {
-            "question": "Zitten er lussen of karabijnhaken aan?",
-            "answer": "<p>Het eerste model houden we bewust simpel. Lussen en karabijnhaken om extra spullen aan de tas te hangen komen op een later model. Stevige karabijnhaken komen ook los in de shop.</p>"
-          }
-        },
-        "qa-6": {
-          "type": "qa",
-          "settings": {
-            "question": "Verkopen jullie ook andere spullen?",
-            "answer": "<p>Naast de tas komen er waxblokjes en karabijnhaken. In een later stadium volgen t-shirts.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "qa-1",
-        "qa-2",
-        "qa-3",
-        "qa-4",
-        "qa-5",
-        "qa-6"
-      ]
-    },
-    "slot": {
-      "type": "tt-slot",
-      "settings": {}
-    },
-    "merk": {
-      "type": "tt-merk",
-      "settings": {}
-    },
-    "check": {
-      "type": "tt-check",
-      "settings": {}
-    },
-    "vergelijk": {
-      "type": "tt-vergelijk",
-      "settings": {},
-      "blocks": {
-        "rij-1": {
-          "type": "rij",
-          "settings": {
-            "punt": "Allebei je handen vrij",
-            "wij": "ja",
-            "arm": "nee",
-            "banden": "deels",
-            "hoes": "deels"
-          }
-        },
-        "rij-2": {
-          "type": "rij",
-          "settings": {
-            "punt": "Geen wax op je arm",
-            "wij": "ja",
-            "arm": "nee",
-            "banden": "deels",
-            "hoes": "ja"
-          }
-        },
-        "rij-3": {
-          "type": "rij",
-          "settings": {
-            "punt": "Gewicht verdeeld over je rug",
-            "wij": "ja",
-            "arm": "nee",
-            "banden": "nee",
-            "hoes": "nee"
-          }
-        },
-        "rij-4": {
-          "type": "rij",
-          "settings": {
-            "punt": "Nat en zanderig board meteen mee",
-            "wij": "ja",
-            "arm": "ja",
-            "banden": "ja",
-            "hoes": "nee"
-          }
-        },
-        "rij-5": {
-          "type": "rij",
-          "settings": {
-            "punt": "Veilig op de fiets of scooter",
-            "wij": "ja",
-            "arm": "nee",
-            "banden": "deels",
-            "hoes": "deels"
-          }
-        },
-        "rij-6": {
-          "type": "rij",
-          "settings": {
-            "punt": "Klein mee in je reisbagage",
-            "wij": "ja",
-            "arm": "ja",
-            "banden": "ja",
-            "hoes": "nee"
-          }
-        }
-      },
-      "block_order": [
-        "rij-1",
-        "rij-2",
-        "rij-3",
-        "rij-4",
-        "rij-5",
-        "rij-6"
       ]
     },
     "surfcheck": {
@@ -498,20 +329,86 @@
         "spot-5",
         "spot-6"
       ]
+    },
+    "verhaal": {
+      "type": "tt-verhaal",
+      "settings": {}
+    },
+    "faq": {
+      "type": "surf-faq",
+      "settings": {
+        "btn_link": "shopify://pages/contact",
+        "color_scheme": "scheme-1",
+        "eyebrow": "",
+        "heading": "Veelgestelde vragen"
+      },
+      "blocks": {
+        "qa-1": {
+          "type": "qa",
+          "settings": {
+            "question": "Welke surfboards passen in de tas?",
+            "answer": "<p>We beginnen met één kernmodel in een universele maat. Die past om de grote, vollere boards waar veel beginners op surfen en om hardboards in verschillende maten. Later komen er meer varianten bij.</p>"
+          }
+        },
+        "qa-2": {
+          "type": "qa",
+          "settings": {
+            "question": "Kan ik de tas meenemen in het vliegtuig?",
+            "answer": "<p>Ja. De tas past in je bagage. Huur je op je bestemming een board, dan neem je dat in je eigen tas mee naar de spot.</p>"
+          }
+        },
+        "qa-3": {
+          "type": "qa",
+          "settings": {
+            "question": "Kan ik ermee fietsen of op de scooter?",
+            "answer": "<p>Daar is hij juist voor bedacht. Je board zit op je rug, dus je hebt allebei je handen vrij voor het stuur.</p>"
+          }
+        },
+        "qa-4": {
+          "type": "qa",
+          "settings": {
+            "question": "Wat is het verschil met een boardbag?",
+            "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Daar moet je je natte, zanderige board na elke sessie weer in proppen. Onze tas is gemaakt om je board te dragen: naar de spot en weer terug.</p>"
+          }
+        },
+        "qa-5": {
+          "type": "qa",
+          "settings": {
+            "question": "Zitten er lussen of karabijnhaken aan?",
+            "answer": "<p>Het eerste model houden we bewust simpel. Lussen en karabijnhaken om extra spullen aan de tas te hangen komen op een later model. Stevige karabijnhaken komen ook los in de shop.</p>"
+          }
+        },
+        "qa-6": {
+          "type": "qa",
+          "settings": {
+            "question": "Verkopen jullie ook andere spullen?",
+            "answer": "<p>Naast de tas komen er waxblokjes en karabijnhaken. In een later stadium volgen t-shirts.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "qa-1",
+        "qa-2",
+        "qa-3",
+        "qa-4",
+        "qa-5",
+        "qa-6"
+      ]
+    },
+    "slot": {
+      "type": "tt-slot",
+      "settings": {}
     }
   },
   "order": [
     "hero",
     "usp",
     "koop",
-    "check",
     "probleem",
     "zo",
-    "vergelijk",
-    "merk",
     "muur",
-    "surfcheck",
     "wie",
+    "surfcheck",
     "verhaal",
     "faq",
     "slot"

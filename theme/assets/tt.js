@@ -230,7 +230,7 @@
           $('tijd').textContent = `${spots[i].naam}, nu (${uur(c.time)} lokale tijd)`;
           s.classList.remove('is-fout');
         } catch (e) {
-          $('oordeel').textContent = 'De zee laat zich nu even niet lezen. Probeer het zo nog eens.';
+          $('oordeel').textContent = 'De gegevens zijn nu niet te laden. Probeer het later nog eens.';
           $('tijd').textContent = '';
           s.classList.add('is-fout');
         }
@@ -293,33 +293,4 @@
   addEventListener('resize', plan);
   tick();
 
-  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    /* 8. Magnetische knoppen */
-    document.querySelectorAll('.tt-knop:not(.tt-knop--vol)').forEach((b) => {
-      b.addEventListener('pointermove', (e) => {
-        const r = b.getBoundingClientRect();
-        b.style.transform = `translate(${((e.clientX - r.left - r.width / 2) * 0.18).toFixed(1)}px, ${((e.clientY - r.top - r.height / 2) * 0.3).toFixed(1)}px)`;
-      });
-      b.addEventListener('pointerleave', () => { b.style.transform = ''; });
-    });
-
-    /* 9. Cursor-bubbel boven beelden */
-    const c = document.createElement('div');
-    c.className = 'tt-cursor';
-    c.setAttribute('aria-hidden', 'true');
-    c.innerHTML = '<span></span>';
-    document.body.appendChild(c);
-    let x = -200, y = -200, tx = -200, ty = -200;
-    addEventListener('pointermove', (e) => { tx = e.clientX; ty = e.clientY; }, { passive: true });
-    const volg = () => { x += (tx - x) * 0.18; y += (ty - y) * 0.18; c.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`; requestAnimationFrame(volg); };
-    volg();
-    document.addEventListener('pointerover', (e) => {
-      const t = e.target.closest('[data-tt-cursor]');
-      if (t && t.dataset.ttCursor) { c.firstChild.textContent = t.dataset.ttCursor; c.classList.add('is-aan'); }
-    });
-    document.addEventListener('pointerout', (e) => {
-      const t = e.target.closest('[data-tt-cursor]');
-      if (t && !t.contains(e.relatedTarget)) c.classList.remove('is-aan');
-    });
-  }
 })();

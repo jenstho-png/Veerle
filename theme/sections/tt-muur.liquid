@@ -1,8 +1,5 @@
 <section class="tt tt-muur tt-bg--{{ section.settings.bg }}">
   <div class="tt-muur__kop tt-wrap">
-    <span class="tt-zweef tt-zweef--1" data-tt-snelheid="0.3" aria-hidden="true">{% render 'tt-icoon', icoon: 'zeester' %}</span>
-    <span class="tt-zweef tt-zweef--2" data-tt-snelheid="-0.2" aria-hidden="true">{% render 'tt-icoon', icoon: 'schelp' %}</span>
-    <span class="tt-zweef tt-zweef--3" data-tt-snelheid="0.45" aria-hidden="true">{% render 'tt-icoon', icoon: 'zon' %}</span>
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
     {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
   </div>
@@ -68,13 +65,13 @@
       "id": "heading",
       "label": "Kop",
       "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
-      "default": "Overal waar|het water *roept.*"
+      "default": "Onderweg naar het water"
     },
     {
       "type": "textarea",
       "id": "text",
       "label": "Tekst",
-      "default": "Australië, Midden-Amerika, Azië of gewoon de duinen om de hoek. De tas gaat mee, zodat jij alleen nog aan die ene golf hoeft te denken."
+      "default": "Australië, Midden-Amerika, Azië of de duinen om de hoek. De mooiste spots liggen vaak niet naast de parkeerplaats."
     }
   ],
   "blocks": [
@@ -264,9 +261,6 @@
           "type": "foto",
           "settings": {
             "vorm": "vierkant",
-            "sticker": "handen vrij",
-            "sticker_kleur": "sunshine",
-            "sticker_icoon": "zon",
             "fallback": "tt-foto-mood-2",
             "alt": "Boards in het zand"
           }
@@ -301,9 +295,6 @@
           "type": "foto",
           "settings": {
             "vorm": "hoog",
-            "sticker": "zout, zand, nat: prima",
-            "sticker_kleur": "rose",
-            "sticker_icoon": "schelp",
             "fallback": "tt-foto-mood-6",
             "alt": "Board tegen een muur"
           }
@@ -321,9 +312,6 @@
           "type": "foto",
           "settings": {
             "vorm": "boog",
-            "sticker": "Tide~Tode",
-            "sticker_kleur": "deep",
-            "sticker_icoon": "maan",
             "fallback": "tt-foto-mood-8",
             "alt": "Kust van bovenaf"
           }

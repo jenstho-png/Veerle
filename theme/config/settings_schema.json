@@ -112,7 +112,7 @@
         "type": "text",
         "id": "surf_popup_heading",
         "label": "Kop",
-        "default": "Pak je tas|*met 10% korting.*",
+        "default": "10% korting op|je eerste tas",
         "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent."
       },
       {

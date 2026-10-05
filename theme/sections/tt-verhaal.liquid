@@ -1,6 +1,6 @@
 <section class="tt tt-verhaal tt-bg--{{ section.settings.bg }}" id="tt-verhaal">
   <div class="tt-wrap tt-verhaal__grid">
-    <div class="tt-verhaal__foto" data-tt-snelheid="-0.06"><div class="tt-onthul">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-verhaal', alt: section.settings.alt, sizes: '(min-width: 990px) 42vw, 90vw' -%}</div><div class="tt-verhaal__zegel" data-tt-draai="-0.05">{% render 'tt-logo', variant: 'zegel' %}</div></div>
+    <div class="tt-verhaal__foto" data-tt-snelheid="-0.06"><div class="tt-onthul">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-verhaal', alt: section.settings.alt, sizes: '(min-width: 990px) 42vw, 90vw' -%}</div><div class="tt-verhaal__zegel">{% render 'tt-logo', variant: 'zegel' %}</div></div>
     <div class="tt-verhaal__tekst">
       {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
       <div class="tt-verhaal__body tt-in">{{ section.settings.text }}</div>
@@ -52,13 +52,13 @@
       "id": "heading",
       "label": "Kop",
       "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
-      "default": "“Niets hield het vol.|*Dus maakten we|hem zelf.*”"
+      "default": "“Dit moet stukken|comfortabeler kunnen.”"
     },
     {
       "type": "richtext",
       "id": "text",
       "label": "Tekst",
-      "default": "<p>Lange hikes naar afgelegen spots in Australië, Midden-Amerika en Azië, met een longboard onder je arm. De wax schuurt, je schouders doen pijn en op de scooter stuur je met één hand. Losse touwtjes, spanbanden, standaardhoezen: we hebben het allemaal geprobeerd.</p><p>Dus maakten we de tas die we zelf zochten. Van riders, voor riders.</p>"
+      "default": "<p>Losse touwtjes, spanbanden, standaardhoezen: ik heb het allemaal geprobeerd. Niets hield het lang vol.</p><p>In februari 2025 kwam er een vriend bij die net zo gek is op surfen en precies dezelfde frustratie kende. Toen zijn we de tas gewoon zelf gaan maken. Robuust, van zware stof, en mooi genoeg om mee te nemen op reis.</p>"
     },
     {
       "type": "text",
