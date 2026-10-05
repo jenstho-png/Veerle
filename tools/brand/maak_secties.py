@@ -501,4 +501,125 @@ schrijf('tt-check', PRIJS + """
     ],
     "presets": [{"name": "TT: past mijn board?"}]})
 
+# ---------- SURFCHECK: hoe is de zee vandaag? ----------
+schrijf('tt-surfcheck', """
+{%- capture spots -%}[{%- for block in section.blocks -%}{"naam":{{ block.settings.naam | json }},"lat":{{ block.settings.lat | plus: 0 }},"lon":{{ block.settings.lon | plus: 0 }}}{% unless forloop.last %},{% endunless %}{%- endfor -%}]{%- endcapture -%}
+<section class="tt tt-surfcheck tt-bg--{{ section.settings.bg }}" data-tt-surfcheck data-sleutel="{{ settings.tt_meteo_key | escape }}" id="surfcheck">
+  <script type="application/json" data-tt-spots>{{ spots }}</script>
+  <div class="tt-wrap">
+    <div class="tt-surfcheck__kop">
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+      {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <div class="tt-surfcheck__spots tt-in" role="tablist" aria-label="Kies je spot">
+      {%- for block in section.blocks -%}
+        <button type="button" role="tab" class="tt-surfcheck__spot" data-tt-spot="{{ forloop.index0 }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" {{ block.shopify_attributes }}>{{ block.settings.naam }}</button>
+      {%- endfor -%}
+    </div>
+    <div class="tt-surfcheck__paneel tt-in" aria-live="polite" data-tt-paneel>
+      <div class="tt-surfcheck__oordeel">
+        <p class="tt-surfcheck__zin" data-tt-oordeel>Even kijken naar de zee…</p>
+        <p class="tt-surfcheck__tijd" data-tt-tijd></p>
+      </div>
+      <dl class="tt-surfcheck__cijfers">
+        <div><dt>{% render 'tt-icoon', icoon: 'golf' %}Golven</dt><dd data-tt-golf>–</dd><span data-tt-golf-extra></span></div>
+        <div data-tt-windblok><dt>{% render 'tt-icoon', icoon: 'meeuw' %}Wind</dt><dd data-tt-wind>–</dd><span data-tt-wind-extra></span></div>
+        <div><dt>{% render 'tt-icoon', icoon: 'schelp' %}Water</dt><dd data-tt-water>–</dd><span data-tt-water-extra></span></div>
+        <div><dt>{% render 'tt-icoon', icoon: 'golfjes' %}Getij</dt><dd data-tt-getij>–</dd><span data-tt-getij-extra></span></div>
+      </dl>
+      <div class="tt-surfcheck__curve" aria-hidden="true">
+        <svg viewBox="0 0 600 120" preserveAspectRatio="none"><path class="tt-surfcheck__vlak" data-tt-curve-vlak d=""/><path class="tt-surfcheck__lijn" data-tt-curve d=""/><line class="tt-surfcheck__nu" data-tt-nu y1="0" y2="120"/></svg>
+        <div class="tt-surfcheck__uren"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+      </div>
+      <div class="tt-surfcheck__onder">
+        <p class="tt-surfcheck__bron">Indicatie van Open-Meteo. Check altijd zelf de omstandigheden ter plekke.</p>
+        {%- if section.settings.btn_label != blank -%}<a class="tt-link" href="{% if settings.tt_product != blank %}{{ settings.tt_product.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}</a>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+""", {
+    "name": "TT: surfcheck", "tag": "div", "max_blocks": 8,
+    "settings": [
+        bg("deep"),
+        kop("Hoe is de zee|*vandaag?*"),
+        {"type": "textarea", "id": "text", "label": "Tekst", "default": "Kies je spot en zie in één keer de golven, de wind, het water en het getij van vandaag."},
+        {"type": "text", "id": "btn_label", "label": "Link onder de check", "default": "Pak je tas"},
+    ],
+    "blocks": [{"type": "spot", "name": "Spot", "settings": [
+        {"type": "text", "id": "naam", "label": "Naam", "default": "Spot"},
+        {"type": "text", "id": "lat", "label": "Breedtegraad", "default": "52.11", "info": "Rechtsklik op de plek in Google Maps om de coördinaten te kopiëren. Kies een punt net in zee."},
+        {"type": "text", "id": "lon", "label": "Lengtegraad", "default": "4.27"}]}],
+    "presets": [{"name": "TT: surfcheck", "blocks": [
+        {"type": "spot", "settings": {"naam": "Scheveningen", "lat": "52.11", "lon": "4.26"}},
+        {"type": "spot", "settings": {"naam": "Zandvoort", "lat": "52.37", "lon": "4.50"}},
+        {"type": "spot", "settings": {"naam": "Domburg", "lat": "51.57", "lon": "3.47"}},
+        {"type": "spot", "settings": {"naam": "Hossegor", "lat": "43.66", "lon": "-1.46"}},
+        {"type": "spot", "settings": {"naam": "Ericeira", "lat": "38.97", "lon": "-9.43"}},
+        {"type": "spot", "settings": {"naam": "Canggu, Bali", "lat": "-8.66", "lon": "115.12"}}]}]})
+
+# ---------- VERGELIJKEN ----------
+schrijf('tt-vergelijk', """
+<section class="tt tt-vergelijk tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap">
+    <div class="tt-vergelijk__kop">
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+      {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <div class="tt-vergelijk__scroll tt-in">
+      <table class="tt-vergelijk__tabel">
+        <thead>
+          <tr>
+            <td></td>
+            <th scope="col" class="tt-vergelijk__wij"><span class="tt-vergelijk__logo">{% render 'tt-logo', variant: 'maan-simpel' %}</span>{{ section.settings.kol1 }}</th>
+            <th scope="col">{{ section.settings.kol2 }}</th>
+            <th scope="col">{{ section.settings.kol3 }}</th>
+            <th scope="col">{{ section.settings.kol4 }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            <tr {{ block.shopify_attributes }}>
+              <th scope="row">{{ block.settings.punt }}</th>
+              {%- assign waarden = block.settings.wij | append: ',' | append: block.settings.arm | append: ',' | append: block.settings.banden | append: ',' | append: block.settings.hoes | split: ',' -%}
+              {%- for w in waarden -%}
+                <td class="tt-vergelijk__cel tt-vergelijk__cel--{{ w }}{% if forloop.first %} tt-vergelijk__wij{% endif %}">
+                  {%- case w -%}
+                    {%- when 'ja' -%}<span class="tt-vergelijk__teken" aria-hidden="true">✓</span><span class="visually-hidden">ja</span>
+                    {%- when 'deels' -%}<span class="tt-vergelijk__teken" aria-hidden="true">~</span><span class="visually-hidden">deels</span>
+                    {%- else -%}<span class="tt-vergelijk__teken" aria-hidden="true">✕</span><span class="visually-hidden">nee</span>
+                  {%- endcase -%}
+                </td>
+              {%- endfor -%}
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+    <p class="tt-vergelijk__uitleg tt-in"><span>✓ ja</span><span>~ deels</span><span>✕ nee</span></p>
+  </div>
+</section>
+""", {
+    "name": "TT: vergelijken", "tag": "div", "max_blocks": 10,
+    "settings": [
+        bg("creme"),
+        kop("Waarom niet gewoon|*onder je arm?*"),
+        {"type": "textarea", "id": "text", "label": "Tekst", "default": "Zo verhoudt de tas zich tot wat de meeste surfers nu doen."},
+        {"type": "text", "id": "kol1", "label": "Kolom 1", "default": "Tide-Tode"},
+        {"type": "text", "id": "kol2", "label": "Kolom 2", "default": "Onder je arm"},
+        {"type": "text", "id": "kol3", "label": "Kolom 3", "default": "Touwtjes of spanbanden"},
+        {"type": "text", "id": "kol4", "label": "Kolom 4", "default": "Boardbag"},
+    ],
+    "blocks": [{"type": "rij", "name": "Rij", "settings": [
+        {"type": "text", "id": "punt", "label": "Punt", "default": "Punt"}] + [
+        {"type": "select", "id": k, "label": l, "options": [{"value": "ja", "label": "Ja"}, {"value": "deels", "label": "Deels"}, {"value": "nee", "label": "Nee"}], "default": "ja" if k == "wij" else "nee"}
+        for k, l in [("wij", "Kolom 1"), ("arm", "Kolom 2"), ("banden", "Kolom 3"), ("hoes", "Kolom 4")]]}],
+    "presets": [{"name": "TT: vergelijken", "blocks": [
+        {"type": "rij", "settings": {"punt": "Allebei je handen vrij", "wij": "ja", "arm": "nee", "banden": "deels", "hoes": "deels"}},
+        {"type": "rij", "settings": {"punt": "Geen wax op je arm", "wij": "ja", "arm": "nee", "banden": "deels", "hoes": "ja"}},
+        {"type": "rij", "settings": {"punt": "Gewicht verdeeld over je rug", "wij": "ja", "arm": "nee", "banden": "nee", "hoes": "nee"}},
+        {"type": "rij", "settings": {"punt": "Nat en zanderig board meteen mee", "wij": "ja", "arm": "ja", "banden": "ja", "hoes": "nee"}},
+        {"type": "rij", "settings": {"punt": "Veilig op de fiets of scooter", "wij": "ja", "arm": "nee", "banden": "deels", "hoes": "deels"}},
+        {"type": "rij", "settings": {"punt": "Klein mee in je reisbagage", "wij": "ja", "arm": "ja", "banden": "ja", "hoes": "nee"}}]}]})
+
 print('klaar')

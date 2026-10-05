@@ -524,3 +524,64 @@ body:has(.tt-balk.is-aan) .tt-pop__teaser { bottom: 96px; }
   .tt-check__grid { grid-template-columns: 1fr; }
   .tt-check__beeld { order: -1; width: 120px; }
 }
+
+/* ==========================================================================
+   SURFCHECK
+   ========================================================================== */
+.tt-surfcheck { padding-block: var(--tt-ruimte); }
+.tt-surfcheck__kop { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 60px; }
+.tt-surfcheck__spots { display: flex; gap: 8px; margin-top: clamp(40px, 5vw, 70px) !important; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+.tt-surfcheck__spots::-webkit-scrollbar { display: none; }
+.tt-surfcheck__spot { flex-shrink: 0; padding: 13px 22px; border-radius: 999px; border: 1px solid var(--tt-lijn); background: transparent; color: inherit; font: 500 14px/1 var(--tt-tekst); cursor: pointer; transition: background .3s, color .3s, border-color .3s; }
+.tt-surfcheck__spot:hover { border-color: currentColor; }
+.tt-surfcheck__spot[aria-selected="true"] { background: var(--tt-sunshine); color: var(--tt-deep); border-color: var(--tt-sunshine); }
+.tt-surfcheck__spot:focus-visible { outline: 2px solid var(--tt-poppy); outline-offset: 3px; }
+.tt-surfcheck__paneel { margin-top: 18px; padding: clamp(24px, 3.4vw, 48px); border-radius: 24px; background: rgba(245, 238, 223, .06); border: 1px solid var(--tt-lijn); transition: opacity .4s; }
+.tt-surfcheck.is-laden .tt-surfcheck__paneel { opacity: .55; }
+.tt-surfcheck__zin { font: 480 clamp(24px, 2.6vw, 38px)/1.15 var(--tt-display); letter-spacing: -.02em; max-width: 30ch; }
+.tt-surfcheck__tijd { margin-top: 10px !important; font: 400 14px/1.4 var(--tt-tekst); opacity: .65; }
+.tt-surfcheck__cijfers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin: clamp(28px, 3vw, 44px) 0 0; border-radius: 18px; overflow: hidden; background: var(--tt-lijn); }
+.tt-surfcheck__cijfers > div { padding: 22px 22px 24px; background: var(--tt-bg); }
+.tt-surfcheck__cijfers > div[hidden] { display: none; }
+.tt-surfcheck__cijfers dt { display: flex; align-items: center; gap: 8px; font: 600 12px/1 var(--tt-tekst); letter-spacing: .1em; text-transform: uppercase; opacity: .75; }
+.tt-surfcheck__cijfers dt .tt-icoon { width: 22px; height: 22px; color: var(--tt-sunshine); }
+.tt-surfcheck__cijfers dd { margin: 14px 0 6px; font: 480 clamp(30px, 3vw, 44px)/1 var(--tt-display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.tt-surfcheck__cijfers span { font: 400 13.5px/1.4 var(--tt-tekst); opacity: .7; }
+.tt-surfcheck__curve { margin-top: 28px; }
+.tt-surfcheck__curve svg { display: block; width: 100%; height: 90px; overflow: visible; }
+.tt-surfcheck__vlak { fill: color-mix(in srgb, var(--tt-baby) 18%, transparent); }
+.tt-surfcheck__lijn { fill: none; stroke: var(--tt-baby); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.tt-surfcheck__nu { stroke: var(--tt-sunshine); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.tt-surfcheck__uren { display: flex; justify-content: space-between; margin-top: 8px; font: 500 11px/1 var(--tt-tekst); opacity: .5; }
+.tt-surfcheck__onder { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-top: 26px; }
+.tt-surfcheck__bron { font: 400 12.5px/1.4 var(--tt-tekst); opacity: .55; }
+@media (max-width: 989px) { .tt-surfcheck__cijfers { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 749px) { .tt-surfcheck__spots { margin-inline: calc(var(--tt-marge) * -1); padding-inline: var(--tt-marge); } .tt-surfcheck__cijfers > div { padding: 18px 16px; } }
+
+/* ==========================================================================
+   VERGELIJKEN
+   ========================================================================== */
+.tt-vergelijk { padding-block: var(--tt-ruimte); }
+.tt-vergelijk__kop { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 60px; margin-bottom: clamp(40px, 5vw, 80px); }
+.tt-vergelijk__scroll { overflow-x: auto; scrollbar-width: thin; }
+.tt-vergelijk__tabel { width: 100%; min-width: 720px; border-collapse: separate; border-spacing: 0; font: 400 15px/1.4 var(--tt-tekst); }
+.tt-vergelijk__tabel th, .tt-vergelijk__tabel td { padding: 20px 18px; text-align: center; border-bottom: 1px solid var(--tt-lijn); }
+.tt-vergelijk__tabel thead th { font: 600 13px/1.3 var(--tt-tekst); letter-spacing: .06em; text-transform: uppercase; vertical-align: bottom; color: var(--tt-zacht); }
+.tt-vergelijk__tabel tbody th { text-align: left; font: 480 clamp(18px, 1.6vw, 22px)/1.25 var(--tt-display); letter-spacing: -.01em; padding-left: 0; }
+.tt-vergelijk__tabel .tt-vergelijk__wij { background: var(--tt-deep); color: var(--tt-creme); border-bottom-color: rgba(245, 238, 223, .14); width: 18%; }
+.tt-vergelijk__tabel thead .tt-vergelijk__wij { border-radius: 20px 20px 0 0; padding-top: 28px; color: var(--tt-creme); }
+.tt-vergelijk__tabel tbody tr:last-child .tt-vergelijk__wij { border-radius: 0 0 20px 20px; border-bottom: 0; }
+.tt-vergelijk__logo { display: block; width: 34px; margin: 0 auto 10px; color: var(--tt-sunshine); }
+.tt-vergelijk__logo svg { width: 100%; height: auto; display: block; }
+.tt-vergelijk__teken { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; font: 600 15px/1 var(--tt-tekst); }
+.tt-vergelijk__cel--ja .tt-vergelijk__teken { background: var(--tt-baby); color: var(--tt-deep); }
+.tt-vergelijk__wij.tt-vergelijk__cel--ja .tt-vergelijk__teken { background: var(--tt-sunshine); color: var(--tt-deep); }
+.tt-vergelijk__cel--deels .tt-vergelijk__teken { background: rgba(24, 50, 90, .08); color: var(--tt-ink); font-size: 18px; }
+.tt-vergelijk__cel--nee .tt-vergelijk__teken { color: var(--tt-poppy); font-size: 14px; }
+.tt-vergelijk__uitleg { display: flex; gap: 20px; margin-top: 18px !important; font: 400 13px/1 var(--tt-tekst); opacity: .6; }
+@media (max-width: 749px) {
+  .tt-vergelijk__scroll { margin-inline: calc(var(--tt-marge) * -1); padding-inline: var(--tt-marge); }
+  .tt-vergelijk__tabel { min-width: 640px; }
+  .tt-vergelijk__tabel tbody th { position: sticky; left: 0; z-index: 2; background: var(--tt-bg); min-width: 150px; padding-right: 12px; }
+  .tt-vergelijk__tabel thead td { position: sticky; left: 0; z-index: 2; background: var(--tt-bg); }
+}

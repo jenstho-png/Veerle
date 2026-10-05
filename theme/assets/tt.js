@@ -155,13 +155,105 @@
     });
   }
 
+  /* 6. Surfcheck: golven, wind, water en getij (Open-Meteo) */
+  const windNaam = (g) => ['N', 'NO', 'O', 'ZO', 'Z', 'ZW', 'W', 'NW'][Math.round(((g % 360) + 360) % 360 / 45) % 8];
+  const uur = (iso) => iso.slice(11, 16);
+  function oordeel(golf, wind) {
+    let zin;
+    if (golf < 0.4) zin = 'Bijna vlak. Goed voor een eerste les op de softtop, of een dag rust.';
+    else if (golf < 0.9) zin = 'Kleine, rustige golven. Ideaal om te leren en voor een longboard.';
+    else if (golf < 1.6) zin = 'Lekker surfbaar. Pak je board en ga.';
+    else if (golf < 2.5) zin = 'Flinke golven. Vooral voor wie al wat ervaring heeft.';
+    else zin = 'Grote zee. Alleen voor gevorderden, en kijk eerst goed vanaf de kant.';
+    if (wind != null && wind >= 20) zin += ' Wel veel wind, dus het water kan rommelig zijn.';
+    return zin;
+  }
+  function startSurfcheck(scope) {
+    scope.querySelectorAll('[data-tt-surfcheck]').forEach((s) => {
+      let spots = [];
+      try { spots = JSON.parse(s.querySelector('[data-tt-spots]').textContent); } catch (e) { return; }
+      if (!spots.length) return;
+      const sleutel = s.dataset.sleutel;
+      const zee = sleutel ? 'https://customer-marine-api.open-meteo.com' : 'https://marine-api.open-meteo.com';
+      const weer = sleutel ? 'https://customer-api.open-meteo.com' : 'https://api.open-meteo.com';
+      const extra = sleutel ? `&apikey=${encodeURIComponent(sleutel)}` : '';
+      const $ = (k) => s.querySelector(`[data-tt-${k}]`);
+      const knoppen = s.querySelectorAll('[data-tt-spot]');
+      const cache = {};
+      async function haal(i) {
+        if (cache[i]) return cache[i];
+        const { lat, lon } = spots[i];
+        const z = fetch(`${zee}/v1/marine?latitude=${lat}&longitude=${lon}&current=wave_height,wave_period,wave_direction,sea_surface_temperature&hourly=sea_level_height_msl&timezone=auto&forecast_days=2${extra}`).then((r) => r.ok ? r.json() : Promise.reject(r.status));
+        const w = fetch(`${weer}/v1/forecast?latitude=${lat}&longitude=${lon}&current=wind_speed_10m,wind_direction_10m&wind_speed_unit=kn&timezone=auto${extra}`).then((r) => r.ok ? r.json() : null).catch(() => null);
+        cache[i] = Promise.all([z, w]);
+        return cache[i];
+      }
+      async function toon(i) {
+        knoppen.forEach((k, n) => k.setAttribute('aria-selected', String(n === i)));
+        try { localStorage.setItem('ttSpot', spots[i].naam); } catch (e) { /* geen opslag */ }
+        s.classList.add('is-laden');
+        try {
+          const [m, w] = await haal(i);
+          const c = m.current;
+          $('golf').textContent = `${c.wave_height.toFixed(1).replace('.', ',')} m`;
+          $('golf-extra').textContent = `${Math.round(c.wave_period)} sec · uit het ${windNaam(c.wave_direction)}`;
+          $('water').textContent = c.sea_surface_temperature != null ? `${Math.round(c.sea_surface_temperature)}°C` : '–';
+          $('water-extra').textContent = c.sea_surface_temperature == null ? '' : c.sea_surface_temperature < 13 ? 'dik wetsuit (5/4)' : c.sea_surface_temperature < 17 ? 'wetsuit 4/3' : c.sea_surface_temperature < 21 ? 'wetsuit 3/2' : c.sea_surface_temperature < 24 ? 'shorty' : 'boardshort of bikini';
+          let wind = null;
+          if (w && w.current) {
+            wind = w.current.wind_speed_10m;
+            $('wind').textContent = `${Math.round(wind)} kn`;
+            $('wind-extra').textContent = `uit het ${windNaam(w.current.wind_direction_10m)}`;
+            $('windblok').hidden = false;
+          } else $('windblok').hidden = true;
+          /* getij: de lokale toppen en dalen in het zeeniveau van vandaag en morgen */
+          const tijd = m.hourly.time, zn = m.hourly.sea_level_height_msl;
+          const nu = c.time.slice(0, 13) + ':00';
+          let ni = Math.max(0, tijd.indexOf(nu));
+          const stijgt = zn[ni + 1] > zn[ni];
+          let volgende = null;
+          for (let k = ni + 1; k < zn.length - 1; k++) {
+            if ((zn[k] >= zn[k - 1] && zn[k] > zn[k + 1]) || (zn[k] <= zn[k - 1] && zn[k] < zn[k + 1])) { volgende = { t: tijd[k], hoog: zn[k] > zn[k - 1] }; break; }
+          }
+          const vlak = Math.max(...zn.slice(0, 24)) - Math.min(...zn.slice(0, 24)) < 0.15;
+          $('getij').textContent = vlak ? 'nauwelijks' : stijgt ? 'opkomend' : 'afgaand';
+          $('getij-extra').textContent = vlak ? 'weinig eb en vloed hier' : volgende ? `${volgende.hoog ? 'hoog' : 'laag'} water rond ${uur(volgende.t)}` : '';
+          /* curve van vandaag */
+          const dagW = zn.slice(0, 25), lo = Math.min(...dagW), hi = Math.max(...dagW), sp = (hi - lo) || 1;
+          const pts = dagW.map((v, k) => [k * 25, 108 - ((v - lo) / sp) * 92]);
+          const d = pts.map((q, k) => `${k ? 'L' : 'M'}${q[0].toFixed(1)} ${q[1].toFixed(1)}`).join('');
+          $('curve').setAttribute('d', d);
+          $('curve-vlak').setAttribute('d', `${d}L600 120L0 120Z`);
+          const x = (parseInt(c.time.slice(11, 13), 10) + parseInt(c.time.slice(14, 16), 10) / 60) * 25;
+          $('nu').setAttribute('x1', x); $('nu').setAttribute('x2', x);
+          $('oordeel').textContent = oordeel(c.wave_height, wind);
+          $('tijd').textContent = `${spots[i].naam}, nu (${uur(c.time)} lokale tijd)`;
+          s.classList.remove('is-fout');
+        } catch (e) {
+          $('oordeel').textContent = 'De zee laat zich nu even niet lezen. Probeer het zo nog eens.';
+          $('tijd').textContent = '';
+          s.classList.add('is-fout');
+        }
+        s.classList.remove('is-laden');
+      }
+      knoppen.forEach((k, n) => k.addEventListener('click', () => toon(n)));
+      let start = 0;
+      try { const opgeslagen = localStorage.getItem('ttSpot'); const n = spots.findIndex((x) => x.naam === opgeslagen); if (n > -1) start = n; } catch (e) { /* geen opslag */ }
+      /* pas laden als de sectie bijna in beeld is */
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((items) => { if (items[0].isIntersecting) { io.disconnect(); toon(start); } }, { rootMargin: '400px 0px' });
+        io.observe(s);
+      } else toon(start);
+    });
+  }
+
   start();
-  startMaan(document); startCheck(document);
-  document.addEventListener('shopify:section:load', (e) => { start(e.target); startMaan(e.target); startCheck(e.target); });
+  startMaan(document); startCheck(document); startSurfcheck(document);
+  document.addEventListener('shopify:section:load', (e) => { start(e.target); startMaan(e.target); startCheck(e.target); startSurfcheck(e.target); });
 
   if (stil) return;
 
-  /* 6. Scroll: parallax en volloop-tekst */
+  /* 7. Scroll: parallax en volloop-tekst */
   let raf = 0;
   const tick = () => {
     raf = 0;
@@ -202,7 +294,7 @@
   tick();
 
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    /* 7. Magnetische knoppen */
+    /* 8. Magnetische knoppen */
     document.querySelectorAll('.tt-knop:not(.tt-knop--vol)').forEach((b) => {
       b.addEventListener('pointermove', (e) => {
         const r = b.getBoundingClientRect();
@@ -211,7 +303,7 @@
       b.addEventListener('pointerleave', () => { b.style.transform = ''; });
     });
 
-    /* 8. Cursor-bubbel boven beelden */
+    /* 9. Cursor-bubbel boven beelden */
     const c = document.createElement('div');
     c.className = 'tt-cursor';
     c.setAttribute('aria-hidden', 'true');

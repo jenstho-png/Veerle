@@ -15,6 +15,12 @@
         "id": "tt_product",
         "label": "Hoofdproduct",
         "info": "De draagtas. Hero, kopen-blok en slot gebruiken dit product (prijs, knop, foto's) als je daar niets anders kiest."
+      },
+      {
+        "type": "text",
+        "id": "tt_meteo_key",
+        "label": "Open-Meteo API-sleutel (surfcheck)",
+        "info": "Open-Meteo is gratis voor niet-commercieel gebruik. Voor een webshop heb je een abonnement nodig (open-meteo.com/en/pricing). Vul hier de sleutel in; dan gebruikt de surfcheck het betaalde adres."
       }
     ]
   },

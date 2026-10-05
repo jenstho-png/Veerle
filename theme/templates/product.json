@@ -351,6 +351,80 @@
     "tt-check": {
       "type": "tt-check",
       "settings": {}
+    },
+    "tt-vergelijk": {
+      "type": "tt-vergelijk",
+      "settings": {},
+      "blocks": {
+        "rij-1": {
+          "type": "rij",
+          "settings": {
+            "punt": "Allebei je handen vrij",
+            "wij": "ja",
+            "arm": "nee",
+            "banden": "deels",
+            "hoes": "deels"
+          }
+        },
+        "rij-2": {
+          "type": "rij",
+          "settings": {
+            "punt": "Geen wax op je arm",
+            "wij": "ja",
+            "arm": "nee",
+            "banden": "deels",
+            "hoes": "ja"
+          }
+        },
+        "rij-3": {
+          "type": "rij",
+          "settings": {
+            "punt": "Gewicht verdeeld over je rug",
+            "wij": "ja",
+            "arm": "nee",
+            "banden": "nee",
+            "hoes": "nee"
+          }
+        },
+        "rij-4": {
+          "type": "rij",
+          "settings": {
+            "punt": "Nat en zanderig board meteen mee",
+            "wij": "ja",
+            "arm": "ja",
+            "banden": "ja",
+            "hoes": "nee"
+          }
+        },
+        "rij-5": {
+          "type": "rij",
+          "settings": {
+            "punt": "Veilig op de fiets of scooter",
+            "wij": "ja",
+            "arm": "nee",
+            "banden": "deels",
+            "hoes": "deels"
+          }
+        },
+        "rij-6": {
+          "type": "rij",
+          "settings": {
+            "punt": "Klein mee in je reisbagage",
+            "wij": "ja",
+            "arm": "ja",
+            "banden": "ja",
+            "hoes": "nee"
+          }
+        }
+      },
+      "block_order": [
+        "rij-1",
+        "rij-2",
+        "rij-3",
+        "rij-4",
+        "rij-5",
+        "rij-6"
+      ]
     }
   },
   "order": [
@@ -360,6 +434,7 @@
     "disclosures",
     "tt-probleem",
     "tt-zo",
+    "tt-vergelijk",
     "faq",
     "tt-muur",
     "related-products",

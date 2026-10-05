@@ -362,6 +362,142 @@
     "check": {
       "type": "tt-check",
       "settings": {}
+    },
+    "vergelijk": {
+      "type": "tt-vergelijk",
+      "settings": {},
+      "blocks": {
+        "rij-1": {
+          "type": "rij",
+          "settings": {
+            "punt": "Allebei je handen vrij",
+            "wij": "ja",
+            "arm": "nee",
+            "banden": "deels",
+            "hoes": "deels"
+          }
+        },
+        "rij-2": {
+          "type": "rij",
+          "settings": {
+            "punt": "Geen wax op je arm",
+            "wij": "ja",
+            "arm": "nee",
+            "banden": "deels",
+            "hoes": "ja"
+          }
+        },
+        "rij-3": {
+          "type": "rij",
+          "settings": {
+            "punt": "Gewicht verdeeld over je rug",
+            "wij": "ja",
+            "arm": "nee",
+            "banden": "nee",
+            "hoes": "nee"
+          }
+        },
+        "rij-4": {
+          "type": "rij",
+          "settings": {
+            "punt": "Nat en zanderig board meteen mee",
+            "wij": "ja",
+            "arm": "ja",
+            "banden": "ja",
+            "hoes": "nee"
+          }
+        },
+        "rij-5": {
+          "type": "rij",
+          "settings": {
+            "punt": "Veilig op de fiets of scooter",
+            "wij": "ja",
+            "arm": "nee",
+            "banden": "deels",
+            "hoes": "deels"
+          }
+        },
+        "rij-6": {
+          "type": "rij",
+          "settings": {
+            "punt": "Klein mee in je reisbagage",
+            "wij": "ja",
+            "arm": "ja",
+            "banden": "ja",
+            "hoes": "nee"
+          }
+        }
+      },
+      "block_order": [
+        "rij-1",
+        "rij-2",
+        "rij-3",
+        "rij-4",
+        "rij-5",
+        "rij-6"
+      ]
+    },
+    "surfcheck": {
+      "type": "tt-surfcheck",
+      "settings": {},
+      "blocks": {
+        "spot-1": {
+          "type": "spot",
+          "settings": {
+            "naam": "Scheveningen",
+            "lat": "52.11",
+            "lon": "4.26"
+          }
+        },
+        "spot-2": {
+          "type": "spot",
+          "settings": {
+            "naam": "Zandvoort",
+            "lat": "52.37",
+            "lon": "4.50"
+          }
+        },
+        "spot-3": {
+          "type": "spot",
+          "settings": {
+            "naam": "Domburg",
+            "lat": "51.57",
+            "lon": "3.47"
+          }
+        },
+        "spot-4": {
+          "type": "spot",
+          "settings": {
+            "naam": "Hossegor",
+            "lat": "43.66",
+            "lon": "-1.46"
+          }
+        },
+        "spot-5": {
+          "type": "spot",
+          "settings": {
+            "naam": "Ericeira",
+            "lat": "38.97",
+            "lon": "-9.43"
+          }
+        },
+        "spot-6": {
+          "type": "spot",
+          "settings": {
+            "naam": "Canggu, Bali",
+            "lat": "-8.66",
+            "lon": "115.12"
+          }
+        }
+      },
+      "block_order": [
+        "spot-1",
+        "spot-2",
+        "spot-3",
+        "spot-4",
+        "spot-5",
+        "spot-6"
+      ]
     }
   },
   "order": [
@@ -371,8 +507,10 @@
     "check",
     "probleem",
     "zo",
+    "vergelijk",
     "merk",
     "muur",
+    "surfcheck",
     "wie",
     "verhaal",
     "faq",

@@ -1,0 +1,279 @@
+<section class="tt tt-vergelijk tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap">
+    <div class="tt-vergelijk__kop">
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+      {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <div class="tt-vergelijk__scroll tt-in">
+      <table class="tt-vergelijk__tabel">
+        <thead>
+          <tr>
+            <td></td>
+            <th scope="col" class="tt-vergelijk__wij"><span class="tt-vergelijk__logo">{% render 'tt-logo', variant: 'maan-simpel' %}</span>{{ section.settings.kol1 }}</th>
+            <th scope="col">{{ section.settings.kol2 }}</th>
+            <th scope="col">{{ section.settings.kol3 }}</th>
+            <th scope="col">{{ section.settings.kol4 }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            <tr {{ block.shopify_attributes }}>
+              <th scope="row">{{ block.settings.punt }}</th>
+              {%- assign waarden = block.settings.wij | append: ',' | append: block.settings.arm | append: ',' | append: block.settings.banden | append: ',' | append: block.settings.hoes | split: ',' -%}
+              {%- for w in waarden -%}
+                <td class="tt-vergelijk__cel tt-vergelijk__cel--{{ w }}{% if forloop.first %} tt-vergelijk__wij{% endif %}">
+                  {%- case w -%}
+                    {%- when 'ja' -%}<span class="tt-vergelijk__teken" aria-hidden="true">✓</span><span class="visually-hidden">ja</span>
+                    {%- when 'deels' -%}<span class="tt-vergelijk__teken" aria-hidden="true">~</span><span class="visually-hidden">deels</span>
+                    {%- else -%}<span class="tt-vergelijk__teken" aria-hidden="true">✕</span><span class="visually-hidden">nee</span>
+                  {%- endcase -%}
+                </td>
+              {%- endfor -%}
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+    <p class="tt-vergelijk__uitleg tt-in"><span>✓ ja</span><span>~ deels</span><span>✕ nee</span></p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: vergelijken",
+  "tag": "div",
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        }
+      ],
+      "default": "creme"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
+      "default": "Waarom niet gewoon|*onder je arm?*"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Tekst",
+      "default": "Zo verhoudt de tas zich tot wat de meeste surfers nu doen."
+    },
+    {
+      "type": "text",
+      "id": "kol1",
+      "label": "Kolom 1",
+      "default": "Tide-Tode"
+    },
+    {
+      "type": "text",
+      "id": "kol2",
+      "label": "Kolom 2",
+      "default": "Onder je arm"
+    },
+    {
+      "type": "text",
+      "id": "kol3",
+      "label": "Kolom 3",
+      "default": "Touwtjes of spanbanden"
+    },
+    {
+      "type": "text",
+      "id": "kol4",
+      "label": "Kolom 4",
+      "default": "Boardbag"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "rij",
+      "name": "Rij",
+      "settings": [
+        {
+          "type": "text",
+          "id": "punt",
+          "label": "Punt",
+          "default": "Punt"
+        },
+        {
+          "type": "select",
+          "id": "wij",
+          "label": "Kolom 1",
+          "options": [
+            {
+              "value": "ja",
+              "label": "Ja"
+            },
+            {
+              "value": "deels",
+              "label": "Deels"
+            },
+            {
+              "value": "nee",
+              "label": "Nee"
+            }
+          ],
+          "default": "ja"
+        },
+        {
+          "type": "select",
+          "id": "arm",
+          "label": "Kolom 2",
+          "options": [
+            {
+              "value": "ja",
+              "label": "Ja"
+            },
+            {
+              "value": "deels",
+              "label": "Deels"
+            },
+            {
+              "value": "nee",
+              "label": "Nee"
+            }
+          ],
+          "default": "nee"
+        },
+        {
+          "type": "select",
+          "id": "banden",
+          "label": "Kolom 3",
+          "options": [
+            {
+              "value": "ja",
+              "label": "Ja"
+            },
+            {
+              "value": "deels",
+              "label": "Deels"
+            },
+            {
+              "value": "nee",
+              "label": "Nee"
+            }
+          ],
+          "default": "nee"
+        },
+        {
+          "type": "select",
+          "id": "hoes",
+          "label": "Kolom 4",
+          "options": [
+            {
+              "value": "ja",
+              "label": "Ja"
+            },
+            {
+              "value": "deels",
+              "label": "Deels"
+            },
+            {
+              "value": "nee",
+              "label": "Nee"
+            }
+          ],
+          "default": "nee"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: vergelijken",
+      "blocks": [
+        {
+          "type": "rij",
+          "settings": {
+            "punt": "Allebei je handen vrij",
+            "wij": "ja",
+            "arm": "nee",
+            "banden": "deels",
+            "hoes": "deels"
+          }
+        },
+        {
+          "type": "rij",
+          "settings": {
+            "punt": "Geen wax op je arm",
+            "wij": "ja",
+            "arm": "nee",
+            "banden": "deels",
+            "hoes": "ja"
+          }
+        },
+        {
+          "type": "rij",
+          "settings": {
+            "punt": "Gewicht verdeeld over je rug",
+            "wij": "ja",
+            "arm": "nee",
+            "banden": "nee",
+            "hoes": "nee"
+          }
+        },
+        {
+          "type": "rij",
+          "settings": {
+            "punt": "Nat en zanderig board meteen mee",
+            "wij": "ja",
+            "arm": "ja",
+            "banden": "ja",
+            "hoes": "nee"
+          }
+        },
+        {
+          "type": "rij",
+          "settings": {
+            "punt": "Veilig op de fiets of scooter",
+            "wij": "ja",
+            "arm": "nee",
+            "banden": "deels",
+            "hoes": "deels"
+          }
+        },
+        {
+          "type": "rij",
+          "settings": {
+            "punt": "Klein mee in je reisbagage",
+            "wij": "ja",
+            "arm": "ja",
+            "banden": "ja",
+            "hoes": "nee"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
