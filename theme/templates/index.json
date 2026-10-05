@@ -358,12 +358,17 @@
     "merk": {
       "type": "tt-merk",
       "settings": {}
+    },
+    "check": {
+      "type": "tt-check",
+      "settings": {}
     }
   },
   "order": [
     "hero",
     "usp",
     "koop",
+    "check",
     "probleem",
     "zo",
     "merk",

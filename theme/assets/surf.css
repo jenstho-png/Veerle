@@ -68,7 +68,7 @@
 }
 .color-scheme-3, .color-scheme-4, .mk-vlak, .surf-hero--full, .surf-pagehero__media, .surf-cta__box.mk-vlak { --tt-accent: var(--surf-sunshine); }
 .mk-hero, .mk-h2, .mk-statement { font-weight: 480; letter-spacing: -0.02em; }
-.mk-handschrift { font-style: italic; color: var(--tt-accent); }
+.mk-handschrift { font-style: normal; color: var(--tt-accent); }
 
 .surf-eyebrow { display: flex; align-items: center; gap: 10px; margin: 0 0 18px; font: 600 11px/1 var(--mk-font-tekst); text-transform: uppercase; letter-spacing: .22em; color: var(--tt-accent); }
 .surf-head--center .surf-eyebrow { justify-content: center; }

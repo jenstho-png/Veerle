@@ -46,6 +46,7 @@ async function renderSection(type, data, idx) {
   const s = {};
   for (const x of sch.settings || []) if ('default' in x) s[x.id] = x.default;
   Object.assign(s, data.settings || {});
+  if (type === 'tt-check') s.bevestigd = true; // preview: checker tonen met de voorlopige maten
   const blocks = (data.block_order || []).map((id) => {
     const b = data.blocks[id]; const bs = (sch.blocks || []).find((x) => x.type === b.type);
     const st = {}; for (const x of bs?.settings || []) if ('default' in x) st[x.id] = x.default;

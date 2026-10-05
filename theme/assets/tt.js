@@ -81,12 +81,87 @@
     });
   }
 
+  /* 4. De maan van vanavond (eigen berekening, geen externe dienst) */
+  const SYN = 29.530588853;
+  const NIEUW = Date.UTC(2000, 0, 6, 18, 14);
+  const dag = 86400000;
+  function maan(datum) {
+    const leeftijd = (((datum - NIEUW) / dag) % SYN + SYN) % SYN;
+    const f = leeftijd / SYN;
+    const licht = (1 - Math.cos(2 * Math.PI * f)) / 2;
+    const namen = ['nieuwe maan', 'wassende sikkel', 'eerste kwartier', 'wassende maan', 'volle maan', 'afnemende maan', 'laatste kwartier', 'afnemende sikkel'];
+    return { leeftijd, f, licht, naam: namen[Math.round(f * 8) % 8] };
+  }
+  function maanPad(f) {
+    const rx = (48 * Math.abs(Math.cos(2 * Math.PI * f))).toFixed(2);
+    const wassend = f < 0.5;
+    const sikkel = f < 0.25 || f > 0.75;
+    if (wassend) return `M50 2A48 48 0 0 1 50 98A${rx} 48 0 0 ${sikkel ? 0 : 1} 50 2Z`;
+    return `M50 2A48 48 0 0 0 50 98A${rx} 48 0 0 ${sikkel ? 1 : 0} 50 2Z`;
+  }
+  function startMaan(scope) {
+    scope.querySelectorAll('[data-tt-maanstand]').forEach((el) => {
+      const nu = new Date();
+      const vanavond = new Date(nu); vanavond.setHours(21, 0, 0, 0);
+      const m = maan(vanavond);
+      el.querySelector('.tt-maanstand__licht').setAttribute('d', maanPad(m.f));
+      el.querySelector('[data-tt-maan-naam]').textContent = `${m.naam}, ${Math.round(m.licht * 100)}% verlicht`;
+      const totVol = ((0.5 - m.f + 1) % 1) * SYN;
+      const totNieuw = ((1 - m.f) % 1) * SYN;
+      const dichtbij = Math.min(totVol, SYN - totVol, totNieuw, SYN - totNieuw);
+      const fmt = (d) => d.toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Amsterdam' });
+      el.querySelector('[data-tt-maan-info]').textContent = dichtbij <= 2
+        ? 'Rond nieuwe en volle maan is het springtij: extra hoog en extra laag water. Check je getijdentabel voor je gaat.'
+        : `Volgende volle maan: ${fmt(new Date(vanavond.getTime() + totVol * dag))}. Dan is het springtij.`;
+      el.hidden = false;
+    });
+  }
+
+  /* 5. Past jouw board? */
+  const voet = (i) => `${Math.floor(i / 12)}'${i % 12}"`;
+  function startCheck(scope) {
+    scope.querySelectorAll('[data-tt-check]').forEach((s) => {
+      const min = +s.dataset.min, max = +s.dataset.max;
+      const schuif = s.querySelector('[data-tt-check-schuif]');
+      const waarde = s.querySelector('[data-tt-check-waarde]');
+      const antwoord = s.querySelector('[data-tt-check-antwoord]');
+      const uitleg = s.querySelector('[data-tt-check-uitleg]');
+      const board = s.querySelector('.tt-check__board');
+      const stringer = s.querySelector('.tt-check__stringer');
+      const banden = s.querySelectorAll('.tt-check__band');
+      const maxlijn = s.querySelector('[data-tt-check-maxlijn]');
+      const maxtekst = s.querySelector('[data-tt-check-maxtekst]');
+      const H = 560, onder = 540, perInch = 500 / 132;
+      const yMax = onder - max * perInch;
+      maxlijn.setAttribute('y1', yMax); maxlijn.setAttribute('y2', yMax);
+      maxtekst.setAttribute('y', yMax - 8); maxtekst.textContent = `max ${voet(max)}`;
+      const teken = () => {
+        const i = +schuif.value;
+        const h = i * perInch, top = onder - h, b = Math.min(58, 30 + i * 0.22);
+        board.setAttribute('d', `M100 ${top}C${100 + b * 1.15} ${top + h * 0.18} ${100 + b} ${top + h * 0.82} 100 ${onder}C${100 - b} ${top + h * 0.82} ${100 - b * 1.15} ${top + h * 0.18} 100 ${top}Z`);
+        stringer.setAttribute('y1', top + 6); stringer.setAttribute('y2', onder - 6);
+        banden[0].setAttribute('y', top + h * 0.28); banden[1].setAttribute('y', top + h * 0.66);
+        const cm = Math.round(i * 2.54);
+        waarde.textContent = `${voet(i)} · ${cm} cm`;
+        schuif.style.setProperty('--p', `${((i - 48) / 84) * 100}%`);
+        const past = i >= min && i <= max;
+        s.classList.toggle('is-past', past); s.classList.toggle('is-niet', !past);
+        if (past) { antwoord.textContent = 'Ja, die past.'; uitleg.textContent = `Een board van ${voet(i)} gaat in de tas. Banden strak, op je rug en gaan.`; }
+        else if (i > max) { antwoord.textContent = 'Net te lang.'; uitleg.textContent = `Deze tas past op boards tot ${voet(max)}. Een grotere maat staat op de planning.`; }
+        else { antwoord.textContent = 'Te klein voor deze tas.'; uitleg.textContent = `Deze tas is gemaakt voor boards vanaf ${voet(min)}.`; }
+      };
+      schuif.addEventListener('input', teken);
+      teken();
+    });
+  }
+
   start();
-  document.addEventListener('shopify:section:load', (e) => start(e.target));
+  startMaan(document); startCheck(document);
+  document.addEventListener('shopify:section:load', (e) => { start(e.target); startMaan(e.target); startCheck(e.target); });
 
   if (stil) return;
 
-  /* 4. Scroll: parallax en volloop-tekst */
+  /* 6. Scroll: parallax en volloop-tekst */
   let raf = 0;
   const tick = () => {
     raf = 0;
@@ -127,7 +202,7 @@
   tick();
 
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    /* 5. Magnetische knoppen */
+    /* 7. Magnetische knoppen */
     document.querySelectorAll('.tt-knop:not(.tt-knop--vol)').forEach((b) => {
       b.addEventListener('pointermove', (e) => {
         const r = b.getBoundingClientRect();
@@ -136,7 +211,7 @@
       b.addEventListener('pointerleave', () => { b.style.transform = ''; });
     });
 
-    /* 6. Cursor-bubbel boven beelden */
+    /* 8. Cursor-bubbel boven beelden */
     const c = document.createElement('div');
     c.className = 'tt-cursor';
     c.setAttribute('aria-hidden', 'true');

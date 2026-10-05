@@ -416,6 +416,15 @@ schrijf('tt-merk', """
     <div class="tt-merk__maan" data-tt-snelheid="0.12">{% render 'tt-logo', variant: 'maan' %}</div>
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
     {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    {%- if section.settings.maan_vandaag -%}
+      <div class="tt-maanstand tt-in" data-tt-maanstand hidden>
+        <svg class="tt-maanstand__beeld" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" class="tt-maanstand__donker"/><path class="tt-maanstand__licht" d=""/></svg>
+        <div class="tt-maanstand__tekst">
+          <p class="tt-maanstand__kop">De maan vanavond: <strong data-tt-maan-naam></strong></p>
+          <p data-tt-maan-info></p>
+        </div>
+      </div>
+    {%- endif -%}
     <ul class="tt-merk__iconen tt-in" aria-hidden="true">
       {%- assign lijst = section.settings.iconen | split: ',' -%}
       {%- for i in lijst -%}<li>{% render 'tt-icoon', icoon: i %}</li>{%- endfor -%}
@@ -434,7 +443,62 @@ schrijf('tt-merk', """
         kop("De maan draagt|de zee. Wij dragen|*je board.*"),
         {"type": "textarea", "id": "text", "label": "Tekst", "default": "De maan trekt aan de zee en maakt zo eb en vloed: het getij, of in het Engels de tide. Zij draagt de zee, wij dragen je board. Daarom staat er een maan in ons logo, met drie golfjes in haar arm."},
         {"type": "text", "id": "iconen", "label": "Iconen (komma's, zonder spaties)", "default": "golf,schelp,zon,zeester,board,tas,palmblad,meeuw"},
+        {"type": "checkbox", "id": "maan_vandaag", "label": "Maanstand van vandaag tonen", "default": True, "info": "Berekend in de browser: de stand van de maan vanavond, en of het springtij is."},
     ],
     "presets": [{"name": "TT: merk"}]})
+
+# ---------- PAST JOUW BOARD? ----------
+schrijf('tt-check', PRIJS + """
+{%- if section.settings.bevestigd or request.design_mode -%}
+<section class="tt tt-check tt-bg--{{ section.settings.bg }}" data-tt-check data-min="{{ section.settings.min_inch }}" data-max="{{ section.settings.max_inch }}">
+  <div class="tt-wrap tt-check__grid">
+    <div class="tt-check__tekst">
+      {%- unless section.settings.bevestigd -%}<p class="tt-check__let-op">Alleen zichtbaar in de editor: vul de echte maten in en zet 'Maten zijn bevestigd' aan.</p>{%- endunless -%}
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+      {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+      <div class="tt-check__invoer tt-in">
+        <label class="tt-check__label" for="tt-check-{{ section.id }}">Lengte van je board</label>
+        <output class="tt-check__waarde" for="tt-check-{{ section.id }}" data-tt-check-waarde>7'0"</output>
+        <input class="tt-check__schuif" id="tt-check-{{ section.id }}" type="range" min="48" max="132" step="1" value="{{ section.settings.start_inch }}" data-tt-check-schuif aria-describedby="tt-check-uit-{{ section.id }}">
+        <div class="tt-check__schaal" aria-hidden="true"><span>4'0"</span><span>7'6"</span><span>11'0"</span></div>
+      </div>
+      <div class="tt-check__uitkomst tt-in" id="tt-check-uit-{{ section.id }}" aria-live="polite">
+        <p class="tt-check__antwoord" data-tt-check-antwoord></p>
+        <p class="tt-check__uitleg" data-tt-check-uitleg></p>
+      </div>
+      <div class="tt-knoppen tt-in">
+        <a class="tt-knop" href="{% if p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}" data-tt-check-knop>{{ section.settings.btn_label }}{% if p != blank %} · {{ v.price | money_without_trailing_zeros }}{% endif %}<span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="tt-check__beeld" aria-hidden="true">
+      <svg viewBox="0 0 200 560" class="tt-check__svg">
+        <line x1="20" x2="180" class="tt-check__maxlijn" data-tt-check-maxlijn/>
+        <text x="182" class="tt-check__maxtekst" data-tt-check-maxtekst text-anchor="end"></text>
+        <g data-tt-check-board>
+          <path class="tt-check__board" d=""/>
+          <line class="tt-check__stringer" x1="100" x2="100"/>
+          <rect class="tt-check__band" x="52" width="96" height="16" rx="5"/>
+          <rect class="tt-check__band" x="52" width="96" height="16" rx="5"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+{%- endif -%}
+""", {
+    "name": "TT: past mijn board?", "tag": "div",
+    "settings": [
+        bg("zand"),
+        {"type": "product", "id": "product", "label": "Product", "info": "Leeg = het product uit Thema-instellingen > Tide-Tode."},
+        kop("Past jouw|*board?*"),
+        {"type": "textarea", "id": "text", "label": "Tekst", "default": "Schuif naar de lengte van je board en zie meteen of hij in de tas past."},
+        {"type": "header", "content": "Maten van de tas"},
+        {"type": "checkbox", "id": "bevestigd", "label": "Maten zijn bevestigd", "default": False, "info": "Pas als dit aan staat, zien bezoekers de checker. Zo komt er nooit een verkeerd antwoord online."},
+        {"type": "range", "id": "min_inch", "label": "Kortste board (inch)", "min": 48, "max": 96, "step": 1, "default": 66, "info": "12 inch = 1 voet. 66 = 5 voet 6 inch."},
+        {"type": "range", "id": "max_inch", "label": "Langste board (inch)", "min": 72, "max": 132, "step": 1, "default": 114, "info": "114 = 9 voet 6 inch."},
+        {"type": "range", "id": "start_inch", "label": "Startwaarde schuif (inch)", "min": 48, "max": 132, "step": 1, "default": 84},
+        {"type": "text", "id": "btn_label", "label": "Knop", "default": "Shop de draagtas"},
+    ],
+    "presets": [{"name": "TT: past mijn board?"}]})
 
 print('klaar')

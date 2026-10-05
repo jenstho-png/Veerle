@@ -39,16 +39,15 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 
 /* ---------- typografie ---------- */
 .tt-kop { font-family: var(--tt-display); font-weight: 480; letter-spacing: -0.035em; line-height: .92; text-wrap: balance; }
-/* accent: rechtop in de accentkleur. Cursief alleen in de hero en de slotzin (spaarzaam, brandbook) */
+/* accent: rechtop in de accentkleur. Cursief zit alleen nog in het logo. */
 .tt-kop em { font-style: normal; color: var(--tt-acc, var(--tt-captain)); }
-.tt-hero .tt-kop em, .tt-slot .tt-kop em { font-style: italic; letter-spacing: -0.025em; }
 .tt-kop--xl { font-size: clamp(62px, 9.6vw, 176px); line-height: .86; letter-spacing: -0.05em; }
 .tt-kop--l { font-size: clamp(50px, 7.4vw, 124px); line-height: .9; letter-spacing: -0.045em; }
 .tt-kop--m { font-size: clamp(40px, 4.8vw, 78px); line-height: .96; }
 .tt-regel { display: block; overflow: hidden; padding: .02em .08em .12em 0; margin-bottom: -.12em; }
 .tt-regel > span { display: inline-block; }
 .tt-lead { font: 400 clamp(16px, 1.25vw, 19px)/1.6 var(--tt-tekst); color: var(--tt-zacht); max-width: 44ch; }
-.tt-handtekening { font: italic 480 clamp(40px, 4vw, 56px)/1 var(--tt-display); color: var(--tt-acc); margin-top: 28px !important; }
+.tt-handtekening { font: 480 clamp(36px, 3.6vw, 50px)/1 var(--tt-display); letter-spacing: -.02em; color: var(--tt-acc); margin-top: 28px !important; }
 
 /* ---------- knoppen ---------- */
 .tt-knoppen { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 30px; }
@@ -472,4 +471,56 @@ body:has(.tt-balk.is-aan) .tt-pop__teaser { bottom: 96px; }
 @media (prefers-reduced-motion: reduce) {
   .tt-pop__kaart, .tt-pop { transition: none; }
   .tt-pop__teaser, .tt-pop__sticker, .tt-pop.is-open .tt-pop__beeld img { animation: none; }
+}
+
+/* ==========================================================================
+   DE MAAN VAN VANAVOND (in de merksectie)
+   ========================================================================== */
+.tt-maanstand { display: flex; align-items: center; gap: 22px; max-width: 560px; margin-top: 10px; padding: 18px 26px 18px 18px; border-radius: 999px; background: rgba(245, 238, 223, .07); border: 1px solid rgba(245, 238, 223, .16); text-align: left; }
+.tt-maanstand[hidden] { display: none; }
+.tt-maanstand__beeld { flex-shrink: 0; width: 64px; height: 64px; }
+.tt-maanstand__donker { fill: rgba(245, 238, 223, .1); stroke: rgba(245, 238, 223, .25); stroke-width: 1; }
+.tt-maanstand__licht { fill: var(--tt-sunshine); }
+.tt-maanstand__kop { font: 500 15px/1.4 var(--tt-tekst); }
+.tt-maanstand__kop strong { font-weight: 600; color: var(--tt-sunshine); }
+.tt-maanstand p + p { margin-top: 4px !important; font: 400 14px/1.5 var(--tt-tekst); opacity: .75; }
+@media (max-width: 749px) { .tt-maanstand { border-radius: 24px; padding: 16px; gap: 16px; } .tt-maanstand__beeld { width: 52px; height: 52px; } }
+
+/* ==========================================================================
+   PAST JOUW BOARD?
+   ========================================================================== */
+.tt-check { padding-block: var(--tt-ruimte); }
+.tt-check__grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: clamp(40px, 6vw, 120px); align-items: center; }
+.tt-check__let-op { margin-bottom: 20px !important; padding: 10px 14px; border-radius: 10px; background: var(--tt-poppy); color: #fff; font: 500 13px/1.4 var(--tt-tekst); }
+.tt-check .tt-lead { margin-top: 22px !important; }
+.tt-check__invoer { margin-top: 44px; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 14px 20px; }
+.tt-check__label { font: 600 13px/1 var(--tt-tekst); }
+.tt-check__waarde { font: 480 clamp(30px, 3vw, 42px)/1 var(--tt-display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.tt-check__schuif { grid-column: 1 / -1; width: 100%; height: 44px; margin: 0; background: none; -webkit-appearance: none; appearance: none; cursor: pointer; --p: 43%; }
+.tt-check__schuif::-webkit-slider-runnable-track { height: 6px; border-radius: 6px; background: linear-gradient(90deg, var(--tt-deep) var(--p), rgba(24, 50, 90, .15) var(--p)); }
+.tt-check__schuif::-moz-range-track { height: 6px; border-radius: 6px; background: rgba(24, 50, 90, .15); }
+.tt-check__schuif::-moz-range-progress { height: 6px; border-radius: 6px; background: var(--tt-deep); }
+.tt-check__schuif::-webkit-slider-thumb { -webkit-appearance: none; width: 34px; height: 34px; margin-top: -14px; border-radius: 50%; background: var(--tt-sunshine); border: 3px solid var(--tt-deep); transition: transform .3s var(--tt-ease); }
+.tt-check__schuif::-moz-range-thumb { width: 28px; height: 28px; border-radius: 50%; background: var(--tt-sunshine); border: 3px solid var(--tt-deep); }
+.tt-check__schuif:active::-webkit-slider-thumb { transform: scale(1.15); }
+.tt-check__schuif:focus-visible { outline: 2px solid var(--tt-poppy); outline-offset: 4px; border-radius: 8px; }
+.tt-check__schaal { grid-column: 1 / -1; display: flex; justify-content: space-between; margin-top: -6px; font: 500 12px/1 var(--tt-tekst); opacity: .55; }
+.tt-check__uitkomst { margin-top: 34px; padding: 24px 28px; border-radius: 18px; background: rgba(255, 255, 255, .5); border-left: 5px solid var(--tt-captain); transition: border-color .4s; }
+.tt-check.is-niet .tt-check__uitkomst { border-left-color: var(--tt-poppy); }
+.tt-check__antwoord { font: 480 clamp(28px, 2.6vw, 38px)/1.05 var(--tt-display); letter-spacing: -.02em; }
+.tt-check.is-past .tt-check__antwoord { color: var(--tt-captain); }
+.tt-check__uitleg { margin-top: 8px !important; font: 400 15.5px/1.55 var(--tt-tekst); color: var(--tt-zacht); }
+.tt-check .tt-knoppen { margin-top: 30px; }
+.tt-check__beeld { justify-self: center; width: min(100%, 210px); }
+.tt-check__svg { width: 100%; height: auto; overflow: visible; display: block; }
+.tt-check__board { fill: var(--tt-creme); stroke: var(--tt-deep); stroke-width: 2.5; transition: d .35s var(--tt-ease), fill .4s; }
+.tt-check.is-niet .tt-check__board { fill: #f6d9cc; }
+.tt-check__stringer { stroke: var(--tt-deep); stroke-width: 1.2; opacity: .35; }
+.tt-check__band { fill: var(--tt-deep); }
+.tt-check__band + .tt-check__band { fill: var(--tt-poppy); }
+.tt-check__maxlijn { stroke: var(--tt-captain); stroke-width: 1.5; stroke-dasharray: 6 6; }
+.tt-check__maxtekst { font: 600 13px var(--tt-tekst); fill: var(--tt-captain); letter-spacing: .06em; }
+@media (max-width: 989px) {
+  .tt-check__grid { grid-template-columns: 1fr; }
+  .tt-check__beeld { order: -1; width: 120px; }
 }

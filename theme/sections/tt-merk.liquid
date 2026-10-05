@@ -3,6 +3,15 @@
     <div class="tt-merk__maan" data-tt-snelheid="0.12">{% render 'tt-logo', variant: 'maan' %}</div>
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
     {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    {%- if section.settings.maan_vandaag -%}
+      <div class="tt-maanstand tt-in" data-tt-maanstand hidden>
+        <svg class="tt-maanstand__beeld" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" class="tt-maanstand__donker"/><path class="tt-maanstand__licht" d=""/></svg>
+        <div class="tt-maanstand__tekst">
+          <p class="tt-maanstand__kop">De maan vanavond: <strong data-tt-maan-naam></strong></p>
+          <p data-tt-maan-info></p>
+        </div>
+      </div>
+    {%- endif -%}
     <ul class="tt-merk__iconen tt-in" aria-hidden="true">
       {%- assign lijst = section.settings.iconen | split: ',' -%}
       {%- for i in lijst -%}<li>{% render 'tt-icoon', icoon: i %}</li>{%- endfor -%}
@@ -70,6 +79,13 @@
       "id": "iconen",
       "label": "Iconen (komma's, zonder spaties)",
       "default": "golf,schelp,zon,zeester,board,tas,palmblad,meeuw"
+    },
+    {
+      "type": "checkbox",
+      "id": "maan_vandaag",
+      "label": "Maanstand van vandaag tonen",
+      "default": true,
+      "info": "Berekend in de browser: de stand van de maan vanavond, en of het springtij is."
     }
   ],
   "presets": [

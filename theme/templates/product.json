@@ -347,11 +347,16 @@
     "tt-slot": {
       "type": "tt-slot",
       "settings": {}
+    },
+    "tt-check": {
+      "type": "tt-check",
+      "settings": {}
     }
   },
   "order": [
     "main",
     "tt-usp",
+    "tt-check",
     "disclosures",
     "tt-probleem",
     "tt-zo",
