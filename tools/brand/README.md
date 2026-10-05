@@ -1,10 +1,10 @@
 # Tide-Tode merk-tools
 
-- `logo.mjs`: zet "TIDE-TODE" uit Bagel Fat One om naar vectorpaden en vervormt ze in een surfboard (hoofdlogo), plus rechte woordmerken. Schrijft `logo.json`.
-- `marks.py`: rekent de spiraal (tij), de golvende zonnestralen en het TT-monogram uit.
+- `logo.mjs`: zet "Tide~Tode" uit Fraunces Italic (Soft 100, Wonk, opsz 144, 600) om naar vectorpaden met een getekend golfje, rekent het beeldmerk uit (de maan die het getij draagt) en zet de ronde tekst van het zegel. Schrijft `logo.json`. De vastgezette Fraunces-instanties staan in `fonts/`.
+- `icons.py`: de handgeknipte iconen. Vormen worden opgebouwd uit taps toelopende stroken en uitsnijdingen (shapely) en krijgen daarna een licht onregelmatige rand.
 - `brandbook.template.html` + `build.py`: bouwt `docs/brandbook/brandbook.html`.
 
 ```bash
-cd tools/brand && npm install && npm run build
+cd tools/brand && npm install && pip install shapely && npm run build
 ```
-Bagel Fat One staat onder de SIL Open Font License; het logo als vectorpad gebruiken is toegestaan.
+Fraunces staat onder de SIL Open Font License; het logo als vectorpad gebruiken is toegestaan.
