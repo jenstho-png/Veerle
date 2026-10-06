@@ -466,7 +466,8 @@ h1, h2, h3, .h0, .h1, .h2, .h3 { font-family: var(--font-heading-family); font-w
   .surf-icon-btn { width: 42px; height: 42px; }
 }
 
-/* CREAjt-credit (donkere footer) */
-.surf-footer__credit { display: inline-flex; align-items: center; gap: 8px; font: 500 13px/1 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: rgba(255, 255, 255, .7); text-decoration: none; opacity: .85; transition: opacity .2s; }
-.surf-footer__credit:hover, .surf-footer__credit:focus-visible { opacity: 1; }
-.surf-footer__credit img { height: 18px; width: auto; display: block; filter: brightness(0) invert(1); }
+/* copyright en CREAjt-credit samen op de onderste regel */
+.surf-footer__regel { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px; }
+/* Dawn rekent met 1rem = 10px, dus de 0.78rem uit het snippet zou hier 7,8px worden,
+   en een footer-linkregel maakt er 15px van. Vast op de bedoelde ±12,5px. */
+.surf-footer__regel .creajt-credit { font-size: 12.5px; line-height: 1; }

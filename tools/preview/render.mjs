@@ -16,6 +16,10 @@ engine.registerTag('form', {
   parse(tk, remain) { this.tpls = []; const s = this.liquid.parser.parseStream(remain); s.on('tag:endform', () => s.stop()).on('template', (t) => this.tpls.push(t)); s.start(); },
   *render(ctx, emitter) { ctx.push({ form: { posted_successfully: false } }); emitter.write('<form method="post">'); yield this.liquid.renderer.renderTemplates(this.tpls, ctx, emitter); emitter.write('</form>'); ctx.pop(); },
 });
+engine.registerTag('style', {
+  parse(tk, remain) { this.tpls = []; const s = this.liquid.parser.parseStream(remain); s.on('tag:endstyle', () => s.stop()).on('template', (t) => this.tpls.push(t)); s.start(); },
+  *render(ctx, emitter) { emitter.write('<style>'); yield this.liquid.renderer.renderTemplates(this.tpls, ctx, emitter); emitter.write('</style>'); },
+});
 const F = {
   asset_url: (s) => s, image_url: (i) => i?.src || i, money: (c) => `€${(c / 100).toFixed(2).replace('.', ',')}`, money_without_trailing_zeros: (c) => `€${(c / 100).toFixed(2).replace('.00', '').replace('.', ',')}`,
   json: (v) => JSON.stringify(v ?? null), t: (k) => k, stylesheet_tag: (u) => `<link rel="stylesheet" href="${u}">`,
