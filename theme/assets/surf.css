@@ -12,31 +12,37 @@
 @font-face { font-family: 'Fraunces'; src: url('fraunces-soft-480-italic.woff2') format('woff2'); font-weight: 400 600; font-style: italic; font-display: swap; }
 @font-face { font-family: 'Inter'; src: url('inter-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Inter'; src: url('inter-latin-600-normal.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+/* Branding 2: eigen display-letter (afgeleid van Kavoon, OFL), Courier Prime (OFL) en Homemade Apple (Apache 2.0) */
+@font-face { font-family: 'Tide Tode Display'; src: url('tide-tode-display.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Courier Prime'; src: url('courierprime-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Courier Prime'; src: url('courierprime-bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'Courier Prime'; src: url('courierprime-italic.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Homemade Apple'; src: url('homemadeapple-regular.woff2') format('woff2'); font-display: swap; }
 
 :root {
   /* palet (moodboard): rust en blauw als basis, warm en zacht alleen in details.
      De kleurenschema's in Shopify gebruiken dezelfde waarden. */
-  --surf-creme: #f5eedf;     /* basis: achtergrond */
-  --surf-deep: #1f3f6b;      /* hoofdkleur: koppen, donkere vlakken */
-  --surf-ink: #18325a;       /* tekst */
-  --surf-captain: #3d6fb6;   /* accent: knoppen, accentwoord */
-  --surf-baby: #c4daf0;      /* zacht vlak */
-  --surf-poppy: #ee7b4f;     /* warme pit, spaarzaam */
-  --surf-rose: #f2bdbd;      /* alleen klein */
-  --surf-sunshine: #c4daf0;  /* geel wordt niet gebruikt (geen geel op blauw): wijst naar Baby */
-  --surf-overlay: 24, 50, 90; /* donkere laag over foto's (rgb van ink) */
+  --surf-creme: #f3ecdd;     /* basis: achtergrond */
+  --surf-deep: #22324f;      /* hoofdkleur: koppen, donkere vlakken */
+  --surf-ink: #22324f;       /* tekst */
+  --surf-captain: #4a6b97;   /* accent: knoppen, accentwoord */
+  --surf-baby: #bfd3ea;      /* zacht vlak */
+  --surf-poppy: #e3a69f;     /* warme pit, spaarzaam */
+  --surf-rose: #edbdb8;      /* alleen klein */
+  --surf-sunshine: #bfd3ea;  /* geel wordt niet gebruikt (geen geel op blauw): wijst naar Baby */
+  --surf-overlay: 34, 50, 79; /* donkere laag over foto's (rgb van ink) */
 
-  --font-body-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body-family: 'Courier Prime', 'Courier New', Courier, monospace;
   --font-body-style: normal;
   --font-body-weight: 400;
-  --font-heading-family: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-heading-family: 'Tide Tode Display', 'Cooper Black', Georgia, serif;
   --font-heading-style: normal;
-  --font-heading-weight: 480;
-  --tt-klein-kop: 'Fraunces Tekst', 'Fraunces', Georgia, serif;
+  --font-heading-weight: 400;
+  --tt-klein-kop: 'Courier Prime', 'Courier New', monospace;
   --tt-accent: var(--surf-captain);
 
   /* merkstijl: één handschrift-woord per pagina (de ondertekening) */
-  --mk-eigen-font-accent: 'Fraunces', Georgia, serif;
+  --mk-eigen-font-accent: 'Homemade Apple', 'Brush Script MT', cursive;
   --mk-eigen-donker: var(--surf-deep);
 }
 
@@ -121,14 +127,13 @@
 .surf-header__logo { display: inline-flex; align-items: center; text-decoration: none; color: inherit; flex-shrink: 0; }
 .surf-header__logo img { height: auto; display: block; }
 /* logo-lockups (snippet tt-logo) */
-.tt-lock { display: inline-flex; align-items: center; gap: .55em; color: inherit; }
-.tt-lock--liggend .tt-maan { height: 1.5em; width: auto; }
-.tt-lock--liggend .tt-woord { height: 1.05em; width: auto; }
-.tt-lock--staand { flex-direction: column; gap: .5em; }
-.tt-lock--staand .tt-maan { height: 2.2em; width: auto; }
-.tt-lock--staand .tt-woord { height: 1.3em; width: auto; }
-.surf-header__logo .tt-lock { font-size: 26px; }
-.surf-drawer .tt-lock { font-size: 26px; }
+.tt-lock { display: block; color: inherit; }
+/* branding 2: het logo is één svg; de hoogte bepaalt de maat */
+svg.tt-lock--liggend { height: 1em; width: auto; }
+svg.tt-lock--staand { height: 2.3em; width: auto; }
+.tt-board { height: 1.6em; width: auto; }
+.surf-header__logo .tt-lock { font-size: 20px; }
+.surf-drawer .tt-lock { font-size: 22px; }
 .surf-header__nav { display: none; }
 .surf-header__nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; }
 .surf-header__nav .item { display: flex; align-items: center; position: relative; }
@@ -354,8 +359,8 @@
 .surf-footer a { color: inherit; text-decoration: none; font-size: 15px; opacity: .88; }
 .surf-footer a:hover { opacity: 1; text-decoration: underline; text-underline-offset: .3em; }
 .surf-footer__word { color: var(--surf-creme); opacity: .1; margin-top: 8px; }
-.surf-footer__word .tt-woord { width: 100%; height: auto; }
-.surf-footer__brand .tt-lock { font-size: 34px; color: var(--surf-creme); }
+.surf-footer__word .tt-lock { width: 100%; height: auto; }
+.surf-footer__brand .tt-lock { font-size: 30px; color: var(--surf-creme); }
 .surf-footer__zegel { width: 120px; color: var(--surf-sunshine); margin-top: 28px; opacity: .9; }
 .surf-brief { margin-top: 28px; max-width: 420px; }
 .surf-brief h2 { font: 480 26px/1.1 var(--mk-font-kop) !important; letter-spacing: -0.01em !important; text-transform: none !important; opacity: 1 !important; color: var(--surf-creme); margin-bottom: 8px !important; }
@@ -461,7 +466,7 @@ h1, h2, h3, .h0, .h1, .h2, .h3 { font-family: var(--font-heading-family); font-w
 .mk-hero, .mk-h2, .mk-statement { letter-spacing: -0.02em !important; font-weight: 480 !important; }
 @media (max-width: 600px) {
   .surf-header { padding-left: 16px; gap: 8px; }
-  .surf-header__logo .tt-lock { font-size: 20px; }
+  .surf-header__logo .tt-lock { font-size: 16px; }
   .surf-header__actions a[href*="search"] { display: none; }
   .surf-icon-btn { width: 42px; height: 42px; }
 }

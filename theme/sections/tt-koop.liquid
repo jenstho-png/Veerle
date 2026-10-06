@@ -38,6 +38,7 @@
         assign aantal = 2
       endif
     -%}
+    {%- if section.settings.stickers -%}<div class="tt-stickers tt-stickers--koop" aria-hidden="true">{% render 'tt-stk', naam: 'golf' %}</div>{%- endif -%}
     <p class="tt-koop__teller" aria-hidden="true"><span data-tt-teller>1</span> / {{ aantal }}</p>
     </div>
     <div class="tt-koop__info">
@@ -183,7 +184,7 @@
       "id": "heading",
       "label": "Kop",
       "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
-      "default": "De Tide-Tode draagtas"
+      "default": "De Tide Tode draagtas"
     },
     {
       "type": "textarea",
@@ -202,6 +203,12 @@
       "id": "sticker",
       "label": "Sticker op de eerste foto",
       "default": ""
+    },
+    {
+      "type": "checkbox",
+      "id": "stickers",
+      "label": "Sticker bij de foto's",
+      "default": true
     },
     {
       "type": "checkbox",

@@ -70,6 +70,24 @@ schrijf('tt-hero', PRIJS + """
 <section class="tt tt-hero{% if section.settings.pagina %} tt-hero--pagina{% endif %}" id="tt-hero-{{ section.id }}">
   <div class="tt-hero__foto">""" + B('', fb, ", sizes: '100vw', loading: 'eager'") + """</div>
   <div class="tt-hero__inhoud tt-wrap">
+    {%- if section.settings.poster -%}
+    <div class="tt-hero__poster">
+      <div class="tt-hero__links">
+        <h1 class="tt-hero__logo tt-in" style="--d: .2s">{%- render 'tt-logo', variant: 'staand' -%}<span class="visually-hidden">{{ section.settings.heading | replace: '|', ' ' | remove: '*' }}</span></h1>
+        {%- if section.settings.hand != blank -%}<p class="tt-hero__hand tt-in" style="--d: .5s">{{ section.settings.hand }}</p>{%- endif -%}
+      </div>
+      <div class="tt-hero__rechts tt-in" style="--d: .7s">
+        {%- if section.settings.text != blank -%}<p>{{ section.settings.text }}</p>{%- endif -%}
+        <div class="tt-knoppen">
+          {%- if section.settings.btn_label != blank -%}
+            <a class="tt-knop tt-knop--licht" href="{% if section.settings.btn_link != blank %}{{ section.settings.btn_link }}{% elsif p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}<span aria-hidden="true">→</span></a>
+          {%- endif -%}
+          {%- if section.settings.link_label != blank -%}<a class="tt-link" href="{{ section.settings.link_url | default: '#tt-verhaal' }}">{{ section.settings.link_label }}</a>{%- endif -%}
+        </div>
+        {%- if section.settings.est != blank -%}<div class="tt-hero__est" aria-hidden="true"><span>est.</span><span>{{ section.settings.est }}</span></div>{%- endif -%}
+      </div>
+    </div>
+    {%- else -%}
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h1', class: 'tt-kop--xl' -%}
     <div class="tt-hero__onder">
       {%- if section.settings.text != blank -%}<p class="tt-lead tt-in" style="--d: .7s">{{ section.settings.text }}</p>{%- endif -%}
@@ -80,6 +98,7 @@ schrijf('tt-hero', PRIJS + """
         {%- if section.settings.link_label != blank -%}<a class="tt-link" href="{{ section.settings.link_url | default: '#tt-verhaal' }}">{{ section.settings.link_label }}</a>{%- endif -%}
       </div>
     </div>
+    {%- endif -%}
   </div>
   {%- if section.settings.kaart and p != blank -%}
     <a class="tt-hero__kaart tt-in" style="--d: 1.1s" href="{{ p.url }}">
@@ -93,8 +112,11 @@ schrijf('tt-hero', PRIJS + """
     "name": "TT: hero", "tag": "div",
     "settings": [
         {"type": "checkbox", "id": "pagina", "label": "Lagere versie (voor subpagina's)", "default": False},
+        {"type": "checkbox", "id": "poster", "label": "Posterversie: het grote logo als kop", "default": True, "info": "De kop hieronder staat dan onzichtbaar in de pagina (voor Google en schermlezers)."},
         {"type": "product", "id": "product", "label": "Product", "info": "Leeg = het product uit Thema-instellingen > Tide-Tode."},
         kop("Je board op je rug,|je handen vrij."),
+        {"type": "text", "id": "hand", "label": "Handgeschreven regel (posterversie)", "default": "Handen vrij, op weg naar zee"},
+        {"type": "text", "id": "est", "label": "Jaartal rechtsonder (posterversie)", "default": "2025"},
         {"type": "textarea", "id": "text", "label": "Tekst", "default": "Een draagtas voor je surfboard, bedacht op surftrips in Australië en Midden-Amerika. Voor de wandeling door de duinen, de fiets naar het strand en de scooter naar een spot verderop."},
         {"type": "text", "id": "btn_label", "label": "Knop", "default": "Bekijk de draagtas"},
         {"type": "url", "id": "btn_link", "label": "Knop-link", "info": "Leeg = het product."},
@@ -163,6 +185,7 @@ schrijf('tt-koop', PRIJS + """
         assign aantal = 2
       endif
     -%}
+    {%- if section.settings.stickers -%}<div class="tt-stickers tt-stickers--koop" aria-hidden="true">{% render 'tt-stk', naam: 'golf' %}</div>{%- endif -%}
     <p class="tt-koop__teller" aria-hidden="true"><span data-tt-teller>1</span> / {{ aantal }}</p>
     </div>
     <div class="tt-koop__info">
@@ -263,10 +286,11 @@ schrijf('tt-koop', PRIJS + """
     "settings": [
         bg("creme"),
         {"type": "product", "id": "product", "label": "Product", "info": "Leeg = op de productpagina het product van die pagina, elders het product uit Thema-instellingen > Tide-Tode."},
-        kop("De Tide-Tode draagtas"),
+        kop("De Tide Tode draagtas"),
         {"type": "textarea", "id": "text", "label": "Korte pitch", "default": "Voor iedereen die zijn board een eind moet dragen. Je legt je board in de tas, trekt de banden aan en hangt hem op je rug. Het gewicht zit verdeeld over je schouders en de wax blijft van je arm af."},
         {"type": "text", "id": "prijs_tekst", "label": "Tekst als er nog geen product is", "default": "Binnenkort"},
         {"type": "text", "id": "sticker", "label": "Sticker op de eerste foto", "default": ""},
+        {"type": "checkbox", "id": "stickers", "label": "Sticker bij de foto's", "default": True},
         {"type": "checkbox", "id": "snel_betalen", "label": "Snelle betaalknoppen tonen (Shop Pay, Apple Pay, enz.)", "default": True},
         {"type": "header", "content": "Vertrouwen onder de knop"},
         {"type": "text", "id": "v1", "label": "Regel 1", "default": "Verzending door heel Europa"},
@@ -341,6 +365,7 @@ schrijf('tt-zo', """
 schrijf('tt-muur', """
 <section class="tt tt-muur tt-bg--{{ section.settings.bg }}">
   <div class="tt-muur__kop tt-wrap">
+    {%- if section.settings.stickers -%}<div class="tt-stickers tt-stickers--muur1" aria-hidden="true">{% render 'tt-stk', naam: 'schelp' %}</div><div class="tt-stickers tt-stickers--muur2" aria-hidden="true">{% render 'tt-stk', naam: 'zeester' %}</div>{%- endif -%}
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
     {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
   </div>
@@ -357,7 +382,7 @@ schrijf('tt-muur', """
 </section>
 """, {
     "name": "TT: fotomuur", "tag": "div", "max_blocks": 12,
-    "settings": [bg("creme"), kop("Onderweg naar het water"),
+    "settings": [bg("creme"), kop("Onderweg naar het water"), {"type": "checkbox", "id": "stickers", "label": "Stickers bij de kop", "default": True},
                  {"type": "textarea", "id": "text", "label": "Tekst", "default": "Australië, Midden-Amerika, Azië of de duinen om de hoek. De mooiste spots liggen vaak niet naast de parkeerplaats."}],
     "blocks": [{"type": "foto", "name": "Foto", "settings": [
         {"type": "select", "id": "vorm", "label": "Vorm", "options": [{"value": "staand", "label": "Staand"}, {"value": "hoog", "label": "Hoog"}, {"value": "vierkant", "label": "Vierkant"}, {"value": "boog", "label": "Boog"}, {"value": "liggend", "label": "Liggend"}], "default": "staand"},
@@ -415,7 +440,7 @@ s, fb = beeld('', 'Foto', 'tt-foto-verhaal', 'tide-tode-verhaal.jpg', 'Op reis m
 schrijf('tt-verhaal', """
 <section class="tt tt-verhaal tt-bg--{{ section.settings.bg }}" id="tt-verhaal">
   <div class="tt-wrap tt-verhaal__grid">
-    <div class="tt-verhaal__foto"><div class="tt-onthul">""" + B('', fb, ", sizes: '(min-width: 990px) 42vw, 90vw'") + """</div></div>
+    <div class="tt-verhaal__foto">{%- if section.settings.stickers -%}<div class="tt-stickers tt-stickers--verhaal" aria-hidden="true">{% render 'tt-stk', naam: 'zon' %}</div>{%- endif -%}<div class="tt-onthul">""" + B('', fb, ", sizes: '(min-width: 990px) 42vw, 90vw'") + """</div></div>
     <div class="tt-verhaal__tekst">
       {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
       <div class="tt-verhaal__body tt-in">{{ section.settings.text }}</div>
@@ -431,6 +456,7 @@ schrijf('tt-verhaal', """
         kop("“Dit moet stukken|comfortabeler kunnen.”"),
         {"type": "richtext", "id": "text", "label": "Tekst", "default": "<p>Losse touwtjes, spanbanden, standaardhoezen: ik heb het allemaal geprobeerd. Niets hield het lang vol.</p><p>In februari 2025 kwam er een vriend bij die net zo gek is op surfen en precies dezelfde frustratie kende. Toen zijn we de tas gewoon zelf gaan maken. Robuust, van zware stof, en mooi genoeg om mee te nemen op reis.</p>"},
         {"type": "text", "id": "naam", "label": "Ondertekening", "default": "Veerle"},
+        {"type": "checkbox", "id": "stickers", "label": "Sticker bij de foto", "default": True},
         {"type": "text", "id": "link_label", "label": "Link", "default": "Lees het hele verhaal"},
         {"type": "url", "id": "link", "label": "Link-adres"},
     ] + s,

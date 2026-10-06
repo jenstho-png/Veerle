@@ -29,8 +29,8 @@ def zacht(g, r):
 
 
 def sticker(naam, vorm, lijnen, vul, lijnkleur, rand=11):
-    vorm = zacht(vorm, 3)
-    randvorm = zacht(vorm.buffer(rand, join_style=1), 6)
+    vorm = zacht(vorm, 3).simplify(0.35)
+    randvorm = zacht(vorm.buffer(rand, join_style=1), 6).simplify(0.5)
     minx, miny, maxx, maxy = randvorm.bounds
     m = 6
     vb = f'{minx - m:.0f} {miny - m:.0f} {maxx - minx + 2 * m:.0f} {maxy - miny + 2 * m:.0f}'

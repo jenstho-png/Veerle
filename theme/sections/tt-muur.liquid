@@ -1,5 +1,6 @@
 <section class="tt tt-muur tt-bg--{{ section.settings.bg }}">
   <div class="tt-muur__kop tt-wrap">
+    {%- if section.settings.stickers -%}<div class="tt-stickers tt-stickers--muur1" aria-hidden="true">{% render 'tt-stk', naam: 'schelp' %}</div><div class="tt-stickers tt-stickers--muur2" aria-hidden="true">{% render 'tt-stk', naam: 'zeester' %}</div>{%- endif -%}
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
     {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
   </div>
@@ -59,6 +60,12 @@
       "label": "Kop",
       "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
       "default": "Onderweg naar het water"
+    },
+    {
+      "type": "checkbox",
+      "id": "stickers",
+      "label": "Stickers bij de kop",
+      "default": true
     },
     {
       "type": "textarea",

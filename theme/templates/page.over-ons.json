@@ -11,7 +11,8 @@
         "kaart": false,
         "image": "",
         "filename": "tide-tode-over-ons.jpg",
-        "alt": "Surfers op weg naar zee"
+        "alt": "Surfers op weg naar zee",
+        "poster": false
       }
     },
     "verhaal": {
