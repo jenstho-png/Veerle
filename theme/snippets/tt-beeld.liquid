@@ -25,4 +25,5 @@
   {%- if filename != blank -%}<span class="tt-beeld__naam">{{ filename }}</span>{%- endif -%}
 {%- else -%}
   <span class="tt-beeld__leeg" role="img" aria-label="{{ alt_text | escape }}">{%- render 'tt-logo', variant: 'maan-simpel' -%}</span>
+  {%- if filename != blank -%}<span class="tt-beeld__naam">{{ filename }}</span>{%- endif -%}
 {%- endif -%}

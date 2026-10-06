@@ -90,7 +90,7 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 .tt-hero .tt-kop { --tt-acc: var(--tt-creme); max-width: 14ch; text-shadow: 0 2px 40px rgba(10, 25, 45, .18); }
 .tt-hero__onder { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 28px 48px; margin-top: clamp(28px, 3vw, 44px); }
 .tt-hero .tt-lead { color: rgba(245, 238, 223, .9); max-width: 38ch; }
-.tt-hero__kaart { position: absolute; z-index: 3; right: var(--tt-marge); top: calc(50% - 40px); display: flex; align-items: center; gap: 16px; padding: 10px 22px 10px 10px; border-radius: 20px; background: var(--tt-creme); color: var(--tt-ink); text-decoration: none; box-shadow: 0 30px 60px -30px rgba(10, 25, 45, .55); transition: transform .6s var(--tt-ease); }
+.tt-hero__kaart { position: absolute; z-index: 3; right: max(var(--tt-marge), calc((100vw - var(--tt-breed)) / 2 + var(--tt-marge))); top: calc(50% - 40px); display: flex; align-items: center; gap: 16px; padding: 10px 22px 10px 10px; border-radius: 20px; background: var(--tt-creme); color: var(--tt-ink); text-decoration: none; box-shadow: 0 30px 60px -30px rgba(10, 25, 45, .55); transition: transform .6s var(--tt-ease); }
 .tt-hero__kaart:hover { transform: translateY(-4px); }
 .tt-hero__kaart-beeld { width: 64px; height: 64px; border-radius: 12px; overflow: hidden; background: var(--tt-zand); display: grid; place-items: center; color: var(--tt-deep); }
 .tt-hero__kaart-beeld img { width: 100%; height: 100%; object-fit: cover; }
@@ -351,7 +351,7 @@ body::after { content: ''; position: fixed; inset: -50%; z-index: 2147483000; po
 .tt-usp__golf .tt-golfje { width: 26px; height: auto; }
 .tt-usp.tt-bg--deep .tt-icoon { color: var(--tt-sunshine); }
 .tt-usp { overflow-x: clip; overflow-y: visible; z-index: 3; }
-.tt-usp__zegel { position: absolute !important; right: clamp(20px, 6vw, 110px); top: -72px; width: 140px; height: 140px; border-radius: 50%; padding: 8px; background: var(--tt-sunshine); color: var(--tt-deep); box-shadow: 0 20px 40px -20px rgba(10, 25, 45, .6); }
+.tt-usp__zegel { position: absolute !important; right: max(clamp(20px, 6vw, 110px), calc((100vw - var(--tt-breed)) / 2 + 110px)); top: -72px; width: 140px; height: 140px; border-radius: 50%; padding: 8px; background: var(--tt-sunshine); color: var(--tt-deep); box-shadow: 0 20px 40px -20px rgba(10, 25, 45, .6); }
 .tt-usp__zegel > svg { width: 100%; height: 100%; display: block; }
 .tt-usp .tt-usp__spoor { overflow: hidden; }
 .tt-usp { contain: none; }
@@ -608,3 +608,31 @@ body:has(.tt-balk.is-aan) .tt-pop__teaser { bottom: 96px; }
 .tt-surfcheck__spot[aria-selected="true"] { background: none; color: var(--tt-sunshine); border-bottom-color: var(--tt-sunshine); }
 @media (max-width: 989px) { .tt-surfcheck__cijfers > div:nth-child(3) { padding-left: 0; border-left: 0; } }
 .tt-surfcheck.is-fout .tt-surfcheck__cijfers, .tt-surfcheck.is-fout .tt-surfcheck__curve { display: none; }
+
+/* ==========================================================================
+   PRODUCTPAGINA: galerij, teller, beschrijving, snel betalen
+   ========================================================================== */
+.tt-koop__galerij-wrap { position: relative; min-width: 0; }
+.tt-koop__teller { display: none; }
+.tt-koop__beschrijving > * { margin: 0 0 .8em !important; }
+.tt-koop__beschrijving ul { padding-left: 1.1em; list-style: disc; }
+.tt-koop__snel { margin-top: 10px; }
+.tt-koop__snel .shopify-payment-button__button { border-radius: 999px !important; min-height: 58px; overflow: hidden; }
+.tt-koop__snel .shopify-payment-button__more-options { font: 500 13px/1.3 var(--tt-tekst); color: var(--tt-zacht); text-decoration: underline; margin-top: 10px; }
+.tt-koop h1.tt-kop { font-size: clamp(34px, 3.8vw, 60px); line-height: 1.02; }
+@media (max-width: 989px) {
+  .tt-koop__teller { display: block; position: absolute; right: 12px; bottom: 12px; z-index: 5; margin: 0 !important; padding: 7px 12px; border-radius: 999px; background: rgba(245, 238, 223, .92); color: var(--tt-ink); font: 600 12px/1 var(--tt-tekst); letter-spacing: .06em; font-variant-numeric: tabular-nums; }
+}
+
+/* ==========================================================================
+   DETAILS VAN DE TAS
+   ========================================================================== */
+.tt-detail { padding-block: var(--tt-ruimte); }
+.tt-detail__kop { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 60px; margin-bottom: clamp(40px, 5vw, 80px); }
+.tt-detail__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(12px, 1.6vw, 24px); }
+.tt-detail__foto { aspect-ratio: 1; border-radius: 6px; }
+.tt-detail__item figcaption { margin-top: 16px; display: grid; gap: 6px; }
+.tt-detail__item strong { font: 480 21px/1.2 var(--tt-display); letter-spacing: -.01em; }
+.tt-detail__item figcaption span { font: 400 14.5px/1.55 var(--tt-tekst); color: var(--tt-zacht); }
+.tt-detail__item:hover img { transform: scale(1.04); }
+@media (max-width: 989px) { .tt-detail__grid { grid-template-columns: 1fr 1fr; gap: 28px 12px; } }

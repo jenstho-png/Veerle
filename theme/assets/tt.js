@@ -58,6 +58,15 @@
           sectie.querySelectorAll('.tt-koop__prijs span, .tt-balk__naam span').forEach((el) => { el.textContent = geld(v.price); });
         });
       }
+      const galerij = sectie.querySelector('[data-tt-galerij]');
+      const teller = sectie.querySelector('[data-tt-teller]');
+      if (galerij && teller) {
+        galerij.addEventListener('scroll', () => {
+          const kind = galerij.firstElementChild;
+          if (!kind) return;
+          teller.textContent = String(Math.round(galerij.scrollLeft / (kind.offsetWidth + 8)) + 1);
+        }, { passive: true });
+      }
       const balk = sectie.querySelector('[data-tt-balk]');
       if (balk) {
         document.body.appendChild(balk);

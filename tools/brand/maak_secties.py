@@ -53,7 +53,12 @@ def schrijf(naam, body, schema):
 
 
 PRIJS = """{%- liquid
+  assign pdp = false
   assign p = section.settings.product
+  if p == blank and template.name == 'product' and product != blank
+    assign p = product
+    assign pdp = true
+  endif
   if p == blank
     assign p = settings.tt_product
   endif
@@ -133,10 +138,12 @@ s2, fb2 = beeld('b2_', 'Productfoto 2', 'tt-foto-product-2', 'tide-tode-draagtas
 schrijf('tt-koop', PRIJS + """
 <section class="tt tt-koop tt-bg--{{ section.settings.bg }}" id="tt-koop-{{ section.id }}" data-tt-koop>
   <div class="tt-wrap tt-koop__grid">
-    <div class="tt-koop__galerij">
+    <div class="tt-koop__galerij-wrap">
+    <div class="tt-koop__galerij" data-tt-galerij>
       {%- assign media = p.media | where: 'media_type', 'image' -%}
+      {%- assign max = 4 -%}{%- if pdp -%}{%- assign max = 12 -%}{%- endif -%}
       {%- if media.size > 0 -%}
-        {%- for m in media limit: 4 -%}
+        {%- for m in media limit: max -%}
           <div class="tt-koop__foto tt-onthul"{% if forloop.first %}{% endif %}>{%- if forloop.first -%}{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}{%- endif -%}{{ m.preview_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 55vw, 100vw', widths: '600, 900, 1200, 1800', alt: m.alt | default: p.title, class: 'tt-beeld__img' }}</div>
         {%- endfor -%}
       {%- else -%}
@@ -144,16 +151,35 @@ schrijf('tt-koop', PRIJS + """
         <div class="tt-koop__foto tt-onthul">""" + B('b2_', fb2, ", sizes: '(min-width: 990px) 55vw, 100vw'") + """</div>
       {%- endif -%}
     </div>
+    {%- liquid
+      assign aantal = media.size
+      if aantal > max
+        assign aantal = max
+      endif
+      if aantal == 0
+        assign aantal = 2
+      endif
+    -%}
+    <p class="tt-koop__teller" aria-hidden="true"><span data-tt-teller>1</span> / {{ aantal }}</p>
+    </div>
     <div class="tt-koop__info">
       <div class="tt-koop__plak">
-        {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
+        {%- if pdp -%}
+          <h1 class="tt-kop tt-kop--m">{{ p.title | escape }}</h1>
+        {%- else -%}
+          {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
+        {%- endif -%}
         <p class="tt-koop__prijs tt-in">
           {%- if p != blank -%}
             <span>{{ v.price | money }}</span>
             {%- if v.compare_at_price > v.price -%}<s>{{ v.compare_at_price | money }}</s>{%- endif -%}
           {%- else -%}<span>{{ section.settings.prijs_tekst }}</span>{%- endif -%}
         </p>
-        {%- if section.settings.text != blank -%}<p class="tt-koop__pitch tt-in">{{ section.settings.text }}</p>{%- endif -%}
+        {%- if pdp and p.description != blank -%}
+          <div class="tt-koop__pitch tt-koop__beschrijving tt-in">{{ p.description }}</div>
+        {%- elsif section.settings.text != blank -%}
+          <p class="tt-koop__pitch tt-in">{{ section.settings.text }}</p>
+        {%- endif -%}
         <ul class="tt-koop__punten tt-in">
           {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span aria-hidden="true">{% render 'tt-logo', variant: 'golfje' %}</span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
         </ul>
@@ -175,6 +201,7 @@ schrijf('tt-koop', PRIJS + """
               <button type="submit" class="tt-knop tt-knop--vol"{% unless v.available %} disabled{% endunless %} data-tt-koopknop>
                 <span data-tt-knoptekst>{% if v.available %}In mijn tas · {{ v.price | money }}{% else %}Uitverkocht{% endif %}</span>
               </button>
+              {%- if section.settings.snel_betalen -%}<div class="tt-koop__snel">{{ form | payment_button }}</div>{%- endif -%}
             {%- endform -%}
           {%- else -%}
             <a class="tt-knop tt-knop--vol" href="{{ routes.all_products_collection_url }}"><span>Bekijk de tas</span></a>
@@ -193,6 +220,34 @@ schrijf('tt-koop', PRIJS + """
       </div>
     </div>
   </div>
+  {%- if pdp -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": {{ p.title | json }},
+        "url": {{ request.origin | append: p.url | json }},
+        {%- if p.featured_media -%}"image": [{{ p.featured_media | image_url: width: 1920 | prepend: 'https:' | json }}],{%- endif -%}
+        "description": {{ p.description | strip_html | strip_newlines | json }},
+        {%- if v.sku != blank -%}"sku": {{ v.sku | json }},{%- endif -%}
+        "brand": { "@type": "Brand", "name": {{ p.vendor | default: shop.name | json }} },
+        "offers": [
+          {%- for variant in p.variants -%}
+            {
+              "@type": "Offer",
+              {%- if variant.sku != blank -%}"sku": {{ variant.sku | json }},{%- endif -%}
+              "availability": "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+              "itemCondition": "https://schema.org/NewCondition",
+              "price": {{ variant.price | divided_by: 100.00 | json }},
+              "priceCurrency": {{ cart.currency.iso_code | json }},
+              "url": {{ request.origin | append: variant.url | json }},
+              "seller": { "@id": {{ shop.url | append: '/#organization' | json }} }
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ]
+      }
+    </script>
+  {%- endif -%}
   {%- if p != blank -%}
     <div class="tt-balk" data-tt-balk aria-hidden="true">
       <span class="tt-balk__naam">{{ p.title }}<span>{{ v.price | money }}</span></span>
@@ -201,7 +256,7 @@ schrijf('tt-koop', PRIJS + """
   {%- endif -%}
 </section>
 """, {
-    "name": "TT: kopen", "tag": "div", "max_blocks": 12,
+    "name": "TT: kopen", "tag": "div", "max_blocks": 12, "info": "Op de productpagina toont deze sectie automatisch het product van die pagina: titel, foto's, beschrijving en varianten.",
     "settings": [
         bg("creme"),
         {"type": "product", "id": "product", "label": "Product", "info": "Leeg = het product uit Thema-instellingen > Tide-Tode."},
@@ -209,6 +264,7 @@ schrijf('tt-koop', PRIJS + """
         {"type": "textarea", "id": "text", "label": "Korte pitch", "default": "Voor iedereen die zijn board een eind moet dragen. Je legt je board in de tas, trekt de banden aan en hangt hem op je rug. Het gewicht zit verdeeld over je schouders en de wax blijft van je arm af."},
         {"type": "text", "id": "prijs_tekst", "label": "Tekst als er nog geen product is", "default": "Binnenkort"},
         {"type": "text", "id": "sticker", "label": "Sticker op de eerste foto", "default": ""},
+        {"type": "checkbox", "id": "snel_betalen", "label": "Snelle betaalknoppen tonen (Shop Pay, Apple Pay, enz.)", "default": True},
         {"type": "header", "content": "Vertrouwen onder de knop"},
         {"type": "text", "id": "v1", "label": "Regel 1", "default": "Verzending door heel Europa"},
         {"type": "text", "id": "v2", "label": "Regel 2", "default": "14 dagen bedenktijd"},
@@ -618,5 +674,55 @@ schrijf('tt-vergelijk', """
         {"type": "rij", "settings": {"punt": "Nat en zanderig board meteen mee", "wij": "ja", "arm": "ja", "banden": "ja", "hoes": "nee"}},
         {"type": "rij", "settings": {"punt": "Veilig op de fiets of scooter", "wij": "ja", "arm": "nee", "banden": "deels", "hoes": "deels"}},
         {"type": "rij", "settings": {"punt": "Klein mee in je reisbagage", "wij": "ja", "arm": "ja", "banden": "ja", "hoes": "nee"}}]}]})
+
+# ---------- DETAILS: close-ups van de tas ----------
+schrijf('tt-detail', """
+{%- liquid
+  assign heeft = false
+  for block in section.blocks
+    if block.settings.image != blank
+      assign heeft = true
+    elsif block.settings.filename != blank and images[block.settings.filename] != blank
+      assign heeft = true
+    endif
+  endfor
+-%}
+{%- if heeft or request.design_mode -%}
+<section class="tt tt-detail tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap">
+    <div class="tt-detail__kop">
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+      {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <div class="tt-detail__grid">
+      {%- for block in section.blocks -%}
+        {%- assign img = block.settings.image -%}
+        {%- if img == blank and block.settings.filename != blank -%}{%- assign img = images[block.settings.filename] -%}{%- endif -%}
+        {%- if img != blank or request.design_mode -%}
+          <figure class="tt-detail__item" {{ block.shopify_attributes }}>
+            <div class="tt-detail__foto tt-onthul">{%- render 'tt-beeld', image: img, filename: block.settings.filename, alt: block.settings.titel, sizes: '(min-width: 990px) 25vw, 50vw' -%}</div>
+            <figcaption><strong>{{ block.settings.titel }}</strong>{%- if block.settings.tekst != blank -%}<span>{{ block.settings.tekst }}</span>{%- endif -%}</figcaption>
+          </figure>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+""", {
+    "name": "TT: details van de tas", "tag": "div", "max_blocks": 8,
+    "info": "Bezoekers zien deze sectie pas als er minstens één foto in staat.",
+    "settings": [bg("creme"), kop("De details"),
+                 {"type": "textarea", "id": "text", "label": "Tekst", "default": "Robuust, van zware stof, en gemaakt om jaren mee op reis te gaan."}],
+    "blocks": [{"type": "detail", "name": "Detail", "settings": [
+        {"type": "image_picker", "id": "image", "label": "Foto (close-up, vierkant)"},
+        {"type": "text", "id": "filename", "label": "Bestandsnaam", "info": "Of upload in Content > Bestanden met precies deze naam."},
+        {"type": "text", "id": "titel", "label": "Titel", "default": "Detail"},
+        {"type": "text", "id": "tekst", "label": "Tekst"}]}],
+    "presets": [{"name": "TT: details van de tas", "blocks": [
+        {"type": "detail", "settings": {"titel": "Zware stof", "tekst": "Waterbestendig en gemaakt voor nat, zand en zout.", "filename": "tide-tode-detail-stof.jpg"}},
+        {"type": "detail", "settings": {"titel": "Sterke stiksels", "tekst": "Stevig gestikt op de plekken waar de tas het zwaarst draagt.", "filename": "tide-tode-detail-stiksels.jpg"}},
+        {"type": "detail", "settings": {"titel": "De schouderbanden", "tekst": "Verdelen het gewicht over je rug in plaats van over één schouder.", "filename": "tide-tode-detail-banden.jpg"}},
+        {"type": "detail", "settings": {"titel": "De gespen", "tekst": "Stevig, en makkelijk open en dicht.", "filename": "tide-tode-detail-gesp.jpg"}}]}]})
 
 print('klaar')

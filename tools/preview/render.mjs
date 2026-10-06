@@ -23,7 +23,7 @@ engine.registerTag('style', {
 const F = {
   asset_url: (s) => s, image_url: (i) => i?.src || i, money: (c) => `€${(c / 100).toFixed(2).replace('.', ',')}`, money_without_trailing_zeros: (c) => `€${(c / 100).toFixed(2).replace('.00', '').replace('.', ',')}`,
   json: (v) => JSON.stringify(v ?? null), t: (k) => k, stylesheet_tag: (u) => `<link rel="stylesheet" href="${u}">`,
-  image_tag: (src, ...a) => `<img src="${src}" alt="">`, payment_type_svg_tag: () => '',
+  image_tag: (src, ...a) => `<img src="${src}" alt="">`, payment_type_svg_tag: () => '', payment_button: () => '<div class="shopify-payment-button"><button class="shopify-payment-button__button" style="width:100%;background:#5a31f4;color:#fff;border:0;padding:18px">Koop met Shop Pay</button></div>', divided_by: (a, b) => a / b, prepend: (a, b) => b + a, strip_html: (s) => String(s || '').replace(/<[^>]+>/g, ''), strip_newlines: (s) => String(s || '').replace(/\n/g, ''),
   preload_tag: (u) => `<link rel="preload" href="${u}" as="image">`,
   placeholder_svg_tag: (n, cls) => `<svg class="${cls || ''}" viewBox="0 0 10 10"></svg>`,
 };
@@ -86,6 +86,18 @@ async function page(name, tplPath, extra = {}) {
 
 await page('home', 'index.json');
 await page('popup', 'index.json', { popup: true, code: 'TIDE10' });
+// productpagina met een nep-product en losse foto's als 'productfoto's'
+{
+  const foto = (f) => ({ media_type: 'image', alt: 'De Tide-Tode draagtas', preview_image: { src: f } });
+  globals.product = { ...settings.tt_product, description: '<p>Voor iedereen die zijn board een eind moet dragen. Leg je board in de tas, trek de banden aan en hang hem op je rug.</p>',
+    vendor: 'Tide-Tode', url: '/products/de-draagtas', featured_media: foto('tt-foto-product-1.jpg'),
+    media: ['tt-foto-product-1.jpg', 'tt-foto-stap-1.jpg', 'tt-foto-product-2.jpg', 'tt-foto-stap-3.jpg', 'tt-foto-stap-2.jpg'].map(foto),
+    variants: [{ id: 1, price: 4000, available: true, url: '/products/de-draagtas?variant=1', sku: 'TT-01', options: [] }] };
+  globals.template = { name: 'product' };
+  globals.cart = { ...globals.cart, currency: { iso_code: 'EUR' } };
+  globals.request.origin = 'https://tide-tode.example';
+  await page('product', 'product.json', { request: { page_type: 'product' } });
+}
 await page('over-ons', 'page.over-ons.json', { request: { page_type: 'page' } });
 await page('faq', 'page.veelgestelde-vragen.json', { request: { page_type: 'page' } });
 console.log('rendered');

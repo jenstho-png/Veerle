@@ -1,5 +1,10 @@
 {%- liquid
+  assign pdp = false
   assign p = section.settings.product
+  if p == blank and template.name == 'product' and product != blank
+    assign p = product
+    assign pdp = true
+  endif
   if p == blank
     assign p = settings.tt_product
   endif
