@@ -168,7 +168,7 @@
           "settings": {
             "vorm": "boog",
             "fallback": "tt-foto-mood-3",
-            "onderschrift": "golden hour",
+            "onderschrift": "zonsondergang",
             "alt": "Zee bij zonsondergang"
           }
         },
@@ -202,7 +202,7 @@
           "settings": {
             "vorm": "staand",
             "fallback": "tt-foto-mood-7",
-            "onderschrift": "van riders voor riders",
+            "onderschrift": "van surfers voor surfers",
             "alt": "Surfers op het strand"
           }
         },
@@ -245,7 +245,7 @@
           "settings": {
             "titel": "Als je leert surfen",
             "tekst": "Groot softtop-board, lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.",
-            "knop": "Shop de tas",
+            "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-beginner",
             "filename": "tide-tode-beginner.jpg",
             "alt": "Beginner met een softtop op het strand"
@@ -256,7 +256,7 @@
           "settings": {
             "titel": "Als je de rustige spots opzoekt",
             "tekst": "Door de bush, over rotsen, achterop de scooter. Jouw board hangt veilig op je rug, jij houdt je handen vrij om te klimmen.",
-            "knop": "Shop de tas",
+            "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-avontuur",
             "filename": "tide-tode-avontuur.jpg",
             "alt": "Surfer klimt over rotsen naar een afgelegen spot"

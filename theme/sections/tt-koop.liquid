@@ -77,7 +77,7 @@
               {%- endunless -%}
               <input type="hidden" name="id" value="{{ v.id }}" data-tt-variant>
               <button type="submit" class="tt-knop tt-knop--vol"{% unless v.available %} disabled{% endunless %} data-tt-koopknop>
-                <span data-tt-knoptekst>{% if v.available %}In mijn tas · {{ v.price | money }}{% else %}Uitverkocht{% endif %}</span>
+                <span data-tt-knoptekst>{% if v.available %}In winkelwagen · {{ v.price | money }}{% else %}Uitverkocht{% endif %}</span>
               </button>
               {%- if section.settings.snel_betalen -%}<div class="tt-koop__snel">{{ form | payment_button }}</div>{%- endif -%}
             {%- endform -%}
@@ -129,7 +129,7 @@
   {%- if p != blank -%}
     <div class="tt-balk" data-tt-balk aria-hidden="true">
       <span class="tt-balk__naam">{{ p.title }}<span>{{ v.price | money }}</span></span>
-      <button type="button" class="tt-knop" tabindex="-1" data-tt-balkknop>In mijn tas</button>
+      <button type="button" class="tt-knop" tabindex="-1" data-tt-balkknop>In winkelwagen</button>
     </div>
   {%- endif -%}
 </section>

@@ -119,13 +119,13 @@
         "type": "textarea",
         "id": "surf_popup_text",
         "label": "Tekst",
-        "default": "Schrijf je in voor de getijdenbrief en krijg 10% korting op je eerste tas. Je hoort ook als eerste wanneer er nieuwe tassen en accessoires zijn."
+        "default": "Schrijf je in voor onze nieuwsbrief en krijg 10% korting op je eerste tas. Je hoort ook als eerste wanneer er nieuwe tassen en accessoires zijn."
       },
       {
         "type": "text",
         "id": "surf_popup_button",
         "label": "Knop",
-        "default": "Stuur mij de korting"
+        "default": "Ontvang mijn korting"
       },
       {
         "type": "text",

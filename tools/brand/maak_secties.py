@@ -202,7 +202,7 @@ schrijf('tt-koop', PRIJS + """
               {%- endunless -%}
               <input type="hidden" name="id" value="{{ v.id }}" data-tt-variant>
               <button type="submit" class="tt-knop tt-knop--vol"{% unless v.available %} disabled{% endunless %} data-tt-koopknop>
-                <span data-tt-knoptekst>{% if v.available %}In mijn tas · {{ v.price | money }}{% else %}Uitverkocht{% endif %}</span>
+                <span data-tt-knoptekst>{% if v.available %}In winkelwagen · {{ v.price | money }}{% else %}Uitverkocht{% endif %}</span>
               </button>
               {%- if section.settings.snel_betalen -%}<div class="tt-koop__snel">{{ form | payment_button }}</div>{%- endif -%}
             {%- endform -%}
@@ -254,7 +254,7 @@ schrijf('tt-koop', PRIJS + """
   {%- if p != blank -%}
     <div class="tt-balk" data-tt-balk aria-hidden="true">
       <span class="tt-balk__naam">{{ p.title }}<span>{{ v.price | money }}</span></span>
-      <button type="button" class="tt-knop" tabindex="-1" data-tt-balkknop>In mijn tas</button>
+      <button type="button" class="tt-knop" tabindex="-1" data-tt-balkknop>In winkelwagen</button>
     </div>
   {%- endif -%}
 </section>
@@ -368,11 +368,11 @@ schrijf('tt-muur', """
     "presets": [{"name": "TT: fotomuur", "blocks": [
         {"type": "foto", "settings": {"vorm": "hoog", "fallback": "tt-foto-mood-1", "onderschrift": "de hike naar de spot", "alt": "Pad door de duinen naar zee"}},
         {"type": "foto", "settings": {"vorm": "vierkant", "fallback": "tt-foto-mood-2", "alt": "Boards in het zand"}},
-        {"type": "foto", "settings": {"vorm": "boog", "fallback": "tt-foto-mood-3", "onderschrift": "golden hour", "alt": "Zee bij zonsondergang"}},
+        {"type": "foto", "settings": {"vorm": "boog", "fallback": "tt-foto-mood-3", "onderschrift": "zonsondergang", "alt": "Zee bij zonsondergang"}},
         {"type": "foto", "settings": {"vorm": "liggend", "fallback": "tt-foto-mood-4", "alt": "Rustige golven"}},
         {"type": "foto", "settings": {"vorm": "staand", "fallback": "tt-foto-mood-5", "onderschrift": "op weg naar zee", "alt": "Surfer op weg naar zee"}},
         {"type": "foto", "settings": {"vorm": "hoog", "fallback": "tt-foto-mood-6", "alt": "Board tegen een muur"}},
-        {"type": "foto", "settings": {"vorm": "staand", "fallback": "tt-foto-mood-7", "onderschrift": "van riders voor riders", "alt": "Surfers op het strand"}},
+        {"type": "foto", "settings": {"vorm": "staand", "fallback": "tt-foto-mood-7", "onderschrift": "van surfers voor surfers", "alt": "Surfers op het strand"}},
         {"type": "foto", "settings": {"vorm": "boog", "fallback": "tt-foto-mood-8", "alt": "Kust van bovenaf"}},
         {"type": "foto", "settings": {"vorm": "vierkant", "fallback": "tt-foto-mood-9", "onderschrift": "door de duinen", "alt": "Hek tussen het duingras"}}]}]})
 
@@ -401,14 +401,14 @@ schrijf('tt-wie', """
     "blocks": [{"type": "kaart", "name": "Kaart", "settings": [
         {"type": "text", "id": "titel", "label": "Titel", "default": "Titel"},
         {"type": "textarea", "id": "tekst", "label": "Tekst"},
-        {"type": "text", "id": "knop", "label": "Linktekst", "default": "Shop de tas"},
+        {"type": "text", "id": "knop", "label": "Linktekst", "default": "Bekijk de draagtas"},
         {"type": "url", "id": "link", "label": "Link"},
         {"type": "text", "id": "sticker", "label": "Sticker"},
         {"type": "select", "id": "sticker_kleur", "label": "Stickerkleur", "options": KLEUREN, "default": "sunshine"},
         {"type": "select", "id": "sticker_icoon", "label": "Stickericoon", "options": [{"value": "", "label": "Geen"}] + ICONEN, "default": ""}] + blok_beeld('tt-foto-beginner', '', '')}],
     "presets": [{"name": "TT: voor wie", "blocks": [
-        {"type": "kaart", "settings": {"titel": "Als je leert surfen", "tekst": "Groot softtop-board, lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.", "knop": "Shop de tas", "fallback": "tt-foto-beginner", "filename": "tide-tode-beginner.jpg", "alt": "Beginner met een softtop op het strand"}},
-        {"type": "kaart", "settings": {"titel": "Als je de rustige spots opzoekt", "tekst": "Door de bush, over rotsen, achterop de scooter. Jouw board hangt veilig op je rug, jij houdt je handen vrij om te klimmen.", "knop": "Shop de tas", "fallback": "tt-foto-avontuur", "filename": "tide-tode-avontuur.jpg", "alt": "Surfer klimt over rotsen naar een afgelegen spot"}}]}]})
+        {"type": "kaart", "settings": {"titel": "Als je leert surfen", "tekst": "Groot softtop-board, lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.", "knop": "Bekijk de draagtas", "fallback": "tt-foto-beginner", "filename": "tide-tode-beginner.jpg", "alt": "Beginner met een softtop op het strand"}},
+        {"type": "kaart", "settings": {"titel": "Als je de rustige spots opzoekt", "tekst": "Door de bush, over rotsen, achterop de scooter. Jouw board hangt veilig op je rug, jij houdt je handen vrij om te klimmen.", "knop": "Bekijk de draagtas", "fallback": "tt-foto-avontuur", "filename": "tide-tode-avontuur.jpg", "alt": "Surfer klimt over rotsen naar een afgelegen spot"}}]}]})
 
 # ---------- VERHAAL ----------
 s, fb = beeld('', 'Foto', 'tt-foto-verhaal', 'tide-tode-verhaal.jpg', 'Op reis met een surfboard')
@@ -547,7 +547,7 @@ schrijf('tt-check', PRIJS + """
         {"type": "range", "id": "min_inch", "label": "Kortste board (inch)", "min": 48, "max": 96, "step": 1, "default": 66, "info": "12 inch = 1 voet. 66 = 5 voet 6 inch."},
         {"type": "range", "id": "max_inch", "label": "Langste board (inch)", "min": 72, "max": 132, "step": 1, "default": 114, "info": "114 = 9 voet 6 inch."},
         {"type": "range", "id": "start_inch", "label": "Startwaarde schuif (inch)", "min": 48, "max": 132, "step": 1, "default": 84},
-        {"type": "text", "id": "btn_label", "label": "Knop", "default": "Shop de draagtas"},
+        {"type": "text", "id": "btn_label", "label": "Knop", "default": "Bekijk de draagtas"},
     ],
     "presets": [{"name": "TT: past mijn board?"}]})
 
@@ -594,7 +594,7 @@ schrijf('tt-surfcheck', """
         bg("deep"),
         kop("De zee van vandaag"),
         {"type": "textarea", "id": "text", "label": "Tekst", "default": "Golven, wind, watertemperatuur en getij voor een paar spots waar we graag komen."},
-        {"type": "text", "id": "btn_label", "label": "Link onder de check", "default": "Pak je tas"},
+        {"type": "text", "id": "btn_label", "label": "Link onder de check", "default": "Bekijk de draagtas"},
     ],
     "blocks": [{"type": "spot", "name": "Spot", "settings": [
         {"type": "text", "id": "naam", "label": "Naam", "default": "Spot"},

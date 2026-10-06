@@ -54,7 +54,7 @@
           const v = varianten.find((x) => x.options.every((o, i) => o === gekozen[i]));
           if (!v) { knop.disabled = true; tekst.textContent = 'Niet beschikbaar'; return; }
           id.value = v.id; knop.disabled = !v.available;
-          tekst.textContent = v.available ? `In mijn tas · ${geld(v.price)}` : 'Uitverkocht';
+          tekst.textContent = v.available ? `In winkelwagen · ${geld(v.price)}` : 'Uitverkocht';
           sectie.querySelectorAll('.tt-koop__prijs span, .tt-balk__naam span').forEach((el) => { el.textContent = geld(v.price); });
         });
       }
@@ -211,7 +211,7 @@
           let wind = null;
           if (w && w.current) {
             wind = w.current.wind_speed_10m;
-            $('wind').textContent = `${Math.round(wind)} kn`;
+            $('wind').textContent = `${Math.round(wind)} knopen`;
             $('wind-extra').textContent = `uit het ${windNaam(w.current.wind_direction_10m)}`;
             $('windblok').hidden = false;
           } else $('windblok').hidden = true;
