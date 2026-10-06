@@ -67,7 +67,7 @@ PRIJS = """{%- liquid
 s, fb = beeld('', 'Foto', 'tt-foto-hero', 'tide-tode-hero.jpg', 'Surfer loopt met board over het strand naar zee')
 schrijf('tt-hero', PRIJS + """
 <section class="tt tt-hero{% if section.settings.pagina %} tt-hero--pagina{% endif %}" id="tt-hero-{{ section.id }}">
-  <div class="tt-hero__foto" data-tt-hero>""" + B('', fb, ", sizes: '100vw', loading: 'eager'") + """</div>
+  <div class="tt-hero__foto">""" + B('', fb, ", sizes: '100vw', loading: 'eager'") + """</div>
   <div class="tt-hero__inhoud tt-wrap">
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h1', class: 'tt-kop--xl' -%}
     <div class="tt-hero__onder">
@@ -99,7 +99,7 @@ schrijf('tt-hero', PRIJS + """
         {"type": "url", "id": "btn_link", "label": "Knop-link", "info": "Leeg = het product."},
         {"type": "text", "id": "link_label", "label": "Tweede link", "default": "Hoe het begon"},
         {"type": "url", "id": "link_url", "label": "Tweede link: adres"},
-        {"type": "checkbox", "id": "kaart", "label": "Productkaartje rechtsonder", "default": True},
+        {"type": "checkbox", "id": "kaart", "label": "Productkaartje rechts", "default": False},
     ] + s,
     "presets": [{"name": "TT: hero"}]})
 
@@ -116,7 +116,6 @@ schrijf('tt-usp', """
       </ul>
     {%- endfor -%}
   </div>
-  {%- if section.settings.zegel -%}<div class="tt-usp__zegel">{% render 'tt-logo', variant: 'zegel' %}</div>{%- endif -%}
 </section>
 """, {
     "name": "TT: voordelen-strook", "tag": "div", "max_blocks": 6,
@@ -291,11 +290,12 @@ s1, fb1 = beeld('', 'Foto links', 'tt-foto-probleem-1', 'tide-tode-sjouwen.jpg',
 s2, fb2 = beeld('b2_', 'Foto rechts', 'tt-foto-probleem-2', 'tide-tode-onderweg.jpg', 'Onderweg naar de spot')
 schrijf('tt-probleem', """
 <section class="tt tt-probleem tt-bg--{{ section.settings.bg }}">
-  <div class="tt-wrap tt-probleem__wrap">
-    <div class="tt-probleem__foto tt-probleem__foto--1" data-tt-snelheid="0.12"><div class="tt-onthul">""" + B('', fb1, ", sizes: '(min-width: 990px) 22vw, 40vw'") + """</div>{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'sunshine', icoon: 'voeten', class: 'tt-sticker--onder' -%}</div>
-    <p class="tt-probleem__tekst" data-tt-vul>{{ section.settings.tekst | escape | replace: '*', '' }}</p>
-    <div class="tt-probleem__foto tt-probleem__foto--2" data-tt-snelheid="-0.1"><div class="tt-onthul">""" + B('b2_', fb2, ", sizes: '(min-width: 990px) 22vw, 40vw'") + """</div></div>
-    {%- if section.settings.slot != blank -%}<p class="tt-probleem__naam tt-in">{{ section.settings.slot }}</p>{%- endif -%}
+  <div class="tt-wrap tt-probleem__grid">
+    <div class="tt-probleem__foto tt-onthul">""" + B('', fb1, ", sizes: '(min-width: 990px) 40vw, 100vw'") + """</div>
+    <blockquote class="tt-probleem__citaat">
+      <p class="tt-probleem__tekst" data-tt-vul>{{ section.settings.tekst | escape | replace: '*', '' }}</p>
+      {%- if section.settings.slot != blank -%}<footer class="tt-probleem__naam tt-in">{{ section.settings.slot }}</footer>{%- endif -%}
+    </blockquote>
   </div>
 </section>
 """, {
@@ -344,22 +344,15 @@ schrijf('tt-muur', """
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
     {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
   </div>
-  <div class="tt-muur__kolommen">
-    {%- for k in (1..3) -%}
-      {%- assign snel = '0.10' -%}{%- if k == 2 -%}{%- assign snel = '-0.14' -%}{%- elsif k == 3 -%}{%- assign snel = '0.2' -%}{%- endif -%}
-      <div class="tt-muur__kolom tt-muur__kolom--{{ k }}" data-tt-snelheid="{{ snel }}">
-        {%- for block in section.blocks -%}
-          {%- assign kol = forloop.index0 | modulo: 3 | plus: 1 -%}
-          {%- if kol == k -%}
-            <figure class="tt-muur__item tt-muur__item--{{ block.settings.vorm }}" {{ block.shopify_attributes }}>
-              <div class="tt-onthul">""" + BB(extra=", sizes: '(min-width: 990px) 30vw, 46vw'") + """</div>
-              {%- render 'tt-sticker', tekst: block.settings.sticker, kleur: block.settings.sticker_kleur, icoon: block.settings.sticker_icoon -%}
-              {%- if block.settings.onderschrift != blank -%}<figcaption>{{ block.settings.onderschrift }}</figcaption>{%- endif -%}
-            </figure>
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-    {%- endfor -%}
+  <div class="tt-wrap">
+    <div class="tt-muur__raster">
+      {%- for block in section.blocks -%}
+        <figure class="tt-muur__item" {{ block.shopify_attributes }}>
+          <div class="tt-onthul">""" + BB(extra=", sizes: '(min-width: 990px) 30vw, 46vw'") + """</div>
+          {%- if block.settings.onderschrift != blank -%}<figcaption>{{ block.settings.onderschrift }}</figcaption>{%- endif -%}
+        </figure>
+      {%- endfor -%}
+    </div>
   </div>
 </section>
 """, {
@@ -422,7 +415,7 @@ s, fb = beeld('', 'Foto', 'tt-foto-verhaal', 'tide-tode-verhaal.jpg', 'Op reis m
 schrijf('tt-verhaal', """
 <section class="tt tt-verhaal tt-bg--{{ section.settings.bg }}" id="tt-verhaal">
   <div class="tt-wrap tt-verhaal__grid">
-    <div class="tt-verhaal__foto" data-tt-snelheid="-0.06"><div class="tt-onthul">""" + B('', fb, ", sizes: '(min-width: 990px) 42vw, 90vw'") + """</div><div class="tt-verhaal__zegel">{% render 'tt-logo', variant: 'zegel' %}</div></div>
+    <div class="tt-verhaal__foto"><div class="tt-onthul">""" + B('', fb, ", sizes: '(min-width: 990px) 42vw, 90vw'") + """</div></div>
     <div class="tt-verhaal__tekst">
       {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
       <div class="tt-verhaal__body tt-in">{{ section.settings.text }}</div>
@@ -447,7 +440,7 @@ schrijf('tt-verhaal', """
 s, fb = beeld('', 'Foto', 'tt-foto-slot', 'tide-tode-slot.jpg', 'Zee bij zonsondergang')
 schrijf('tt-slot', PRIJS + """
 <section class="tt tt-slot">
-  <div class="tt-slot__foto" data-tt-snelheid="0.12">""" + B('', fb, ", sizes: '100vw'") + """</div>
+  <div class="tt-slot__foto">""" + B('', fb, ", sizes: '100vw'") + """</div>
   <div class="tt-slot__inhoud tt-wrap">
     <div class="tt-slot__maan tt-in">{% render 'tt-logo', variant: 'maan' %}</div>
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--xl' -%}
@@ -470,7 +463,7 @@ schrijf('tt-slot', PRIJS + """
 schrijf('tt-merk', """
 <section class="tt tt-merk tt-bg--{{ section.settings.bg }}">
   <div class="tt-wrap tt-merk__wrap">
-    <div class="tt-merk__maan" data-tt-snelheid="0.12">{% render 'tt-logo', variant: 'maan' %}</div>
+    <div class="tt-merk__maan">{% render 'tt-logo', variant: 'maan' %}</div>
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
     {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
     {%- if section.settings.maan_vandaag -%}

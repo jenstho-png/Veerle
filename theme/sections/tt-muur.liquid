@@ -3,22 +3,15 @@
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
     {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
   </div>
-  <div class="tt-muur__kolommen">
-    {%- for k in (1..3) -%}
-      {%- assign snel = '0.10' -%}{%- if k == 2 -%}{%- assign snel = '-0.14' -%}{%- elsif k == 3 -%}{%- assign snel = '0.2' -%}{%- endif -%}
-      <div class="tt-muur__kolom tt-muur__kolom--{{ k }}" data-tt-snelheid="{{ snel }}">
-        {%- for block in section.blocks -%}
-          {%- assign kol = forloop.index0 | modulo: 3 | plus: 1 -%}
-          {%- if kol == k -%}
-            <figure class="tt-muur__item tt-muur__item--{{ block.settings.vorm }}" {{ block.shopify_attributes }}>
-              <div class="tt-onthul">{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, fallback: block.settings.fallback, alt: block.settings.alt, sizes: '(min-width: 990px) 30vw, 46vw' -%}</div>
-              {%- render 'tt-sticker', tekst: block.settings.sticker, kleur: block.settings.sticker_kleur, icoon: block.settings.sticker_icoon -%}
-              {%- if block.settings.onderschrift != blank -%}<figcaption>{{ block.settings.onderschrift }}</figcaption>{%- endif -%}
-            </figure>
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-    {%- endfor -%}
+  <div class="tt-wrap">
+    <div class="tt-muur__raster">
+      {%- for block in section.blocks -%}
+        <figure class="tt-muur__item" {{ block.shopify_attributes }}>
+          <div class="tt-onthul">{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, fallback: block.settings.fallback, alt: block.settings.alt, sizes: '(min-width: 990px) 30vw, 46vw' -%}</div>
+          {%- if block.settings.onderschrift != blank -%}<figcaption>{{ block.settings.onderschrift }}</figcaption>{%- endif -%}
+        </figure>
+      {%- endfor -%}
+    </div>
   </div>
 </section>
 

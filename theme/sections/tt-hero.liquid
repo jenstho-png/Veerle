@@ -9,7 +9,7 @@
   assign v = p.selected_or_first_available_variant
 -%}
 <section class="tt tt-hero{% if section.settings.pagina %} tt-hero--pagina{% endif %}" id="tt-hero-{{ section.id }}">
-  <div class="tt-hero__foto" data-tt-hero>{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-hero', alt: section.settings.alt, sizes: '100vw', loading: 'eager' -%}</div>
+  <div class="tt-hero__foto">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-hero', alt: section.settings.alt, sizes: '100vw', loading: 'eager' -%}</div>
   <div class="tt-hero__inhoud tt-wrap">
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h1', class: 'tt-kop--xl' -%}
     <div class="tt-hero__onder">
@@ -87,8 +87,8 @@
     {
       "type": "checkbox",
       "id": "kaart",
-      "label": "Productkaartje rechtsonder",
-      "default": true
+      "label": "Productkaartje rechts",
+      "default": false
     },
     {
       "type": "header",

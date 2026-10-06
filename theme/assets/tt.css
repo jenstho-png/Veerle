@@ -636,3 +636,71 @@ body:has(.tt-balk.is-aan) .tt-pop__teaser { bottom: 96px; }
 .tt-detail__item figcaption span { font: 400 14.5px/1.55 var(--tt-tekst); color: var(--tt-zacht); }
 .tt-detail__item:hover img { transform: scale(1.04); }
 @media (max-width: 989px) { .tt-detail__grid { grid-template-columns: 1fr 1fr; gap: 28px 12px; } }
+
+/* ==========================================================================
+   STRAK RASTER (laatste laag, gaat boven alles hierboven)
+   Eén fotoverhouding (4:5), één afronding (4px), alles op één lijn,
+   vaste ruimte tussen secties en niets dat verspringt of meebeweegt.
+   ========================================================================== */
+:root { --tt-ruimte: clamp(80px, 9vw, 150px); --tt-r: 4px; --tt-kolom-gat: clamp(16px, 2vw, 32px); }
+
+/* afronding en verhoudingen */
+.tt-onthul, .tt-koop__foto, .tt-zo__foto, .tt-wie__foto, .tt-verhaal__foto, .tt-probleem__foto, .tt-detail__foto, .tt-muur__item .tt-onthul { border-radius: var(--tt-r) !important; }
+.tt-koop__foto, .tt-koop__foto:first-child, .tt-koop__foto:nth-child(2):last-child,
+.tt-zo__foto, .tt-wie__foto, .tt-verhaal__foto, .tt-probleem__foto, .tt-muur__item .tt-onthul { aspect-ratio: 4 / 5 !important; }
+.tt-koop__foto:nth-child(2):last-child { grid-column: auto; }
+
+/* koppen van secties: altijd kop links, tekst rechts op de onderlijn */
+.tt-zo__kop, .tt-muur__kop, .tt-surfcheck__kop, .tt-vergelijk__kop, .tt-detail__kop, .tt .tt-wie__kop { margin-bottom: clamp(40px, 5vw, 72px) !important; }
+.tt-muur__kop { padding-inline: var(--tt-marge); }
+.tt-muur__kop.tt-wrap { padding-inline: var(--tt-marge); }
+.tt-lead { max-width: 42ch; }
+
+/* geen verspringende kolommen */
+.tt-zo__stap:nth-child(n), .tt-wie__kaart:nth-child(n) { margin-top: 0 !important; padding: 0 !important; }
+.tt-zo__stappen, .tt-wie__grid { gap: var(--tt-kolom-gat); }
+
+/* het probleem: foto links, citaat rechts */
+.tt-probleem { padding-block: var(--tt-ruimte); }
+.tt-probleem__grid { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(32px, 6vw, 110px); align-items: center; }
+.tt-probleem__foto { width: 100%; margin: 0 !important; }
+.tt-probleem__citaat { margin: 0; }
+.tt-probleem__tekst { font-size: clamp(24px, 2.5vw, 38px) !important; line-height: 1.25 !important; text-align: left !important; max-width: 30ch; grid-column: auto !important; }
+.tt-probleem__naam { grid-column: auto !important; margin-top: 28px !important; }
+
+/* fotomuur: één raster van gelijke foto's */
+.tt-muur { padding-block: var(--tt-ruimte); }
+.tt-muur__raster { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--tt-kolom-gat); }
+.tt-muur__item figcaption { margin-top: 12px; }
+
+/* verhaal en slot */
+.tt-verhaal__grid { grid-template-columns: 5fr 7fr; align-items: center; }
+.tt-verhaal__foto { width: 100% !important; }
+.tt-slot__foto { inset: 0; }
+
+/* productgalerij: alles 4:5, eerste groot, de rest per twee */
+.tt-koop__galerij { gap: 10px; }
+
+/* voordelen-strook: zonder zegel geen extra ruimte rechts */
+@media (min-width: 1100px) { .tt-usp__lijst { padding-right: var(--tt-marge) !important; } }
+
+/* rustiger onthullen: kleine zoom, geen grote sprongen */
+.tt-js:not(.tt-stil) .tt-onthul > img { transform: scale(1.06); transition: clip-path 1.2s var(--tt-ease) var(--d, 0s), transform 1.6s var(--tt-ease) var(--d, 0s); }
+.tt-js:not(.tt-stil) .tt-in { transform: translateY(12px); }
+.tt-muur__item:hover img, .tt-wie__kaart:hover img, .tt-detail__item:hover img { transform: none; }
+
+@media (max-width: 989px) {
+  .tt-probleem__grid, .tt-verhaal__grid { grid-template-columns: 1fr; }
+  .tt-verhaal__foto { width: 100% !important; }
+  .tt-muur__raster { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 749px) {
+  .tt-zo__stappen { gap: 48px; }
+  .tt-wie__grid { gap: 56px; }
+}
+/* 2 foto's: naast elkaar. Oneven laatste foto: over de volle breedte (geen halve gaten) */
+.tt-koop__foto:first-child:nth-last-child(2) { grid-column: auto !important; }
+.tt-koop__foto:not(:first-child):nth-child(even):last-child { grid-column: 1 / -1 !important; aspect-ratio: 16 / 10 !important; }
+.tt-koop__foto:first-child:nth-last-child(2) ~ .tt-koop__foto { grid-column: auto !important; aspect-ratio: 4 / 5 !important; }
+/* fotomuur op 2 kolommen: een losse laatste foto weglaten, dan blijft het raster dicht */
+@media (max-width: 989px) { .tt-muur__item:nth-child(odd):last-child { display: none; } }

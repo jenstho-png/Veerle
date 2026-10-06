@@ -1,6 +1,6 @@
 <section class="tt tt-merk tt-bg--{{ section.settings.bg }}">
   <div class="tt-wrap tt-merk__wrap">
-    <div class="tt-merk__maan" data-tt-snelheid="0.12">{% render 'tt-logo', variant: 'maan' %}</div>
+    <div class="tt-merk__maan">{% render 'tt-logo', variant: 'maan' %}</div>
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
     {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
     {%- if section.settings.maan_vandaag -%}
