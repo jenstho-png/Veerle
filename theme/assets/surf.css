@@ -23,7 +23,7 @@
   --surf-baby: #c4daf0;      /* zacht vlak */
   --surf-poppy: #ee7b4f;     /* warme pit, spaarzaam */
   --surf-rose: #f2bdbd;      /* alleen klein */
-  --surf-sunshine: #f2d06b;  /* alleen klein */
+  --surf-sunshine: #c4daf0;  /* geel wordt niet gebruikt (geen geel op blauw): wijst naar Baby */
   --surf-overlay: 24, 50, 90; /* donkere laag over foto's (rgb van ink) */
 
   --font-body-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;

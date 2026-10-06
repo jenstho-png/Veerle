@@ -710,3 +710,44 @@ body:has(.tt-balk.is-aan) .tt-pop__teaser { bottom: 96px; }
 .tt-koop__vinkje::after { content: ''; position: absolute; left: 7px; top: 4px; width: 5px; height: 9px; border: solid var(--tt-deep); border-width: 0 2px 2px 0; rotate: 45deg; }
 /* balk bovenaan: ruimte tussen de teksten in plaats van golfjes */
 .surf-balk__extra > span { margin-left: 44px; }
+
+/* ==========================================================================
+   GEEN GEEL OP BLAUW
+   Sunshine wordt niet meer gebruikt: het token wijst naar Baby (lichtblauw).
+   Zo kan geel ook in nieuwe secties niet terugkomen.
+   ========================================================================== */
+:root { --tt-sunshine: #c4daf0; }
+.tt-bg--deep { --tt-acc: var(--tt-baby); }
+.tt-maanstand__licht { fill: var(--tt-creme); }
+.tt-maanstand__kop strong { color: var(--tt-creme); }
+.tt-surfcheck__spot[aria-selected="true"] { color: var(--tt-creme) !important; border-bottom-color: var(--tt-creme) !important; }
+.tt-surfcheck__nu { stroke: var(--tt-creme); }
+.tt-check__schuif::-webkit-slider-thumb { background: var(--tt-creme); }
+.tt-check__schuif::-moz-range-thumb { background: var(--tt-creme); }
+.tt-handtekening { color: inherit; }
+
+/* ==========================================================================
+   HOOFDLETTERS VOOR KORTE TEKSTEN
+   Knoppen, links, labels en tussenkopjes in kapitalen met wat lucht.
+   Grote koppen en lopende tekst blijven gewoon.
+   ========================================================================== */
+.tt-knop, .tt-link, .tt-surfcheck__spot, .tt-check__label, .tt-koop__optie legend,
+.tt-koop__vertrouwen li, .tt-usp__lijst li, .tt-muur__item figcaption, .tt-probleem__naam,
+.tt-surfcheck__bron, .tt-vergelijk__uitleg, .tt-check__schaal, .tt-pop__nee, .tt-pop__klein {
+  text-transform: uppercase; letter-spacing: .12em;
+}
+.tt-knop { font: 600 13px/1 var(--tt-tekst); letter-spacing: .14em; }
+.tt-knop--vol { font-size: 13.5px; }
+.tt-link { font: 600 12.5px/1.2 var(--tt-tekst); letter-spacing: .14em; padding-bottom: 5px; }
+.tt-usp__lijst li { font-size: 12.5px; font-weight: 600; }
+.tt-koop__vertrouwen li { font-size: 11.5px; font-weight: 500; }
+.tt-muur__item figcaption, .tt-probleem__naam { font: 600 11.5px/1.3 var(--tt-tekst); letter-spacing: .14em; }
+
+/* tussenkopjes: strak in kapitalen in plaats van de schreefletter */
+.tt-zo__stap h3, .tt-wie__tekst h3, .tt-detail__item strong, .tt-koop__details summary {
+  font: 600 15px/1.3 var(--tt-tekst) !important; letter-spacing: .12em !important; text-transform: uppercase;
+}
+.tt-wie__tekst h3 { font-size: 16px !important; }
+
+/* menu en thema-knoppen ook in kapitalen */
+.surf-header__nav a, .surf-header__nav summary, .surf-btn { text-transform: uppercase; letter-spacing: .12em; font-size: 12.5px !important; font-weight: 600 !important; }
