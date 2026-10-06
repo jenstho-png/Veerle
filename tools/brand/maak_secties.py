@@ -53,11 +53,9 @@ def schrijf(naam, body, schema):
 
 
 PRIJS = """{%- liquid
-  assign pdp = false
   assign p = section.settings.product
   if p == blank and template.name == 'product' and product != blank
     assign p = product
-    assign pdp = true
   endif
   if p == blank
     assign p = settings.tt_product
@@ -136,6 +134,12 @@ schrijf('tt-usp', """
 s1, fb1 = beeld('', 'Productfoto 1 (zolang het product geen foto\'s heeft)', 'tt-foto-product-1', 'tide-tode-draagtas-1.jpg', 'De Tide-Tode draagtas met board')
 s2, fb2 = beeld('b2_', 'Productfoto 2', 'tt-foto-product-2', 'tide-tode-draagtas-2.jpg', 'Board op de rug onderweg naar de spot')
 schrijf('tt-koop', PRIJS + """
+{%- liquid
+  assign pdp = false
+  if template.name == 'product' and product != blank and section.settings.product == blank
+    assign pdp = true
+  endif
+-%}
 <section class="tt tt-koop tt-bg--{{ section.settings.bg }}" id="tt-koop-{{ section.id }}" data-tt-koop>
   <div class="tt-wrap tt-koop__grid">
     <div class="tt-koop__galerij-wrap">
@@ -256,10 +260,10 @@ schrijf('tt-koop', PRIJS + """
   {%- endif -%}
 </section>
 """, {
-    "name": "TT: kopen", "tag": "div", "max_blocks": 12, "info": "Op de productpagina toont deze sectie automatisch het product van die pagina: titel, foto's, beschrijving en varianten.",
+    "name": "TT: kopen", "tag": "div", "max_blocks": 12,
     "settings": [
         bg("creme"),
-        {"type": "product", "id": "product", "label": "Product", "info": "Leeg = het product uit Thema-instellingen > Tide-Tode."},
+        {"type": "product", "id": "product", "label": "Product", "info": "Leeg = op de productpagina het product van die pagina, elders het product uit Thema-instellingen > Tide-Tode."},
         kop("De Tide-Tode draagtas"),
         {"type": "textarea", "id": "text", "label": "Korte pitch", "default": "Voor iedereen die zijn board een eind moet dragen. Je legt je board in de tas, trekt de banden aan en hangt hem op je rug. Het gewicht zit verdeeld over je schouders en de wax blijft van je arm af."},
         {"type": "text", "id": "prijs_tekst", "label": "Tekst als er nog geen product is", "default": "Binnenkort"},
@@ -711,8 +715,7 @@ schrijf('tt-detail', """
 {%- endif -%}
 """, {
     "name": "TT: details van de tas", "tag": "div", "max_blocks": 8,
-    "info": "Bezoekers zien deze sectie pas als er minstens één foto in staat.",
-    "settings": [bg("creme"), kop("De details"),
+    "settings": [{"type": "paragraph", "content": "Bezoekers zien deze sectie pas als er minstens één foto in staat."}, bg("creme"), kop("De details"),
                  {"type": "textarea", "id": "text", "label": "Tekst", "default": "Robuust, van zware stof, en gemaakt om jaren mee op reis te gaan."}],
     "blocks": [{"type": "detail", "name": "Detail", "settings": [
         {"type": "image_picker", "id": "image", "label": "Foto (close-up, vierkant)"},

@@ -1,14 +1,18 @@
 {%- liquid
-  assign pdp = false
   assign p = section.settings.product
   if p == blank and template.name == 'product' and product != blank
     assign p = product
-    assign pdp = true
   endif
   if p == blank
     assign p = settings.tt_product
   endif
   assign v = p.selected_or_first_available_variant
+-%}
+{%- liquid
+  assign pdp = false
+  if template.name == 'product' and product != blank and section.settings.product == blank
+    assign pdp = true
+  endif
 -%}
 <section class="tt tt-koop tt-bg--{{ section.settings.bg }}" id="tt-koop-{{ section.id }}" data-tt-koop>
   <div class="tt-wrap tt-koop__grid">
@@ -135,7 +139,6 @@
   "name": "TT: kopen",
   "tag": "div",
   "max_blocks": 12,
-  "info": "Op de productpagina toont deze sectie automatisch het product van die pagina: titel, foto's, beschrijving en varianten.",
   "settings": [
     {
       "type": "select",
@@ -173,7 +176,7 @@
       "type": "product",
       "id": "product",
       "label": "Product",
-      "info": "Leeg = het product uit Thema-instellingen > Tide-Tode."
+      "info": "Leeg = op de productpagina het product van die pagina, elders het product uit Thema-instellingen > Tide-Tode."
     },
     {
       "type": "text",
