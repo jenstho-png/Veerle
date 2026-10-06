@@ -55,7 +55,7 @@
               <select name="id" id="SurfVariant-{{ section.id }}">
                 {%- for v in p.variants -%}
                   <option value="{{ v.id }}"{% if v == variant %} selected{% endif %}{% unless v.available %} disabled{% endunless %}>
-                    {{ v.title }} · {{ v.price | money }}{% unless v.available %} (uitverkocht){% endunless %}
+                    {{ v.title }}, {{ v.price | money }}{% unless v.available %} (uitverkocht){% endunless %}
                   </option>
                 {%- endfor -%}
               </select>

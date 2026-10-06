@@ -59,7 +59,7 @@
           <p class="tt-koop__pitch tt-in">{{ section.settings.text }}</p>
         {%- endif -%}
         <ul class="tt-koop__punten tt-in">
-          {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span aria-hidden="true">{% render 'tt-logo', variant: 'golfje' %}</span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
+          {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span class="tt-koop__vinkje" aria-hidden="true"></span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
         </ul>
         <div class="tt-koop__form tt-in">
           {%- if p != blank -%}
@@ -77,7 +77,7 @@
               {%- endunless -%}
               <input type="hidden" name="id" value="{{ v.id }}" data-tt-variant>
               <button type="submit" class="tt-knop tt-knop--vol"{% unless v.available %} disabled{% endunless %} data-tt-koopknop>
-                <span data-tt-knoptekst>{% if v.available %}In winkelwagen · {{ v.price | money }}{% else %}Uitverkocht{% endif %}</span>
+                <span data-tt-knoptekst>{% if v.available %}In winkelwagen{% else %}Uitverkocht{% endif %}</span>
               </button>
               {%- if section.settings.snel_betalen -%}<div class="tt-koop__snel">{{ form | payment_button }}</div>{%- endif -%}
             {%- endform -%}

@@ -6,7 +6,6 @@
   if p == blank
     assign p = settings.tt_product
   endif
-  assign v = p.selected_or_first_available_variant
 -%}
 {%- if section.settings.bevestigd or request.design_mode -%}
 <section class="tt tt-check tt-bg--{{ section.settings.bg }}" data-tt-check data-min="{{ section.settings.min_inch }}" data-max="{{ section.settings.max_inch }}">
@@ -26,7 +25,7 @@
         <p class="tt-check__uitleg" data-tt-check-uitleg></p>
       </div>
       <div class="tt-knoppen tt-in">
-        <a class="tt-knop" href="{% if p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}" data-tt-check-knop>{{ section.settings.btn_label }}{% if p != blank %} · {{ v.price | money_without_trailing_zeros }}{% endif %}<span aria-hidden="true">→</span></a>
+        <a class="tt-knop" href="{% if p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}" data-tt-check-knop>{{ section.settings.btn_label }}<span aria-hidden="true">→</span></a>
       </div>
     </div>
     <div class="tt-check__beeld" aria-hidden="true">

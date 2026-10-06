@@ -704,3 +704,9 @@ body:has(.tt-balk.is-aan) .tt-pop__teaser { bottom: 96px; }
 .tt-koop__foto:first-child:nth-last-child(2) ~ .tt-koop__foto { grid-column: auto !important; aspect-ratio: 4 / 5 !important; }
 /* fotomuur op 2 kolommen: een losse laatste foto weglaten, dan blijft het raster dicht */
 @media (max-width: 989px) { .tt-muur__item:nth-child(odd):last-child { display: none; } }
+
+/* opsomming in het koopblok: een rustig vinkje in plaats van een golfje */
+.tt-koop__punten li .tt-koop__vinkje { position: relative; width: 20px !important; height: 20px !important; border-radius: 50%; background: var(--tt-baby) !important; margin-top: 1px; }
+.tt-koop__vinkje::after { content: ''; position: absolute; left: 7px; top: 4px; width: 5px; height: 9px; border: solid var(--tt-deep); border-width: 0 2px 2px 0; rotate: 45deg; }
+/* balk bovenaan: ruimte tussen de teksten in plaats van golfjes */
+.surf-balk__extra > span { margin-left: 44px; }

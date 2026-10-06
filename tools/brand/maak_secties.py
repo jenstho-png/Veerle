@@ -62,6 +62,7 @@ PRIJS = """{%- liquid
   endif
   assign v = p.selected_or_first_available_variant
 -%}"""
+PRODUCT = PRIJS.replace("\n  assign v = p.selected_or_first_available_variant", "")
 
 # ---------- HERO: volle foto, grote belofte, productkaartje ----------
 s, fb = beeld('', 'Foto', 'tt-foto-hero', 'tide-tode-hero.jpg', 'Surfer loopt met board over het strand naar zee')
@@ -74,7 +75,7 @@ schrijf('tt-hero', PRIJS + """
       {%- if section.settings.text != blank -%}<p class="tt-lead tt-in" style="--d: .7s">{{ section.settings.text }}</p>{%- endif -%}
       <div class="tt-knoppen tt-in" style="--d: .85s">
         {%- if section.settings.btn_label != blank -%}
-          <a class="tt-knop tt-knop--licht" href="{% if section.settings.btn_link != blank %}{{ section.settings.btn_link }}{% elsif p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}{% if p != blank %} · {{ v.price | money_without_trailing_zeros }}{% endif %}<span aria-hidden="true">→</span></a>
+          <a class="tt-knop tt-knop--licht" href="{% if section.settings.btn_link != blank %}{{ section.settings.btn_link }}{% elsif p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}<span aria-hidden="true">→</span></a>
         {%- endif -%}
         {%- if section.settings.link_label != blank -%}<a class="tt-link" href="{{ section.settings.link_url | default: '#tt-verhaal' }}">{{ section.settings.link_label }}</a>{%- endif -%}
       </div>
@@ -111,7 +112,6 @@ schrijf('tt-usp', """
       <ul class="tt-usp__lijst"{% if n == 2 %} aria-hidden="true"{% endif %}>
         {%- for block in section.blocks -%}
           <li {{ block.shopify_attributes }}>{% render 'tt-icoon', icoon: block.settings.icoon %}<span>{{ block.settings.tekst }}</span></li>
-          <li class="tt-usp__golf" aria-hidden="true">{% render 'tt-logo', variant: 'golfje' %}</li>
         {%- endfor -%}
       </ul>
     {%- endfor -%}
@@ -184,7 +184,7 @@ schrijf('tt-koop', PRIJS + """
           <p class="tt-koop__pitch tt-in">{{ section.settings.text }}</p>
         {%- endif -%}
         <ul class="tt-koop__punten tt-in">
-          {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span aria-hidden="true">{% render 'tt-logo', variant: 'golfje' %}</span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
+          {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span class="tt-koop__vinkje" aria-hidden="true"></span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
         </ul>
         <div class="tt-koop__form tt-in">
           {%- if p != blank -%}
@@ -202,7 +202,7 @@ schrijf('tt-koop', PRIJS + """
               {%- endunless -%}
               <input type="hidden" name="id" value="{{ v.id }}" data-tt-variant>
               <button type="submit" class="tt-knop tt-knop--vol"{% unless v.available %} disabled{% endunless %} data-tt-koopknop>
-                <span data-tt-knoptekst>{% if v.available %}In winkelwagen · {{ v.price | money }}{% else %}Uitverkocht{% endif %}</span>
+                <span data-tt-knoptekst>{% if v.available %}In winkelwagen{% else %}Uitverkocht{% endif %}</span>
               </button>
               {%- if section.settings.snel_betalen -%}<div class="tt-koop__snel">{{ form | payment_button }}</div>{%- endif -%}
             {%- endform -%}
@@ -407,7 +407,7 @@ schrijf('tt-wie', """
         {"type": "select", "id": "sticker_kleur", "label": "Stickerkleur", "options": KLEUREN, "default": "sunshine"},
         {"type": "select", "id": "sticker_icoon", "label": "Stickericoon", "options": [{"value": "", "label": "Geen"}] + ICONEN, "default": ""}] + blok_beeld('tt-foto-beginner', '', '')}],
     "presets": [{"name": "TT: voor wie", "blocks": [
-        {"type": "kaart", "settings": {"titel": "Als je leert surfen", "tekst": "Groot softtop-board, lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.", "knop": "Bekijk de draagtas", "fallback": "tt-foto-beginner", "filename": "tide-tode-beginner.jpg", "alt": "Beginner met een softtop op het strand"}},
+        {"type": "kaart", "settings": {"titel": "Als je leert surfen", "tekst": "Een grote softtop, een lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.", "knop": "Bekijk de draagtas", "fallback": "tt-foto-beginner", "filename": "tide-tode-beginner.jpg", "alt": "Beginner met een softtop op het strand"}},
         {"type": "kaart", "settings": {"titel": "Als je de rustige spots opzoekt", "tekst": "Door de bush, over rotsen, achterop de scooter. Jouw board hangt veilig op je rug, jij houdt je handen vrij om te klimmen.", "knop": "Bekijk de draagtas", "fallback": "tt-foto-avontuur", "filename": "tide-tode-avontuur.jpg", "alt": "Surfer klimt over rotsen naar een afgelegen spot"}}]}]})
 
 # ---------- VERHAAL ----------
@@ -438,14 +438,14 @@ schrijf('tt-verhaal', """
 
 # ---------- SLOT ----------
 s, fb = beeld('', 'Foto', 'tt-foto-slot', 'tide-tode-slot.jpg', 'Zee bij zonsondergang')
-schrijf('tt-slot', PRIJS + """
+schrijf('tt-slot', PRODUCT + """
 <section class="tt tt-slot">
   <div class="tt-slot__foto">""" + B('', fb, ", sizes: '100vw'") + """</div>
   <div class="tt-slot__inhoud tt-wrap">
     <div class="tt-slot__maan tt-in">{% render 'tt-logo', variant: 'maan' %}</div>
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--xl' -%}
     <div class="tt-knoppen tt-in">
-      <a class="tt-knop tt-knop--licht" href="{% if section.settings.btn_link != blank %}{{ section.settings.btn_link }}{% elsif p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}{% if p != blank %} · {{ v.price | money_without_trailing_zeros }}{% endif %}<span aria-hidden="true">→</span></a>
+      <a class="tt-knop tt-knop--licht" href="{% if section.settings.btn_link != blank %}{{ section.settings.btn_link }}{% elsif p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}<span aria-hidden="true">→</span></a>
     </div>
   </div>
 </section>
@@ -498,7 +498,7 @@ schrijf('tt-merk', """
     "presets": [{"name": "TT: merk"}]})
 
 # ---------- PAST JOUW BOARD? ----------
-schrijf('tt-check', PRIJS + """
+schrijf('tt-check', PRODUCT + """
 {%- if section.settings.bevestigd or request.design_mode -%}
 <section class="tt tt-check tt-bg--{{ section.settings.bg }}" data-tt-check data-min="{{ section.settings.min_inch }}" data-max="{{ section.settings.max_inch }}">
   <div class="tt-wrap tt-check__grid">
@@ -517,7 +517,7 @@ schrijf('tt-check', PRIJS + """
         <p class="tt-check__uitleg" data-tt-check-uitleg></p>
       </div>
       <div class="tt-knoppen tt-in">
-        <a class="tt-knop" href="{% if p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}" data-tt-check-knop>{{ section.settings.btn_label }}{% if p != blank %} · {{ v.price | money_without_trailing_zeros }}{% endif %}<span aria-hidden="true">→</span></a>
+        <a class="tt-knop" href="{% if p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}" data-tt-check-knop>{{ section.settings.btn_label }}<span aria-hidden="true">→</span></a>
       </div>
     </div>
     <div class="tt-check__beeld" aria-hidden="true">
@@ -568,14 +568,14 @@ schrijf('tt-surfcheck', """
     </div>
     <div class="tt-surfcheck__paneel tt-in" aria-live="polite" data-tt-paneel>
       <div class="tt-surfcheck__oordeel">
-        <p class="tt-surfcheck__zin" data-tt-oordeel>Even kijken naar de zee…</p>
+        <p class="tt-surfcheck__zin" data-tt-oordeel>Even kijken naar de zee</p>
         <p class="tt-surfcheck__tijd" data-tt-tijd></p>
       </div>
       <dl class="tt-surfcheck__cijfers">
-        <div><dt>{% render 'tt-icoon', icoon: 'golf' %}Golven</dt><dd data-tt-golf>–</dd><span data-tt-golf-extra></span></div>
-        <div data-tt-windblok><dt>{% render 'tt-icoon', icoon: 'meeuw' %}Wind</dt><dd data-tt-wind>–</dd><span data-tt-wind-extra></span></div>
-        <div><dt>{% render 'tt-icoon', icoon: 'schelp' %}Water</dt><dd data-tt-water>–</dd><span data-tt-water-extra></span></div>
-        <div><dt>{% render 'tt-icoon', icoon: 'golfjes' %}Getij</dt><dd data-tt-getij>–</dd><span data-tt-getij-extra></span></div>
+        <div><dt>{% render 'tt-icoon', icoon: 'golf' %}Golven</dt><dd data-tt-golf></dd><span data-tt-golf-extra></span></div>
+        <div data-tt-windblok><dt>{% render 'tt-icoon', icoon: 'meeuw' %}Wind</dt><dd data-tt-wind></dd><span data-tt-wind-extra></span></div>
+        <div><dt>{% render 'tt-icoon', icoon: 'schelp' %}Water</dt><dd data-tt-water></dd><span data-tt-water-extra></span></div>
+        <div><dt>{% render 'tt-icoon', icoon: 'golfjes' %}Getij</dt><dd data-tt-getij></dd><span data-tt-getij-extra></span></div>
       </dl>
       <div class="tt-surfcheck__curve" aria-hidden="true">
         <svg viewBox="0 0 600 120" preserveAspectRatio="none"><path class="tt-surfcheck__vlak" data-tt-curve-vlak d=""/><path class="tt-surfcheck__lijn" data-tt-curve d=""/><line class="tt-surfcheck__nu" data-tt-nu y1="0" y2="120"/></svg>

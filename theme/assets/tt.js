@@ -1,4 +1,4 @@
-/* Tide-Tode · beweging en kopen voor de tt-secties. Geen libraries.
+/* Tide-Tode: beweging en kopen voor de tt-secties. Geen libraries.
    - Alles rekent in één requestAnimationFrame per scroll.
    - 'Minder beweging' of de thema-editor: alles staat meteen op de eindstand. */
 (() => {
@@ -54,7 +54,7 @@
           const v = varianten.find((x) => x.options.every((o, i) => o === gekozen[i]));
           if (!v) { knop.disabled = true; tekst.textContent = 'Niet beschikbaar'; return; }
           id.value = v.id; knop.disabled = !v.available;
-          tekst.textContent = v.available ? `In winkelwagen · ${geld(v.price)}` : 'Uitverkocht';
+          tekst.textContent = v.available ? 'In winkelwagen' : 'Uitverkocht';
           sectie.querySelectorAll('.tt-koop__prijs span, .tt-balk__naam span').forEach((el) => { el.textContent = geld(v.price); });
         });
       }
@@ -151,7 +151,7 @@
         stringer.setAttribute('y1', top + 6); stringer.setAttribute('y2', onder - 6);
         banden[0].setAttribute('y', top + h * 0.28); banden[1].setAttribute('y', top + h * 0.66);
         const cm = Math.round(i * 2.54);
-        waarde.textContent = `${voet(i)} · ${cm} cm`;
+        waarde.textContent = `${voet(i)} (${cm} cm)`;
         schuif.style.setProperty('--p', `${((i - 48) / 84) * 100}%`);
         const past = i >= min && i <= max;
         s.classList.toggle('is-past', past); s.classList.toggle('is-niet', !past);
@@ -205,8 +205,8 @@
           const [m, w] = await haal(i);
           const c = m.current;
           $('golf').textContent = `${c.wave_height.toFixed(1).replace('.', ',')} m`;
-          $('golf-extra').textContent = `${Math.round(c.wave_period)} sec · uit het ${windNaam(c.wave_direction)}`;
-          $('water').textContent = c.sea_surface_temperature != null ? `${Math.round(c.sea_surface_temperature)}°C` : '–';
+          $('golf-extra').textContent = `om de ${Math.round(c.wave_period)} seconden, uit het ${windNaam(c.wave_direction)}`;
+          $('water').textContent = c.sea_surface_temperature != null ? `${Math.round(c.sea_surface_temperature)}°C` : '';
           $('water-extra').textContent = c.sea_surface_temperature == null ? '' : c.sea_surface_temperature < 13 ? 'dik wetsuit (5/4)' : c.sea_surface_temperature < 17 ? 'wetsuit 4/3' : c.sea_surface_temperature < 21 ? 'wetsuit 3/2' : c.sea_surface_temperature < 24 ? 'shorty' : 'boardshort of bikini';
           let wind = null;
           if (w && w.current) {

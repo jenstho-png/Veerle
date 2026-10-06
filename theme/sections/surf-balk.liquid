@@ -2,10 +2,10 @@
   <div class="surf-balk__inner">
     {%- if section.settings.link != blank -%}<a href="{{ section.settings.link }}">{{ section.settings.tekst }}</a>{%- else -%}<span>{{ section.settings.tekst }}</span>{%- endif -%}
     {%- if section.settings.tekst2 != blank -%}
-      <span class="surf-balk__extra">{% render 'tt-logo', variant: 'golfje' %}<span>{{ section.settings.tekst2 }}</span></span>
+      <span class="surf-balk__extra"><span>{{ section.settings.tekst2 }}</span></span>
     {%- endif -%}
     {%- if section.settings.tekst3 != blank -%}
-      <span class="surf-balk__extra">{% render 'tt-logo', variant: 'golfje' %}<span>{{ section.settings.tekst3 }}</span></span>
+      <span class="surf-balk__extra"><span>{{ section.settings.tekst3 }}</span></span>
     {%- endif -%}
   </div>
 </div>
