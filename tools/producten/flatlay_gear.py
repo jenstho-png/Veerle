@@ -335,7 +335,7 @@ def wax_op_deck(img, hoogte, basis, wax_hex, zaad=7, schaal=7.0):
     # doorschijnend: de deck schemert erdoor, de kleur van de wax zacht verlopen
     kleur = img * (1 - dekking[..., None]) + wax[None, None] * dekking[..., None]
     kleur = cv2.GaussianBlur(kleur, (0, 0), 0.6)
-    kleur = kleur * ((1 - (hoogte > 0.02)[..., None] * 0) * dif[..., None]) * (1 - 0.35 * sch[..., None]) + glans[..., None]
+    kleur = kleur * dif[..., None] * (1 - 0.35 * sch[..., None]) + glans[..., None]
     korrel = ruis((H, B), 0.012, 0.8, zaad + 9) * (hoogte > 0.05)
     return np.clip(kleur * (1 + korrel[..., None]), 0, 1)
 
@@ -355,6 +355,40 @@ def proef():
     PROEF.mkdir(parents=True, exist_ok=True)
     pad = ST.bewaar(ST.afwerking(doek), PROEF / 'gear-proef-1.jpg')
     print('proef', pad)
+
+
+ACHTER = {'koud': 'baby', 'koel': 'zandpapier', 'warm': 'rose'}
+
+
+def bewaar(img, naam, map_=DOEL):
+    pad = ST.bewaar(ST.afwerking(img), map_ / f'{naam}.jpg')
+    print('foto', pad.relative_to(ROOT))
+    return pad
+
+
+def surfwax(soort, shots=(1, 2, 3)):
+    if 1 in shots:
+        # 1: hero, één pak groot en recht van boven
+        doek = ST.achtergrond(ACHTER[soort])
+        doek = ST.leg(doek, wikkel_pak(soort), breedte=1320, midden=(800, 1000), hoogte=15, contact=0.6)
+        bewaar(doek, f'surfwax-{soort}-1')
+    if 2 in shots:
+        # 2: het blok uit de wikkel onder het pak, met een paar kamgroefjes
+        doek = ST.achtergrond(ACHTER[soort], zaad=2)
+        rgb, a, _ = wax_blok(soort, kam=True, zaad=8)
+        doek = ST.leg(doek, wikkel_pak(soort), breedte=1000, midden=(800, 655), hoogte=14, contact=0.6)
+        doek = ST.leg(doek, np.dstack([rgb, a]).astype(np.float32), breedte=1000, midden=(800, 1365), hoogte=14, contact=0.6)
+        bewaar(doek, f'surfwax-{soort}-2')
+    if 3 in shots:
+        # 3: in gebruik: close-up van de deck, verse wax in rondjes, het pak half uit de wikkel erop
+        B, H = ST.B, ST.H
+        img = deck(DECK[soort], stringer_x=1030, zaad=3)
+        gebied = wax_gebied(B, H, zaad=5)
+        hoogte, basis = wax_parels(B, H, gebied, zaad=11)
+        img = wax_op_deck(img, hoogte, basis, EW.SOORTEN[soort]['kleur'])
+        pak = wikkel_pak(soort, verschuif=200, gebruikt=True, zaad=9)
+        img = ST.leg(img, pak, breedte=840, midden=(760, 700), hoogte=22, contact=0.6)
+        bewaar(img, f'surfwax-{soort}-3')
 
 
 if __name__ == '__main__':
