@@ -1681,3 +1681,7 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
 
 /* plakbalk: productnaam altijd in kapitalen */
 .tt-balk__naam { text-transform: uppercase; }
+.tt-surfcheck__cijfers dd { min-height: 1em; }
+.tt-surfcheck__cijfers dd + span { display: block; min-height: 2.8em; }
+.tt-surfcheck__zin { min-height: 2.3em; }
+.tt-surfcheck__tijd { min-height: 1.4em; }

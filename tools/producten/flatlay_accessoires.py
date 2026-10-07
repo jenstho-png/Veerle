@@ -211,9 +211,19 @@ def midden_voor(m, punt, s, doel=(800, 1000)):
     return (doel[0] - (punt[0] - x0 - w / 2) * s, doel[1] - (punt[1] - y0 - h / 2) * s)
 
 
-def opslaan(img, naam):
-    ST.bewaar(ST.afwerking(img), DOEL / f'{naam}.jpg')
-    print('foto', naam)
+def opslaan(img, naam, max_kb=195):
+    """ST.bewaar, en als zand of stof dan nog te zwaar is (eis: onder 200 kB) verder omlaag in kwaliteit."""
+    from PIL import Image
+    img = ST.afwerking(img)
+    pad = ST.bewaar(img, DOEL / f'{naam}.jpg')
+    q = 70
+    while pad.stat().st_size > max_kb * 1000:
+        bron = img if q > 58 else cv2.GaussianBlur(img, (0, 0), 0.45 + (58 - q) * 0.05)
+        q -= 2
+        Image.fromarray((np.clip(bron, 0, 1) * 255).astype(np.uint8)).save(pad, quality=q, optimize=True, progressive=True)
+        if q <= 44:
+            break
+    print('foto', naam, pad.stat().st_size // 1000, 'kB', 'q', q)
 
 
 def pet_navy_rgba(schaal=1.0):
