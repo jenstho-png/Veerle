@@ -10,6 +10,7 @@ Profielfoto, highlights en Facebook-header komen nog steeds uit posts2.py.
 
 Gebruik: python3 tools/social/carrousels.py
 """
+import json
 import pathlib
 import shutil
 import subprocess
@@ -57,6 +58,33 @@ def hand(t, kleur=NAVY):
 
 # foto's: bron, plus optioneel (y, zoom) voor de uitsnede.
 # y = waar de 4:5 uitsnede verticaal ligt (0 boven, 0.5 midden, 1 onder); zoom > 1 snijdt dichterbij in.
+L = json.load(open(ROOT / 'tools' / 'brand2' / 'logo2.json'))
+ONTWERP = ROOT / 'tools' / 'producten' / 'uit_echt'
+FOTOS = ROOT / 'docs' / 'producten' / 'fotos'
+ROSE, ZANDPAPIER, BABY = '#EDBDB8', '#E3CFAE', '#BFD3EA'
+
+
+def vlak(kleur):
+    """Effen achtergrond in een merkkleur (naadloos papier, met een heel fijne korrel)."""
+    return ('vlak', kleur)
+
+
+def logo(soort, kleur, w):
+    g = L[soort]
+    return (f'<div style="position:absolute;inset:0;display:grid;place-items:center">'
+            f'<svg viewBox="0 0 {g["w"]} {g["h"]}" style="width:{w}px;fill:{kleur};display:block"><path d="{g["d"]}"/></svg></div>')
+
+
+def tekening(naam, w=820):
+    """Een van de prints van de kleding, als los kunstwerkje."""
+    return (f'<div style="position:absolute;inset:0;display:grid;place-items:center">'
+            f'<img src="file://{ONTWERP / ("ontwerp-" + naam + ".png")}" style="width:{w}px;display:block"></div>')
+
+
+def sf(naam):
+    return FOTOS / f'sfeer-{naam}.jpg'
+
+
 def pb(naam):
     return PB / f'{naam}.jpg'
 
@@ -128,11 +156,36 @@ POSTS = [
         (pb('draagtas-zonsondergang-3'), 0.5, 1, ''),
         (pb('draagtas-zonsondergang-4'), 0.5, 1, ''),
     ]),
+    ('post-10-op-het-board', [
+        (sf('zand-tegel'), 0.5, 1, ''),
+        (sf('muur-tegel'), 0.5, 1, ''),
+        (sf('oker-zonsondergang'), 0.5, 1, ''),
+        (sf('witte-muur-ruit'), 0.6, 1, ''),
+        (sf('gele-muur-salie'), 0.5, 1, ''),
+    ]),
+    ('post-11-logo', [
+        (vlak(NAVY), 0.5, 1, logo('gestapeld', CREME, 640)),
+        (vlak(CREME), 0.5, 1, logo('board', NAVY, 150)),
+        (vlak(ROSE), 0.5, 1, logo('liggend', NAVY, 760)),
+    ]),
+    ('post-12-tekeningen', [
+        (vlak(ZANDPAPIER), 0.5, 1, tekening('grootboard-licht')),
+        (vlak(NAVY), 0.5, 1, tekening('tweeboardslos-donker')),
+        (vlak(BABY), 0.5, 1, tekening('golf-licht')),
+        (vlak(CREME), 0.5, 1, tekening('vin-licht')),
+    ]),
 ]
 
 
 def staand(bron, y=0.5, zoom=1.0):
     """Snijdt een foto bij tot 4:5 en schaalt naar 1080x1350."""
+    if isinstance(bron, tuple):
+        import numpy as np
+        k = np.array([int(bron[1][i:i + 2], 16) for i in (1, 3, 5)], np.float32)
+        ruis = np.random.default_rng(1).normal(0, 2.2, (H, B, 1))
+        yy, xx = np.mgrid[0:H, 0:B]
+        licht = 1.03 - 0.06 * (xx / B * 0.45 + yy / H * 0.55)          # raamlicht linksboven, zoals de productfoto's
+        return Image.fromarray(np.clip(k * licht[..., None] + ruis, 0, 255).astype(np.uint8))
     im = Image.open(bron).convert('RGB')
     w, h = im.size
     if w / h > B / H:

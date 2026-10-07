@@ -1,6 +1,6 @@
 # Social media
 
-De Instagram-posts zijn carrousels: staand 4:5 (1080 x 1350, jpg), met 4 tot 6 slides per post. Elke post heeft een eigen map met `slide-1.jpg`, `slide-2.jpg` enzovoort. Upload de slides in die volgorde.
+De Instagram-posts zijn carrousels: staand 4:5 (1080 x 1350, jpg), met 3 tot 6 slides per post. Elke post heeft een eigen map met `slide-1.jpg`, `slide-2.jpg` enzovoort. Upload de slides in die volgorde.
 
 De foto's doen het werk. Op de meeste slides staat geen tekst, en waar wel staat er hooguit één korte regel.
 
@@ -16,7 +16,7 @@ Dat script snijdt de foto's bij tot 4:5, zet waar nodig de tekst erop (gerenderd
 
 | Bestand | Waarvoor |
 |---|---|
-| `post-01-...` tot en met `post-09-...` | Negen carrousels, elk een map met slides (1080 x 1350, jpg) |
+| `post-01-...` tot en met `post-12-...` | Twaalf carrousels, elk een map met slides (1080 x 1350, jpg) |
 | `raster-voorbeeld.jpg` | Zo ziet je profiel eruit met de eerste slide van elke post. Niet posten |
 | `profielfoto.png` | Voor Instagram, TikTok, Facebook en Pinterest. Instagram maakt hem rond |
 | `highlight-*.png` | Covers voor de highlights: Tassen, Kleding, Gear, Onderweg, Strand en Info |
@@ -49,7 +49,7 @@ Zet de link naar de winkel eronder.
 
 ## Volgorde van posten
 
-Post van 09 naar 01. Dan staat 01 linksboven in je raster, zoals in `raster-voorbeeld.jpg`. Negen posts maken drie volle rijen.
+Post van 12 naar 01. Dan staat 01 linksboven in je raster, zoals in `raster-voorbeeld.jpg`. Twaalf posts maken vier volle rijen.
 De eerste slides wisselen af in kleur: zand, crème, rose en baby blue. Twee vlakken met dezelfde kleur staan nooit naast of onder elkaar.
 
 | Rij | Links | Midden | Rechts |
@@ -57,10 +57,50 @@ De eerste slides wisselen af in kleur: zand, crème, rose en baby blue. Twee vla
 | 1 | 01 Ons verhaal | 02 Draagtas Tegel | 03 T-shirts |
 | 2 | 04 Accessoires | 05 Alle draagtassen | 06 Surfwax |
 | 3 | 07 Zo werkt het | 08 Najaar | 09 Draagtas Zonsondergang |
+| 4 | 10 Op het board | 11 Logo | 12 Tekeningen |
 
 ## Posts en captions
 
 Kopieer de tekst in het blok. De hashtags kun je ook in de eerste reactie zetten.
+
+### 12 `post-12-tekeningen`
+
+1. Het grote board met TIDE TODE langs de rand, op zandkleurig papier
+2. Twee boards naast elkaar, crème op navy
+3. Board met golf, op baby blue
+4. De vin, op crème
+
+```
+Wat er op de achterkant van onze shirts en truien staat. Eerst getekend, dan pas gedrukt.
+
+#tidetode #illustratie #surfen #noordzee
+```
+
+### 11 `post-11-logo`
+
+1. Het logo in crème op navy
+2. Het boardje los, op crème
+3. Het liggende logo op rose
+
+```
+Tide Tode.
+
+#tidetode #surfen #noordzee
+```
+
+### 10 `post-10-op-het-board`
+
+1. Tegel om een rood board op het strand
+2. Tegel om een board tegen een betonnen muur
+3. Zonsondergang om een fish tegen een lemen muur
+4. Ruit om een zwart board bij een witte muur
+5. Salie om een board bij een gele muur
+
+```
+Om elk board. Van een rode longboard tot een kleine fish.
+
+#tidetode #draagtas #surfboard #surfbag #surfen
+```
 
 ### 09 `post-09-draagtas-zonsondergang`
 
