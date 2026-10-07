@@ -98,8 +98,7 @@ def ontwerp(ppc):
             i = MOTIEVEN[(r * 2 + c * 1 + (r // 2)) % len(MOTIEVEN)]
             veld[r * tp:(r + 1) * tp, c * tp:(c + 1) * tp] = _MOT[(i, tp)]
     # zachte rand tussen garens (scherpte past bij de schaal)
-    scherp = 0.35 * TEGEL * ppc / 60
-    a = np.clip(veld * scherp + 0.5, 0, 1)
+    a = np.clip(veld * 2.2 * max(1.0, ppc / 12) + 0.5, 0, 1)
     x0, y0 = int(round(u0 * ppc)), int(round(v0 * ppc))
     sub = img[y0:y0 + veld.shape[0], x0:x0 + veld.shape[1]]
     sub[:] = GAREN_NAVY * (1 - a[..., None]) + GAREN_CREME * a[..., None]
@@ -161,6 +160,129 @@ def label_geweven(ppc_label=None):
         f = 1 - 0.07 * (6 - k)
         rand[k, :] *= f; rand[-1 - k, :] *= f; rand[:, k] *= f; rand[:, -1 - k] *= f
     return np.dstack([rgb * rand[..., None], a[..., 3]])
+
+
+LABEL_POS = (80.6, 10.3, 5.0, 2.4)   # u, v, breedte, hoogte in cm: plat op de hoek gestikt, tussen band en kader
+
+
+def ontwerp_met_label(ppc):
+    """Ontwerp plus het geweven label (plat opgestikt, met stiksel en een heel klein beetje dikte)."""
+    img = ontwerp(ppc)
+    lab = label_geweven()
+    u, v, b, h = LABEL_POS
+    bw, bh = int(round(b * ppc)), int(round(h * ppc))
+    klein = cv2.resize(lab, (bw, bh), interpolation=cv2.INTER_AREA)
+    x0, y0 = int(round(u * ppc)), int(round(v * ppc))
+    # schaduwtje onder het label (dikte)
+    m = np.zeros(img.shape[:2], np.float32)
+    m[y0:y0 + bh, x0:x0 + bw] = 1
+    sch = cv2.GaussianBlur(np.roll(np.roll(m, max(1, int(ppc * 0.06)), 0), max(1, int(ppc * 0.04)), 1), (0, 0), max(0.8, ppc * 0.06))
+    img = img * (1 - 0.35 * (sch * (1 - m))[..., None])
+    rgb = klein[..., :3].copy()
+    # stiksel: korte navy steekjes rondom, net binnen de rand
+    yy, xx = np.mgrid[0:bh, 0:bw].astype(np.float32)
+    r = 0.18 * ppc
+    rand = ((np.abs(xx - r) < 0.04 * ppc + 0.5) | (np.abs(xx - (bw - 1 - r)) < 0.04 * ppc + 0.5)) & (yy > r) & (yy < bh - 1 - r)
+    rand |= ((np.abs(yy - r) < 0.04 * ppc + 0.5) | (np.abs(yy - (bh - 1 - r)) < 0.04 * ppc + 0.5)) & (xx > r) & (xx < bw - 1 - r)
+    steek = (np.sin((xx + yy) * 2 * np.pi / (0.35 * ppc)) > -0.2)
+    rgb[rand & steek] = rgb[rand & steek] * 0.72
+    img[y0:y0 + bh, x0:x0 + bw] = rgb
+    lm = np.zeros(img.shape[:2], np.float32)
+    lm[y0:y0 + bh, x0:x0 + bw] = 1
+    return img, lm
+
+
+# ---------- afbeelden op een foto ----------
+def strepen_weg(img, dikte=31):
+    """Lichte geweven streepjes van de stockhanddoek weghalen (dunne lichte lijnen) zonder de plooien te verliezen."""
+    k = cv2.getStructuringElement(cv2.MORPH_RECT, (1, dikte))
+    uit = np.empty_like(img)
+    for c in range(3):
+        o = cv2.morphologyEx(img[..., c], cv2.MORPH_OPEN, k)
+        o = cv2.GaussianBlur(o, (0, 0), 2.5)
+        uit[..., c] = np.minimum(img[..., c], o + 0.012)
+    return uit
+
+
+def breng_aan(foto, masker, U, V, ppc, ontw, labelm=None, schoon=None, verplaatsing=0.35, detail=1.0, ref=None, gamma=1.0,
+              detail_sigma=1.3, schaduw_sigma=1.6, wrap=False):
+    """Ontwerp (bij ppc px/cm) via de coördinaatkaarten U, V (cm) op de foto zetten.
+
+    schoon: de foto zonder de streepjes van de stockhanddoek (voor de schaduw); detail: sterkte van de stofstructuur."""
+    schoon = foto if schoon is None else schoon
+    L = MK.helderheid(schoon)
+    Lz = cv2.GaussianBlur(L, (0, 0), 5)
+    gx = cv2.Sobel(Lz, cv2.CV_32F, 1, 0, ksize=5)
+    gy = cv2.Sobel(Lz, cv2.CV_32F, 0, 1, ksize=5)
+    nrm = max(np.percentile(np.abs(gx[masker > 0.5]), 99), np.percentile(np.abs(gy[masker > 0.5]), 99), 1e-6)
+    Ud = U + np.clip(gx / nrm, -1.5, 1.5) * verplaatsing
+    Vd = V + np.clip(gy / nrm, -1.5, 1.5) * verplaatsing
+    mx = (Ud * ppc - 0.5).astype(np.float32)
+    my = (Vd * ppc - 0.5).astype(np.float32)
+    rand = cv2.BORDER_WRAP if wrap else cv2.BORDER_REPLICATE
+    patroon = cv2.remap(ontw, mx, my, cv2.INTER_LINEAR, borderMode=rand)
+    # schaduw en licht van de foto, per kleurkanaal (warme schaduwen in de zon blijven warm)
+    Ps = cv2.GaussianBlur(schoon, (0, 0), schaduw_sigma)
+    if ref is None:
+        ref = np.percentile(Ps[masker > 0.5].reshape(-1, 3), 75, axis=0)
+    ratio = np.clip(Ps / ref[None, None], 0, 1.5) ** gamma
+    kleur = patroon * ratio
+    # stofstructuur als hoogdoorlaat
+    Lf = MK.helderheid(foto)
+    fijn = (Lf - cv2.GaussianBlur(Lf, (0, 0), detail_sigma))[..., None]
+    donker = 0.55 + 0.45 * MK.helderheid(patroon)[..., None]   # op donker garen valt structuur minder op
+    kleur = np.clip(kleur + fijn * detail * 1.6 * donker, 0, 1)
+    if labelm is not None:
+        lab = cv2.remap(labelm, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
+        kleur = kleur * (1 - 0.0 * lab[..., None])
+    m = masker[..., None]
+    return foto * (1 - m) + kleur * m
+
+
+def grade(img, warm=0.0, contrast=1.0, licht=1.0):
+    uit = img.copy()
+    if warm:
+        uit[..., 0] *= 1 + warm; uit[..., 2] *= 1 - warm
+    uit = (uit - 0.5) * contrast + 0.5
+    return np.clip(uit * licht, 0, 1)
+
+
+def interp(punten, t):
+    p = np.array(punten, np.float32)
+    return np.interp(t, p[:, 0], p[:, 1]).astype(np.float32)
+
+
+# ---------- foto 2: op het zand ----------
+def foto2():
+    f = MK.laad(STOCK / 'handdoek2-zand-1.jpg')
+    h, w = f.shape[:2]
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    s = 15.5  # px per cm: 90 cm is ca. 1400 px, de linkerzoom valt buiten beeld
+    # zoom (franjekant) en zelfkant (rechterrand), gemeten op de foto
+    zoom = 836 + 0.013 * xx
+    zelf = interp([(0, 1040), (900, 1043), (950, 1045), (1180, 1052), (1260, 1063), (1340, 1068), (1420, 1071), (1500, 1076),
+                   (1820, 1078), (1980, 1076), (2133, 1080)], yy)
+    U = BREED - (zelf - xx) / s
+    V = (yy - zoom) / s
+    binnen = ((xx < zelf) & (yy > zoom)).astype(np.float32)
+    # bril eruit (ligt bovenop de handdoek)
+    hsv = cv2.cvtColor((f * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
+    bril = ((hsv[..., 2] < 150) & (hsv[..., 1] > 90)).astype(np.uint8)
+    bril[:, :850] = 0; bril[:950] = 0; bril[1260:] = 0
+    bril = cv2.morphologyEx(bril, cv2.MORPH_CLOSE, np.ones((9, 9), np.uint8))
+    n, lab, st, _ = cv2.connectedComponentsWithStats(bril)
+    if n > 1:
+        bril = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
+    vul = bril.copy(); ff = np.zeros((h + 2, w + 2), np.uint8); cv2.floodFill(vul, ff, (0, 0), 1); bril = bril | (1 - vul)
+    bril = cv2.dilate(bril, np.ones((3, 3), np.uint8)).astype(np.float32)
+    masker = cv2.GaussianBlur(binnen, (0, 0), 1.0) * (1 - cv2.GaussianBlur(bril, (0, 0), 1.0))
+    schoon = strepen_weg(f)
+    ontw, lm = ontwerp_met_label(s * 1.5)
+    uit = breng_aan(f, masker, U, V, s * 1.5, ontw, schoon=schoon, verplaatsing=0.5, detail=0.9)
+    uit = uit[0:1950, 0:1560]
+    uit = cv2.resize(uit, (1600, 2000), interpolation=cv2.INTER_CUBIC)
+    MK.bewaar(uit, DOEL / 'strandhanddoek-tegel-2.jpg')
+    print('foto strandhanddoek-tegel-2')
 
 
 if __name__ == '__main__':

@@ -77,6 +77,148 @@ def art_html():
     print('html klaar in', ART)
 
 
-if __name__ == '__main__' and sys.argv[1:2] == ['art']:
-    art_html()
-    sys.exit()
+# ---------- hulpjes ----------
+def hexrgb(h):
+    return np.array([int(h[i:i + 2], 16) for i in (1, 3, 5)], np.float32) / 255
+
+
+def L(img):
+    return MK.helderheid(img)
+
+
+def poets(img, rechthoeken, straal=7, ruis=0.006):
+    """Tekst van de stockfoto weghalen (Telea inpaint) en een beetje korrel terugzetten."""
+    m = np.zeros(img.shape[:2], np.uint8)
+    for x0, y0, x1, y1 in rechthoeken:
+        m[y0:y1, x0:x1] = 255
+    return poets_masker(img, m, straal, ruis)
+
+
+def poets_masker(img, m, straal=7, ruis=0.006):
+    u8 = (np.clip(img, 0, 1) * 255).astype(np.uint8)
+    uit = cv2.inpaint(u8, m, straal, cv2.INPAINT_TELEA).astype(np.float32) / 255
+    k = cv2.GaussianBlur(np.random.default_rng(3).normal(0, ruis, img.shape[:2]).astype(np.float32), (0, 0), 0.7)[..., None]
+    z = cv2.GaussianBlur(m.astype(np.float32) / 255, (0, 0), 2)[..., None]
+    return uit * z + img * (1 - z) + k * z
+
+
+def art(naam):
+    a = MK.laad_art(ART / f'{naam}.png')
+    return a
+
+
+def druk(img, a, quad, wit, blur=0.7, structuur=0.5, rand=0.8, licht=None):
+    """Druk art (RGBA) in perspectief op het vlak quad (lb, rb, ro, lo) van wit papier.
+    Kleur = inkt x licht van de foto (vermenigvuldigen), plus de fijne papierstructuur."""
+    h, w = img.shape[:2]
+    quad = np.float32(quad)
+    doelb = max(np.linalg.norm(quad[1] - quad[0]), np.linalg.norm(quad[2] - quad[3]))
+    s = doelb / a.shape[1]
+    if s < 1:
+        a = cv2.resize(a, (int(a.shape[1] * s * 1.5), int(a.shape[0] * s * 1.5)), interpolation=cv2.INTER_AREA)
+    ah, aw = a.shape[:2]
+    M = cv2.getPerspectiveTransform(np.float32([[0, 0], [aw, 0], [aw, ah], [0, ah]]), quad)
+    laag = cv2.warpPerspective(a, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
+    Lb = L(img) if licht is None else licht
+    lichtf = np.clip(cv2.GaussianBlur(Lb, (0, 0), 1.0) / wit, 0, 1.08)[..., None]
+    fijn = (Lb - cv2.GaussianBlur(Lb, (0, 0), 1.6))[..., None]
+    kleur = laag[..., :3] * lichtf + fijn * structuur
+    if blur:
+        kleur = cv2.GaussianBlur(kleur, (0, 0), blur)
+    al = laag[..., 3]
+    if rand:
+        al = cv2.GaussianBlur(al, (0, 0), rand)
+    al = al[..., None]
+    return np.clip(img * (1 - al) + kleur * al, 0, 1)
+
+
+def vlak(kleur_hex, b=400, h=200):
+    a = np.ones((h, b, 4), np.float32)
+    a[..., :3] = hexrgb(kleur_hex)
+    return a
+
+
+def wax_kleur(img, m, kleur_hex, glad=0.0, sterkte=1.0):
+    """Blok wax omkleuren met behoud van licht en vorm; glad > 0 strijkt korrel en vlekjes weg."""
+    bron = img
+    if glad:
+        g = cv2.bilateralFilter((img * 255).astype(np.uint8), 0, 30, glad).astype(np.float32) / 255
+        bron = g
+    uit = MK.kleur_om(bron, m, kleur_hex, sterkte)
+    mm = (m * sterkte)[..., None]
+    return img * (1 - mm) + uit * mm
+
+
+def rond_rechthoek(shape, x0, y0, x1, y1, r):
+    m = np.zeros(shape, np.uint8)
+    cv2.rectangle(m, (x0 + r, y0), (x1 - r, y1), 1, -1)
+    cv2.rectangle(m, (x0, y0 + r), (x1, y1 - r), 1, -1)
+    for cx, cy in [(x0 + r, y0 + r), (x1 - r, y0 + r), (x0 + r, y1 - r), (x1 - r, y1 - r)]:
+        cv2.circle(m, (cx, cy), r, 1, -1)
+    return m
+
+
+def bewaar(img, naam, x0, y0, b):
+    """Uitsnede in 4:5 (b breed) en opslaan als 1600 x 2000 onder 190 kB."""
+    h = int(round(b * 1.25))
+    uit = img[y0:y0 + h, x0:x0 + b]
+    uit = cv2.resize(uit, (1600, 2000), interpolation=cv2.INTER_AREA if b > 1600 else cv2.INTER_CUBIC)
+    MK.bewaar(uit, DOEL / f'{naam}.jpg')
+    print('foto', naam)
+
+
+# ---------- -1: stapel van drie blokken ----------
+# banden (voorkant, lb rb ro lo) en de zichtbare uiteinden van de blokken, gemeten op wax2-stapel-1.jpg (2400 x 3598)
+STAPEL_BANDEN = [
+    [(1183, 2398), (2071, 2398), (2072, 2705), (1183, 2705)],
+    [(1202, 2706), (2094, 2706), (2095, 2998), (1202, 2998)],
+    [(1180, 2999), (2063, 2999), (2070, 3292), (1181, 3292)],
+]
+STAPEL_TEKST = [(1240, 2318, 1990, 2410), (1330, 2505, 1910, 2585), (1400, 2748, 1905, 2820), (1330, 3140, 1910, 3215)]
+STAPEL_BLOKKEN = [((1085, 2320, 2200, 2706), (1183, 2072)), ((1085, 2700, 2210, 3000), (1202, 2095)), ((1085, 2995, 2200, 3300), (1180, 2068))]
+
+
+def stapel_masker(img):
+    sub = (np.clip(img[2200:3400, 1000:2300], 0, 1) * 255).astype(np.uint8)[..., ::-1].copy()
+    m = np.full(sub.shape[:2], cv2.GC_BGD, np.uint8)
+    m[2320 - 2200:3300 - 2200, 1085 - 1000:2200 - 1000] = cv2.GC_PR_FGD
+    m[2400 - 2200:3280 - 2200, 1190 - 1000:2060 - 1000] = cv2.GC_FGD
+    cv2.grabCut(sub, m, None, np.zeros((1, 65)), np.zeros((1, 65)), 6, cv2.GC_INIT_WITH_MASK)
+    vol = np.zeros(img.shape[:2], np.uint8)
+    vol[2200:3400, 1000:2300] = ((m == 1) | (m == 3)).astype(np.uint8)
+    # het crème blok in het midden lijkt te veel op de muur: rechts met de hand
+    vol |= rond_rechthoek(vol.shape, 2094, 2711, 2196, 2990, 12)
+    return vol
+
+
+def stapel(soort):
+    d = SOORTEN[soort]
+    img = MK.laad(STOCK / 'wax2-stapel-1.jpg')
+    vol = stapel_masker(img)
+    # 1. blokken in de waxkleur (alleen de uiteinden naast de band)
+    for (x0, y0, x1, y1), (bl, br) in STAPEL_BLOKKEN:
+        m = np.zeros(vol.shape, np.uint8)
+        m[y0:y1, x0:bl + 3] = 1
+        m[y0:y1, br - 3:x1] = 1
+        m = (m & vol).astype(np.float32)
+        m = cv2.GaussianBlur(m, (0, 0), 1.6)
+        img = wax_kleur(img, m, d['kleur'], glad=9)
+    # 2. oude tekst van de wikkels weg
+    img = poets(img, STAPEL_TEKST)
+    # 3. onze wikkel erop: crème papier met druk
+    zij = art(f'band-zij-{soort}')
+    for i, q in enumerate(STAPEL_BANDEN):
+        img = druk(img, zij, q, wit=0.955, blur=0.6)
+    # bovenkant van de bovenste wikkel (onscherp): alleen crème papier
+    boven = [(1185, 2335), (2068, 2335), (2071, 2399), (1183, 2399)]
+    img = druk(img, vlak(CREME), boven, wit=0.95, blur=2.5, rand=2.5)
+    return img
+
+
+if __name__ == '__main__':
+    if sys.argv[1:2] == ['art']:
+        art_html(); sys.exit()
+    stappen = sys.argv[1:] or ['stapel', 'blok']
+    for soort in SOORTEN:
+        if 'stapel' in stappen:
+            bewaar(stapel(soort), f'surfwax-{soort}-1', 898, 1620, 1500)
