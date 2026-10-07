@@ -65,7 +65,17 @@ def motief(i, n=480):
         acc += [np.fliplr(a) for a in acc]
     X = cv2.GaussianBlur(np.mean(acc, 0), (0, 0), n / 160)
     X = (X - X.mean()) / (X.std() + 1e-6)
-    return np.dstack([X - np.percentile(X, 30), X - np.percentile(X, 58)])
+    uit = []
+    for pct in (30, 58):
+        Y = X - np.percentile(X, pct)
+        # spikkels weg: losse vlekjes kleiner dan ca. 3 mm worden opgevuld met de omringende kleur
+        for teken in (1, -1):
+            m = (teken * Y > 0).astype(np.uint8)
+            n_, lab, st, _ = cv2.connectedComponentsWithStats(m, connectivity=4)
+            klein = np.isin(lab, 1 + np.where(st[1:, cv2.CC_STAT_AREA] < (n / 45) ** 2)[0])
+            Y = np.where(klein, -teken * np.maximum(np.abs(Y), 0.3), Y)
+        uit.append(cv2.GaussianBlur(Y, (0, 0), n / 400))
+    return np.dstack(uit)
 
 
 _MOT = {}
@@ -367,21 +377,23 @@ def foto1():
     rand = np.zeros((h, w), np.float32)
     for naam, g in stapel.items():
         m = cv2.dilate(kleurmasker(f, naam), np.ones((5, 5), np.uint8))
+        m = m * (yy <= interp(g['D'], xx) + 4)          # niet de gekleurde weerschijn op de tafel
         rand = np.maximum(rand, m)
         B = lambda x, p=g['B']: interp(p, x)
         C = lambda x, p=g['C']: interp(p, x)
         D = lambda x, p=g['D']: interp(p, x)
-        s, t = gevouwen_uv(xx, yy, B, C, D, 1200, 45.0, float(D(np.float32(1200)) - C(np.float32(1200))), 22.0, 10.5)
+        s, t = gevouwen_uv(xx, yy, B, C, D, 1200, 36.0, float(D(np.float32(1200)) - C(np.float32(1200))), 22.0, 10.5)
         U = g['u0'] + s
         V = g['v0'] + t
         mz = cv2.GaussianBlur(m, (0, 0), 1.2)
-        uit = breng_aan(uit, mz, U, V, ppc, ontw, schoon=f, verplaatsing=0.25, detail=0.9, mono=True, weef=0.01, waas=0.04,
+        uit = breng_aan(uit, mz, U, V, ppc, ontw, schoon=f, verplaatsing=0.25, detail=0.9, mono=True, weef=0.01, waas=0.04, gamma=0.75,
                         ref=np.full(3, np.percentile(MK.helderheid(f)[m > 0.5], 88), np.float32))
-    # losse rode en turquoise pluisjes langs de randen neutraal maken
+    # losse rode en turquoise pluisjes langs de randen en de gekleurde weerschijn op de tafel neutraal maken
     zone = cv2.dilate(rand, np.ones((25, 25), np.uint8)) > 0
+    zone |= (yy > 900)
     hsv = cv2.cvtColor((np.clip(uit, 0, 1) * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
     Hh, Ss = hsv[..., 0].astype(int), hsv[..., 1].astype(int)
-    fel = zone & (Ss > 45) & ((Hh < 12) | (Hh > 160) | ((Hh > 75) & (Hh < 105)))
+    fel = zone & (rand < 0.5) & (Ss > 12) & ((Hh < 12) | (Hh > 160) | ((Hh > 75) & (Hh < 105)))
     fel = cv2.GaussianBlur(fel.astype(np.float32), (0, 0), 1.5)[..., None]
     grijs = MK.helderheid(uit)[..., None] * np.array([1.02, 1.0, 0.96], np.float32)
     uit = uit * (1 - fel) + grijs * fel

@@ -44,9 +44,17 @@
             "label": "Contact",
             "link": "shopify://pages/contact"
           }
+        },
+        "tab-home": {
+          "type": "tab",
+          "settings": {
+            "label": "Home",
+            "link": "/"
+          }
         }
       },
       "block_order": [
+        "tab-home",
         "tab-1",
         "tab-2",
         "tab-3",

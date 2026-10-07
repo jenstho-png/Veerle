@@ -270,6 +270,56 @@ def hoodie():
     E.bewaar(h, 'hoodie-busje-2', vul=1.0, uitsnede=(965, 70, 2685, 2220))
 
 
+# ---------- karabijnhaak ----------
+KARABIJN = {
+    'messing': dict(donker=[0.42, 0.29, 0.1], licht=[1.0, 0.88, 0.58], gamma=1.15, band='#22324F', garen='#C0603E', tekst='#DCD3C2'),
+    'zwart': dict(donker=[0.05, 0.055, 0.065], licht=[0.62, 0.64, 0.68], gamma=2.2, band='#67809F', garen='#F3ECDD', tekst='#22324F'),
+}
+PX_PER_CM_RENDER = 880 / 7.0          # karabijnhaak van 7 cm is 880 px in de render van echt.karabijn
+
+
+def karabijn_laag(naam):
+    """De karabijnhaak met D-ring en bandlus precies zoals op karabijnhaak-<naam>-1 (zelfde functies uit echt.py),
+    maar als losse laag (RGBA) zonder de tafel en de schaduwen erop: twee keer renderen, op zwart en op wit,
+    en de dekking uit het verschil halen."""
+    p = KARABIJN[naam]
+    k = E.foto('karabiner-zilver-1.jpg')
+    m = E.omkleur_masker(k, 0.15, (800, 589), vullen=False, sluit=81)
+    L = MK.helderheid(k)
+    donker, licht = np.array(p['donker']), np.array(p['licht'])
+    t = np.clip(L, 0, 1) ** p['gamma']
+    metaal = donker[None, None] + (licht - donker)[None, None] * t[..., None]
+    glim = np.clip((L - 0.965) / 0.03, 0, 1)[..., None]
+    spec = licht * 0.25 + 0.75 if naam == 'messing' else np.array([0.9, 0.92, 0.95])
+    metaal = (metaal * (1 - glim) + spec[None, None] * glim).astype(np.float32)
+    cnts, _ = cv2.findContours((m > 0.5).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    romp = np.zeros_like(m); cv2.fillPoly(romp, [cv2.convexHull(np.vstack(cnts))], 1)
+    romp = cv2.erode(romp, np.ones((9, 9), np.uint8))
+    grijs = (L < 0.935) & (cv2.dilate((m > 0.5).astype(np.uint8), np.ones((61, 61), np.uint8)) > 0)
+    glans = cv2.morphologyEx((romp * grijs).astype(np.uint8), cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8)).astype(np.float32)
+    zone = np.maximum(m, cv2.GaussianBlur(glans, (0, 0), 1.2))
+    metaal = E.gegoten_logo(metaal, m, 760, 600, 250, 29.2, sterkte=1.0 if naam == 'messing' else 1.4)
+    L0, B0, B, H = 360, 300, 2600, 3250
+    haak_a = np.zeros((H, B), np.float32); haak_a[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = zone
+    haak_c = np.zeros((H, B, 3), np.float32); haak_c[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = metaal
+    hm = np.zeros((H, B), np.float32); hm[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = np.maximum(m, 0)
+    r = np.array([-0.215, 0.977]); C = np.array([592 + L0, 1068 + B0])
+    Sd = C + r * 150
+    lagen = []
+    for achter in (0.0, 1.0):
+        doek = haak_c * haak_a[..., None] + achter * (1 - haak_a[..., None])
+        doek = E.d_ring(doek, hm, Sd, r, 300, 26, donker, licht)
+        doek = E.bandlabel(doek, tuple(Sd), tuple(r), 1450, 280, p['band'], p['garen'], p['tekst'], buig=0.09, R=13)
+        lagen.append(doek.astype(np.float32))
+    Cz, Cw = lagen
+    A = np.clip(1 - (Cw - Cz).mean(-1), 0, 1)
+    F = Cz / np.maximum(A, 1e-3)[..., None]
+    voorwerp = np.maximum(haak_a, A * (F.max(-1) > 0.015))          # schaduwen (puur zwart) vallen weg
+    voorwerp = np.where(A > 0.02, voorwerp, 0)
+    kleur_v = np.clip(np.where(haak_a[..., None] > 0.5, Cz / np.maximum(A, 1e-3)[..., None], F), 0, 1)
+    return np.dstack([kleur_v, voorwerp]).astype(np.float32)
+
+
 def borduur_op(img, L_bron, ref, a, cx, cy, breedte, draai=0, sterkte=0.8):
     """E.borduur, en daarna het licht van de stof (uit de bronfoto) ook over het borduursel."""
     uit = E.borduur(img, a, cx, cy, breedte, draai)

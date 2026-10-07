@@ -345,7 +345,7 @@ def uv_shirt():
     gat = (1 - stof).astype(np.uint8)
     n, lab, st, _ = cv2.connectedComponentsWithStats(gat)
     for i in range(1, n):
-        if st[i, cv2.CC_STAT_AREA] < 3000:
+        if st[i, cv2.CC_STAT_AREA] < 3000 and L[lab == i].mean() < 0.5:
             stof[lab == i] = 1
     stof = cv2.erode(stof, np.ones((3, 3), np.uint8))
     haak = np.zeros(L.shape, np.float32)
@@ -355,8 +355,14 @@ def uv_shirt():
     alfa = np.clip(np.maximum(np.maximum(ms, cv2.GaussianBlur(hout.astype(np.float32), (0, 0), 1.0)), haak), 0, 1)
     if PROEF:
         cv2.imwrite(str(UIT / 'proef-uitknip.png'), cv2.cvtColor((np.dstack([h, alfa]) * 255).astype(np.uint8)[150:1960, 1990:3060], cv2.COLOR_RGBA2BGRA))
-    h = kleur_lab(h, ms, NAVY, chroma=0.85, spreiding=0.4)
-    h = np.clip(h * 1.12, 0, 1)
+    h = kleur_lab(h, ms, NAVY, chroma=0.75, spreiding=0.4)
+    # zonlicht van linksboven: links en boven iets lichter, rechtsonder iets donkerder
+    yy, xx = np.mgrid[0:h.shape[0], 0:h.shape[1]].astype(np.float32)
+    zon = 1.22 - 0.22 * np.clip((xx - 2000) / 1000, 0, 1) - 0.12 * np.clip((yy - 400) / 1500, 0, 1)
+    h = np.clip(h * (1 + (zon[..., None] - 1) * ms[..., None]), 0, 1)
+    haak = np.clip(haak * 1.6, 0, 1)
+    h[150:340, 2440:2640] = np.where(haak[150:340, 2440:2640, None] > 0, h[150:340, 2440:2640] * 0.8, h[150:340, 2440:2640])
+    alfa = np.maximum(alfa, haak)
     licht = np.percentile(MK.helderheid(h)[ms > 0.5], 90)
     h = druk(h, plaats(h.shape, borst, 2690, 760, 175), ref=licht, verplaatsing=3, schaduw=0.8, masker=ms, structuur=0.5)
     h = band_zoom(h, [(2028, 1842), (2110, 1848), (2198, 1852)], 108, strook2, masker=ms, ref=licht, verplaatsing=3, schaduw=0.9, structuur=0.6)
@@ -374,7 +380,7 @@ def uv_shirt():
     laag[oy:oy + H, ox:ox + W] = hw
     a = laag[..., 3:4]
     # zon: iets lichter en een tikje koeler, korrel als de foto
-    kleur = laag[..., :3] * np.array([0.98, 1.0, 1.04], np.float32) * 1.06
+    kleur = laag[..., :3] * 1.04
     kleur += np.random.default_rng(4).normal(0, 0.012, kleur.shape[:2]).astype(np.float32)[..., None]
     # schaduw van shirt en hanger op het laken (een paar cm erachter)
     laken = masker_kleur(r, (160, 15, 150), (180, 120, 255), rect=(2500, 1400, 3700, 2460))
