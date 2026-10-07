@@ -1685,3 +1685,4 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
 .tt-surfcheck__cijfers dd + span { display: block; min-height: 2.8em; }
 .tt-surfcheck__zin { min-height: 2.3em; }
 .tt-surfcheck__tijd { min-height: 1.4em; }
+@media (max-width: 749px) { .tt-surfcheck__zin { min-height: 3.45em; } }

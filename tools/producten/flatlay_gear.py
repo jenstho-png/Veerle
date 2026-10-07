@@ -1,11 +1,20 @@
 """Gear in de vaste studiostijl (stijl.py): recht van boven, gecentreerd, echt zand of naadloos papier, raamlicht linksboven.
 
-Surfwax: het blok is een echte zeepfoto van recht boven (stock/flatlay/zeep-blok-boven-1.jpg, Unsplash), rechtgetrokken
-en omgekleurd, zodat de matte korrel, putjes en snijsporen echt zijn. De wikkel is de artwork uit echt_wax.py
-(uit_wax/band-voor-<soort>.png) op crème papier met vezel, vlekkerigheid en kreukjes waar hij om de rand vouwt.
+Surfwax (koud op baby, koel op zandpapier, warm op rose):
+  -1 hero: een pak groot in beeld; -2 het blok uit de wikkel onder het pak; -3 in gebruik: close-up van een pastel deck
+  met stringer, verse wax in rondjes en kruisarcering (bultjes), het pak half uit de wikkel erop.
+  Het blok is een echte zeepfoto van recht boven (stock/flatlay/zeep-blok-boven-1.jpg), rechtgetrokken en omgekleurd:
+  matte korrel, putjes en snijsporen zijn echt. De wikkel is de artwork uit echt_wax.py (uit_wax/band-voor-<soort>.png)
+  op crème papier met vezel, vlekkerigheid, vouw om de rand en kreukjes; de zijkant van het blok is net zichtbaar.
+Waxkam (op zand): -1 hero; -2 detail van tanden en ingedrukt logo; -3 naast een pak surfwax.
+  Steek van de tanden en de korrel van het plastic komen uit een echte kamfoto (stock/flatlay/kam-plat-voor-1.jpg).
+Karabijnhaak messing (zand) en zwart (baby): -1 hero; -2 macro van lus, geweven logo, stiksel en D-ring.
+  Haak, D-ring en lus uit echt.py, als vrijstaande laag (op zwart en wit opgebouwd, dekking uit het verschil).
 
 Gebruik:
-    python3 tools/producten/flatlay_gear.py proef      # docs/producten/proef/gear-proef-1.jpg (surfwax koud, los pak)
+    python3 tools/producten/flatlay_gear.py                  # alles
+    python3 tools/producten/flatlay_gear.py surfwax waxkam karabijn
+    python3 tools/producten/flatlay_gear.py proef            # docs/producten/proef/gear-proef-1.jpg
 """
 import pathlib, sys
 import cv2
@@ -112,7 +121,7 @@ def zijlicht(d_boven):
 ZIJ = (21, 15)      # zichtbare zijkant links/rechts en boven/onder (px op het blok), lens recht boven het midden
 
 
-def wax_blok(soort, b=1450, h=1000, zaad=3, kam=False, gebruikt=False):
+def wax_blok(soort, b=1450, h=1000, zaad=3, gebruikt=False):
     """Pak-blok van boven: bovenvlak met echte korrel en een smalle zichtbare zijkant rondom. Geeft rgb, alpha, d_boven."""
     kleur = hexrgb(EW.SOORTEN[soort]['kleur'])
     sx, sy = ZIJ
@@ -132,18 +141,6 @@ def wax_blok(soort, b=1450, h=1000, zaad=3, kam=False, gebruikt=False):
     f_zij = Lz * zijlicht(d_boven) * (1 - 0.05 * np.clip(1 - d_buiten / 2.5, 0, 1))   # uiterste randje iets donkerder
     f = f_boven * boven + f_zij * (1 - boven)
     yy, xx = np.mgrid[0:h, 0:b].astype(np.float32)
-    if kam:
-        # een paar groefjes van een waxkam over een hoek van het blok: smalle geultjes, schaduwkant rechtsonder
-        groef = np.zeros((h, b), np.float32)
-        rng = np.random.default_rng(zaad + 21)
-        for i in range(7):
-            y = h * 0.66 + i * 21 + rng.uniform(-2, 2)
-            x0, x1 = b * 0.63 + rng.uniform(-30, 10), b * 0.93 + rng.uniform(-20, 15)
-            langs = np.clip((xx - x0) / 40, 0, 1) * np.clip((x1 - xx) / 60, 0, 1)
-            groef = np.maximum(groef, np.exp(-((yy - y) / 3.2) ** 2) * langs * rng.uniform(0.7, 1.0))
-        groef = groef * boven
-        gy = np.gradient(cv2.GaussianBlur(groef, (0, 0), 1.0), axis=0)
-        f = f * (1 - 0.06 * groef) * (1 + 2.2 * gy * LICHT_NAAR[1] * -1)
     if gebruikt:
         # linkerkant is al over een board gewreven: hoeken rond, vlak licht glimmend met strepen in de wrijfrichting
         slijt = np.clip(1 - xx / (b * 0.32), 0, 1) ** 1.5 * boven
@@ -378,7 +375,7 @@ def surfwax(soort, shots=(1, 2, 3)):
         doek = ST.leg(doek, wikkel_pak(soort), breedte=1320, midden=(800, 1000), hoogte=15, contact=0.6)
         bewaar(doek, f'surfwax-{soort}-1')
     if 2 in shots:
-        # 2: het blok uit de wikkel onder het pak, met een paar kamgroefjes
+        # 2: het blok uit de wikkel onder het pak
         doek = ST.achtergrond(ACHTER[soort], zaad=2)
         rgb, a, _ = wax_blok(soort, zaad=8)
         doek = ST.leg(doek, wikkel_pak(soort), breedte=1000, midden=(800, 655), hoogte=14, contact=0.6)
@@ -621,5 +618,15 @@ def karabijn_fotos(naam, rgba=None):
 
 
 if __name__ == '__main__':
-    for stap in sys.argv[1:] or ['proef']:
-        globals()[stap]()
+    stappen = sys.argv[1:] or ['surfwax', 'waxkam', 'karabijn']
+    for stap in stappen:
+        if stap == 'surfwax':
+            for soort in ACHTER:
+                surfwax(soort)
+        elif stap == 'waxkam':
+            waxkam_fotos()
+        elif stap == 'karabijn':
+            for naam in KARABIJN:
+                karabijn_fotos(naam)
+        else:
+            globals()[stap]()

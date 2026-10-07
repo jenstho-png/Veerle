@@ -270,5 +270,21 @@
     "photographer": "",
     "what": "Reused only as a fold map",
     "notes": "flatlay_accessoires.kreukels() takes only the soft light-and-shadow of the folds from the towel area (stripes and sunglasses removed, hard sun softened) for strandhanddoek-tegel-2. Nothing else of the photo is visible."
+  },
+  {
+    "file": "flatlay/zeep-blok-boven-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/7gZW8ZX6BqY",
+    "image_url": "https://images.unsplash.com/photo-1612800083273-24ea5c80313d?w=4500&q=92&fm=jpg",
+    "photographer": "Sincerely Media (Unsplash)",
+    "what": "Handmade soap bars shot straight from above on a cream surface; one plain white matte bar in the middle (stand-in for surf wax)",
+    "notes": "4500x4500. Only the white bar is used: its top face (lb 2408,1508 / rb 3235,1240 / ro 3560,2275 / lo 2722,2536) is rectified, turned to landscape and recoloured to the wax colour in tools/producten/flatlay_gear.py, so the matte grain, pits and cut marks are real. Unsplash License (free)."
+  },
+  {
+    "file": "flatlay/kam-plat-voor-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/aEeP1hNu4t4",
+    "image_url": "https://images.unsplash.com/photo-1612580676353-0c09af678c8b?w=4000&q=92&fm=jpg",
+    "photographer": "Jonathan Cooper (Unsplash)",
+    "what": "Flat peach plastic comb with a level, shot straight from the front (stand-in for a wax comb)",
+    "notes": "4000x5600. Used in flatlay_gear.py for the waxkam: tooth pitch (slots x 1128 to 2701, about 75 px) and the plastic grain (noise spectrum measured on the plain strips beside the slots, x 1052 to 1108 and 2722 to 2790). The printed FLAT TOPPER text, level and script logo are not used. Unsplash License (free)."
   }
 ]

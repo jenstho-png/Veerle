@@ -413,13 +413,13 @@ ECHT = {
     'bucket-hat-tegel': ['Crème bucket hat met geborduurd board-icoon', 'Crème bucket hat met geborduurd board-icoon in gebruik'],
     'canvas-tas': ['Canvas tas met het busje en OP WEG NAAR ZEE', 'Canvas tas met busjesprint in gebruik'],
     'strandhanddoek-tegel': ['Strandhanddoek in de tegelprint, opgevouwen', 'Strandhanddoek in de tegelprint op het strand', 'Detail van de strandhanddoek met franjes en geweven label'],
-    'waxkam': ['Waxkam met schraper en het Tide Tode logo', 'Waxkam op een gewaxt board', 'Waxkam naast een blok surfwax'],
-    'karabijnhaak-messing': ['Messing karabijnhaak met gegoten logo en een navy sleutellus van tasband', 'Messing karabijnhaak met sleutellus in gebruik'],
-    'karabijnhaak-zwart': ['Zwarte karabijnhaak met gegoten logo en een blauwe sleutellus van tasband', 'Zwarte karabijnhaak met sleutellus in gebruik'],
+    'waxkam': ['Terracotta waxkam met schraper en ingedrukt Tide Tode logo', 'Detail van de tanden en het ingedrukte logo van de waxkam', 'Waxkam naast een pak surfwax'],
+    'karabijnhaak-messing': ['Messing karabijnhaak met gegoten logo en een navy sleutellus van tasband', 'Detail van de navy sleutellus met geweven logo, stiksel en D-ring'],
+    'karabijnhaak-zwart': ['Zwarte karabijnhaak met gegoten logo en een blauwe sleutellus van tasband', 'Detail van de blauwe sleutellus met geweven logo, stiksel en D-ring'],
     'stickerset': ['Tide Tode stickervel op een houten tafel', 'Tide Tode stickers op een wit surfboard'],
 }
 for soort, naam in [('koud', 'Surfwax koud'), ('koel', 'Surfwax koel'), ('warm', 'Surfwax warm')]:
-    ECHT[f'surfwax-{soort}'] = [f'{naam} in de Tide Tode verpakking', f'{naam} uit de verpakking']
+    ECHT[f'surfwax-{soort}'] = [f'{naam} in de Tide Tode verpakking', f'{naam} uit de verpakking naast het pak', f'{naam} op de deck van een surfboard']
 for p in P:
     if p['handle'] in ECHT:
         p['beelden'] = [('extern', alt) for alt in ECHT[p['handle']]]
