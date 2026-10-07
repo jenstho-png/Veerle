@@ -51,7 +51,7 @@
                         <li class="discounts__discount discounts__discount--position">
                           {{- 'icon-discount.svg' | inline_asset_content -}}
                           {{ discount.title | escape }}
-                          (-{{ discount.total_allocated_amount | money }})
+                          (-{{ discount.total_allocated_amount | money_without_trailing_zeros }})
                         </li>
                       {%- endfor -%}
                     </ul>

@@ -47,6 +47,13 @@ Bijgewerkt op woensdag 7 oktober 2026.
 
 **Footermenu Service**: Verzending, Retourneren, Herroepingsrecht, Algemene voorwaarden, Privacy.
 
+**Prijsweergave** (Instellingen > Algemeen > Winkelstandaarden > Valuta-opmaak wijzigen)
+
+- HTML zonder valuta: `€{{amount_with_comma_separator}}`
+- HTML met valuta: `€{{amount_with_comma_separator}}`
+
+Het thema laat de nullen achter de komma al weg, dus je ziet €40 en €5.
+
 ## 3. Snelheid
 
 | Eis | Status | Toelichting |

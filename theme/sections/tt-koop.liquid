@@ -66,8 +66,8 @@
         {%- endif -%}
         <p class="tt-koop__prijs tt-in">
           {%- if p != blank -%}
-            <span>{{ v.price | money }}</span>
-            {%- if v.compare_at_price > v.price -%}<s>{{ v.compare_at_price | money }}</s>{%- endif -%}
+            <span>{{ v.price | money_without_trailing_zeros }}</span>
+            {%- if v.compare_at_price > v.price -%}<s>{{ v.compare_at_price | money_without_trailing_zeros }}</s>{%- endif -%}
           {%- else -%}<span>{{ section.settings.prijs_tekst }}</span>{%- endif -%}
         </p>
         {%- if pdp and p.description != blank -%}
@@ -151,7 +151,7 @@
   {%- endif -%}
   {%- if p != blank -%}
     <div class="tt-balk" data-tt-balk aria-hidden="true">
-      <span class="tt-balk__naam">{{ p.title }}<span>{{ v.price | money }}</span></span>
+      <span class="tt-balk__naam">{{ p.title }}<span>{{ v.price | money_without_trailing_zeros }}</span></span>
       <button type="button" class="tt-knop" tabindex="-1" data-tt-balkknop>In winkelwagen</button>
     </div>
   {%- endif -%}

@@ -9,8 +9,8 @@
 
   const klem = (v, a, b) => Math.max(a, Math.min(b, v));
   const geld = (c) => {
-    try { return new Intl.NumberFormat(document.documentElement.lang || 'nl', { style: 'currency', currency: (window.Shopify && Shopify.currency && Shopify.currency.active) || 'EUR' }).format(c / 100); }
-    catch (e) { return '€' + (c / 100).toFixed(2).replace('.', ','); }
+    try { return new Intl.NumberFormat(document.documentElement.lang || 'nl', { style: 'currency', currency: (window.Shopify && Shopify.currency && Shopify.currency.active) || 'EUR', minimumFractionDigits: c % 100 ? 2 : 0 }).format(c / 100); }
+    catch (e) { return '€' + (c % 100 ? (c / 100).toFixed(2).replace('.', ',') : String(c / 100)); }
   };
 
   function start(scope = document) {

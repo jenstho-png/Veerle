@@ -19,6 +19,6 @@
   </span>
   <span class="tt-pk__info">
     <span class="tt-pk__titel">{{ p.title }}</span>
-    <span class="tt-pk__prijs">{%- if p.price_varies -%}Vanaf {% endif -%}{{ p.price | money }}</span>
+    <span class="tt-pk__prijs">{%- if p.price_varies -%}Vanaf {% endif -%}{{ p.price | money_without_trailing_zeros }}</span>
   </span>
 </a>

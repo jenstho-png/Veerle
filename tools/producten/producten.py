@@ -306,14 +306,14 @@ VERZENDING = '<p>Verzending door heel Europa. Binnen 14 dagen retour.</p>'
 TASSEN = [
     # handle, naam, patroon, band, achtergrond, prijs, kleuromschrijving, regel
     ('draagtas-tegel', 'Tegel', 'tegel', BLAUW, '#EFE5D3', '40.00', 'tegelprint in terracotta, dusty blue, roest en crème', 'Het origineel'),
-    ('draagtas-tegel-navy', 'Tegel Navy', 'tegel-navy', NAVY, BABY, '42.00', 'tegelprint in navy, baby blue en crème', 'Donkere versie van de tegel'),
-    ('draagtas-golfjes', 'Golfjes', 'golfjes', BABY, '#DCE6F1', '42.00', 'baby blue golfjes op navy', 'Golfjes op navy'),
-    ('draagtas-zonsondergang', 'Zonsondergang', 'zonsondergang', TERRA, ROSE, '42.00', 'strepen in rose, zand, terracotta en crème', 'Strepen in zachte kleuren'),
-    ('draagtas-schelp', 'Schelp', 'schelp', ROSE, '#F6E3DF', '42.00', 'schelpenprint in rose en crème', 'Schelpenprint'),
-    ('draagtas-ruit', 'Ruit', 'ruit', NAVY, '#E4ECF5', '42.00', 'ruitjes in baby blue en crème', 'Ruitjes in baby blue'),
-    ('draagtas-duin', 'Duin', 'duin', TERRA, ZAND, '42.00', 'schuine strepen in zand en crème', 'Zand en crème'),
-    ('draagtas-salie', 'Salie', 'salie', NAVY, '#E3E8DF', '42.00', 'tegelprint in saliegroen, zand en crème', 'Tegels in saliegroen'),
-    ('draagtas-navy', 'Navy', 'effen-navy', BLAUW, '#E9E2D3', '38.00', 'effen navy', 'Effen navy'),
+    ('draagtas-tegel-navy', 'Tegel Navy', 'tegel-navy', NAVY, BABY, '40.00', 'tegelprint in navy, baby blue en crème', 'Donkere versie van de tegel'),
+    ('draagtas-golfjes', 'Golfjes', 'golfjes', BABY, '#DCE6F1', '40.00', 'baby blue golfjes op navy', 'Golfjes op navy'),
+    ('draagtas-zonsondergang', 'Zonsondergang', 'zonsondergang', TERRA, ROSE, '40.00', 'strepen in rose, zand, terracotta en crème', 'Strepen in zachte kleuren'),
+    ('draagtas-schelp', 'Schelp', 'schelp', ROSE, '#F6E3DF', '40.00', 'schelpenprint in rose en crème', 'Schelpenprint'),
+    ('draagtas-ruit', 'Ruit', 'ruit', NAVY, '#E4ECF5', '40.00', 'ruitjes in baby blue en crème', 'Ruitjes in baby blue'),
+    ('draagtas-duin', 'Duin', 'duin', TERRA, ZAND, '40.00', 'schuine strepen in zand en crème', 'Zand en crème'),
+    ('draagtas-salie', 'Salie', 'salie', NAVY, '#E3E8DF', '40.00', 'tegelprint in saliegroen, zand en crème', 'Tegels in saliegroen'),
+    ('draagtas-navy', 'Navy', 'effen-navy', BLAUW, '#E9E2D3', '40.00', 'effen navy', 'Effen navy'),
 ]
 
 P = []
@@ -338,7 +338,7 @@ WAX = [('surfwax-koud', 'Surfwax koud water', BABY, 'KOUD WATER', 'onder 14 grad
        ('surfwax-warm', 'Surfwax warm water', ROSE, 'WARM WATER', 'boven 19 graden', 'Voor Portugal in de zomer en verder weg.')]
 for handle, titel, kleur, label, temp, waar in WAX:
     P.append(dict(
-        handle=handle, titel=titel, type='Surfwax', collectie='Surfgear', prijs='4.50', gram=80, tags=['wax', 'gear'],
+        handle=handle, titel=titel, type='Surfwax', collectie='Surfgear', prijs='5.00', gram=80, tags=['wax', 'gear'],
         tekst=f'<p>Blok surfwax voor watertemperaturen {temp}. {waar}</p><p>Tip: begin met een basislaag en wax daarna in kleine rondjes tot je goede grip hebt.</p>' + VERZENDING,
         seo_titel=f'{titel} ({temp}) | Tide-Tode',
         seo_tekst=f'Surfwax voor water {temp}. Voor goede grip op je softtop of hardboard.',
@@ -346,11 +346,11 @@ for handle, titel, kleur, label, temp, waar in WAX:
                  ('sfeer', lambda k=kleur, l=label, h=handle: (wax(k, l, h.replace('-', '') + 's'), '0 0 600 600', 1150, 0), 'Wax on, wax off', f'{titel} als sticker op een foto van de zee')]))
 
 GEAR = [
-    dict(handle='waxkam', titel='Waxkam', type='Surfgear', prijs='5.00', gram=30, tags=['wax', 'gear'],
+    dict(handle='waxkam', titel='Waxkam', type='Surfgear', prijs='6.00', gram=30, tags=['wax', 'gear'],
          tekst='<p>Kam en schraper in één. Met de tanden maak je oude wax weer ruw voor meer grip. Met de rechte kant haal je wax eraf als je opnieuw wilt beginnen.</p>',
          seo_tekst='Waxkam met schraper om je surfwax ruw te maken of eraf te halen.',
          svg=lambda: (kam(), '0 0 600 600', 1650, 0), achter=BABY, label='Waxkam', alt='Navy waxkam met het Tide-Tode icoon', regel='Meer grip'),
-    dict(handle='karabijnhaak-messing', titel='Karabijnhaak messing', type='Surfgear', prijs='9.00', gram=40, tags=['karabijnhaak', 'gear'],
+    dict(handle='karabijnhaak-messing', titel='Karabijnhaak messing', type='Surfgear', prijs='10.00', gram=40, tags=['karabijnhaak', 'gear'],
          tekst='<p>Karabijnhaak van messing. Handig voor je sleutels, een waterfles of je slippers aan je tas.</p><p>Niet geschikt om te klimmen.</p>',
          seo_tekst='Messing karabijnhaak voor sleutels, waterfles of slippers aan je tas.',
          svg=lambda: (karabijn('#B48A3E', '#E9CF8E', 'm'), '0 0 600 600', 1450, 0), achter=ROSE, label='Messing', alt='Messing karabijnhaak', regel='Alles aan je tas'),
@@ -472,7 +472,7 @@ regels += ['## Collecties aanmaken', '',
            '| Surfgear | Producttag is gelijk aan `Surfgear` | `surfgear` |',
            '| Kleding en merch | Producttag is gelijk aan `Kleding en merch` | `kleding-en-merch` |', '',
            '## Nog controleren met Veerle', '',
-           '- Prijzen (alleen de € 40 van de draagtas komt uit de intake, de rest is een voorstel).',
+           '- Prijzen: alle draagtassen € 40 (uit de intake), de rest zijn ronde voorstelprijzen.',
            '- Materialen en gewichten van de kleding, de UPF van het UV-shirt, maat handdoek en canvas tas.',
            '- Temperaturen van de wax.',
            '- Voorraad staat op 25 per variant als testwaarde.', '']

@@ -104,7 +104,7 @@ schrijf('tt-hero', PRIJS + """
   {%- if section.settings.kaart and p != blank -%}
     <a class="tt-hero__kaart tt-in" style="--d: 1.1s" href="{{ p.url }}">
       <span class="tt-hero__kaart-beeld">{%- if p.featured_media -%}{{ p.featured_media | image_url: width: 240 | image_tag: loading: 'eager', alt: p.title }}{%- else -%}{% render 'tt-logo', variant: 'maan-simpel' %}{%- endif -%}</span>
-      <span><strong>{{ p.title }}</strong><span>{{ v.price | money }}</span></span>
+      <span><strong>{{ p.title }}</strong><span>{{ v.price | money_without_trailing_zeros }}</span></span>
       <span class="tt-hero__kaart-pijl" aria-hidden="true">→</span>
     </a>
   {%- endif -%}
@@ -214,8 +214,8 @@ schrijf('tt-koop', PRIJS + """
         {%- endif -%}
         <p class="tt-koop__prijs tt-in">
           {%- if p != blank -%}
-            <span>{{ v.price | money }}</span>
-            {%- if v.compare_at_price > v.price -%}<s>{{ v.compare_at_price | money }}</s>{%- endif -%}
+            <span>{{ v.price | money_without_trailing_zeros }}</span>
+            {%- if v.compare_at_price > v.price -%}<s>{{ v.compare_at_price | money_without_trailing_zeros }}</s>{%- endif -%}
           {%- else -%}<span>{{ section.settings.prijs_tekst }}</span>{%- endif -%}
         </p>
         {%- if pdp and p.description != blank -%}
@@ -299,7 +299,7 @@ schrijf('tt-koop', PRIJS + """
   {%- endif -%}
   {%- if p != blank -%}
     <div class="tt-balk" data-tt-balk aria-hidden="true">
-      <span class="tt-balk__naam">{{ p.title }}<span>{{ v.price | money }}</span></span>
+      <span class="tt-balk__naam">{{ p.title }}<span>{{ v.price | money_without_trailing_zeros }}</span></span>
       <button type="button" class="tt-knop" tabindex="-1" data-tt-balkknop>In winkelwagen</button>
     </div>
   {%- endif -%}
