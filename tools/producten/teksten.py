@@ -68,7 +68,7 @@ KLEDING = {
                             '<h3>Materiaal en onderhoud</h3><ul><li>Gerecycled polyamide met elastaan</li><li>Droogt snel</li><li>Spoel na het surfen uit met zoet water</li></ul>',
                             '<h3>Maat en pasvorm</h3><ul><li>Strak, zodat hij niet opbolt in het water</li><li>Maten XS tot XL, zie de <a href="/pages/maatwijzer">maatwijzer</a></li></ul>'),
     'surfponcho-tegel': ('Badstof poncho om je op het strand of naast de auto om te kleden, met een rand in onze tegelprint.',
-                         '<h3>Details</h3><ul><li>Capuchon en korte, wijde mouwen</li><li>Rand in tegelprint en ons logo groot op de rug</li><li>Eén maat, voor lengtes van 160 tot 195 cm</li></ul>',
+                         '<h3>Details</h3><ul><li>Capuchon en korte, wijde mouwen</li><li>Geweven band in tegelprint en ons logo groot op de rug</li><li>Wordt opgevouwen geleverd</li><li>Eén maat, voor lengtes van 160 tot 195 cm</li></ul>',
                          '<h3>Materiaal en onderhoud</h3><ul><li>Katoenen badstof, 350 gram</li><li>Droogt snel aan de lucht</li><li>Wassen op 40 graden</li></ul>'),
 }
 
