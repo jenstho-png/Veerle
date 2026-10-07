@@ -256,28 +256,30 @@
     },
     "wie": {
       "type": "tt-wie",
-      "settings": {},
+      "settings": {
+        "heading": "Voor wie is *hij*"
+      },
       "blocks": {
         "kaart-1": {
           "type": "kaart",
           "settings": {
             "titel": "Als je leert surfen",
-            "tekst": "Een grote softtop, een lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.",
+            "tekst": "Een grote softtop en een lange wandeling naar het strand. Met de tas heb je je handen vrij.",
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-beginner",
             "filename": "tide-tode-beginner.jpg",
-            "alt": "Surfer houdt een board met de Tide Tode draagtas vast bij de zee"
+            "alt": "Draagtas Salie om een board op het zand"
           }
         },
         "kaart-2": {
           "type": "kaart",
           "settings": {
-            "titel": "Als je de rustige spots opzoekt",
-            "tekst": "Door de bush, over rotsen, achterop de scooter. Je board hangt over je schouder, zodat je je handen vrij hebt om te klimmen.",
+            "titel": "Als je rustige spots zoekt",
+            "tekst": "Over rotsen of achterop de scooter. Je board hangt over je schouder, jij kunt klimmen.",
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-avontuur",
             "filename": "tide-tode-avontuur.jpg",
-            "alt": "Board met de Tide Tode draagtas op het zand"
+            "alt": "Draagtas Duin om een navy board op het zand"
           }
         }
       },
