@@ -30,7 +30,7 @@ rb = rb[ys.min():ys.max() + 1, xs.min():xs.max() + 1]; rl = rl[ys.min():ys.max()
 # board-bovenrand (eerste rij met board) en de lus erboven uitrekken
 rij_b = np.where(rb[..., 3].max(1) > .5)[0].min()
 boven = rl[:rij_b]; onder_l = rl[rij_b:]
-rek = 1.9
+rek = 1.0                                   # echte lengte van de lus, zoals op de productfoto
 boven = cv2.resize(boven, (boven.shape[1], int(boven.shape[0] * rek)), interpolation=cv2.INTER_LINEAR)
 pad_b = np.zeros((boven.shape[0] - rij_b, rb.shape[1], 4), np.float32)
 rb = np.concatenate([pad_b, rb], 0); rl = np.concatenate([boven, onder_l], 0)
@@ -59,8 +59,8 @@ deep = (34, 50, 79)
 def tekst(t, xy):
     cv2.putText(img, t, xy, cv2.FONT_HERSHEY_SIMPLEX, 0.9, deep, 2, cv2.LINE_AA)
 tekst('strap loop over RIGHT shoulder', (1000, 380)); cv2.arrowedLine(img, (995, 372), (950, 410), deep, 3, cv2.LINE_AA, tipLength=.2)
-tekst('both strap ends come out of the TOP rail', (1030, 560)); cv2.arrowedLine(img, (1150, 575), (1080, 700), deep, 3, cv2.LINE_AA, tipLength=.2)
-tekst('sleeve wraps around the board', (1030, 1130)); cv2.arrowedLine(img, (1150, 1100), (1150, 960), deep, 3, cv2.LINE_AA, tipLength=.2)
+tekst('both strap ends come out of the TOP rail', (1000, 280)); cv2.arrowedLine(img, (1160, 295), (1040, 560), deep, 3, cv2.LINE_AA, tipLength=.08)
+tekst('sleeve wraps around the board', (1030, 1130)); cv2.arrowedLine(img, (1150, 1100), (1100, 820), deep, 3, cv2.LINE_AA, tipLength=.1)
 tekst('board hangs at the right side, deck facing out', (60, 1150))
 tekst('hands free', (230, 760)); cv2.arrowedLine(img, (420, 752), (570, 760), deep, 3, cv2.LINE_AA, tipLength=.2)
 cv2.putText(img, 'LAYOUT REFERENCE  (seen from behind)', (40, 60), cv2.FONT_HERSHEY_SIMPLEX, 1.1, deep, 2, cv2.LINE_AA)
