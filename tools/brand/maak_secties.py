@@ -73,6 +73,7 @@ schrijf('tt-hero', PRIJS + """
     {%- if section.settings.poster -%}
     <div class="tt-hero__poster">
       <div class="tt-hero__links">
+        <div class="tt-hero__icoon tt-in" style="--d: .1s" aria-hidden="true">{%- render 'tt-logo', variant: 'maan' -%}</div>
         <h1 class="tt-hero__logo tt-in" style="--d: .2s">{%- render 'tt-logo', variant: 'staand' -%}<span class="visually-hidden">{{ section.settings.heading | replace: '|', ' ' | remove: '*' }}</span></h1>
         {%- if section.settings.hand != blank -%}<p class="tt-hero__hand tt-in" style="--d: .5s">{{ section.settings.hand }}</p>{%- endif -%}
       </div>
