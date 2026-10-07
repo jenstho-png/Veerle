@@ -1,3 +1,4 @@
+import pathlib
 """Bouwt het Tide-Tode brandbook (branding 2) als één HTML-bestand.
 Posterpagina's in 4:5, alles schaalt mee met de breedte (container query units).
 Fonts en foto's gaan als data-URI mee, zodat de pagina los te delen is."""
@@ -603,14 +604,68 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
   </div>
   <div class="kaart-creme">{tekening('parasol', NAVY)}</div>
 </section>''')
+    # 9b prints van de kleding
+    O = HIER.parent / 'producten' / 'uit_echt'
+    prints = [('lijn', 'licht', 'var(--creme)', 'LIJN NAAR ZEE'), ('herhaling', 'licht', 'var(--creme)', 'OP WEG NAAR ZEE'), ('boog', 'licht', 'var(--baby)', 'KLASSIEK'),
+              ('grootboard', 'licht', 'var(--zand)', 'BOARD'), ('zon', 'donker', 'var(--navy)', 'ZON'), ('golf', 'licht', 'var(--rose)', 'GOLF'),
+              ('vin', 'donker', 'var(--navy)', 'VIN'), ('tweeboards', 'donker', 'var(--navy)', 'TWEE BOARDS'), ('tweeboardslos', 'licht', 'var(--creme)', 'BOARDS')]
+    def printvak(naam, soort, kleur, titel):
+        pad = O / f'ontwerp-{naam}-{soort}.png'
+        if not pad.exists():
+            return ''
+        return (f'<figure><div style="background:{kleur} url({b64(pad, "image/png")}) center/78% no-repeat"></div>'
+                f'<figcaption>{titel}</figcaption></figure>')
+    paginas.append(f'''<section class="pagina" aria-label="Prints"><div class="fotop">
+  <h2>PRINTS</h2>
+  <p>De tekeningen op de rug van de shirts en truien. Eén of twee kleuren, gedrukt met inkt op waterbasis.</p>
+  <div class="negen">{"".join(printvak(*x) for x in prints)}</div>
+</div></section>''')
+    # 9c homepage, video en zo werkt hij
+    A = HIER.parent.parent / 'theme' / 'assets'
+    paginas.append(f'''<section class="pagina" aria-label="Homepage"><div class="fotop">
+  <h2>HOMEPAGE</h2>
+  <p>De hero: drie boards met de draagtas op het zand, in dezelfde studiostijl als de productfoto's. Daaronder de drie stappen van Zo werkt hij.</p>
+  <div style="display:grid;grid-template-rows:1.15fr 1fr;gap:1.4cqw;min-height:0">
+    <div style="background:url({productfoto(A / 'tt-foto-hero-home.jpg', 1400)}) center/cover"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.4cqw;min-height:0">
+      <div style="background:url({productfoto(A / 'tt-foto-stap-1.jpg', 500)}) center/cover"></div>
+      <div style="background:url({productfoto(A / 'tt-foto-stap-2.jpg', 500)}) center/cover"></div>
+      <div style="background:url({productfoto(A / 'tt-foto-stap-3.jpg', 500)}) center/cover"></div>
+    </div>
+  </div>
+</div></section>''')
+    V = HIER.parent.parent / 'docs' / 'video'
+    import subprocess, tempfile
+    beelden = []
+    if (V / 'tide-tode-hero-720.mp4').exists():
+        tmp = pathlib.Path(tempfile.mkdtemp())
+        for i, t in enumerate((0.6, 2.6, 4.6, 6.6)):
+            uit = tmp / f'v{i}.jpg'
+            subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-ss', str(t), '-i', str(V / 'tide-tode-hero-720.mp4'), '-frames:v', '1', str(uit)], check=False)
+            if uit.exists():
+                beelden.append(productfoto(uit, 700))
+    if beelden:
+        vakken = ''.join(f'<div style="background:url({b}) center/cover"></div>' for b in beelden)
+        paginas.append(f'''<section class="pagina" aria-label="Video" style="background:var(--navy);color:var(--creme)"><div class="fotop">
+  <h2>VIDEO</h2>
+  <p>Een korte film voor de hero, gemaakt uit onze eigen tasbeelden: close-ups van label en stof, het geheel van boven, warme filmkleur en korrel.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4cqw;min-height:0">{vakken}</div>
+</div></section>''')
+    S = HIER.parent.parent / 'docs' / 'social'
+    if (S / 'raster-voorbeeld.jpg').exists():
+        paginas.append(f'''<section class="pagina" aria-label="Instagram" style="background:var(--rose)"><div class="fotop">
+  <h2>INSTAGRAM</h2>
+  <p>Twaalf carrousels in 4:5. Weinig tekst, de foto's doen het werk. Zo ziet het profiel eruit.</p>
+  <div style="background:url({productfoto(S / 'raster-voorbeeld.jpg', 900)}) center/contain no-repeat;min-height:0"></div>
+</div></section>''')
     # 10 website
     paginas.append(f'''<section class="pagina" aria-label="Website" style="background:var(--baby)">
   <div class="browser"><div class="balk"><i></i><i></i><i></i></div>
-    <div class="scherm"><img src="{foto('web')}" alt="">
+    <div class="scherm"><img src="{productfoto(HIER.parent.parent / 'theme' / 'assets' / 'tt-foto-hero-home.jpg', 1200)}" alt="" style="object-position:70% 50%">
       <nav>{logo('liggend', CREME)}<span class="links"><span>SHOP</span><span>ONS VERHAAL</span><span>FAQ</span></span></nav>
-      {logo('gestapeld', CREME, 'hero-logo')}
+      {logo('gestapeld', NAVY, 'hero-logo')}
       <span class="hero-hand">Handen vrij, op weg naar zee</span>
-      <div class="hero-tekst">Een draagtas voor je surfboard. Je board op je rug, je handen vrij voor de wandeling, de fiets en de scooter.<br><span class="knop">BEKIJK DE DRAAGTAS</span></div>
+      <div class="hero-tekst"><span class="knop">NAAR DE SHOP</span></div>
     </div></div>
   <p class="label" style="position:absolute;left:6cqw;bottom:4cqw;margin:0">De voorkant van de website</p>
 </section>''')
