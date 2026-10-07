@@ -166,11 +166,19 @@ def bemonster(tex, U, V, ppc, du=0.0, dv=0.0):
                      cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
 
 
+def contrast(tex, ppc, lusjes, vlekken):
+    """Sterkte van de badstof op deze afstand: lusjes (fijn, < 4 mm) en zachte plukjes/vlekken (grover) apart."""
+    laag = cv2.GaussianBlur(tex, (0, 0), 0.35 * ppc)
+    return (1 + (tex - laag) * lusjes + (laag - 1) * vlekken).astype(np.float32)
+
+
 # ---------- vormen ----------
-def rolprofiel(e, r, top):
-    """Hoogte (cm) van een ronde vouwrand: e = afstand tot de buitenrand (cm), r = straal, top = hoogte bovenop."""
+def rolprofiel(e, r, top, macht=1.7):
+    """Hoogte (cm) van een vouwrand: e = afstand tot de buitenrand (cm), r = breedte van de ronding, top = hoogte bovenop.
+    Badstof vouwt niet als een buis maar als een platgedrukte rol: de ronding loopt geleidelijk af en is op de buitenrand
+    nog maar zo'n 60 graden steil (de onderste helft ligt eronder en zie je van boven niet)."""
     e = np.clip(e, 0, r)
-    return top - r + np.sqrt(np.clip(r * r - (r - e) ** 2, 0, None))
+    return top - r * (1 - e / r) ** macht
 
 
 def rol_uv(e, r):
@@ -192,9 +200,9 @@ def tegelrand(U, V, ppc, tex):
     """Albedo en dekking van de tegelrand: rij tegels van TEGEL cm, ruit met stip, ingeweven in de badstof.
     De randjes van de vormen volgen de lusjes (geen strakke drukrand)."""
     gy, gx = np.gradient(cv2.GaussianBlur(tex, (0, 0), max(0.6, ppc * 0.03)))
-    k = 0.10 * ppc                            # ca. 1 mm verschuiving per eenheid helling: lusjes over de rand
-    Uu = U + gx * k / max(ppc * 0.02, 1)
-    Vv = V + gy * k / max(ppc * 0.02, 1)
+    k = 0.06 / (np.percentile(np.abs(gx), 90) + 1e-6)    # hooguit ca. 0,6 mm: de lusjes rafelen de vormrand
+    Uu = U + np.clip(gx * k, -0.09, 0.09)
+    Vv = V + np.clip(gy * k, -0.09, 0.09)
     v0, v1 = BAND
     i = np.floor(Uu / TEGEL).astype(np.int64)
     fu = Uu / TEGEL - i - 0.5
@@ -238,7 +246,7 @@ def label_textuur(ppc):
 
 
 # ---------- het pakket ----------
-def poncho_lagen(X, Y, ppc, kap='op', zaad=1):
+def poncho_lagen(X, Y, ppc, kap='op', zaad=1, lusjes=0.55, vlekken=0.3):
     """Alle lagen van de opgevouwen poncho in cm-coördinaten X, Y (bovenkant pakket y = 0, links x = 0).
     Geeft een lijst van lagen (onder naar boven): dict(alpha, z, rgb, tex)."""
     h, w = X.shape
@@ -251,7 +259,7 @@ def poncho_lagen(X, Y, ppc, kap='op', zaad=1):
     el, er, et, eb = X - xL, xR - X, Y - yT, yB - Y
     rc = 2.6
     e = afgeronde_afstand(el, er, et, eb, rc)
-    tex_kader = lambda z: badstof(h, w, ppc, zaad * 10 + z)    # noqa: E731
+    tex_kader = lambda z: contrast(badstof(h, w, ppc, zaad * 10 + z), ppc, lusjes, vlekken)    # noqa: E731
 
     # rafelige rand: de lusjes steken een fractie uit (sterkte in px)
     def dekking(e_cm, tex, rafel=0.09):
@@ -297,7 +305,7 @@ def poncho_lagen(X, Y, ppc, kap='op', zaad=1):
         xc = BREED / 2 + 0.05 * ruis1d(Y, 8, zaad + 41)
         # halve breedte: 10 cm in de nek, 11 cm op de breedste plek, ronde punt op 20 cm
         yk = np.array([-6, 0, 4, 9, 12, 15, 17, 18.5, 19.6, 20.2], np.float32)
-        hk = np.array([10.0, 10.0, 10.6, 11.0, 10.8, 9.6, 8.0, 6.1, 3.8, 0.0], np.float32)
+        hk = np.array([9.2, 9.2, 9.7, 10.1, 9.9, 8.8, 7.3, 5.6, 3.5, 0.0], np.float32)
         hw = np.interp(Y, yk, hk, right=0.0) + 0.12 * ruis1d(Y, 3, zaad + 42)
         S = 4
         mask_ss = np.zeros((h * S, w * S), np.uint8)
@@ -309,7 +317,8 @@ def poncho_lagen(X, Y, ppc, kap='op', zaad=1):
         x0, y0 = X[0, 0] - 0.5 / ppc, Y[0, 0] - 0.5 / ppc
         pts_px = ((pts - [x0, y0]) * ppc * S).astype(np.int32)
         cv2.fillPoly(mask_ss, [pts_px], 1, lineType=cv2.LINE_8)
-        dist = cv2.distanceTransform(mask_ss, cv2.DIST_L2, 5)
+        # getekende afstand tot de rand (positief binnen, negatief buiten)
+        dist = cv2.distanceTransform(mask_ss, cv2.DIST_L2, 5) - cv2.distanceTransform(1 - mask_ss, cv2.DIST_L2, 5)
         dist = cv2.resize(dist, (w, h), interpolation=cv2.INTER_AREA) / (ppc * S)
         golf = 0.10 * ruis2d(h, w, 2.5 * ppc, zaad + 43)
         e_k = dist + golf - 0.02
@@ -383,7 +392,7 @@ def belicht(lagen, ppc, schaduw=0.55):
             kleur = lg['rgb'] * s[..., None]
         else:
             # in de dalletjes van de badstof valt minder licht; op de schaduwkant tellen de lusjes zwaarder
-            kleur = lg['rgb'] * (s * tex ** (1.0 + 0.6 * (1 - s)))[..., None]
+            kleur = lg['rgb'] * (s * tex ** (1.0 + 0.3 * (1 - s)))[..., None]
         al = lg['alpha']
         rgb = rgb * (1 - al[..., None]) + kleur * al[..., None]
         Z = Z * (1 - al) + lg['z'] * al
