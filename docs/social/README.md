@@ -54,20 +54,63 @@ De eerste slides wisselen af in kleur: zand, crème, rose en baby blue. Twee vla
 
 | Rij | Links | Midden | Rechts |
 |---|---|---|---|
-| 1 | 01 Ons verhaal | 02 Draagtas Tegel | 03 T-shirts |
-| 2 | 04 Accessoires | 05 Alle draagtassen | 06 Surfwax |
-| 3 | 07 Zo werkt het | 08 Najaar | 09 Draagtas Zonsondergang |
-| 4 | 10 Op het board | 11 Logo | 12 Tekeningen |
+| 1 | 01 Ons verhaal (tas, zand) | 02 Handen vrij (tekst, crème) | 03 Truien (product, rose) |
+| 2 | 04 Accessoires (product, baby blue) | 05 Negen stoffen (stofdetail, zand) | 06 Logo (navy) |
+| 3 | 07 Zo werkt het (twee boards, zand) | 08 T-shirts (product, crème) | 09 Tekeningen (baby blue) |
+| 4 | 10 Repareren (tekst, rose) | 11 Stickers (zand) | 12 Strand (product, crème) |
+
+Elke rij heeft een foto, een vlak en een product, en de soorten wisselen af: tasfoto, grote tekst, product op kleur, stof van dichtbij, logo, tekening en stickers. Er staan alleen eigen beelden in, geen stockfoto's.
 
 ## Posts en captions
 
 Kopieer de tekst in het blok. De hashtags kun je ook in de eerste reactie zetten.
 
-### 12 `post-12-tekeningen`
+### 12 `post-12-strand`
 
-1. Het grote board met TIDE TODE langs de rand, op zandkleurig papier
-2. Twee boards naast elkaar, crème op navy
-3. Board met golf, op baby blue
+1. Surfponcho Tegel
+2. Strandhanddoek Tegel
+3. Canvas tas
+
+```
+Voor na het surfen. Een poncho om je in om te kleden, een handdoek in de tegelprint en een canvas tas voor je natte spullen.
+
+Link in bio.
+
+#tidetode #strand #surfponcho #noordzee #surfen
+```
+
+### 11 `post-11-stickers`
+
+1. Losse stickers op zand
+2. Het stickervel
+
+```
+Voor je board, je laptop of je koelbox.
+
+Zeven vinyl stickers op één vel. Link in bio.
+
+#tidetode #stickers #surfboard #surfen
+```
+
+### 10 `post-10-repareren`
+
+1. STUK? WIJ MAKEN HEM, op rose
+2. Draagtas Navy van dichtbij
+3. Het label en de naad
+
+```
+We maken weinig, en dat goed. Stevige stof, sterke naden en een band die jaren meegaat.
+
+Gaat er toch iets stuk, stuur ons een berichtje. Dan repareren we je tas.
+
+#tidetode #repareren #duurzaam #draagtas #surfen
+```
+
+### 09 `post-09-tekeningen`
+
+1. Board met golf, op baby blue
+2. Twee boards, crème op navy
+3. Het grote board met TIDE TODE langs de rand, op zand
 4. De vin, op crème
 
 ```
@@ -76,74 +119,27 @@ Wat er op de achterkant van onze shirts en truien staat. Eerst getekend, dan pas
 #tidetode #illustratie #surfen #noordzee
 ```
 
-### 11 `post-11-logo`
+### 08 `post-08-t-shirts`
 
-1. Het logo in crème op navy
-2. Het boardje los, op crème
-3. Het liggende logo op rose
-
-```
-Tide Tode.
-
-#tidetode #surfen #noordzee
-```
-
-### 10 `post-10-op-het-board`
-
-1. Tegel om een rood board op het strand
-2. Tegel om een board tegen een betonnen muur
-3. Zonsondergang om een fish tegen een lemen muur
-4. Ruit om een zwart board bij een witte muur
-5. Salie om een board bij een gele muur
+1. T-shirt Golf
+2. T-shirt Board
+3. T-shirt Klassiek
+4. T-shirt Zon
 
 ```
-Om elk board. Van een rode longboard tot een kleine fish.
+De print op de rug, een klein board op de borst.
 
-#tidetode #draagtas #surfboard #surfbag #surfen
-```
+Zwaar biologisch katoen, ruime rechte pasvorm. €35, link in bio.
 
-### 09 `post-09-draagtas-zonsondergang`
-
-1. Op rose papier, met het label ZONSONDERGANG
-2. Op het zand
-3. Het label en de band van dichtbij
-4. De rand van de tas over het board
-
-```
-Draagtas Zonsondergang.
-
-Brede strepen in rose, zand, terracotta en crème, met een terracotta band. De kleuren van de lucht na een avondsessie.
-
-€40, link in bio.
-
-#tidetode #draagtas #surfboard #surfbag #surfen
-```
-
-### 08 `post-08-najaar`
-
-1. UV-shirt lange mouw, met het label NAJAAR
-2. Hoodie Twee boards
-3. Sweater Boards
-4. Longsleeve Vin
-5. Longsleeve Zon
-6. Surfponcho
-
-```
-Het water wordt kouder, de ochtenden ook.
-
-UV-shirt om in te surfen, en voor erna een hoodie, sweater, longsleeve of de poncho om je naast de auto om te kleden.
-
-Swipe door de zes. Alles in de shop, link in bio.
-
-#tidetode #surfkleding #noordzee #koudwatersurfen #najaar
+#tidetode #surfkleding #tshirt #biologischkatoen #surfstyle
 ```
 
 ### 07 `post-07-zo-werkt-het`
 
-1. OMDOEN: de tas om het board, op het zand
-2. AANTREKKEN: de band van dichtbij
-3. DRAGEN: met het board in je armen aan zee
-4. LOPEN: het duinpad naar het strand
+1. Twee boards in hun tas, met voetstappen in het zand
+2. OMDOEN: de tas om het board
+3. AANTREKKEN: de band van dichtbij
+4. DRAGEN: de rand van de tas over het board
 
 ```
 Zo werkt de draagtas.
@@ -155,35 +151,29 @@ Op het strand haal je hem er in een paar tellen weer af. Past op softtops en har
 #tidetode #draagtas #surfboard #longboard #softtop
 ```
 
-### 06 `post-06-surfwax`
+### 06 `post-06-logo`
 
-1. Koud water, met het label KOUD
-2. De wax op een board
-3. Koel water, met het label KOEL
-4. Warm water, met het label WARM
-5. De waxkam
+1. Het logo in crème op navy
+2. Het boardje los, op crème
+3. Het liggende logo op rose
 
 ```
-Drie soorten wax, voor drie temperaturen.
+Tide Tode.
 
-Koud onder 14 graden, koel van 14 tot 19, warm daarboven. In het najaar op de Noordzee pak je koud.
-
-Bijenwas en kokosolie, 70 gram, €5. De waxkam is €6.
-
-#tidetode #surfwax #noordzee #surfgear #surfen
+#tidetode #surfen #noordzee
 ```
 
-### 05 `post-05-alle-draagtassen`
+### 05 `post-05-negen-stoffen`
 
-1. Salie, met het label NEGEN STOFFEN
-2. Ruit
-3. Tegel Navy
-4. Schelp
-5. Duin
-6. Navy
+1. Schelp
+2. Salie
+3. Zonsondergang
+4. Ruit
+5. Tegel Navy
+6. Duin
 
 ```
-Eén tas, negen stoffen. Hier zie je er zes. Tegel, Golfjes en Zonsondergang komen in andere posts langs.
+Eén tas, negen stoffen. Swipe door zes ervan.
 
 Allemaal dezelfde maat, voor softtops en hardboards. Welke past bij jouw board?
 
@@ -194,59 +184,53 @@ Allemaal dezelfde maat, voor softtops en hardboards. Welke past bij jouw board?
 
 ### 04 `post-04-accessoires`
 
-1. Pet navy
-2. Bucket hat
-3. Karabijnhaak messing
-4. Strandhanddoek tegel
-5. Canvas tas
-6. Stickerset
-
-Geen tekst op de slides.
+1. Bucket hat
+2. Pet navy
+3. Surfwax koud water
+4. Karabijnhaak messing
+5. Waxkam
 
 ```
 De kleine dingen voor een dag aan zee.
 
-Pet en bucket hat met ons board geborduurd. Een karabijnhaak voor je sleutels, een strandhanddoek in de tegelprint, een canvas tas voor je wetsuit en lunch, en een vel stickers.
+Pet en bucket hat met ons board geborduurd. Wax voor koud water, een waxkam en een karabijnhaak voor je sleutels.
 
 Link in bio.
 
-#tidetode #strand #surfgear #accessoires #surfen
+#tidetode #surfgear #surfwax #accessoires #surfen
 ```
 
-### 03 `post-03-t-shirts`
+### 03 `post-03-truien`
 
-1. T-shirt Golf, met het label T-SHIRTS
-2. T-shirt Board
-3. T-shirt Klassiek
-4. T-shirt Zon
-5. T-shirt Lijn naar zee
-6. T-shirt Op weg naar zee
-
-```
-Zes T-shirts, allemaal met de print op de rug en een klein board op de borst.
-
-Zwaar biologisch katoen, ruime rechte pasvorm. Lijn naar zee heeft onze spots van Petten tot Domburg erop.
-
-€35, link in bio.
-
-#tidetode #surfkleding #tshirt #biologischkatoen #surfstyle
-```
-
-### 02 `post-02-draagtas-tegel`
-
-1. Op het zand, met het label DRAAGTAS TEGEL
-2. Het label en de band van dichtbij
-3. De rand van de tas over het board
-4. Op rose papier
+1. Hoodie Twee boards
+2. Sweater Boards
+3. Longsleeve Zon
+4. Longsleeve Vin
+5. UV-shirt lange mouw
 
 ```
-Draagtas Tegel, de stof waar het mee begon.
+Het water wordt kouder, de ochtenden ook.
 
-Geweven tegels in rood, terracotta, blauw, groen en crème. Het patroon loopt over de hele rol, dus elke tas valt net iets anders.
+Een UV-shirt om in te surfen, en voor erna een hoodie, sweater of longsleeve.
 
-€40, link in bio.
+Link in bio.
 
-#tidetode #draagtas #surfboard #surfbag #tegels
+#tidetode #surfkleding #noordzee #koudwatersurfen #najaar
+```
+
+### 02 `post-02-handen-vrij`
+
+1. HANDEN VRIJ OP WEG NAAR ZEE, op crème
+2. Draagtas Tegel op het zand
+3. Het label en de band van dichtbij
+4. De rand van de tas over het board
+
+```
+Board erin, tas over je schouder, handen vrij.
+
+Draagtas Tegel, de stof waar het mee begon. €40, link in bio.
+
+#tidetode #draagtas #surfboard #surfbag #handenvrij
 ```
 
 ### 01 `post-01-ons-verhaal`
@@ -266,11 +250,3 @@ Veerle
 
 #tidetode #onsverhaal #surftrip #surfen #draagtas
 ```
-
-## Wat er is veranderd
-
-- De twaalf vierkante posts zijn vervangen door negen carrousels in 4:5. Dat formaat neemt op Instagram meer ruimte in het scherm in.
-- Bijna geen tekst meer op de beelden. De uitleg staat in de caption.
-- Elke post heeft nu een eigen map met slides.
-- Het handschrift staat maar op één slide in de hele set: de naam Veerle in post 01.
-- `tools/social/carrousels.py` maakt de posts. `tools/social/posts2.py` maakt alleen nog profielfoto, highlights en Facebook-header.

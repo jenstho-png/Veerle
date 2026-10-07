@@ -93,86 +93,89 @@ def fa(naam):
     return ASSETS / f'{naam}.jpg'
 
 
+def groot(regels, kleur=NAVY, accent='#4A6B97', w=150):
+    """Grote tekstpost: korte regels in de display-letter, *woord* in de accentkleur, klein board-logo eronder."""
+    html = '<br>'.join(r.replace('*', '<em>', 1).replace('*', '</em>', 1) for r in regels)
+    g = L['board']
+    return (f'<div style="position:absolute;inset:0;display:grid;place-items:center;text-align:center">'
+            f'<p style="font:400 {w}px/.92 \'Tide Tode Display\';text-transform:uppercase;letter-spacing:.01em;color:{kleur}">'
+            f'{html}</p></div><style>em{{font-style:normal;color:{accent}}}</style>'
+            f'<svg viewBox="0 0 {g["w"]} {g["h"]}" style="position:absolute;left:50%;bottom:92px;translate:-50% 0;'
+            f'width:46px;fill:{kleur};display:block"><path d="{g["d"]}"/></svg>')
+
+
+# De feed wisselt af: tasfoto, tekst, product op kleur, stofdetail, logo, tekening, stickers.
+# Twee vlakken met dezelfde kleur staan nooit naast of onder elkaar (raster van 3 breed).
 POSTS = [
     ('post-01-ons-verhaal', [
         (fa('tt-foto-avontuur'), 0.5, 1, label('Ons verhaal', plek='rechtsonder', kleur=CREME)),
         (fa('tt-foto-stap-3'), 0.5, 1, ''),
         (fa('tt-foto-beginner'), 0.5, 1, ''),
     ]),
-    ('post-02-draagtas-tegel', [
-        (pb('draagtas-tegel-1'), 0.5, 1, label('Draagtas Tegel', plek='rechtsonder')),
-        (pb('draagtas-tegel-3'), 0.5, 1, ''),
-        (pb('draagtas-tegel-4'), 0.5, 1, ''),
+    ('post-02-handen-vrij', [
+        (vlak(CREME), 0.5, 1, groot(['Handen', '*vrij*', 'op weg', 'naar zee'])),
+        (pb('draagtas-tegel-1'), 0.5, 1, ''),
         (pb('draagtas-tegel-2'), 0.5, 1, ''),
+        (pb('draagtas-tegel-3'), 0.5, 1, ''),
     ]),
-    ('post-03-t-shirts', [
-        (pb('t-shirt-golf-2'), 0.5, 1, label('T-shirts')),
-        (pb('t-shirt-board-2'), 0.5, 1, ''),
-        (pb('t-shirt-klassiek-2'), 0.5, 1, ''),
-        (pb('t-shirt-zon-2'), 0.5, 1, ''),
-        (pb('t-shirt-lijn-naar-zee-2'), 0.5, 1, ''),
-        (pb('t-shirt-op-weg-naar-zee-2'), 0.5, 1, ''),
-    ]),
-    ('post-04-accessoires', [
-        (pb('pet-navy-1'), 0.5, 1, ''),
-        (pb('bucket-hat-tegel-1'), 0.5, 1, ''),
-        (pb('karabijnhaak-messing-1'), 0.5, 1, ''),
-        (pb('strandhanddoek-tegel-1'), 0.5, 1, ''),
-        (pb('canvas-tas-1'), 0.5, 1, ''),
-        (pb('stickerset-2'), 0.5, 1, ''),
-    ]),
-    ('post-05-alle-draagtassen', [
-        (pb('draagtas-salie-2'), 0.5, 1, label('Negen stoffen', plek='rechtsonder')),
-        (pb('draagtas-ruit-2'), 0.5, 1, ''),
-        (pb('draagtas-tegel-navy-2'), 0.5, 1, ''),
-        (pb('draagtas-schelp-2'), 0.5, 1, ''),
-        (pb('draagtas-duin-2'), 0.5, 1, ''),
-        (pb('draagtas-navy-2'), 0.5, 1, ''),
-    ]),
-    ('post-06-surfwax', [
-        (pb('surfwax-koud-1'), 0.5, 1, label('Koud')),
-        (pb('surfwax-koud-3'), 0.5, 1, ''),
-        (pb('surfwax-koel-1'), 0.5, 1, label('Koel')),
-        (pb('surfwax-warm-1'), 0.5, 1, label('Warm')),
-        (pb('waxkam-1'), 0.5, 1, ''),
-    ]),
-    ('post-07-zo-werkt-het', [
-        (pb('draagtas-golfjes-1'), 0.5, 1, woord('Omdoen', plek='onder')),
-        (pb('draagtas-golfjes-3'), 0.5, 1, woord('Aantrekken', plek='onder')),
-        (fa('tt-foto-stap-1'), 0.35, 1, woord('Dragen', CREME, 'linksonder')),
-        (fa('tt-foto-mood-1'), 0.5, 1, woord('Lopen')),
-    ]),
-    ('post-08-najaar', [
-        (pb('uv-shirt-lange-mouw-1'), 0.5, 1, label('Najaar')),
+    ('post-03-truien', [
         (pb('hoodie-twee-boards-2'), 0.5, 1, ''),
         (pb('sweater-boards-2'), 0.5, 1, ''),
-        (pb('longsleeve-vin-2'), 0.5, 1, ''),
         (pb('longsleeve-zon-2'), 0.5, 1, ''),
-        (pb('surfponcho-tegel-2'), 0.5, 1, ''),
+        (pb('longsleeve-vin-2'), 0.5, 1, ''),
+        (pb('uv-shirt-lange-mouw-1'), 0.5, 1, ''),
     ]),
-    ('post-09-draagtas-zonsondergang', [
-        (pb('draagtas-zonsondergang-2'), 0.5, 1, label('Zonsondergang', plek='rechtsonder')),
-        (pb('draagtas-zonsondergang-1'), 0.5, 1, ''),
-        (pb('draagtas-zonsondergang-3'), 0.5, 1, ''),
-        (pb('draagtas-zonsondergang-4'), 0.5, 1, ''),
+    ('post-04-accessoires', [
+        (pb('bucket-hat-tegel-1'), 0.5, 1, ''),
+        (pb('pet-navy-1'), 0.5, 1, ''),
+        (pb('surfwax-koud-1'), 0.5, 1, ''),
+        (pb('karabijnhaak-messing-1'), 0.5, 1, ''),
+        (pb('waxkam-1'), 0.5, 1, ''),
     ]),
-    ('post-10-op-het-board', [
-        (sf('zand-tegel'), 0.5, 1, ''),
-        (sf('muur-tegel'), 0.5, 1, ''),
-        (sf('oker-zonsondergang'), 0.5, 1, ''),
-        (sf('witte-muur-ruit'), 0.6, 1, ''),
-        (sf('gele-muur-salie'), 0.5, 1, ''),
+    ('post-05-negen-stoffen', [
+        (pb('draagtas-schelp-2'), 0.5, 1, ''),
+        (pb('draagtas-salie-2'), 0.5, 1, ''),
+        (pb('draagtas-zonsondergang-2'), 0.5, 1, ''),
+        (pb('draagtas-ruit-2'), 0.5, 1, ''),
+        (pb('draagtas-tegel-navy-2'), 0.5, 1, ''),
+        (pb('draagtas-duin-2'), 0.5, 1, ''),
     ]),
-    ('post-11-logo', [
+    ('post-06-logo', [
         (vlak(NAVY), 0.5, 1, logo('gestapeld', CREME, 640)),
         (vlak(CREME), 0.5, 1, logo('board', NAVY, 150)),
         (vlak(ROSE), 0.5, 1, logo('liggend', NAVY, 760)),
     ]),
-    ('post-12-tekeningen', [
-        (vlak(ZANDPAPIER), 0.5, 1, tekening('grootboard-licht')),
-        (vlak(NAVY), 0.5, 1, tekening('tweeboardslos-donker')),
+    ('post-07-zo-werkt-het', [
+        (fa('tt-foto-stap-3'), 0.5, 1, ''),
+        (pb('draagtas-golfjes-1'), 0.5, 1, woord('Omdoen', plek='onder')),
+        (pb('draagtas-golfjes-3'), 0.5, 1, woord('Aantrekken', plek='onder')),
+        (fa('tt-foto-stap-1'), 0.35, 1, woord('Dragen', CREME, 'linksonder')),
+    ]),
+    ('post-08-t-shirts', [
+        (pb('t-shirt-golf-2'), 0.5, 1, ''),
+        (pb('t-shirt-board-2'), 0.5, 1, ''),
+        (pb('t-shirt-klassiek-2'), 0.5, 1, ''),
+        (pb('t-shirt-zon-2'), 0.5, 1, ''),
+    ]),
+    ('post-09-tekeningen', [
         (vlak(BABY), 0.5, 1, tekening('golf-licht')),
+        (vlak(NAVY), 0.5, 1, tekening('tweeboardslos-donker')),
+        (vlak(ZANDPAPIER), 0.5, 1, tekening('grootboard-licht')),
         (vlak(CREME), 0.5, 1, tekening('vin-licht')),
+    ]),
+    ('post-10-repareren', [
+        (vlak(ROSE), 0.5, 1, groot(['Stuk?', 'Wij', '*maken*', 'hem'])),
+        (pb('draagtas-navy-2'), 0.5, 1, ''),
+        (fa('tt-foto-stap-2'), 0.5, 1, ''),
+    ]),
+    ('post-11-stickers', [
+        (pb('stickerset-2'), 0.5, 1, ''),
+        (pb('stickerset-1'), 0.5, 1, ''),
+    ]),
+    ('post-12-strand', [
+        (pb('surfponcho-tegel-1'), 0.5, 1, ''),
+        (pb('strandhanddoek-tegel-1'), 0.5, 1, ''),
+        (pb('canvas-tas-1'), 0.5, 1, ''),
     ]),
 ]
 
