@@ -1627,3 +1627,4 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
 .tt-contact__ill { grid-template-columns: auto 1fr; align-items: center; justify-items: start; gap: 18px; padding: 18px 22px; }
 .tt-contact__ill .tt-ill { width: 120px; }
 .tt-contact__ill figcaption { font-size: clamp(20px, 1.8vw, 26px); }
+.tt-contact { padding-top: clamp(84px, 8vw, 120px); }

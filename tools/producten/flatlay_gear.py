@@ -121,8 +121,8 @@ def wax_blok(soort, b=1450, h=1000, zaad=3, kam=False, gebruikt=False):
     if gebruikt:
         # afgesleten kant links: veel rondere hoeken
         links = (np.arange(b, dtype=np.float32)[None, :] < b / 2)
-        d_buiten = np.where(links, np.minimum(d_buiten, rand_afstand((h, b), 0, 0, b - 1, h - 1, 110, zaad + 40)), d_buiten)
-        d_boven = np.where(links, np.minimum(d_boven, rand_afstand((h, b), sx + 6, sy, b - 1 - sx, h - 1 - sy, 120, zaad + 41, ruw=0.8)), d_boven)
+        d_buiten = np.where(links, np.minimum(d_buiten, rand_afstand((h, b), 0, 0, b - 1, h - 1, 55, zaad + 40)), d_buiten)
+        d_boven = np.where(links, np.minimum(d_boven, rand_afstand((h, b), sx + 4, sy, b - 1 - sx, h - 1 - sy, 60, zaad + 41, ruw=0.8)), d_boven)
     a = np.clip(d_buiten + 0.5, 0, 1).astype(np.float32)
     boven = np.clip(d_boven + 0.5, 0, 1)
     Lv = wax_vlak(b, h)
@@ -281,39 +281,40 @@ def wax_parels(B, H, gebied, zaad=7, cirkels=190):
     basis = np.zeros((H, B), np.float32)
     for richting in [(1, 1), (1, -1)]:
         r = np.float32(richting) / np.sqrt(2)
-        for _ in range(900):
+        for _ in range(1500):
             c = np.float32([rng.uniform(0, B), rng.uniform(0, H)])
-            l = rng.uniform(40, 160)
+            l = rng.uniform(25, 90)
             p0, p1 = c - r * l / 2, c + r * l / 2
-            cv2.line(basis, tuple(int(v) for v in p0), tuple(int(v) for v in p1), float(rng.uniform(0.4, 1.0)), int(rng.integers(2, 4)), cv2.LINE_AA)
-    basis = cv2.GaussianBlur(basis, (0, 0), 1.6)
+            cv2.line(basis, tuple(int(v) for v in p0), tuple(int(v) for v in p1), float(rng.uniform(0.3, 0.8)), int(rng.integers(3, 6)), cv2.LINE_AA)
+    basis = cv2.GaussianBlur(basis, (0, 0), 2.6)
     basis = 1 - np.exp(-basis * 0.9)
     # rondjes: bultjes langs kleine cirkels, ze klonteren waar cirkels overlappen
-    lagen = {3.5: np.zeros((H, B), np.float32), 6.0: np.zeros((H, B), np.float32), 9.0: np.zeros((H, B), np.float32)}
+    lagen = {4.5: np.zeros((H, B), np.float32), 7.5: np.zeros((H, B), np.float32), 12.0: np.zeros((H, B), np.float32)}
     ys, xs = np.nonzero(gebied > 0.3)
     for _ in range(cirkels):
         i = rng.integers(len(xs))
         cx, cy = xs[i], ys[i]
         straal = rng.uniform(55, 190)
-        n = int(2 * np.pi * straal / rng.uniform(16, 26))
+        n = int(2 * np.pi * straal / rng.uniform(12, 20))
         hoek0 = rng.uniform(0, 2 * np.pi)
         boog = rng.uniform(1.2, 2.0) * np.pi
         for t in np.linspace(0, boog, n):
             x = cx + np.cos(hoek0 + t) * straal + rng.normal(0, 5)
             y = cy + np.sin(hoek0 + t) * straal * rng.uniform(0.85, 1.0) + rng.normal(0, 5)
             if 0 <= x < B and 0 <= y < H:
-                k = rng.choice([3.5, 6.0, 9.0], p=[0.45, 0.4, 0.15])
+                k = rng.choice([4.5, 7.5, 12.0], p=[0.4, 0.42, 0.18])
                 lagen[k][int(y), int(x)] += rng.uniform(0.6, 1.0)
     bult = np.zeros((H, B), np.float32)
     for sig, l in lagen.items():
         bult += cv2.GaussianBlur(l, (0, 0), sig) * (2 * np.pi * sig ** 2) * 0.55
     bult = 1 - np.exp(-bult * 1.4)
     # binnen het gebied; aan de rand minder bultjes en een dunnere basislaag
-    hoogte = (0.28 * basis + bult) * gebied
+    dik = 0.75 + ruis((H, B), 0.25, 45, zaad + 2)
+    hoogte = (0.18 * basis + bult * dik) * gebied
     return hoogte.astype(np.float32), (basis * gebied).astype(np.float32)
 
 
-def wax_op_deck(img, hoogte, basis, wax_hex, zaad=7, schaal=7.0):
+def wax_op_deck(img, hoogte, basis, wax_hex, zaad=7, schaal=11.0):
     """Wax over de deck: doorschijnend, dikker = voller van kleur, satijnglans en kleine schaduwtjes naar rechtsonder."""
     H, B = hoogte.shape
     hz = cv2.GaussianBlur(hoogte, (0, 0), 1.2) * schaal
@@ -321,17 +322,17 @@ def wax_op_deck(img, hoogte, basis, wax_hex, zaad=7, schaal=7.0):
     n = np.dstack([-gx, -gy, np.ones_like(gx)])
     n /= np.linalg.norm(n, axis=2, keepdims=True)
     nl = np.clip(n @ L3, 0, 1)
-    dif = (0.45 + 0.55 * nl) / (0.45 + 0.55 * L3[2])
+    dif = (0.38 + 0.62 * nl) / (0.38 + 0.62 * L3[2])
     Hv = L3 + np.float32([0, 0, 1]); Hv /= np.linalg.norm(Hv)
-    glans = np.clip(n @ Hv, 0, 1) ** 18 * 0.16
+    glans = np.clip(n @ Hv, 0, 1) ** 9 * 0.07
     # schaduwtjes van de bultjes op de deck en op elkaar
     dx, dy = -LICHT_NAAR * 3.0
     verschoven = cv2.warpAffine(hoogte, np.float32([[1, 0, dx], [0, 1, dy]]), (B, H))
     sch = np.clip(verschoven - hoogte, 0, 1)
     sch = cv2.GaussianBlur(sch, (0, 0), 1.5)
     wax = hexrgb(wax_hex)
-    wax = wax * 0.85 + 0.15                                               # wax is lichter dan de verpakkingskleur doet vermoeden
-    dekking = np.clip(0.10 + 0.8 * hoogte, 0, 0.9)
+    wax = wax * 0.93 + 0.06                                               # wax is lichter dan de verpakkingskleur doet vermoeden
+    dekking = np.clip(0.08 + 0.5 * hoogte, 0, 0.62)
     # doorschijnend: de deck schemert erdoor, de kleur van de wax zacht verlopen
     kleur = img * (1 - dekking[..., None]) + wax[None, None] * dekking[..., None]
     kleur = cv2.GaussianBlur(kleur, (0, 0), 0.6)
@@ -375,7 +376,7 @@ def surfwax(soort, shots=(1, 2, 3)):
     if 2 in shots:
         # 2: het blok uit de wikkel onder het pak, met een paar kamgroefjes
         doek = ST.achtergrond(ACHTER[soort], zaad=2)
-        rgb, a, _ = wax_blok(soort, kam=True, zaad=8)
+        rgb, a, _ = wax_blok(soort, zaad=8)
         doek = ST.leg(doek, wikkel_pak(soort), breedte=1000, midden=(800, 655), hoogte=14, contact=0.6)
         doek = ST.leg(doek, np.dstack([rgb, a]).astype(np.float32), breedte=1000, midden=(800, 1365), hoogte=14, contact=0.6)
         bewaar(doek, f'surfwax-{soort}-2')
@@ -384,7 +385,7 @@ def surfwax(soort, shots=(1, 2, 3)):
         B, H = ST.B, ST.H
         img = deck(DECK[soort], stringer_x=1030, zaad=3)
         gebied = wax_gebied(B, H, zaad=5)
-        hoogte, basis = wax_parels(B, H, gebied, zaad=11)
+        hoogte, basis = wax_parels(B, H, gebied, zaad=11, cirkels=420)
         img = wax_op_deck(img, hoogte, basis, EW.SOORTEN[soort]['kleur'])
         pak = wikkel_pak(soort, verschuif=200, gebruikt=True, zaad=9)
         img = ST.leg(img, pak, breedte=840, midden=(760, 700), hoogte=22, contact=0.6)

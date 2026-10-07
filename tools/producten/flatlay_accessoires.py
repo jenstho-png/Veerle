@@ -131,12 +131,18 @@ def borduur(img, a, cx, cy, breedte, draai=0.0, steek=4.2, hoek=12.0, schaduw_br
     al = laag[..., 3]
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
     rng = np.random.default_rng(zaad)
-    # satijnsteek: evenwijdige draadjes met kleine onregelmatigheid in fase en dikte
+    # satijnsteek: evenwijdige draadjes, elk met een rond profiel, eigen helderheid en vezelstreepjes in de lengte
     t = np.deg2rad(hoek)
-    jit = cv2.GaussianBlur(rng.normal(0, 1, (h, w)).astype(np.float32), (0, 0), 3) * 1.4
-    fase = (yy * np.cos(t) + xx * np.sin(t)) / steek * 2 * np.pi + jit
-    draad = 0.5 + 0.5 * np.sin(fase)
-    draad = 0.80 + 0.30 * draad ** 0.6
+    jit = cv2.GaussianBlur(rng.normal(0, 1, (h, w)).astype(np.float32), (0, 0), 4) * 0.35
+    u = (yy * np.cos(t) - xx * np.sin(t)) / steek + jit
+    idx = np.floor(u).astype(np.int64)
+    frac = u - idx
+    profiel = np.sin(np.pi * frac) ** 0.6
+    eigen = rng.normal(0, 1, 4096).astype(np.float32)[idx % 4096]
+    vezel = rng.normal(0, 1, (h, w)).astype(np.float32)
+    vezel = cv2.GaussianBlur(vezel, (0, 0), sigmaX=steek * 1.6, sigmaY=0.5)
+    vezel = vezel / (vezel.std() + 1e-6)
+    draad = 0.84 + 0.17 * profiel + 0.035 * eigen + 0.025 * vezel
     # glimlicht op de draadjes: sterker waar het licht van linksboven komt
     # bolling van het borduursel
     hoog = cv2.GaussianBlur(al, (0, 0), 2.6)
@@ -226,7 +232,7 @@ def pet_navy_rgba(schaal=1.0):
     ref = float(np.percentile(L0[m > 0.5], 85))
     licht = cv2.GaussianBlur(L0, (0, 0), 30 * k) / ref        # grove lichtval op de pet, zonder naden
     p = stof_kleur(img, m, NAVY)
-    p = borduur(p, ico, cx, cy, br, hoek=8, steek=4.2 * k, schaduw_bron=licht ** 0.6)
+    p = borduur(p, ico, cx, cy, br, hoek=3, steek=2.7 * k, schaduw_bron=licht ** 0.6)
     st = MK.laad_art(ART / 'petsticker.png')
     x0, x1, y0, y1 = cx + 170 * k, cx + 560 * k, 1636 * k, 1694 * k
     quad = [(x0 + 7 * k, y0), (x1 - 3 * k, y0), (x1 + 4 * k, y1), (x0, y1)]

@@ -4,13 +4,13 @@
       "type": "tt-hero",
       "settings": {
         "pagina": true,
-        "heading": "Hoe Tide-Tode|begon",
+        "heading": "Hoe Tide Tode|begon",
         "text": "Het begon met een tas die we zelf zochten op elke surftrip en nergens konden vinden. Nu is Tide Tode een merk voor de hele weg naar zee.",
         "btn_label": "Bekijk de draagtas",
         "link_label": "",
         "kaart": false,
         "filename": "tide-tode-over-ons.jpg",
-        "alt": "Surfers op weg naar zee",
+        "alt": "Leeg strand bij zonsondergang",
         "poster": false
       }
     },
@@ -31,7 +31,7 @@
           "type": "foto",
           "settings": {
             "fallback": "tt-foto-lifestyle-busje",
-            "alt": "De Tide-Tode draagtas om een board tegen een busje"
+            "alt": "De Tide Tode draagtas om een board tegen een busje"
           }
         },
         "tekst-2": {
@@ -46,7 +46,7 @@
           "type": "foto",
           "settings": {
             "fallback": "tt-foto-beginner",
-            "alt": "Board in de Tide-Tode draagtas bij de zee"
+            "alt": "Board in de Tide Tode draagtas bij de zee"
           }
         },
         "logo-4": {

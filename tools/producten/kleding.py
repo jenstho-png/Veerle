@@ -161,7 +161,7 @@ KLEDING = [
 ]
 for k in KLEDING:
     P.append(dict(handle=k['handle'], titel=k['titel'], type=k['type'], collectie='Kleding en accessoires', prijs=k['prijs'], gram=k['gram'], tags=['kleding'], maten=k.get('maten'),
-                  tekst=k['tekst'] + VERZENDING, seo_titel=f"{k['titel']} | Tide-Tode", seo_tekst=k['seo_tekst'],
+                  tekst=k['tekst'] + VERZENDING, seo_titel=f"{k['titel']} | Tide Tode", seo_tekst=k['seo_tekst'],
                   beelden=[('pack', lambda k=k: (k['voor'](), '0 0 600 600', 1450, 0), k['voor_bg'], 'Voorkant', k['alt'] + ', voorkant'),
                            ('pack', lambda k=k: (k['achter'](), '0 0 600 600', 1450, 0), k['achter_bg'], 'Achterkant', k['alt'] + ', achterkant met print'),
                            ('sfeer', lambda k=k: (k['achter'](), '0 0 600 600', 1450, 0), k['regel'], k['alt'] + ' als sticker op een foto van de zee')]))
@@ -169,15 +169,15 @@ for k in KLEDING:
 ACCESSOIRES = [
     dict(handle='pet-navy', titel='Pet navy', type='Pet', prijs='30.00', gram=90,
          tekst='<p>Navy pet van katoen met ons board-icoon geborduurd op de voorkant. Verstelbaar aan de achterkant, één maat.</p>',
-         seo_tekst='Navy katoenen pet met geborduurd Tide-Tode icoon. Verstelbaar, één maat.',
+         seo_tekst='Navy katoenen pet met geborduurd Tide Tode icoon. Verstelbaar, één maat.',
          svg=lambda: (pet(NAVY), '0 0 600 600', 1600, 0), achter=ROSE, label='Navy', alt='Navy pet met het geborduurde board-icoon', regel='Zon in je ogen'),
     dict(handle='bucket-hat-tegel', titel='Bucket hat', type='Hoed', prijs='30.00', gram=90,
          tekst='<p>Crème bucket hat van gewassen katoen met ons board-icoon geborduurd op de voorkant. Eén maat.</p>',
-         seo_tekst='Crème bucket hat van gewassen katoen met geborduurd Tide-Tode icoon. Eén maat.',
+         seo_tekst='Crème bucket hat van gewassen katoen met geborduurd Tide Tode icoon. Eén maat.',
          svg=lambda: (bucket('b'), '0 0 600 600', 1600, 0), achter=BABY, label='Crème', alt='Crème bucket hat met geborduurd board-icoon', regel='Voor lange stranddagen'),
     dict(handle='strandhanddoek-tegel', titel='Strandhanddoek tegel', type='Handdoek', prijs='45.00', gram=600,
          tekst='<p>Grote strandhanddoek van katoen in onze tegelprint, met franjes aan de korte kant. 90 bij 170 cm.</p>',
-         seo_tekst='Katoenen strandhanddoek in de Tide-Tode tegelprint, 90 bij 170 cm.',
+         seo_tekst='Katoenen strandhanddoek in de Tide Tode tegelprint, 90 bij 170 cm.',
          svg=lambda: (handdoek('h'), '0 0 600 600', 1500, -4), achter=ZAND, label='Tegelprint', alt='Strandhanddoek in tegelprint met franjes', regel='Na de sessie'),
     dict(handle='canvas-tas', titel='Canvas tas', type='Tas', prijs='20.00', gram=250,
          tekst='<p>Stevige canvas tas met ons busje erop en OP WEG NAAR ZEE eronder. Voor je handdoek, wetsuit en lunch. 38 bij 42 cm.</p>',
@@ -186,7 +186,7 @@ ACCESSOIRES = [
 ]
 for k in ACCESSOIRES:
     P.append(dict(handle=k['handle'], titel=k['titel'], type=k['type'], collectie='Kleding en accessoires', prijs=k['prijs'], gram=k['gram'], tags=['accessoires'],
-                  tekst=k['tekst'] + VERZENDING, seo_titel=f"{k['titel']} | Tide-Tode", seo_tekst=k['seo_tekst'],
+                  tekst=k['tekst'] + VERZENDING, seo_titel=f"{k['titel']} | Tide Tode", seo_tekst=k['seo_tekst'],
                   beelden=[('pack', k['svg'], k['achter'], k['label'], k['alt']), ('sfeer', k['svg'], k['regel'], k['alt'] + ' als sticker op een foto van de zee')]))
 
 # losse printbestanden (zelfde artwork als op de kleding), voor de referentie bij ChatGPT

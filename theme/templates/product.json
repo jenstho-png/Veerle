@@ -154,8 +154,8 @@
         "punt-3": {
           "type": "punt",
           "settings": {
-            "titel": "Tegelstof",
-            "tekst": "Stevige geweven stof met ons tegelpatroon. Zand klop je er zo af.",
+            "titel": "Het paneel",
+            "tekst": "Stevige geweven stof in het ontwerp dat je kiest. Zand klop je er zo af.",
             "x": 50,
             "y": 70
           }
@@ -164,7 +164,7 @@
           "type": "punt",
           "settings": {
             "titel": "Je board",
-            "tekst": "Softtop of hardboard, kort of lang. Nat en vol zand mag gewoon.",
+            "tekst": "Softtop of hardboard, tot ongeveer 9'6\". Nat en vol zand mag gewoon.",
             "x": 88,
             "y": 50
           }
@@ -187,14 +187,14 @@
           "type": "spec",
           "settings": {
             "label": "Stof",
-            "waarde": "Geweven jacquard met tegelprint"
+            "waarde": "Stevige geweven stof"
           }
         },
         "spec-8": {
           "type": "spec",
           "settings": {
-            "label": "Print",
-            "waarde": "Tegels in terracotta, dusty blue, roest en crème"
+            "label": "Ontwerp",
+            "waarde": "Negen ontwerpen, elk met een eigen bandkleur"
           }
         },
         "spec-9": {
@@ -257,8 +257,8 @@
         "detail-4": {
           "type": "detail",
           "settings": {
-            "titel": "De tegelprint",
-            "tekst": "Geweven in terracotta, dusty blue, roest en crème.",
+            "titel": "Het ontwerp",
+            "tekst": "Het patroon zit in de stof geweven, niet erop gedrukt. Het blijft mooi, ook na veel zand en zout.",
             "filename": "tide-tode-detail-print.jpg"
           }
         }
@@ -414,7 +414,7 @@
             "kleur": "baby",
             "ill": "busje",
             "titel": "Verzending",
-            "tekst": "We versturen door heel Europa. Je krijgt een track and trace zodra hij onderweg is."
+            "tekst": "We versturen door heel Europa. Je krijgt een een volgcode zodra hij onderweg is."
           }
         },
         "kaart-2": {
@@ -455,7 +455,7 @@
           "type": "qa",
           "settings": {
             "question": "Welke surfboards passen in de tas?",
-            "answer": "<p>We beginnen met één kernmodel in een universele maat. Die past om de grote, vollere boards waar veel beginners op surfen en om hardboards in verschillende maten. Later komen er meer varianten bij.</p>"
+            "answer": "<p>De draagtas heeft één universele maat. Die past om softtops en vollere boards en om de meeste hardboards, tot ongeveer 9'6\". In de <a href=\"/pages/maatwijzer\">maatwijzer</a> zie je welke boards passen.</p>"
           }
         },
         "qa-2": {
@@ -482,15 +482,15 @@
         "qa-5": {
           "type": "qa",
           "settings": {
-            "question": "Zitten er lussen of karabijnhaken aan?",
-            "answer": "<p>Het eerste model houden we bewust simpel. Lussen en karabijnhaken om extra spullen aan de tas te hangen komen op een later model. Stevige karabijnhaken komen ook los in de shop.</p>"
+            "question": "Kan ik spullen aan de tas hangen?",
+            "answer": "<p>Aan de tas zit één doorlopende band met een lus over je schouder. Wil je je sleutels, een fles of slippers meenemen, dan klik je die vast met een van onze <a href=\"/collections/surfgear\">karabijnhaken</a>. Die hebben een lus van dezelfde band als de tas.</p>"
           }
         },
         "qa-6": {
           "type": "qa",
           "settings": {
-            "question": "Verkopen jullie ook andere spullen?",
-            "answer": "<p>Naast de tas komen er waxblokjes en karabijnhaken. In een later stadium volgen t-shirts.</p>"
+            "question": "Maken jullie meer dan de draagtas?",
+            "answer": "<p>Ja. De draagtas is waar het begon, maar Tide Tode is een merk voor de hele weg naar zee. We maken <a href=\"/collections/kleding-en-accessoires\">kleding en accessoires</a>: zware T-shirts met een verhaal op de rug, longsleeves, een hoodie, een pet, een bucket hat en een UV-shirt, een surfponcho, een strandhanddoek in onze tegelprint en een canvas tas. En <a href=\"/collections/surfgear\">surfgear</a>: wax voor koud, koel en warm water, een waxkam, karabijnhaken en stickers.</p>"
           }
         }
       },
@@ -513,7 +513,7 @@
           "type": "foto",
           "settings": {
             "fallback": "tt-foto-lifestyle-busje",
-            "alt": "De Tide-Tode draagtas om een board tegen een busje"
+            "alt": "De Tide Tode draagtas om een board tegen een busje"
           }
         },
         "tekst-2": {
@@ -528,7 +528,7 @@
           "type": "foto",
           "settings": {
             "fallback": "tt-foto-beginner",
-            "alt": "Board in de Tide-Tode draagtas bij de zee"
+            "alt": "Board in de Tide Tode draagtas bij de zee"
           }
         },
         "logo-4": {
@@ -756,7 +756,7 @@
           "type": "qa",
           "settings": {
             "question": "Waar versturen jullie naartoe?",
-            "answer": "<p>We versturen door heel Europa. Je krijgt een track and trace zodra je pakket onderweg is.</p>"
+            "answer": "<p>We versturen door heel Europa. Je krijgt een een volgcode zodra je pakket onderweg is.</p>"
           }
         },
         "qa-2": {

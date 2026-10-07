@@ -3,7 +3,7 @@
     "hero": {
       "type": "tt-hero",
       "settings": {
-        "text": "Tide Tode is een surfmerk voor de weg naar zee. Het begon met een draagtas voor je board, bedacht op surftrips in Australië en Midden-Amerika. Nu maken we ook kleding en surfgear met dezelfde zorg."
+        "text": "Tide Tode is een surfmerk voor de weg naar zee. Het begon met een draagtas voor je board, bedacht op surftrips door Australië, Midden- en Zuid-Amerika en Azië. Nu maken we ook kleding en surfgear met dezelfde zorg."
       }
     },
     "usp": {
@@ -107,7 +107,7 @@
           "type": "foto",
           "settings": {
             "fallback": "tt-foto-lifestyle-busje",
-            "alt": "De Tide-Tode draagtas om een board tegen een busje"
+            "alt": "De Tide Tode draagtas om een board tegen een busje"
           }
         },
         "tekst-2": {
@@ -122,7 +122,7 @@
           "type": "foto",
           "settings": {
             "fallback": "tt-foto-beginner",
-            "alt": "Board in de Tide-Tode draagtas bij de zee"
+            "alt": "Board in de Tide Tode draagtas bij de zee"
           }
         },
         "logo-4": {
@@ -198,7 +198,7 @@
             "tekst": "Softtop of hardboard, nat of droog. Je hoeft hem niet eerst schoon te maken.",
             "fallback": "tt-foto-stap-1",
             "filename": "tide-tode-stap-1.jpg",
-            "alt": "Surfboard in het zand"
+            "alt": "Surfer met een board in de armen bij zee"
           }
         },
         "stap-2": {
@@ -209,7 +209,7 @@
             "tekst": "De brede schouderband draagt het gewicht. Je handen zijn vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
             "fallback": "tt-foto-stap-2",
             "filename": "tide-tode-stap-2.jpg",
-            "alt": "Surfer met de tas over de schouder"
+            "alt": "Paal met touw in het duinpad naar zee"
           }
         },
         "stap-3": {
@@ -246,7 +246,7 @@
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-beginner",
             "filename": "tide-tode-beginner.jpg",
-            "alt": "Surfer houdt een board met de Tide-Tode draagtas vast bij de zee"
+            "alt": "Surfer houdt een board met de Tide Tode draagtas vast bij de zee"
           }
         },
         "kaart-2": {
@@ -257,7 +257,7 @@
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-avontuur",
             "filename": "tide-tode-avontuur.jpg",
-            "alt": "Board met de Tide-Tode draagtas tegen een busje in de duinen"
+            "alt": "Board met de Tide Tode draagtas tegen een busje in de duinen"
           }
         }
       },
@@ -426,7 +426,7 @@
           "type": "qa",
           "settings": {
             "question": "Welke surfboards passen in de tas?",
-            "answer": "<p>We beginnen met één kernmodel in een universele maat. Die past om de grote, vollere boards waar veel beginners op surfen en om hardboards in verschillende maten. Later komen er meer varianten bij.</p>"
+            "answer": "<p>De draagtas heeft één universele maat. Die past om softtops en vollere boards en om de meeste hardboards, tot ongeveer 9'6\". In de <a href=\"/pages/maatwijzer\">maatwijzer</a> zie je welke boards passen.</p>"
           }
         },
         "qa-2": {

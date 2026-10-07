@@ -13,7 +13,7 @@
           "type": "qa",
           "settings": {
             "question": "Welke surfboards passen in de tas?",
-            "answer": "<p>We beginnen met één kernmodel in een universele maat. Die past om de grote, vollere boards waar veel beginners op surfen en om hardboards in verschillende maten. Later komen er meer varianten bij.</p>"
+            "answer": "<p>De draagtas heeft één universele maat. Die past om softtops en vollere boards en om de meeste hardboards, tot ongeveer 9'6\". In de <a href=\"/pages/maatwijzer\">maatwijzer</a> zie je welke boards passen.</p>"
           }
         },
         "qa-2": {
@@ -40,15 +40,15 @@
         "qa-5": {
           "type": "qa",
           "settings": {
-            "question": "Zitten er lussen of karabijnhaken aan?",
-            "answer": "<p>Het eerste model houden we bewust simpel. Lussen en karabijnhaken om extra spullen aan de tas te hangen komen op een later model. Stevige karabijnhaken komen ook los in de shop.</p>"
+            "question": "Kan ik spullen aan de tas hangen?",
+            "answer": "<p>Aan de tas zit één doorlopende band met een lus over je schouder. Wil je je sleutels, een fles of slippers meenemen, dan klik je die vast met een van onze <a href=\"/collections/surfgear\">karabijnhaken</a>. Die hebben een lus van dezelfde band als de tas.</p>"
           }
         },
         "qa-6": {
           "type": "qa",
           "settings": {
-            "question": "Verkopen jullie ook andere spullen?",
-            "answer": "<p>Naast de tas komen er waxblokjes en karabijnhaken. In een later stadium volgen t-shirts.</p>"
+            "question": "Maken jullie meer dan de draagtas?",
+            "answer": "<p>Ja. De draagtas is waar het begon, maar Tide Tode is een merk voor de hele weg naar zee. We maken <a href=\"/collections/kleding-en-accessoires\">kleding en accessoires</a>: zware T-shirts met een verhaal op de rug, longsleeves, een hoodie, een pet, een bucket hat en een UV-shirt, een surfponcho, een strandhanddoek in onze tegelprint en een canvas tas. En <a href=\"/collections/surfgear\">surfgear</a>: wax voor koud, koel en warm water, een waxkam, karabijnhaken en stickers.</p>"
           }
         }
       },

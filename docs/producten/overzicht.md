@@ -1,4 +1,4 @@
-# Assortiment Tide-Tode
+# Assortiment Tide Tode
 
 27 producten in 3 collecties. Importeren: Shopify admin, Producten, Importeren, `producten.csv`.
 

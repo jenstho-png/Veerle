@@ -1,4 +1,4 @@
-"""Het assortiment van Tide-Tode: 22 producten in 3 collecties.
+"""Het assortiment van Tide Tode: 22 producten in 3 collecties.
 
 Schrijft:
 - docs/producten/producten.csv   Shopify-productimport (beelden via de openbare GitHub-link)
@@ -321,16 +321,16 @@ for handle, naam, pat, band, achter, prijs, kleur, regel in TASSEN:
     P.append(dict(
         handle=handle, titel=f'Draagtas {naam}', type='Draagtas', collectie='Draagtassen', prijs=prijs, gram=650,
         tags=['draagtas', 'surfboard', 'tas'] + (['origineel'] if pat == 'tegel' else []),
-        tekst=(f'<p>De Tide-Tode draagtas in {kleur}. Je schuift je surfboard in de tas en hangt hem over je schouder. '
+        tekst=(f'<p>De Tide Tode draagtas in {kleur}. Je schuift je surfboard in de tas en hangt hem over je schouder. '
                f'Zo heb je je handen vrij als je naar het strand loopt, fietst of op de scooter zit.</p>'
                '<ul><li>Eén maat, voor softtops en hardboards</li><li>Stevige nylon schouderband, fijn geweven zodat hij zacht in je hand ligt</li><li>De band loopt in één stuk rondom de tas, dat maakt hem sterk</li><li>Zware geweven stof met sterke stiksels</li><li>Je natte board mag er gewoon in</li></ul>'
                + VERZENDING),
-        seo_titel=f'Draagtas {naam} voor je surfboard | Tide-Tode',
+        seo_titel=f'Draagtas {naam} voor je surfboard | Tide Tode',
         seo_tekst=f'Surfboard draagtas in {kleur}. Board in de tas, tas over je schouder en je handen zijn vrij. Voor softtops en hardboards.',
         beelden=[
             ('extern', f'Draagtas {naam} om een crème surfboard, met de schouderband in een lus'),
             ('extern', f'Draagtas {naam} om het midden van een surfboard, van bovenaf'),
-            ('extern', f'Geweven Tide-Tode label en de schouderband met ingeweven logo van draagtas {naam}'),
+            ('extern', f'Geweven Tide Tode label en de schouderband met ingeweven logo van draagtas {naam}'),
         ]))
 
 WAX = [('surfwax-koud', 'Surfwax koud water', BABY, 'KOUD WATER', 'onder 14 graden', 'Voor de Noordzee in het voorjaar en najaar.'),
@@ -340,32 +340,32 @@ for handle, titel, kleur, label, temp, waar in WAX:
     P.append(dict(
         handle=handle, titel=titel, type='Surfwax', collectie='Surfgear', prijs='5.00', gram=80, tags=['wax', 'gear'],
         tekst=f'<p>Blok surfwax voor watertemperaturen {temp}. {waar}</p><p>Tip: begin met een basislaag en wax daarna in kleine rondjes tot je goede grip hebt.</p>' + VERZENDING,
-        seo_titel=f'{titel} ({temp}) | Tide-Tode',
+        seo_titel=f'{titel} ({temp}) | Tide Tode',
         seo_tekst=f'Surfwax voor water {temp}. Voor goede grip op je softtop of hardboard.',
-        beelden=[('pack', lambda k=kleur, l=label, h=handle: (wax(k, l, h.replace('-', '')), '0 0 600 600', 1750, 0), '#EFE5D3', titel.replace('Surfwax ', ''), f'Blok {titel.lower()} met het Tide-Tode label'),
+        beelden=[('pack', lambda k=kleur, l=label, h=handle: (wax(k, l, h.replace('-', '')), '0 0 600 600', 1750, 0), '#EFE5D3', titel.replace('Surfwax ', ''), f'Blok {titel.lower()} met het Tide Tode label'),
                  ('sfeer', lambda k=kleur, l=label, h=handle: (wax(k, l, h.replace('-', '') + 's'), '0 0 600 600', 1150, 0), 'Wax on, wax off', f'{titel} als sticker op een foto van de zee')]))
 
 GEAR = [
     dict(handle='waxkam', titel='Waxkam', type='Surfgear', prijs='6.00', gram=30, tags=['wax', 'gear'],
          tekst='<p>Kam en schraper in één. Met de tanden maak je oude wax weer ruw voor meer grip. Met de rechte kant haal je wax eraf als je opnieuw wilt beginnen.</p>',
          seo_tekst='Waxkam met schraper om je surfwax ruw te maken of eraf te halen.',
-         svg=lambda: (kam(), '0 0 600 600', 1650, 0), achter=BABY, label='Waxkam', alt='Navy waxkam met het Tide-Tode icoon', regel='Meer grip'),
+         svg=lambda: (kam(), '0 0 600 600', 1650, 0), achter=BABY, label='Waxkam', alt='Navy waxkam met het Tide Tode icoon', regel='Meer grip'),
     dict(handle='karabijnhaak-messing', titel='Karabijnhaak messing', type='Surfgear', prijs='10.00', gram=40, tags=['karabijnhaak', 'gear'],
          tekst='<p>Karabijnhaak van messing met TIDE TODE in het metaal gegoten. Aan een D-ring hangt een lus van dezelfde band als onze draagtas, navy met het geweven logo, zodat je je sleutels niet kwijtraakt. Ook handig voor een waterfles of je slippers aan je tas.</p><ul><li>Haak ongeveer 7 cm, lus 12 cm</li><li>Schroefsluiting</li></ul><p>Niet geschikt om te klimmen.</p>',
-         seo_tekst='Messing karabijnhaak met sleutellus van onze draagtasband en gegoten Tide-Tode logo.',
+         seo_tekst='Messing karabijnhaak met sleutellus van onze draagtasband en gegoten Tide Tode logo.',
          svg=lambda: (karabijn('#B48A3E', '#E9CF8E', 'm'), '0 0 600 600', 1450, 0), achter=ROSE, label='Messing', alt='Messing karabijnhaak met navy sleutellus', regel='Alles aan je tas'),
     dict(handle='karabijnhaak-zwart', titel='Karabijnhaak zwart', type='Surfgear', prijs='8.00', gram=40, tags=['karabijnhaak', 'gear'],
          tekst='<p>Karabijnhaak in zwart metaal met TIDE TODE in het metaal gegoten. Aan een D-ring hangt een lus van dezelfde band als onze draagtas, in stoffig blauw met het geweven logo, zodat je je sleutels niet kwijtraakt.</p><ul><li>Haak ongeveer 7 cm, lus 12 cm</li><li>Schroefsluiting</li></ul><p>Niet geschikt om te klimmen.</p>',
-         seo_tekst='Zwarte karabijnhaak met sleutellus van onze draagtasband en gegoten Tide-Tode logo.',
+         seo_tekst='Zwarte karabijnhaak met sleutellus van onze draagtasband en gegoten Tide Tode logo.',
          svg=lambda: (karabijn('#2B2F36', '#6B7280', 'z'), '0 0 600 600', 1450, 0), achter=ZAND, label='Mat zwart', alt='Zwarte karabijnhaak met blauwe sleutellus', regel='Alles aan je tas'),
     dict(handle='stickerset', titel='Stickerset', type='Stickers', prijs='6.00', gram=20, tags=['stickers', 'gear', 'cadeau'],
          tekst='<p>Stickervel met zeven vinyl stickers in onze stijl: de zonsondergang, op weg naar zee, een rond tegeltje, het vaantje van de surfclub, een postzegel, de ruitjesband en het board. Waterbestendig, dus ook voor je board, fles of laptop.</p>',
-         seo_tekst='Stickervel met zeven vinyl stickers van Tide-Tode, waterbestendig.',
-         svg=lambda: (stickerset(), '0 0 600 600', 1250, -3), achter=BABY, label='Stickervel', alt='Stickervel met zeven Tide-Tode stickers', regel='Plak ze overal op'),
+         seo_tekst='Stickervel met zeven vinyl stickers van Tide Tode, waterbestendig.',
+         svg=lambda: (stickerset(), '0 0 600 600', 1250, -3), achter=BABY, label='Stickervel', alt='Stickervel met zeven Tide Tode stickers', regel='Plak ze overal op'),
 ]
 for g in GEAR:
     P.append(dict(handle=g['handle'], titel=g['titel'], type=g['type'], collectie='Surfgear', prijs=g['prijs'], gram=g['gram'], tags=g['tags'],
-                  tekst=g['tekst'] + VERZENDING, seo_titel=f"{g['titel']} | Tide-Tode", seo_tekst=g['seo_tekst'],
+                  tekst=g['tekst'] + VERZENDING, seo_titel=f"{g['titel']} | Tide Tode", seo_tekst=g['seo_tekst'],
                   beelden=[('pack', g['svg'], g['achter'], g['label'], g['alt']), ('sfeer', g['svg'], g['regel'], g['alt'] + ' als sticker op een foto van de zee')]))
 
 exec(open(HIER / 'kleding.py', encoding='utf-8').read())
@@ -410,19 +410,19 @@ ECHT = {
                      'Achterkant van de baby blue hoodie met het busje en OP WEG NAAR ZEE',
                      'Detail van het logo op de borst van de baby blue hoodie'],
     'surfponcho-tegel': ['Surfponcho van badstof met capuchon en tegelrand',
-                         'Achterkant van de surfponcho met het Tide-Tode logo',
+                         'Achterkant van de surfponcho met het Tide Tode logo',
                          'Surfponcho in gebruik op het strand'],
-    'pet-navy': ['Navy pet met het geborduurde board-icoon en de Tide-Tode klepsticker', 'Navy pet met geborduurd board-icoon in gebruik'],
+    'pet-navy': ['Navy pet met het geborduurde board-icoon en de Tide Tode klepsticker', 'Navy pet met geborduurd board-icoon in gebruik'],
     'bucket-hat-tegel': ['Crème bucket hat met geborduurd board-icoon', 'Crème bucket hat met geborduurd board-icoon in gebruik'],
     'canvas-tas': ['Canvas tas met het busje en OP WEG NAAR ZEE', 'Canvas tas met busjesprint in gebruik'],
     'strandhanddoek-tegel': ['Strandhanddoek in de tegelprint, opgevouwen', 'Strandhanddoek in de tegelprint op het strand', 'Detail van de strandhanddoek met franjes en geweven label'],
-    'waxkam': ['Waxkam met schraper en het Tide-Tode logo', 'Waxkam op een gewaxt board', 'Waxkam naast een blok surfwax'],
+    'waxkam': ['Waxkam met schraper en het Tide Tode logo', 'Waxkam op een gewaxt board', 'Waxkam naast een blok surfwax'],
     'karabijnhaak-messing': ['Messing karabijnhaak met gegoten logo en een navy sleutellus van tasband', 'Messing karabijnhaak met sleutellus in gebruik'],
     'karabijnhaak-zwart': ['Zwarte karabijnhaak met gegoten logo en een blauwe sleutellus van tasband', 'Zwarte karabijnhaak met sleutellus in gebruik'],
-    'stickerset': ['Tide-Tode stickervel op een houten tafel', 'Tide-Tode stickers op een wit surfboard'],
+    'stickerset': ['Tide Tode stickervel op een houten tafel', 'Tide Tode stickers op een wit surfboard'],
 }
 for soort, naam in [('koud', 'Surfwax koud'), ('koel', 'Surfwax koel'), ('warm', 'Surfwax warm')]:
-    ECHT[f'surfwax-{soort}'] = [f'{naam} in de Tide-Tode verpakking', f'{naam} uit de verpakking']
+    ECHT[f'surfwax-{soort}'] = [f'{naam} in de Tide Tode verpakking', f'{naam} uit de verpakking']
 for p in P:
     if p['handle'] in ECHT:
         p['beelden'] = [('extern', alt) for alt in ECHT[p['handle']]]
@@ -478,7 +478,7 @@ for p in P:
         r = dict.fromkeys(KOP, '')
         r['URL handle'] = p['handle']
         if vi == 0:
-            r.update({'Title': p['titel'], 'Description': p['tekst'], 'Vendor': 'Tide-Tode', 'Product category': CATEGORIE.get(p['type'], ''), 'Type': p['type'],
+            r.update({'Title': p['titel'], 'Description': p['tekst'], 'Vendor': 'Tide Tode', 'Product category': CATEGORIE.get(p['type'], ''), 'Type': p['type'],
                       'Tags': tags, 'Published on online store': 'TRUE', 'Status': 'Active', 'Gift card': 'FALSE', 'SEO title': p['seo_titel'], 'SEO description': p['seo_tekst'],
                       'Google Shopping / Google product category': CATEGORIE.get(p['type'], ''), 'Google Shopping / Condition': 'New', 'Google Shopping / Custom product': 'FALSE',
                       'Google Shopping / Custom label 0': p['collectie']})
@@ -503,7 +503,7 @@ with open(DOCS / 'producten.csv', 'w', newline='', encoding='utf-8') as fh:
     w.writeheader(); w.writerows(rijen)
 
 # ---------- overzicht ----------
-regels = ['# Assortiment Tide-Tode', '', f'{len(P)} producten in 3 collecties. Importeren: Shopify admin, Producten, Importeren, `producten.csv`.', '',
+regels = ['# Assortiment Tide Tode', '', f'{len(P)} producten in 3 collecties. Importeren: Shopify admin, Producten, Importeren, `producten.csv`.', '',
           'De productfoto\'s worden bij de import van GitHub opgehaald.', '']
 for col in ('Draagtassen', 'Surfgear', 'Kleding en accessoires'):
     regels += [f'## {col}', '', '| Product | Prijs | Handle |', '|---|---|---|']
