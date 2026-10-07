@@ -24,7 +24,7 @@ UIT = ROOT / 'docs' / 'producten' / 'fotos'
 
 # naam: (stockfoto, ontwerp, instellingen voor sfeer_tas.maak)
 LIJST = {
-    'witte-muur-tegel': ('board-muur-4.jpg', 'draagtas-tegel', dict(lus=1, belicht=1.15, schaduw=(-6, 5, 0.35, 6), lus_schaduw=(-30, 6, 0.3, 6))),
+    'witte-muur-tegel': ('board-muur-4.jpg', 'draagtas-tegel', dict(lus=1, belicht=1.15, schaduw=(-6, 5, 0.35, 6), lus_schaduw=(-14, 5, 0.3, 5))),
 }
 
 

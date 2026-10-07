@@ -305,7 +305,7 @@ def simuleer_lus(E1, E2, d1, d2, L, w, botsing, g=(0.0, 1.0), stappen=500, min_r
     g = np.asarray(g, np.float64)
     P = _herbemonster(start_lus(E1, E2, d1, d2, L, w, g), n)
     l = L / (n - 1)
-    min_r = min_r or 1.5 * w
+    min_r = min_r or 2.0 * w
     vorig = P.copy()
     # alleen het uittreepunt ligt vast: de band gaat om de ronde rail en kan daar alle kanten op
     klem = 0
@@ -457,7 +457,7 @@ def maak(foto, naam, handle, lus=-1, stringer=0.0, kort=1.0, belicht=1.0, tint=(
         afst_b = (np.abs(sb_) - 1) * B.half(tb_)
         cb = np.clip(dik - afst_b + 0.5, 0, 1)
         # bij de lusrail mag de band eroverheen (hij gaat de lus in)
-        lus_kant = (np.sign(sb_) == B.lus) & (np.abs(tb_ - B.tb) < (STR_KORT + 1.2 * w_band * B.k) / B.kx)
+        lus_kant = (np.sign(sb_) == B.lus) & (np.abs(tb_ - B.tb) < (STR_KORT + 1.2 * w_band * B.k) / abs(B.kx))
         clip[by, bx] = np.where((ob > 0.5) & ~lus_kant, cb, 1.0)
         # occluders voor het board ook voor de band
         z = B.zicht[by, bx]
@@ -474,9 +474,12 @@ def maak(foto, naam, handle, lus=-1, stringer=0.0, kort=1.0, belicht=1.0, tint=(
     uit = uit * (1 - schaduw[2] * np.clip(bs - ba, 0, 1) * op_bord_masker)[..., None]
     if lus_schaduw is not None:
         dx, dy, st, zz = lus_schaduw
-        lm = ba * (lb > 0) * (1 - op_bord_masker)
+        lm = ba * (1 - op_bord_masker)
         ls = cv2.GaussianBlur(np.roll(np.roll(lm, int(dy * schaal), 0), int(dx * schaal), 1), (0, 0), zz * schaal + 0.5)
-        uit = uit * (1 - st * np.clip(ls - ba, 0, 1))[..., None]
+        # alleen op de achtergrond (de muur), niet op het board dat ervoor staat
+        bord_heel = np.zeros((h, w), np.uint8)
+        cv2.fillPoly(bord_heel, [np.round(B.omtrek() * 4).astype(np.int32)], 1, shift=2)
+        uit = uit * (1 - st * np.clip(ls - ba, 0, 1) * (1 - bord_heel))[..., None]
     band_k = kleurcorrectie(brgb, lb)
     uit = uit * (1 - ba[..., None]) + band_k * ba[..., None]
     # ---- camera: scherpte en korrel van de foto op de nieuwe delen
@@ -549,10 +552,13 @@ def band_pad(B, shape, w, plat=False, lengte_factor=1.0, ondergrens=None):
     op_stof = np.r_[np.ones(n1), np.zeros(nl - 2), np.ones(n2)]
     op_board = op_stof.copy()
     u = np.linspace(0, 1, nl - 2)
-    draai = 1 - 0.18 * np.sin(np.pi * u) ** 2 * (0 if plat else 1)
+    Lu = np.r_[0, np.cumsum(np.linalg.norm(np.diff(lus[1:-1], axis=0), axis=1))]
+    rand_af = np.minimum(Lu, Lu[-1] - Lu) / (2.5 * w)          # afstand tot het uittreepunt in bandbreedtes
+    # om de rail draait de band een kwartslag: even smaller en donkerder, daarna plat in beeld
+    draai = 1 - 0.28 * np.exp(-(rand_af - 0.35) ** 2 / 0.12) * (0 if plat else 1)
     breed = np.r_[np.ones(n1), draai, np.ones(n2)]
     # licht in de lus: iets donkerder waar hij gedraaid is, binnenkant van de bocht schaduw
-    lus_licht = np.r_[np.ones(n1), 0.92 * (0.85 + 0.15 * draai / draai.max()), np.ones(n2)]
+    lus_licht = np.r_[np.ones(n1), 0.94 * (0.55 + 0.45 * draai), np.ones(n2)]
     # stof: stiksels alleen waar de band over het vak loopt (niet voorbij de vakrand)
     return pad, op_stof, dict(breed=breed, op_board=op_board, lus_licht=lus_licht, lus=lus, strengen=strengen)
 
