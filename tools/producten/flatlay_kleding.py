@@ -247,6 +247,7 @@ def sweater_basis():
         img, a = img[:, ::-1].copy(), a[:, ::-1].copy()
         cx = W - 1 - SWEAT_CX
         img, a = symmetrisch(img, a, cx, band=0, overgang=50)
+        a = cv2.GaussianBlur(cv2.morphologyEx((a > 0.5).astype(np.uint8), cv2.MORPH_OPEN, _k(4)).astype(np.float32), (0, 0), 0.9)
         _CACHE['sweat'] = (img, a, cx)
     return _CACHE['sweat']
 
@@ -437,6 +438,179 @@ def tees(*welke):
     for handle, kleur, naam, bg in TEES:
         if not welke or handle in welke:
             tee(handle, kleur, naam, bg)
+
+
+
+def product(handle, voor, rug, achtergrond, macro_kader, macro_prints, maat, vulling=(0.90, 0.80), macro_img=None):
+    """Drie beelden per product: -1 voorkant groot, -2 achterkant, -3 macro."""
+    (v, va), (r, ra) = voor, rug
+    bewaar(leg_neer(v, va, achtergrond, vulling=vulling[0]), f'{handle}-1')
+    bewaar(leg_neer(r, ra, achtergrond, vulling=vulling[1], zaad=2), f'{handle}-2')
+    mi, ma = macro_img
+    bewaar(macro(mi, ma, macro_kader, macro_prints, maat=maat), f'{handle}-3')
+
+
+def rugprint_macro_kader(pr, art, naam, maat_breed=1.12):
+    _, pcx, pcy, br, _ = pr
+    ph = br * art.shape[0] / art.shape[1]
+    w = br * maat_breed
+    focus = MACRO_FOCUS.get(naam, 0.0)
+    return (pcx - w / 2, pcy - ph / 2 + focus * ph - w * 0.10, w)
+
+
+# ---------- sweater (en daarvan afgeleid: longsleeve en uv-shirt) ----------
+SW_MAAT = 18.5                          # px per cm (romp 1095 px = 59 cm)
+SW_KRAAG = 198                          # bovenkant rugboord in het midden
+SW_ROMP = (637, 1732)                   # zijnaden onder de oksel (gespiegelde bron)
+
+
+def neklabel_in(img, kleur, cx, cy, breedte, zicht):
+    zicht = cv2.GaussianBlur(zicht.astype(np.float32), (0, 0), 1.2)
+    laag = MK.zet_print(img, neklabel_art(kleur), cx, cy, breedte, verplaatsing=1.5, schaduw_sterkte=0.6, structuur=0.35, dekking=0.9)
+    return img * (1 - zicht[..., None]) + laag * zicht[..., None]
+
+
+def sweater_voorkant(img, a, cx, kleur, label_y=318):
+    H, W = a.shape
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    zicht = ((((xx - cx) / 185) ** 2 + ((yy - 200) / 135) ** 2) < 1) & ~((((xx - cx) / 354) ** 2 + (yy / 290) ** 2) < 1)
+    img = neklabel_in(img, kleur, cx, label_y, 5.0 * SW_MAAT, zicht)
+    ic = icoon(kleur)
+    hoogte = 8.0 * SW_MAAT
+    br = hoogte * ic.shape[1] / ic.shape[0]
+    pos = (cx + 10 * SW_MAAT, SW_KRAAG + 17 * SW_MAAT)
+    return druk(img, a, ic, pos[0], pos[1], br, verplaatsing=3), (ic, pos[0], pos[1], br, {'verplaatsing': 3})
+
+
+def sweater_rugkant(img, a, cx):
+    img, a = rugkant_tshirt(img, a, cx, hals=(170, 182, 244), boord=(0, 354, 268), verschuif=300, hoek=None)
+    W = a.shape[1]
+    return img[:, ::-1].copy(), a[:, ::-1].copy(), W - 1 - cx
+
+
+def rugprint(img, a, cx, art, maat, kraag, breedte_cm=25, max_cm=40, onder_kraag_cm=8.0):
+    br = printmaat(art, breedte_cm * maat, max_cm * maat)
+    cy = kraag + onder_kraag_cm * maat + br * art.shape[0] / art.shape[1] / 2
+    return druk(img, a, art, cx, cy, br), (art, cx, cy, br, {})
+
+
+def longsleeve_basis(smal=1.0):
+    """Longsleeve uit de sweater: mouwen en manchetten blijven, de gerimpelde boord gaat eraf; de romp loopt recht door
+    tot een gewone zoom met dubbel stiksel. smal < 1 maakt hem nauwer (uv-shirt)."""
+    key = ('ls', smal)
+    if key in _CACHE:
+        return _CACHE[key]
+    img, a, cx = sweater_basis()
+    H, W = a.shape
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    y_knip, y_zoom = 1280.0, 1600.0
+    xl, xr = SW_ROMP
+    kolom = (xx >= xl) & (xx <= xr)
+    # nieuwe onderkant van de romp, met stof uit de buik (iets samengedrukt zodat er geen mouwrand in zit)
+    mapx = (cx + (xx - cx) * 0.70).astype(np.float32)
+    mapy = (yy - 330).astype(np.float32)
+    bron = cv2.remap(img, mapx, mapy, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+    w = np.clip((yy - y_knip) / 40, 0, 1) * kolom
+    w = cv2.GaussianBlur(w.astype(np.float32), (0, 0), 3)
+    img = img * (1 - w[..., None]) + bron * w[..., None]
+    # zoom: dubbel stiksel 2,2 cm boven de onderrand, de omgeslagen rand iets lichter, onderrand iets donkerder
+    st = y_zoom - 2.2 * SW_MAAT
+    steek = (np.exp(-((yy - st) / 1.1) ** 2) + np.exp(-((yy - st - 9) / 1.1) ** 2)) * (np.sin(xx * 0.55) > -0.4)
+    zoom = np.clip((yy - st) / 6, 0, 1) * (yy <= y_zoom)
+    rand = np.exp(-((y_zoom - yy) / 5) ** 2)
+    f = (1 - 0.10 * steek + 0.025 * zoom - 0.10 * rand) * (yy > y_knip)
+    f = np.where(kolom & (yy > y_knip), f, 1.0)
+    img = img * f[..., None]
+    romp = np.zeros((H * 4, W * 4), np.uint8)
+    cv2.rectangle(romp, (int(xl * 4), int((y_knip - 60) * 4)), (int(xr * 4), int(y_zoom * 4)), 255, -1)
+    romp = cv2.resize(romp.astype(np.float32) / 255, (W, H), interpolation=cv2.INTER_AREA)
+    romp = cv2.GaussianBlur(romp, (0, 0), 0.7)
+    oud = np.where(kolom & (yy > y_knip - 60), 0, a)
+    a = np.maximum(oud, romp)
+    if smal != 1.0:
+        M = np.float32([[smal, 0, cx * (1 - smal)], [0, 1, 0]])
+        img = cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_AREA, borderMode=cv2.BORDER_REPLICATE)
+        a = cv2.warpAffine(a, M, (W, H), flags=cv2.INTER_AREA)
+    _CACHE[key] = (img, a, cx)
+    return _CACHE[key]
+
+
+def sweater(handle, kleur, naam, achtergrond):
+    img, a, cx = sweater_basis()
+    art = ontwerp(naam, kleur)
+    v = kleur_stof(img, a, kleur)
+    v, _ = sweater_voorkant(v, a, cx, kleur)
+    r, ra, rcx = sweater_rugkant(img, a, cx)
+    r = kaal = kleur_stof(r, ra, kleur)
+    r, pr = rugprint(r, ra, rcx, art, SW_MAAT, SW_KRAAG)
+    product(handle, (v, a), (r, ra), achtergrond, rugprint_macro_kader(pr, art, naam), [pr], SW_MAAT, macro_img=(kaal, ra))
+
+
+def longsleeve(handle, kleur, naam, achtergrond):
+    img, a, cx = longsleeve_basis()
+    art = ontwerp(naam, kleur)
+    v = kleur_stof(img, a, kleur)
+    v, _ = sweater_voorkant(v, a, cx, kleur)
+    r, ra, rcx = sweater_rugkant(img, a, cx)
+    r = kaal = kleur_stof(r, ra, kleur)
+    r, pr = rugprint(r, ra, rcx, art, SW_MAAT, SW_KRAAG)
+    product(handle, (v, a), (r, ra), achtergrond, rugprint_macro_kader(pr, art, naam), [pr], SW_MAAT, macro_img=(kaal, ra))
+
+
+def tegelband(h, w, tegel_px, zaad=0):
+    """Rij tegels (de tegelprint van de tas) als band, in px."""
+    t = MK.laad(ROOT / 'docs' / 'producten' / 'fabriek' / 'tegels-2x2.png')
+    s = tegel_px * 2 / t.shape[1]
+    t = cv2.resize(t, (int(t.shape[1] * s), int(t.shape[0] * s)), interpolation=cv2.INTER_AREA)
+    reps = (h // t.shape[0] + 2, w // t.shape[1] + 2)
+    return np.tile(t, (reps[0], reps[1], 1))[:h, :w]
+
+
+def uv_shirt():
+    handle, kleur, achtergrond = 'uv-shirt-lange-mouw', '#26355A', 'baby'
+    smal = 0.86
+    img, a, cx = longsleeve_basis(smal)
+    H, W = a.shape
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    v = kleur_stof(img, a, kleur)
+    # tegelband op beide manchetten: alles onder de manchetnaad (links gemeten, rechts gespiegeld), mee versmald
+    def manchet(x):
+        xs = cx + (x - cx) / smal                        # terug naar de bron-x
+        xs = np.where(xs > cx, 2 * cx - xs, xs)
+        y_naad = 1460 + (xs - 250) / 150 * 37
+        return (yy > y_naad) & (xs < 430) & (yy > 1400)
+    band = (manchet(xx) & (a > 0.5)).astype(np.float32)
+    band = cv2.GaussianBlur(band, (0, 0), 1.0)
+    L = MK.helderheid(v)
+    ref = float(np.median(L[band > 0.5])) if (band > 0.5).any() else 0.2
+    tegels = tegelband(H, W, int(4.5 * SW_MAAT))
+    sch = np.clip(L / max(ref, 1e-3), 0.6, 1.3)[..., None]
+    fijn = (L - cv2.GaussianBlur(L, (0, 0), 1.5))[..., None]
+    print_band = np.clip(tegels * 0.94 * sch + fijn * 0.8, 0, 1)
+    v = v * (1 - band[..., None]) + print_band * band[..., None]
+    kaal_manchet = v.copy()
+    v, ic = sweater_voorkant(v, a, cx, kleur)
+    # achterkant: effen, klein logo in de nek
+    r, ra, rcx = sweater_rugkant(img, a, cx)
+    r = kleur_stof(r, ra, kleur)
+    band_r = band[:, ::-1]
+    r = r * (1 - band_r[..., None]) + print_band[:, ::-1] * band_r[..., None]
+    logo = E.art(REF / 'logo-navy.png', CREME)
+    lb = 7 * SW_MAAT * smal
+    r = druk(r, ra, logo, rcx, SW_KRAAG + 6.5 * SW_MAAT + lb * logo.shape[0] / logo.shape[1] / 2, lb, verplaatsing=2)
+    # macro: manchet met de tegelband, linkermouw
+    kader_w = 330
+    kader = (325 - kader_w / 2, 1555 - kader_w * 1.25 / 2, kader_w)
+    product(handle, (v, a), (r, ra), achtergrond, kader, [], SW_MAAT, macro_img=(kaal_manchet, a))
+
+
+def sweaters():
+    sweater('sweater-boards', CREME_T, 'tweeboardslos', 'zand')
+
+
+def longsleeves():
+    longsleeve('longsleeve-vin', '#26355A', 'vin', 'zand')
+    longsleeve('longsleeve-zon', CREME_T, 'zon', 'baby')
 
 
 if __name__ == '__main__':
