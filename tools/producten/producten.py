@@ -513,6 +513,7 @@ for p in P:
 for h, lijst in PRINTS.items():
     for soort, f, bg in lijst:
         ref_pagina(f'{h}-{soort}', f(), '0 0 600 600', bg, 1400, 0, 1600, 1600)
+        ref_pagina(f'{h}-{soort}-los', f(), '0 0 600 600', 'transparent', 1400, 0, 1600, 1600)
 
 # ---------- prompts voor echte productfoto's ----------
 TAS_EN = ('a surfboard carry bag. It is a trapezoid-shaped fabric sleeve that wraps around the middle of a cream surfboard, '
