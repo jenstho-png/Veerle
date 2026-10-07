@@ -527,6 +527,7 @@ def longsleeve_basis(smal=1.0):
     img = img * f[..., None]
     oud = np.where(kolom & (yy > y_knip - 40), 0, a)
     a = np.maximum(oud, romp)
+    a = cv2.morphologyEx(a, cv2.MORPH_CLOSE, _k(4))              # geen haarlijn tussen mouw en nieuwe romp
     if smal != 1.0:
         M = np.float32([[smal, 0, cx * (1 - smal)], [0, 1, 0]])
         img = cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_AREA, borderMode=cv2.BORDER_REPLICATE)

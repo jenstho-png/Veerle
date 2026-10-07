@@ -532,6 +532,7 @@ def waxkam_fotos():
 
 
 # ---------- karabijnhaak ----------
+D_RING = 340          # D-ring: 27 mm breed (binnenmaat voor 25 mm band), draad 2 mm
 KARABIJN = {
     # naam: donker metaal, licht metaal, gamma, band, garen (stiksel), tekst (geweven logo), achtergrond
     'messing': ([0.42, 0.29, 0.1], [1.0, 0.88, 0.58], 1.15, '#22324F', '#C0603E', '#DCD3C2', 'zand'),
@@ -571,13 +572,28 @@ def karabijn_rgba(naam):
     _, _, vt = np.linalg.svd(pts - mid, full_matrices=False)
     r = vt[0] if vt[0][1] > 0 else -vt[0]                 # naar beneden
     proj = (pts - mid) @ r
-    eind = pts[proj > proj.max() - 6].mean(0)
-    C = eind - r * 47 + np.array([L0, B0])               # hart van de staaf (ca. 94 px dik)
-    Sd = C + r * 150
+    eind = pts[proj > proj.max() - 6].mean(0)            # buitenkant van de onderste staaf, op de as
+    # binnenkant van de staaf: langs de as terug tot de opening van de haak begint
+    t = 0
+    while m[int(round(eind[1] - r[1] * t)), int(round(eind[0] - r[0] * t))] > 0.5 or t < 20:
+        t += 1
+    staaf = t                                             # dikte van de staaf langs de as (px)
+    # D-ring door de haak: de boog komt in de opening boven de staaf uit (ca. 3,5 mm), loopt onder de staaf door,
+    # en de rechte kant (waar de lus omheen genaaid is) ligt ca. 2,5 mm onder de staaf
+    hb = D_RING / 2
+    top = eind - r * (staaf + 45)
+    Sd = top + r * hb + np.array([L0, B0])
     lagen = []
     for grond in (0.0, 1.0):
         doek = zc * za[..., None] + grond * (1 - za[..., None])
-        doek = E.d_ring(doek, hm, Sd, r, 300, 26, donker, licht)
+        voor = doek.copy()
+        doek = E.d_ring(doek, hm, Sd, r, D_RING, 26, donker, licht)
+        if grond == 0.0:
+            ring = np.clip((doek - voor).max(-1) / 0.03, 0, 1) * (1 - hm)
+        # contactschaduw: waar de staaf over de ring ligt wordt de ring vlak naast de staaf donker
+        afst = cv2.distanceTransform((hm < 0.5).astype(np.uint8), cv2.DIST_L2, 5)
+        ao = ring * np.exp(-afst / 7.0) * 0.55
+        doek = doek * (1 - ao[..., None])
         doek = E.bandlabel(doek, tuple(Sd), tuple(r), 1450, 280, band, garen, tekst, buig=0.0, R=13)
         lagen.append(doek)
     P, Wt = lagen
@@ -623,18 +639,26 @@ def roteer(rgba, hoek):
 def karabijn_fotos(naam, rgba=None):
     if rgba is None:
         rgba, _, _ = karabijn_rgba(naam)
+    rgba = rond_af(rgba)
     achter = KARABIJN[naam][6]
     h, w = rgba.shape[:2]
-    # 1: hero van boven, haak, D-ring en lus recht onder elkaar, groot in beeld
+    # 1: hero van de haak zelf: groot en in het midden, gegoten logo en schroefsluiting goed te zien;
+    #    D-ring en het begin van de lus eronder, de lus loopt onderaan uit beeld
     doek = achtergrond(achter)
-    doek = ST.leg(doek, rond_af(rgba), breedte=w * 1700 / h, midden=(800, 1000), hoogte=9, contact=0.55)
+    schaal = 1450 / (h * 0.37)                                # haak (ca. 37 procent van de lengte) ca. 1450 px hoog
+    midden_laag = h * 0.24                                    # dit punt van de laag komt iets boven het midden
+    doek = ST.leg(doek, rgba, breedte=w * schaal, midden=(800, 900 + (h / 2 - midden_laag) * schaal), hoogte=16, contact=0.55)
     bewaar(doek, f'karabijnhaak-{naam}-1')
-    # 2: macro van de lus: geweven logo, stiksel en de D-ring (bovenkant van de lus in de bovenste helft)
-    doek = achtergrond(achter, zaad=5)
-    schaal = 2.15 * 1700 / h
-    d_y = 0.40 * h                                           # punt in de laag dat in het midden van de foto komt
-    doek = ST.leg(doek, rond_af(rgba), breedte=w * schaal, midden=(800, 1000 + (h / 2 - d_y) * schaal), hoogte=16, contact=0.55)
+    # 2: het hele product van boven: haak, D-ring en de lus van 12 cm, recht onder elkaar
+    doek = achtergrond(achter, zaad=2)
+    doek = ST.leg(doek, rgba, breedte=w * 1700 / h, midden=(800, 1000), hoogte=9, contact=0.55)
     bewaar(doek, f'karabijnhaak-{naam}-2')
+    # 3: macro van de band: geweven logo, stiksel en de D-ring bovenaan
+    doek = achtergrond(achter, zaad=5)
+    schaal = 2.3 * 1700 / h
+    d_y = 0.55 * h
+    doek = ST.leg(doek, rgba, breedte=w * schaal, midden=(800, 1000 + (h / 2 - d_y) * schaal), hoogte=16, contact=0.55)
+    bewaar(doek, f'karabijnhaak-{naam}-3')
     return rgba
 
 
