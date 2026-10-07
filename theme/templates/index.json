@@ -255,7 +255,8 @@
         "btn1_label": "Alle artikelen",
         "btn1_link": "/collections/all",
         "btn2_label": "",
-        "btn2_link": ""
+        "btn2_link": "",
+        "stickers": true
       }
     },
     "wie": {
@@ -272,7 +273,10 @@
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-beginner",
             "filename": "tide-tode-beginner.jpg",
-            "alt": "Draagtas Salie om een board op het zand"
+            "alt": "Draagtas Salie om een board op het zand",
+            "sticker": "handen vrij",
+            "sticker_kleur": "creme",
+            "sticker_icoon": "tas"
           }
         },
         "kaart-2": {
@@ -283,7 +287,10 @@
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-avontuur",
             "filename": "tide-tode-avontuur.jpg",
-            "alt": "Draagtas Duin om een navy board op het zand"
+            "alt": "Draagtas Duin om een navy board op het zand",
+            "sticker": "ook op de scooter",
+            "sticker_kleur": "creme",
+            "sticker_icoon": "golf"
           }
         }
       },
@@ -347,7 +354,8 @@
     "uitgelicht": {
       "type": "tt-uitgelicht",
       "settings": {
-        "bg": "creme"
+        "bg": "creme",
+        "stickers": true
       },
       "blocks": {
         "ontwerp-1": {
@@ -411,10 +419,10 @@
   },
   "order": [
     "hero",
+    "uitgelicht",
     "usp",
     "zo",
     "wie",
-    "uitgelicht",
     "meer",
     "duurzaam",
     "faq",

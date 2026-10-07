@@ -157,7 +157,7 @@ await page('actie', 'page.actie.json', { request: { page_type: 'page', path: '/p
   globals.collections.all = { products: lijst.map((x) => ({ ...x, handle: x.url.split('/').pop() })) };
   globals.routes.product_recommendations_url = '/recommendations/products';
   globals.template = { name: 'product' };
-  for (const [naam, handle, opt] of [['product-tas', 'draagtas-tegel'], ['product-shirt', 't-shirt-getijden', { uitverkocht: ['L'] }], ['product-wax', 'surfwax-koel'], ['product-handdoek', 'strandhanddoek-tegel'], ['product-leeg', 'hoodie-busje', { metFotos: false }]]) {
+  for (const [naam, handle, opt] of [['product-tas', 'draagtas-tegel'], ['product-shirt', 't-shirt-golf', { uitverkocht: ['L'] }], ['product-wax', 'surfwax-koel'], ['product-handdoek', 'strandhanddoek-tegel'], ['product-leeg', 'hoodie-twee-boards', { metFotos: false }]]) {
     globals.product = maakProduct(handle, opt);
     await page(naam, 'product.json', { request: { page_type: 'product', path: `/products/${handle}` } });
   }

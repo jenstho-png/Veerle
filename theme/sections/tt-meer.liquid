@@ -11,7 +11,11 @@
 {%- endif -%}
 {%- if tt_zie -%}
 <section class="tt tt-meer tt-bg--{{ section.settings.bg }}">
-  <div class="tt-wrap">
+  <div class="tt-wrap tt-meer__wrap">
+    {%- if section.settings.stickers -%}
+      <div class="tt-stickers tt-stickers--meer1" aria-hidden="true">{% render 'tt-stk', naam: 'golf' %}</div>
+      <div class="tt-stickers tt-stickers--meer2" aria-hidden="true">{% render 'tt-stk', naam: 'schelp' %}</div>
+    {%- endif -%}
     <div class="tt-meer__kop">
       <div>
         {%- if section.settings.label != blank -%}<p class="tt-duurzaam__label tt-in">{{ section.settings.label }}</p>{%- endif -%}
@@ -52,6 +56,12 @@
   "tag": "div",
   "max_blocks": 8,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "stickers",
+      "label": "Stickers bij de kop",
+      "default": true
+    },
     {
       "type": "select",
       "id": "bg",

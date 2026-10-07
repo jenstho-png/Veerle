@@ -2111,3 +2111,39 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
 .tt-uit__foto img.is-wissel { opacity: 1 !important; clip-path: inset(0 0 0 100%); transition: none !important; }
 .tt-pop__teaser { transition: opacity .35s ease, transform .35s ease, rotate .4s ease; }
 .tt-in-voet .tt-pop__teaser { opacity: 0; transform: translateY(20px); pointer-events: none; }
+
+/* ---------- ontwerpkiezer op de home (geen prijs, alleen de prints) ---------- */
+.tt-uit__beeld { position: relative; }
+.tt-stickers--uit { left: -30px; bottom: 28px; width: 200px; rotate: -8deg; }
+.tt-stickers--uit2 { right: -24px; top: 28px; width: 96px; rotate: 11deg; }
+.tt-uit__label { margin: 0 0 14px !important; font: 700 11px/1 var(--tt-tekst); letter-spacing: .24em; text-transform: uppercase; color: #B4553A; }
+.tt-uit__pitch { margin-top: 16px !important; }
+.tt-uit__nu { display: flex; align-items: baseline; gap: 14px; margin: 30px 0 14px !important; padding-bottom: 14px; border-bottom: 1px solid rgba(34, 50, 79, .15); }
+.tt-uit__nu span { font: 700 11px/1 var(--tt-tekst); letter-spacing: .2em; opacity: .5; }
+.tt-uit__nu b { font: 700 clamp(22px, 2.2vw, 30px)/1 var(--tt-tekst); letter-spacing: .14em; text-transform: uppercase; color: var(--tt-deep, #22324F); }
+.tt-uit__ontwerpen { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; gap: 10px !important; margin: 0 0 30px !important; }
+.tt-uit__ontwerpen button { all: unset; box-sizing: border-box; display: block; width: 100%; aspect-ratio: 1 / 1; border-radius: 50%; overflow: hidden; cursor: pointer; position: relative; box-shadow: 0 0 0 1px rgba(34, 50, 79, .14); transition: box-shadow .3s ease, transform .4s cubic-bezier(.22, 1, .36, 1); }
+.tt-uit__ontwerpen button img { width: 100% !important; height: 100% !important; max-height: none !important; aspect-ratio: 1 / 1 !important; object-fit: cover !important; object-position: 30% 42%; scale: 2.6; transform-origin: 30% 42%; border-radius: 0 !important; transform: none !important; }
+.tt-uit__ontwerpen button:hover { transform: translateY(-3px); }
+.tt-uit__ontwerpen button.is-actief { box-shadow: 0 0 0 2px var(--tt-creme, #F3ECDD), 0 0 0 4px var(--tt-deep, #22324F); }
+.tt-uit__ontwerpen button:focus-visible { outline: 2px solid var(--tt-deep, #22324F); outline-offset: 4px; }
+@media (max-width: 989px) {
+  .tt-uit__grid { gap: 40px !important; }
+  .tt-stickers--uit { left: -6px; bottom: 14px; width: 132px; }
+  .tt-stickers--uit2 { right: -4px; top: 14px; width: 62px; }
+  .tt-uit__ontwerpen { gap: 8px !important; }
+}
+.tt-meer__wrap { position: relative; }
+.tt-stickers--meer1 { right: 2%; top: -64px; width: 128px; rotate: 7deg; }
+.tt-stickers--meer2 { right: 15%; top: -40px; width: 72px; rotate: -14deg; }
+@media (max-width: 749px) {
+  .tt-stickers--meer1 { right: 0; top: -54px; width: 86px; }
+  .tt-stickers--meer2 { right: 24%; top: -36px; width: 50px; }
+}
+.tt-wie__kaart { position: relative; }
+.tt-wie__badge { left: 10px; bottom: 10px; width: 84px !important; height: 84px !important; font-size: 9.5px !important; rotate: -9deg; }
+.tt-wie__badge .tt-icoon { width: 20px !important; height: 20px !important; }
+@media (max-width: 749px) {
+  .tt-wie__badge { left: 6px; bottom: 6px; width: 68px !important; height: 68px !important; font-size: 8px !important; gap: 2px !important; }
+  .tt-wie__badge .tt-icoon { width: 16px !important; height: 16px !important; }
+}
