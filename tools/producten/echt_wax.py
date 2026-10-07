@@ -151,6 +151,12 @@ def wax_kleur(img, m, kleur_hex, glad=0, gamma=0.75, vlak=0, laag=0.5):
         u8 = (np.clip(img, 0, 1) * 255).astype(np.uint8)
         u8 = cv2.medianBlur(u8, glad)
         bron = cv2.bilateralFilter(u8, 0, 25, 5).astype(np.float32) / 255
+        # grote lichte of donkere vlekken (zeepkorrels) uit het blok poetsen
+        Lx = L(bron)
+        Lm = cv2.medianBlur((Lx * 255).astype(np.uint8), 41).astype(np.float32) / 255
+        vlekken = ((np.abs(Lx - Lm) > 0.045) & (m > 0.3)).astype(np.uint8) * 255
+        vlekken = cv2.dilate(vlekken, np.ones((5, 5), np.uint8))
+        bron = cv2.inpaint((np.clip(bron, 0, 1) * 255).astype(np.uint8), vlekken, 9, cv2.INPAINT_TELEA).astype(np.float32) / 255
     Lb = L(bron)
     if vlak:
         # korrel helemaal weg: licht alleen uit het blok zelf, sterk verzacht, plus wat fijne korrel van wax
@@ -188,7 +194,14 @@ def bewaar(img, naam, x0, y0, b, rechts=0):
     h = int(round(b * 1.25))
     if rechts:
         w = img.shape[1]
-        img = np.concatenate([img, img[:, w - rechts:w][:, ::-1]], 1)
+        # verschoven kopie van de rand (hout en muur lopen horizontaal door), met een zachte overgang van 60 px
+        o = 60
+        stuk = img[:, w - rechts - o:w]
+        breder = np.concatenate([img, np.zeros((img.shape[0], rechts, 3), np.float32)], 1)
+        a = np.linspace(0, 1, o, dtype=np.float32)[None, :, None]
+        breder[:, w - o:w] = img[:, w - o:w] * (1 - a) + stuk[:, :o] * a
+        breder[:, w:] = stuk[:, o:]
+        img = breder
     uit = img[y0:y0 + h, x0:x0 + b]
     uit = cv2.resize(uit, (1600, 2000), interpolation=cv2.INTER_AREA if b > 1600 else cv2.INTER_CUBIC)
     MK.bewaar(uit, DOEL / f'{naam}.jpg')
@@ -339,6 +352,6 @@ if __name__ == '__main__':
     stappen = sys.argv[1:] or ['stapel', 'blok']
     for soort in SOORTEN:
         if 'stapel' in stappen:
-            bewaar(stapel(soort), f'surfwax-{soort}-1', 728, 1298, 1840, rechts=168)
+            bewaar(stapel(soort), f'surfwax-{soort}-1', 798, 1473, 1700, rechts=98)
         if 'blok' in stappen:
             bewaar(blok(soort), f'surfwax-{soort}-2', 1056, 0, 1600)
