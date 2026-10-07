@@ -149,8 +149,8 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 2147483000; point
 .tt-koop__optie legend { font: 600 13px/1 var(--tt-tekst); margin-bottom: 12px; }
 .tt-koop__optie label { display: inline-block; margin: 0 6px 6px 0; cursor: pointer; }
 .tt-koop__optie input { position: absolute; opacity: 0; pointer-events: none; }
-.tt-koop__optie span { display: inline-block; padding: 12px 20px; border-radius: 999px; border: 1px solid var(--tt-lijn); font: 500 14px/1 var(--tt-tekst); transition: border-color .3s, background .3s, color .3s; }
-.tt-koop__optie input:checked + span { background: var(--tt-ink); color: var(--tt-creme); border-color: var(--tt-ink); }
+.tt-koop__pillen label > span { display: inline-block; padding: 12px 20px; border-radius: 999px; border: 1px solid var(--tt-lijn); font: 500 14px/1 var(--tt-tekst); transition: border-color .3s, background .3s, color .3s; }
+.tt-koop__pillen input:checked + span { background: var(--tt-ink); color: var(--tt-creme); border-color: var(--tt-ink); }
 .tt-koop__optie input:focus-visible + span { outline: 2px solid var(--tt-poppy); outline-offset: 2px; }
 .tt-koop__vertrouwen { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 22px !important; }
 .tt-koop__vertrouwen li { display: flex; align-items: center; gap: 8px; font: 400 13.5px/1.3 var(--tt-tekst); color: var(--tt-zacht); }
@@ -1343,17 +1343,20 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
 .tt-koop__punten { margin-top: 22px !important; }
 .tt-koop__form { margin-top: 28px; }
 .tt-koop__optie { position: relative; margin: 0 0 22px; }
+
+.tt-koop__optie legend .tt-koop__gekozen { font-weight: 400; opacity: .65; letter-spacing: .1em; }
 .tt-koop__optie legend { display: flex; gap: 10px; margin-bottom: 12px; font: 700 11.5px/1 var(--tt-tekst); letter-spacing: .2em; text-transform: uppercase; }
 .tt-koop__gekozen { font-weight: 400; opacity: .65; letter-spacing: .1em; }
-.tt-koop__maatlink { position: absolute; right: 0; top: 0; font: 700 11px/1 var(--tt-tekst); letter-spacing: .16em; text-transform: uppercase; color: inherit; text-underline-offset: 4px; }
+.tt-koop__optie legend { width: 100%; }
+.tt-koop__maatlink { margin-left: auto; font: 700 11px/1 var(--tt-tekst); letter-spacing: .16em; text-transform: uppercase; color: inherit; text-underline-offset: 4px; }
 .tt-koop__pillen { display: flex; flex-wrap: wrap; gap: 8px; }
 .tt-koop__optie label { margin: 0; position: relative; }
 .tt-koop__optie input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; pointer-events: auto; }
-.tt-koop__optie span { display: inline-grid; place-items: center; min-width: 58px; min-height: 48px; padding: 0 20px; border-radius: 999px; border: 1.5px solid var(--tt-lijn); font: 700 13px/1 var(--tt-tekst); letter-spacing: .08em; transition: background-color .35s var(--tt-ease), color .35s var(--tt-ease), border-color .35s var(--tt-ease), transform .5s var(--tt-ease); }
-.tt-koop__optie label:hover span { border-color: currentColor; }
-.tt-koop__optie input:checked + span { background: var(--tt-deep); color: var(--tt-creme); border-color: var(--tt-deep); }
-.tt-koop__optie label:active span { transform: scale(.96); }
-.tt-koop__optie .is-op span { opacity: .45; background-image: linear-gradient(to top left, transparent calc(50% - .75px), currentColor calc(50% - .75px), currentColor calc(50% + .75px), transparent calc(50% + .75px)); }
+.tt-koop__pillen label > span { display: inline-grid; place-items: center; min-width: 58px; min-height: 48px; padding: 0 20px; border-radius: 999px; border: 1.5px solid var(--tt-lijn); font: 700 13px/1 var(--tt-tekst); letter-spacing: .08em; transition: background-color .35s var(--tt-ease), color .35s var(--tt-ease), border-color .35s var(--tt-ease), transform .5s var(--tt-ease); }
+.tt-koop__pillen label:hover > span { border-color: currentColor; }
+.tt-koop__pillen input:checked + span { background: var(--tt-deep); color: var(--tt-creme); border-color: var(--tt-deep); }
+.tt-koop__pillen label:active > span { transform: scale(.96); }
+.tt-koop__pillen .is-op > span { opacity: .45; background-image: linear-gradient(to top left, transparent calc(50% - .75px), currentColor calc(50% - .75px), currentColor calc(50% + .75px), transparent calc(50% + .75px)); }
 .tt-koop__rij { display: flex; gap: 10px; align-items: stretch; }
 .tt-koop__aantal { display: flex; align-items: center; flex-shrink: 0; border: 1.5px solid var(--tt-lijn); border-radius: 999px; }
 .tt-koop__aantal button { width: 44px; height: 100%; min-height: 56px; border: 0; background: none; color: inherit; font: 400 20px/1 var(--tt-tekst); cursor: pointer; border-radius: 999px; }
@@ -1611,3 +1614,9 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
   .tt-melding, .tt-pop__kaart, .tt-pk__img, .tt-koop__optie span { transition-duration: .01s !important; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
+@media (max-width: 749px) {
+  .tt-kaarten__grid { gap: 10px; }
+  .tt-kaarten__kaart { grid-template-columns: 88px minmax(0, 1fr); column-gap: 18px; row-gap: 6px; align-items: start; padding: 18px; }
+  .tt-kaarten__ill { grid-row: span 3; aspect-ratio: 1; margin: 0; padding: 14%; }
+}
+.tt-koop__foto--leeg .tt-beeld__leeg svg, .tt-pk__leeg svg { width: 26% !important; height: auto !important; opacity: .45; color: var(--tt-deep); fill: currentColor; }

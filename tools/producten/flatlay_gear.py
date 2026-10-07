@@ -109,15 +109,20 @@ def zijlicht(d_boven):
     return 0.89 + 0.11 * richting + 0.02 * np.clip(richting, 0, 1)
 
 
-ZIJ = (17, 12)      # zichtbare zijkant links/rechts en boven/onder (px op het blok), lens recht boven het midden
+ZIJ = (21, 15)      # zichtbare zijkant links/rechts en boven/onder (px op het blok), lens recht boven het midden
 
 
-def wax_blok(soort, b=1450, h=1000, zaad=3):
+def wax_blok(soort, b=1450, h=1000, zaad=3, kam=False, gebruikt=False):
     """Pak-blok van boven: bovenvlak met echte korrel en een smalle zichtbare zijkant rondom. Geeft rgb, alpha, d_boven."""
     kleur = hexrgb(EW.SOORTEN[soort]['kleur'])
     sx, sy = ZIJ
     d_buiten = hapjes(rand_afstand((h, b), 0, 0, b - 1, h - 1, 26, zaad), zaad, n=4, diep=3)
     d_boven = hapjes(rand_afstand((h, b), sx, sy, b - 1 - sx, h - 1 - sy, 18, zaad + 5, ruw=0.8), zaad + 9, n=6, diep=3.5)
+    if gebruikt:
+        # afgesleten kant links: veel rondere hoeken
+        links = (np.arange(b, dtype=np.float32)[None, :] < b / 2)
+        d_buiten = np.where(links, np.minimum(d_buiten, rand_afstand((h, b), 0, 0, b - 1, h - 1, 110, zaad + 40)), d_buiten)
+        d_boven = np.where(links, np.minimum(d_boven, rand_afstand((h, b), sx + 6, sy, b - 1 - sx, h - 1 - sy, 120, zaad + 41, ruw=0.8)), d_boven)
     a = np.clip(d_buiten + 0.5, 0, 1).astype(np.float32)
     boven = np.clip(d_boven + 0.5, 0, 1)
     Lv = wax_vlak(b, h)
@@ -126,8 +131,26 @@ def wax_blok(soort, b=1450, h=1000, zaad=3):
     Lz = cv2.GaussianBlur(Lv, (0, 0), sigmaX=3, sigmaY=3) * (1 + ruis((h, b), 0.03, 1.0, zaad + 3))
     f_zij = Lz * zijlicht(d_boven) * (1 - 0.05 * np.clip(1 - d_buiten / 2.5, 0, 1))   # uiterste randje iets donkerder
     f = f_boven * boven + f_zij * (1 - boven)
-    # wax is satijnmat: heel zacht glanslicht naar het raam toe
     yy, xx = np.mgrid[0:h, 0:b].astype(np.float32)
+    if kam:
+        # een paar groefjes van een waxkam over een hoek van het blok: smalle geultjes, schaduwkant rechtsonder
+        groef = np.zeros((h, b), np.float32)
+        rng = np.random.default_rng(zaad + 21)
+        for i in range(7):
+            y = h * 0.66 + i * 21 + rng.uniform(-2, 2)
+            x0, x1 = b * 0.63 + rng.uniform(-30, 10), b * 0.93 + rng.uniform(-20, 15)
+            langs = np.clip((xx - x0) / 40, 0, 1) * np.clip((x1 - xx) / 60, 0, 1)
+            groef = np.maximum(groef, np.exp(-((yy - y) / 3.2) ** 2) * langs * rng.uniform(0.7, 1.0))
+        groef = groef * boven
+        gy = np.gradient(cv2.GaussianBlur(groef, (0, 0), 1.0), axis=0)
+        f = f * (1 - 0.06 * groef) * (1 + 2.2 * gy * LICHT_NAAR[1] * -1)
+    if gebruikt:
+        # linkerkant is al over een board gewreven: hoeken rond, vlak licht glimmend met strepen in de wrijfrichting
+        slijt = np.clip(1 - xx / (b * 0.32), 0, 1) ** 1.5 * boven
+        streep = cv2.GaussianBlur(np.random.default_rng(zaad + 30).normal(0, 1, (h, b)).astype(np.float32), (0, 0), sigmaX=1.2, sigmaY=10)
+        streep = streep / (streep.std() + 1e-6)
+        f = f * (1 + slijt * (0.035 + 0.03 * streep))
+    # wax is satijnmat: heel zacht glanslicht naar het raam toe
     f = f * (1.03 - 0.05 * (xx / b * 0.5 + yy / h * 0.5))
     rgb = np.clip(kleur[None, None] * f[..., None] ** 1.1, 0, 1)
     return rgb.astype(np.float32), a, d_boven
@@ -158,14 +181,14 @@ def kreuk(shape, p0, p1, breedte, sterkte):
     return 1 + sterkte * 2.3 * flank * langs * np.sign(kant if abs(kant) > 1e-3 else 1)
 
 
-def wikkel_pak(soort, b=1450, h=1000, zaad=5):
+def wikkel_pak(soort, b=1450, h=1000, zaad=5, verschuif=0, **blok):
     """Een pak surfwax van boven: blok met de papieren band om het midden. Geeft RGBA (float32)."""
-    rgb, a, d_boven = wax_blok(soort, b, h)
+    rgb, a, d_boven = wax_blok(soort, b, h, **blok)
     sx, sy = ZIJ
     hb = h - 2 * sy                                             # bedrukt deel = bovenvlak
     art = EW.art(f'band-voor-{soort}')[..., :3]
     bb = int(round(hb * art.shape[1] / art.shape[0]))
-    x0 = (b - bb) // 2
+    x0 = (b - bb) // 2 + int(verschuif)
     x1 = x0 + bb
     art = cv2.resize(art, (bb, hb), interpolation=cv2.INTER_AREA)
     creme = hexrgb(CREME)
@@ -213,6 +236,116 @@ def wikkel_pak(soort, b=1450, h=1000, zaad=5):
     # silhouet: waar de band zit loopt het papier recht door tot de onderkant van het blok
     alpha = np.maximum(a, bandm * np.clip(np.minimum(yy, h - 1 - yy) + 0.5, 0, 1))
     return np.dstack([np.clip(uit, 0, 1), alpha]).astype(np.float32)
+
+
+# ---------- board deck met verse wax ----------
+DECK = {'koud': '#F1D9D2', 'koel': '#D3E6DF', 'warm': '#F1EADB'}      # rose, mint en zand deck (zelfde tinten als de tasshoot)
+L3 = np.array([LICHT_NAAR[0] * 0.77, LICHT_NAAR[1] * 0.77, 0.64], np.float32)   # raam linksboven, ca. 40 graden hoog
+L3 /= np.linalg.norm(L3)
+
+
+def deck(kleur_hex, stringer_x, zaad=1, B=ST.B, H=ST.H):
+    """Close-up van een glassed deck van boven: getinte resin, fijne schuurkrasjes in de lengte, houten stringer onder het glas,
+    zachte reflectie van het raam linksboven."""
+    rng = np.random.default_rng(zaad)
+    kleur = hexrgb(kleur_hex)
+    vlek = ruis((H, B), 0.010, 60, zaad)
+    fijn = ruis((H, B), 0.005, 0.8, zaad + 1)
+    kras = cv2.GaussianBlur(rng.normal(0, 1, (H, B)).astype(np.float32), (0, 0), sigmaX=0.7, sigmaY=14)
+    kras = kras / (kras.std() + 1e-6) * 0.005
+    img = kleur[None, None] * (1 + vlek + fijn + kras)[..., None]
+    # houten stringer (3 mm): lichtbruin met nerf in de lengte, door de resin iets in de deckkleur getrokken
+    xx = np.arange(B, dtype=np.float32)[None, :]
+    yy = np.arange(H, dtype=np.float32)[:, None]
+    rand = ruis((H, 1), 0.6, 40, zaad + 3)
+    s = np.clip(14.5 - np.abs(xx - stringer_x - rand), 0, 1)
+    nerf = 1 + 0.07 * np.sin((xx - stringer_x) * 1.3 + ruis((H, B), 1.5, 30, zaad + 4)) + ruis((H, B), 0.03, 2, zaad + 5)
+    hout = np.array([0.70, 0.54, 0.37], np.float32)[None, None] * nerf[..., None]
+    hout = hout * 0.8 + kleur[None, None] * 0.2
+    img = img * (1 - s[..., None]) + hout * s[..., None]
+    # randjes van de stringer: dun donker lijntje waar het hout aan het schuim grenst
+    lijn = np.exp(-((np.abs(xx - stringer_x - rand) - 14.5) / 1.1) ** 2)
+    img = img * (1 - 0.12 * lijn[..., None])
+    # raamlicht en een zachte reflectie van het raam in het glas
+    img = img * ST._licht(H, B)
+    refl = np.exp(-(((xx - B * 0.22) / (B * 0.45)) ** 2 + ((yy - H * 0.18) / (H * 0.35)) ** 2))
+    img = img + 0.045 * refl[..., None]
+    return np.clip(img, 0, 1).astype(np.float32)
+
+
+def wax_parels(B, H, gebied, zaad=7, cirkels=190):
+    """Hoogteveld van verse surfwax: eerst een basislaag in kruisarcering, daarna in kleine rondjes gewreven, waardoor
+    bultjes (wax beads) ontstaan. gebied: 0..1, waar de wax ligt (randen dunner)."""
+    rng = np.random.default_rng(zaad)
+    # basislaag: korte streken in twee schuine richtingen
+    basis = np.zeros((H, B), np.float32)
+    for richting in [(1, 1), (1, -1)]:
+        r = np.float32(richting) / np.sqrt(2)
+        for _ in range(900):
+            c = np.float32([rng.uniform(0, B), rng.uniform(0, H)])
+            l = rng.uniform(40, 160)
+            p0, p1 = c - r * l / 2, c + r * l / 2
+            cv2.line(basis, tuple(int(v) for v in p0), tuple(int(v) for v in p1), float(rng.uniform(0.4, 1.0)), int(rng.integers(2, 4)), cv2.LINE_AA)
+    basis = cv2.GaussianBlur(basis, (0, 0), 1.6)
+    basis = 1 - np.exp(-basis * 0.9)
+    # rondjes: bultjes langs kleine cirkels, ze klonteren waar cirkels overlappen
+    lagen = {3.5: np.zeros((H, B), np.float32), 6.0: np.zeros((H, B), np.float32), 9.0: np.zeros((H, B), np.float32)}
+    ys, xs = np.nonzero(gebied > 0.3)
+    for _ in range(cirkels):
+        i = rng.integers(len(xs))
+        cx, cy = xs[i], ys[i]
+        straal = rng.uniform(55, 190)
+        n = int(2 * np.pi * straal / rng.uniform(16, 26))
+        hoek0 = rng.uniform(0, 2 * np.pi)
+        boog = rng.uniform(1.2, 2.0) * np.pi
+        for t in np.linspace(0, boog, n):
+            x = cx + np.cos(hoek0 + t) * straal + rng.normal(0, 5)
+            y = cy + np.sin(hoek0 + t) * straal * rng.uniform(0.85, 1.0) + rng.normal(0, 5)
+            if 0 <= x < B and 0 <= y < H:
+                k = rng.choice([3.5, 6.0, 9.0], p=[0.45, 0.4, 0.15])
+                lagen[k][int(y), int(x)] += rng.uniform(0.6, 1.0)
+    bult = np.zeros((H, B), np.float32)
+    for sig, l in lagen.items():
+        bult += cv2.GaussianBlur(l, (0, 0), sig) * (2 * np.pi * sig ** 2) * 0.55
+    bult = 1 - np.exp(-bult * 1.4)
+    # binnen het gebied; aan de rand minder bultjes en een dunnere basislaag
+    hoogte = (0.28 * basis + bult) * gebied
+    return hoogte.astype(np.float32), (basis * gebied).astype(np.float32)
+
+
+def wax_op_deck(img, hoogte, basis, wax_hex, zaad=7, schaal=7.0):
+    """Wax over de deck: doorschijnend, dikker = voller van kleur, satijnglans en kleine schaduwtjes naar rechtsonder."""
+    H, B = hoogte.shape
+    hz = cv2.GaussianBlur(hoogte, (0, 0), 1.2) * schaal
+    gy, gx = np.gradient(hz)
+    n = np.dstack([-gx, -gy, np.ones_like(gx)])
+    n /= np.linalg.norm(n, axis=2, keepdims=True)
+    nl = np.clip(n @ L3, 0, 1)
+    dif = (0.45 + 0.55 * nl) / (0.45 + 0.55 * L3[2])
+    Hv = L3 + np.float32([0, 0, 1]); Hv /= np.linalg.norm(Hv)
+    glans = np.clip(n @ Hv, 0, 1) ** 18 * 0.16
+    # schaduwtjes van de bultjes op de deck en op elkaar
+    dx, dy = -LICHT_NAAR * 3.0
+    verschoven = cv2.warpAffine(hoogte, np.float32([[1, 0, dx], [0, 1, dy]]), (B, H))
+    sch = np.clip(verschoven - hoogte, 0, 1)
+    sch = cv2.GaussianBlur(sch, (0, 0), 1.5)
+    wax = hexrgb(wax_hex)
+    wax = wax * 0.85 + 0.15                                               # wax is lichter dan de verpakkingskleur doet vermoeden
+    dekking = np.clip(0.10 + 0.8 * hoogte, 0, 0.9)
+    # doorschijnend: de deck schemert erdoor, de kleur van de wax zacht verlopen
+    kleur = img * (1 - dekking[..., None]) + wax[None, None] * dekking[..., None]
+    kleur = cv2.GaussianBlur(kleur, (0, 0), 0.6)
+    kleur = kleur * ((1 - (hoogte > 0.02)[..., None] * 0) * dif[..., None]) * (1 - 0.35 * sch[..., None]) + glans[..., None]
+    korrel = ruis((H, B), 0.012, 0.8, zaad + 9) * (hoogte > 0.05)
+    return np.clip(kleur * (1 + korrel[..., None]), 0, 1)
+
+
+def wax_gebied(B, H, zaad=4):
+    """Organische vlek waar de wax ligt: het onderste deel en het midden, schoon deck linksboven."""
+    yy, xx = np.mgrid[0:H, 0:B].astype(np.float32)
+    basis = 1 / (1 + np.exp(-((yy / H - 0.30) + 0.25 * (xx / B - 0.5)) * 9))
+    vorm = basis + ruis((H, B), 0.18, 70, zaad) + ruis((H, B), 0.06, 14, zaad + 1)
+    return np.clip((vorm - 0.5) / 0.22 + 0.5, 0, 1).astype(np.float32)
 
 
 def proef():

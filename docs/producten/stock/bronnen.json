@@ -222,5 +222,13 @@
     "photographer": "Dongsh",
     "what": "Fine light beige beach sand with gentle wind ripples, shot from straight above (3200x4262)",
     "notes": "Same photo as lifestyle/textuur-zand-1.jpg, at full resolution. Used by tools/tas/studio2.py for the close-up details (-3, -4) of the bags, so the sand grain keeps its real size when zoomed in. Soft overcast light, no objects."
+  },
+  {
+    "file": "flatlay/tshirt-wit-plat-1.jpg",
+    "source_page": "https://unsplash.com/photos/4rUYuwJ2vGw",
+    "image_url": "https://images.unsplash.com/photo-1651761179569-4ba2aa054997?w=2400&q=85&fm=jpg",
+    "photographer": "mockupbee (Unsplash)",
+    "what": "Blank white crew-neck t-shirt, flat lay shot straight from above on a seamless light grey background",
+    "notes": "2400x1600. Background is digitally flat (RGB 226) with a soft drop shadow, garment hardly brighter than the background, so the mask is built on fabric texture plus GrabCut and snapped to the real fabric edge (flatlay_kleding.masker_vlak). Garment axis x=1191.5; body 827 to 1565 at chest height; collar top y about 212; hem y about 1395. Slim, long cut rather than boxy. Same photo as tshirt-wit-1.jpg, at higher resolution. Used for the t-shirt flat lays."
   }
 ]

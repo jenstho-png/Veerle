@@ -306,7 +306,7 @@
   function koop(sectie) {
     if (sectie.dataset.ttKoopAan) return; sectie.dataset.ttKoopAan = '1';
     const gal = galerij(sectie);
-    const form = sectie.querySelector('[data-tt-form]');
+    const form = sectie.querySelector('[data-tt-form]') || sectie.querySelector('.tt-koop__form form');
     if (!form) return;
     const data = form.querySelector('[data-tt-varianten]');
     const id = form.querySelector('[data-tt-variant]');

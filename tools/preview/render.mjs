@@ -84,7 +84,7 @@ async function page(name, tplPath, extra = {}) {
   const css = Object.entries(schemes).map(([id, { settings: c }]) => `.color-${id}{--color-background:${hex(c.background)};--color-foreground:${hex(c.text)};--color-button:${hex(c.button)};--color-button-text:${hex(c.button_label)};background-color:rgb(var(--color-background));color:rgb(var(--color-foreground))}`).join('\n');
   const doc = `<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name}</title>
 <style>html{font-size:62.5%}body{margin:0;font-size:1.6rem;line-height:1.5;font-family:var(--font-body-family);background:#F4EEE4;color:#142029}*,*::before,*::after{box-sizing:border-box}.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}${css}</style>
-<link rel="stylesheet" href="surf.css">${await engine.renderFile('mk-stijl', { papier: true, leesbalk: true })}<link rel="stylesheet" href="tt.css"><script>document.documentElement.classList.add('tt-js');if(location.hash==='#stil')document.documentElement.classList.add('tt-stil');</script><script src="surf.js" defer></script><script src="tt.js" defer></script></head><body>${html}</body></html>`;
+<link rel="stylesheet" href="surf.css">${await engine.renderFile('mk-stijl', { papier: true, leesbalk: true })}<link rel="stylesheet" href="tt.css"><script>document.documentElement.classList.add('tt-js');if(location.hash==='#stil'||matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('tt-stil');setTimeout(function(){if(!document.documentElement.classList.contains('tt-klaar'))document.documentElement.classList.add('tt-stil')},4000);</script><script src="surf.js" defer></script><script src="tt.js" defer></script></head><body>${html}</body></html>`;
   fs.writeFileSync(`${OUT}/${name}.html`, doc);
 }
 
@@ -130,5 +130,41 @@ await page('actie', 'page.actie.json', { request: { page_type: 'page', path: '/p
   globals.routes.collections_url = '/collections';
   await page('collectie', 'collection.json', { request: { page_type: 'collection', path: '/collections/all' } });
   await page('collecties', 'list-collections.json', { request: { page_type: 'list-collections', path: '/collections' } });
+  // lege collectie (producten zijn nog niet geïmporteerd)
+  globals.collection = { ...col, title: 'Draagtassen', handle: 'draagtassen', description: '', products: [], products_count: 0 };
+  await page('collectie-leeg', 'collection.json', { request: { page_type: 'collection', path: '/collections/draagtassen' } });
+  globals.collection = col;
+
+  // productpagina's per producttype, met de foto's en teksten uit de csv
+  const csv = fs.readFileSync(path.resolve(T, '../docs/producten/producten.csv'), 'utf8');
+  const rows = []; { let rij = [], veld = '', q = false; for (let i = 0; i < csv.length; i++) { const c = csv[i];
+    if (q) { if (c === '"' && csv[i + 1] === '"') { veld += '"'; i++; } else if (c === '"') q = false; else veld += c; }
+    else if (c === '"') q = true; else if (c === ',') { rij.push(veld); veld = ''; } else if (c === '\n') { rij.push(veld); rows.push(rij); rij = []; veld = ''; } else if (c !== '\r') veld += c; } }
+  const kop = rows.shift(); const K = (r, n) => r[kop.indexOf(n)];
+  const maakProduct = (handle, { metFotos = true, uitverkocht = [] } = {}) => {
+    const rs = rows.filter((r) => K(r, 'URL handle') === handle); const r0 = rs[0];
+    const waarden = rs.map((r) => K(r, 'Option1 value')).filter(Boolean);
+    const fotos = metFotos ? [1, 2, 3].map((n) => `${handle}-${n}.jpg`).filter((f) => fs.existsSync(`${B}/${f}`)) : [];
+    const media = fotos.map((f, i) => ({ id: 100 + i, media_type: 'image', alt: K(r0, 'Title'), preview_image: { src: f }, src: f }));
+    const prijs = Math.round(parseFloat(K(r0, 'Price')) * 100);
+    const enkel = waarden.length <= 1;
+    const variants = (enkel ? ['Default Title'] : waarden).map((w, i) => ({ id: 1000 + i, title: w, price: prijs, compare_at_price: null, available: !uitverkocht.includes(w), options: [w], sku: `TT-${i}`, url: `/products/${handle}?variant=${1000 + i}`, featured_media: null }));
+    const v = variants.find((x) => x.available) || variants[0];
+    return { id: 1, handle, title: K(r0, 'Title'), type: K(r0, 'Type'), vendor: 'Tide-Tode', url: `/products/${handle}`, description: K(r0, 'Description'), tags: K(r0, 'Tags').split(', '),
+      media, featured_media: media[0] || null, available: true, price: prijs, has_only_default_variant: enkel, variants, selected_or_first_available_variant: v,
+      options_with_values: enkel ? [] : [{ name: K(r0, 'Option1 name'), values: waarden, selected_value: v.title }] };
+  };
+  globals.collections.all = { products: lijst.map((x) => ({ ...x, handle: x.url.split('/').pop() })) };
+  globals.routes.product_recommendations_url = '/recommendations/products';
+  globals.template = { name: 'product' };
+  for (const [naam, handle, opt] of [['product-tas', 'draagtas-tegel'], ['product-shirt', 't-shirt-getijden', { uitverkocht: ['L'] }], ['product-wax', 'surfwax-koel'], ['product-handdoek', 'strandhanddoek-tegel'], ['product-leeg', 'hoodie-busje', { metFotos: false }]]) {
+    globals.product = maakProduct(handle, opt);
+    await page(naam, 'product.json', { request: { page_type: 'product', path: `/products/${handle}` } });
+  }
+  // homepage zonder uitgelicht product in de thema-instellingen
+  delete globals.product; globals.template = { name: 'index' };
+  const bewaar = settings.tt_product; settings.tt_product = null;
+  await page('home-leeg', 'index.json', { request: { page_type: 'index', path: '/' } });
+  settings.tt_product = bewaar;
 }
 console.log('rendered');

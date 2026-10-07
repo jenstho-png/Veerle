@@ -141,14 +141,14 @@ def borduur(img, a, cx, cy, breedte, draai=0.0, steek=4.2, hoek=12.0, schaduw_br
     # bolling van het borduursel
     hoog = cv2.GaussianBlur(al, (0, 0), 2.6)
     gx = cv2.Sobel(hoog, cv2.CV_32F, 1, 0, ksize=3); gy = cv2.Sobel(hoog, cv2.CV_32F, 0, 1, ksize=3)
-    reliëf = 1 - (gx * 0.62 + gy * 0.78) * 1.6            # rand linksboven licht, rechtsonder donker
+    reliëf = 1 - (gx * 0.62 + gy * 0.78) * 0.9            # rand linksboven licht, rechtsonder donker
     kleur = laag[..., :3] * (draad * reliëf)[..., None]
     if schaduw_bron is not None:
         kleur = kleur * np.clip(schaduw_bron, 0.35, 1.2)[..., None]
     # stof: slagschaduw van het borduursel en een licht 'getrokken' rand
     sch = cv2.GaussianBlur(cv2.warpAffine(al, np.float32([[1, 0, 2.5], [0, 1, 3.5]]), (w, h)), (0, 0), 2.4)
     trek = cv2.GaussianBlur(al, (0, 0), 7) * (1 - al)
-    img = img * (1 - (0.40 * sch * (1 - al) + 0.10 * trek))[..., None]
+    img = img * (1 - (0.26 * sch * (1 - al) + 0.05 * trek))[..., None]
     rand = cv2.GaussianBlur(al, (0, 0), 0.7)
     return img * (1 - rand[..., None]) + np.clip(kleur, 0, 1) * rand[..., None]
 
@@ -182,43 +182,80 @@ def naad_weg(img, x0, x1, y0, y1, zacht=10):
     return uit
 
 
-def pet_navy_rgba(met_sticker=True):
-    """Navy snapback recht van voren: crème geborduurd board-icoon, onze klepsticker op de klep."""
+def kopie_schaal(img, m, schaal):
+    if schaal == 1:
+        return img, m
+    h, w = m.shape
+    return (cv2.resize(img, (int(w * schaal), int(h * schaal)), interpolation=cv2.INTER_CUBIC),
+            cv2.resize(m, (int(w * schaal), int(h * schaal)), interpolation=cv2.INTER_LINEAR))
+
+
+def oorsprong(m):
+    """Linksboven van de uitsnede die ST.vrijstaand maakt (om punten op het product terug te vinden)."""
+    a = cv2.GaussianBlur(m.astype(np.float32), (0, 0), 0.8)
+    ys, xs = np.where(a > 0.02)
+    return xs.min(), ys.min(), xs.max() + 1 - xs.min(), ys.max() + 1 - ys.min()
+
+
+def midden_voor(m, punt, s, doel=(800, 1000)):
+    """Waar ST.leg het product moet neerleggen zodat 'punt' (in fotocoördinaten) op 'doel' in beeld valt."""
+    x0, y0, w, h = oorsprong(m)
+    return (doel[0] - (punt[0] - x0 - w / 2) * s, doel[1] - (punt[1] - y0 - h / 2) * s)
+
+
+def opslaan(img, naam):
+    ST.bewaar(ST.afwerking(img), DOEL / f'{naam}.jpg')
+    print('foto', naam)
+
+
+def pet_navy_rgba(schaal=1.0):
+    """Navy snapback recht van voren: crème geborduurd board-icoon, onze klepsticker op de klep.
+    Geeft (rgb, masker, punten) terug op de gevraagde schaal van de stockfoto."""
     img, m = pet_basis()
+    img, m = kopie_schaal(img, m, schaal)
+    k = schaal
     w = img.shape[1]
-    nx = w - 1 - 1200                                   # middennaad na spiegelen
-    # onder het borduursel loopt geen naad meer zichtbaar door (het icoon ligt eroverheen)
-    img = naad_weg(img, nx - 30, nx + 30, 1020, 1470)
+    nx = (w / k - 1 - 1200) * k                         # middennaad na spiegelen
+    cx, cy, br = nx + 2 * k, 1240 * k, 128 * k
+    ico = art(REF / 'icoon-navy.png', CREME)
+    hoog = br * ico.shape[0] / ico.shape[1]
+    top = cy - hoog / 2
+    # in de openingen tussen de strepen van het icoon is geen naad te zien: het icoon ligt eroverheen
+    img = naad_weg(img, int(nx - 24 * k), int(nx + 24 * k), int(top + 0.42 * hoog), int(top + 0.86 * hoog), zacht=6 * k)
     L0 = MK.helderheid(img)
     ref = float(np.percentile(L0[m > 0.5], 85))
-    licht = cv2.GaussianBlur(L0, (0, 0), 30) / ref        # grove lichtval op de pet, zonder naden
+    licht = cv2.GaussianBlur(L0, (0, 0), 30 * k) / ref        # grove lichtval op de pet, zonder naden
     p = stof_kleur(img, m, NAVY)
-    cx = nx + 2
-    p = borduur(p, art(REF / 'icoon-navy.png', CREME), cx, 1240, 128, hoek=8, schaduw_bron=licht ** 0.6)
-    if met_sticker:
-        st = MK.laad_art(ART / 'petsticker.png')
-        x0, x1, y0, y1 = cx + 170, cx + 560, 1636, 1694
-        quad = [(x0 + 7, y0), (x1 - 3, y0), (x1 + 4, y1), (x0, y1)]
-        p = sticker_op_vlak(p, st, quad, licht=licht ** 0.5)
-    return p, m
+    p = borduur(p, ico, cx, cy, br, hoek=8, steek=4.2 * k, schaduw_bron=licht ** 0.6)
+    st = MK.laad_art(ART / 'petsticker.png')
+    x0, x1, y0, y1 = cx + 170 * k, cx + 560 * k, 1636 * k, 1694 * k
+    quad = [(x0 + 7 * k, y0), (x1 - 3 * k, y0), (x1 + 4 * k, y1), (x0, y1)]
+    p = sticker_op_vlak(p, st, quad, licht=licht ** 0.5)
+    return p, m, {'icoon': (cx, cy), 'sticker': ((x0 + x1) / 2, (y0 + y1) / 2)}
 
 
-def pet_navy():
-    p, m = pet_navy_rgba()
-    return ST.vrijstaand(p, m)
-
-
-def compositie_pet(rgba):
-    doek = ST.achtergrond('rose')
-    doek = ST.leg(doek, rgba, breedte=1160, midden=(800, 1030), hoogte=14)
-    return ST.afwerking(doek)
+def pet():
+    p, m, pt = pet_navy_rgba()
+    rgba = ST.vrijstaand(p, m)
+    # 1: hero, groot en recht van voren
+    opslaan(ST.leg(ST.achtergrond('rose'), rgba, breedte=1420, midden=(800, 1010), hoogte=16), 'pet-navy-1')
+    # 2: de hele pet met ruimte eromheen, zoals een packshot
+    opslaan(ST.leg(ST.achtergrond('rose', zaad=2), rgba, breedte=1060, midden=(800, 1030), hoogte=14), 'pet-navy-2')
+    # 3: detail van borduursel en klepsticker, op dubbele resolutie opgebouwd
+    k = 2.0
+    p2, m2, pt2 = pet_navy_rgba(schaal=k)
+    rgba2 = ST.vrijstaand(p2, m2)
+    s = 1.0
+    doelpunt = (pt2['icoon'][0] * 0.55 + pt2['sticker'][0] * 0.45, pt2['icoon'][1] * 0.5 + pt2['sticker'][1] * 0.5)
+    mid = midden_voor(m2, doelpunt, s, (800, 980))
+    opslaan(ST.leg(ST.achtergrond('rose', zaad=3), rgba2, breedte=rgba2.shape[1] * s, midden=mid, hoogte=20), 'pet-navy-3')
 
 
 def proef():
     PROEF.mkdir(parents=True, exist_ok=True)
-    rgba = pet_navy()
-    uit = ST.bewaar(compositie_pet(rgba), PROEF / 'accessoires-proef-1.jpg', max_kb=400)
-    print(uit)
+    p, m, _ = pet_navy_rgba()
+    doek = ST.leg(ST.achtergrond('rose'), ST.vrijstaand(p, m), breedte=1160, midden=(800, 1030), hoogte=14)
+    print(ST.bewaar(ST.afwerking(doek), PROEF / 'accessoires-proef-1.jpg', max_kb=400))
 
 
 if __name__ == '__main__':

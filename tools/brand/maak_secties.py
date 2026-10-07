@@ -342,10 +342,11 @@ schrijf('tt-koop', PRIJS + """
                 {%- for option in p.options_with_values -%}
                   {%- assign on = option.name | downcase -%}
                   <fieldset class="tt-koop__optie{% if on == 'maat' or on == 'size' %} tt-koop__optie--maat{% endif %}">
-                    <legend><span>{{ option.name }}</span> <span class="tt-koop__gekozen" data-tt-gekozen>{{ option.selected_value }}</span></legend>
-                    {%- if on == 'maat' or on == 'size' -%}
-                      {%- if section.settings.maatwijzer != blank -%}<a class="tt-koop__maatlink" href="{{ section.settings.maatwijzer }}">{{ section.settings.maatwijzer_label }}</a>{%- endif -%}
-                    {%- endif -%}
+                    <legend><span>{{ option.name }}</span> <span class="tt-koop__gekozen" data-tt-gekozen>{{ option.selected_value }}</span>
+                      {%- if on == 'maat' or on == 'size' -%}
+                        {%- if section.settings.maatwijzer != blank -%}<a class="tt-koop__maatlink" href="{{ section.settings.maatwijzer }}">{{ section.settings.maatwijzer_label }}</a>{%- endif -%}
+                      {%- endif -%}
+                    </legend>
                     <div class="tt-koop__pillen">
                       {%- for value in option.values -%}
                         <label><input type="radio" name="tt-optie-{{ section.id }}-{{ forloop.parentloop.index }}" value="{{ value | escape }}"{% if option.selected_value == value %} checked{% endif %}><span>{{ value }}</span></label>
@@ -389,7 +390,12 @@ schrijf('tt-koop', PRIJS + """
         {%- endif -%}
         <div class="tt-koop__details tt-in">
           {%- if pdp and p.description != blank -%}
-            <details open><summary>{{ section.settings.beschrijving_titel }}<i aria-hidden="true"></i></summary><div class="tt-koop__beschrijving">{{ p.description }}</div></details>
+            {%- comment -%} de eerste alinea staat al bovenaan als pitch {%- endcomment -%}
+            {%- assign eerste = p.description | split: '</p>' | first | append: '</p>' -%}
+            {%- assign rest = p.description | remove_first: eerste | strip -%}
+            {%- if rest != blank -%}
+              <details open><summary>{{ section.settings.beschrijving_titel }}<i aria-hidden="true"></i></summary><div class="tt-koop__beschrijving">{{ rest }}</div></details>
+            {%- endif -%}
           {%- endif -%}
           {%- for block in section.blocks -%}{%- if block.type == 'detail' -%}""" + BLOK_ZIE + """{%- if zie -%}
             <details {{ block.shopify_attributes }}><summary>{{ block.settings.titel }}<i aria-hidden="true"></i></summary><div>{{ block.settings.tekst }}</div></details>
