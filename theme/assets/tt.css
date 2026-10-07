@@ -1904,3 +1904,46 @@ main .shopify-section-group-footer-group, footer { position: relative; }
 .tt-hero__video { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 .tt-hero__video video { width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; display: block; }
 @media (prefers-reduced-motion: reduce) { .tt-hero__video { display: none; } }
+
+/* ---------- uitgelicht product op de homepage: rustig en duidelijk ---------- */
+.tt-uit__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+.tt-uit__foto { display: block; position: relative; aspect-ratio: 4 / 5; max-height: 74vh; border-radius: var(--tt-r, 4px); overflow: hidden; }
+.tt-uit__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tt-uit__prijs { margin-top: 14px !important; font: 700 22px/1 var(--tt-tekst); }
+.tt-uit__prijs small { font: 400 13px var(--tt-tekst); opacity: .6; }
+.tt-uit__pitch { margin-top: 18px !important; font: 400 15px/1.7 var(--tt-tekst); max-width: 44ch; }
+.tt-uit__punten { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 8px; font: 400 14px/1.4 var(--tt-tekst); }
+.tt-uit__punten span { display: inline-grid; place-items: center; width: 20px; height: 20px; margin-right: 10px; border-radius: 50%; background: var(--tt-baby, #BFD3EA); font-size: 11px; }
+.tt-uit__kies { margin-top: 26px !important; font: 700 11px/1 var(--tt-tekst); letter-spacing: .2em; text-transform: uppercase; }
+.tt-uit__ontwerpen { list-style: none; margin: 12px 0 26px; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.tt-uit__ontwerpen a { display: block; text-decoration: none; color: inherit; }
+.tt-uit__ontwerpen img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 4px; display: block; transition: transform .4s cubic-bezier(.22, 1, .36, 1); }
+.tt-uit__ontwerpen a:hover img { transform: translateY(-3px); }
+.tt-uit__ontwerpen span { display: block; margin-top: 6px; font: 700 9.5px/1.2 var(--tt-tekst); letter-spacing: .1em; text-transform: uppercase; }
+@media (max-width: 749px) {
+  .tt-uit__grid { grid-template-columns: 1fr; }
+  .tt-uit__foto { aspect-ratio: 4 / 3; }
+  .tt-uit__ontwerpen { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* ---------- voor beginners en avonturiers: lagere foto's ---------- */
+.tt-wie__foto { aspect-ratio: 16 / 10 !important; }
+.tt-wie__kaart { overflow: hidden; }
+
+/* ---------- hero met video: rustig, de film doet het werk ---------- */
+.template-index .tt-hero:has(.tt-hero__video) { color: var(--tt-creme); }
+.template-index .tt-hero:has(.tt-hero__video)::after { display: block !important; background: linear-gradient(90deg, rgba(20, 30, 45, .55) 0%, rgba(20, 30, 45, .15) 55%, rgba(20, 30, 45, 0) 100%), linear-gradient(180deg, rgba(20, 30, 45, .25) 0%, rgba(20, 30, 45, 0) 30%, rgba(20, 30, 45, .45) 100%) !important; }
+.template-index .tt-hero:has(.tt-hero__video) .tt-hero__logo,
+.template-index .tt-hero:has(.tt-hero__video) .tt-hero__hand,
+.template-index .tt-hero:has(.tt-hero__video) .tt-hero__icoon,
+.template-index .tt-hero:has(.tt-hero__video) .tt-hero__rechts,
+.template-index .tt-hero:has(.tt-hero__video) .tt-link { color: var(--tt-creme) !important; }
+.template-index .tt-hero:has(.tt-hero__video) .tt-hero__logo { width: min(100%, 420px) !important; }
+.template-index .tt-hero:has(.tt-hero__video) .tt-knop--licht { background: var(--tt-creme); color: var(--tt-deep); }
+.template-index .tt-hero:has(.tt-hero__video) .tt-hero__rechts > p { max-width: 38ch; }
+.tt-hero__video { z-index: 0; }
+.tt-hero__inhoud { z-index: 2; }
+.tt-uit__punten { margin-top: 22px !important; }
+.tt-uit__ontwerpen { margin-bottom: 30px !important; }
+.tt-uit__kies { margin-top: 30px !important; }
+.tt-uit .tt-knoppen { margin-top: 0 !important; }

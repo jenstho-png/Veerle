@@ -22,7 +22,7 @@ import stijl as ST  # noqa: E402
 PB = ROOT / 'docs' / 'producten' / 'beelden'
 UIT = ROOT / 'docs' / 'video'
 W, H, FPS = 1920, 1080, 24
-OVER = 12
+OVER = 8
 RNG = np.random.default_rng(5)
 
 
@@ -81,12 +81,18 @@ def palm(img, t, sterkte=0.30, **kw):
 
 
 # ---------- shots ----------
-def still(pad, n, van, naar, palmkw=None, focus=None, rot=(0, 0)):
+def still(pad, n, van, naar, palmkw=None, focus=None, rot=(0, 0), schuin=(0.0, 0.0)):
     img = lees(pad) if isinstance(pad, (str, pathlib.Path)) else pad
     for k in range(n):
         t = ease(k / (n - 1))
         cx, cy, z = [a + (b - a) * t for a, b in zip(van, naar)]
-        f = uitsnede(img, cx, cy, z, rot=rot[0] + (rot[1] - rot[0]) * t)
+        f = uitsnede(img, cx, cy, z * 1.06, rot=rot[0] + (rot[1] - rot[0]) * t)
+        sc = schuin[0] + (schuin[1] - schuin[0]) * t
+        if sc:                                                      # camera schuin: bovenkant verder weg
+            d = sc * W
+            src = np.float32([[0, 0], [W, 0], [W, H], [0, H]])
+            dst = np.float32([[-d, -d * 0.3], [W + d, -d * 0.3], [W - d * 0.35, H], [d * 0.35, H]])
+            f = cv2.warpPerspective(f, cv2.getPerspectiveTransform(src, dst), (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
         if focus:
             blur = focus * (1 - ease(min(1, k / (n * 0.6))))
             if blur > 0.3: f = cv2.GaussianBlur(f, (0, 0), blur)
@@ -203,16 +209,21 @@ if __name__ == '__main__':
     hero = lees(ROOT / 'theme' / 'assets' / 'tt-foto-hero-home.jpg')
     f = lambda s: int(s * FPS)
     shots = [
-        still(hero, f(3.6), (0.62, 0.5, 1.0), (0.70, 0.5, 1.32), palmkw=dict(schaal=1.3, x0=0.12, y0=-0.2), rot=(-0.4, 0.2)),
-        still(PB / 'draagtas-tegel-2.jpg', f(3.2), (0.5, 0.42, 1.2), (0.52, 0.5, 1.5), focus=10, palmkw=dict(schaal=1.1, x0=0.85, y0=-0.25)),
-        lus_shot(f(3.4)),
-        still(PB / 'draagtas-golfjes-3.jpg', f(3.0), (0.38, 0.5, 1.25), (0.62, 0.46, 1.3), palmkw=dict(schaal=1.2, x0=0.05, y0=-0.3)),
-        still(hero, f(3.0), (0.72, 0.5, 1.4), (0.66, 0.5, 1.05), palmkw=dict(schaal=1.3, x0=0.12, y0=-0.2)),
+        # close-up: label en tegelstof, de focus komt
+        still(PB / 'draagtas-tegel-2.jpg', f(2.2), (0.40, 0.42, 1.12), (0.42, 0.47, 1.28), focus=7, rot=(-2, -1)),
+        # het hele board: drie tassen, camera schuift rustig in
+        still(hero, f(2.2), (0.66, 0.50, 1.02), (0.69, 0.50, 1.18), rot=(1.5, 0.5), schuin=(0.02, 0.01)),
+        # close-up: rand van de Golfjes-tas over het board, zijwaarts
+        still(PB / 'draagtas-golfjes-3.jpg', f(2.1), (0.44, 0.50, 1.1), (0.56, 0.47, 1.16), rot=(1, 2)),
+        # close-up: label en band van de Zonsondergang-tas
+        still(PB / 'draagtas-zonsondergang-2.jpg', f(2.1), (0.44, 0.46, 1.24), (0.42, 0.50, 1.1), rot=(-1, -2)),
+        # terug naar het geheel, recht van boven
+        still(hero, f(2.2), (0.69, 0.50, 1.22), (0.66, 0.50, 1.02), rot=(-0.5, 0)),
     ]
-    totaal = sum(int(x * FPS) for x in (3.6, 3.2, 3.4, 3.0, 3.0)) - 4 * OVER
+    totaal = sum(int(x * FPS) for x in (2.2, 2.2, 2.1, 2.1, 2.2)) - 4 * OVER
     groot = encoder(UIT / 'tide-tode-hero.mp4', 1920, 1080, 23)
     klein = encoder(UIT / 'tide-tode-hero-720.mp4', 1280, 720, 25)
-    momenten = {int(s * FPS): i for i, s in enumerate([1.5, 5.0, 8.4, 11.0])}
+    momenten = {int(s * FPS): i for i, s in enumerate([0.9, 2.6, 4.6, 6.4])}
     for i, fr in enumerate(plak(shots)):
         fr = camera(fr, i, totaal)
         b8 = (fr * 255 + 0.5).astype(np.uint8)

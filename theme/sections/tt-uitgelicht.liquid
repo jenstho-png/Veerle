@@ -1,0 +1,92 @@
+{%- liquid
+  assign p = all_products[section.settings.handle]
+  assign prijs = section.settings.prijs
+  if p != blank
+    assign prijs = p.price | money_without_trailing_zeros
+  endif
+  assign link = section.settings.link | default: routes.all_products_collection_url
+  if p != blank
+    assign link = p.url
+  endif
+-%}
+<section class="tt tt-uit tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap tt-uit__grid">
+    <a class="tt-uit__foto tt-onthul" href="{{ link }}" tabindex="-1" aria-hidden="true">
+      {%- if p != blank and p.featured_media -%}
+        {{ p.featured_media | image_url: width: 1400 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 44vw, 92vw', widths: '600, 900, 1200, 1400', alt: '', class: 'tt-beeld__img' }}
+      {%- else -%}
+        {%- render 'tt-beeld', fallback: section.settings.fallback, alt: '', sizes: '(min-width: 990px) 44vw, 92vw' -%}
+      {%- endif -%}
+    </a>
+    <div class="tt-uit__tekst">
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+      {%- if prijs != blank -%}<p class="tt-uit__prijs tt-in">{{ prijs }}<small> per tas</small></p>{%- endif -%}
+      {%- if section.settings.text != blank -%}<p class="tt-uit__pitch tt-in">{{ section.settings.text }}</p>{%- endif -%}
+      <ul class="tt-uit__punten tt-in">
+        {%- for i in (1..3) -%}
+          {%- assign k = 'punt' | append: i -%}
+          {%- if section.settings[k] != blank -%}<li><span aria-hidden="true">✓</span>{{ section.settings[k] }}</li>{%- endif -%}
+        {%- endfor -%}
+      </ul>
+      {%- if section.blocks.size > 0 -%}
+        <p class="tt-uit__kies tt-in">{{ section.settings.kies }}</p>
+        <ul class="tt-uit__ontwerpen tt-in">
+          {%- for block in section.blocks -%}
+            {%- assign bp = all_products[block.settings.handle] -%}
+            <li {{ block.shopify_attributes }}>
+              <a href="{% if bp != blank %}{{ bp.url }}{% else %}/products/{{ block.settings.handle }}{% endif %}" aria-label="{{ block.settings.naam | escape }}">
+                {%- if bp != blank and bp.featured_media -%}
+                  {{ bp.featured_media | image_url: width: 240 | image_tag: loading: 'lazy', sizes: '90px', widths: '120, 240', alt: '' }}
+                {%- else -%}
+                  {%- assign klein = block.settings.fallback | append: '-800.jpg' | asset_url -%}
+                  <img src="{{ klein }}" alt="" width="120" height="150" loading="lazy">
+                {%- endif -%}
+                <span>{{ block.settings.naam }}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      <div class="tt-knoppen tt-in">
+        {%- if section.settings.btn_label != blank -%}<a class="tt-knop" href="{{ link }}">{{ section.settings.btn_label }}<span aria-hidden="true">→</span></a>{%- endif -%}
+        {%- if section.settings.link2_label != blank -%}<a class="tt-link" href="{{ section.settings.link2 | default: '/collections/draagtassen' }}">{{ section.settings.link2_label }}</a>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: uitgelicht product",
+  "tag": "div",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "select", "id": "bg", "label": "Achtergrond", "options": [ { "value": "creme", "label": "Crème" }, { "value": "papier", "label": "Papier" }, { "value": "zand", "label": "Zand" }, { "value": "baby", "label": "Baby" }, { "value": "rose", "label": "Rose" } ], "default": "creme" },
+    { "type": "text", "id": "handle", "label": "Handle van het product", "default": "draagtas-tegel" },
+    { "type": "text", "id": "fallback", "label": "Themafoto zolang het product er niet is", "default": "tt-product-1" },
+    { "type": "text", "id": "heading", "label": "Kop", "default": "De *draagtas*" },
+    { "type": "text", "id": "prijs", "label": "Prijs zolang het product er niet is", "default": "€40" },
+    { "type": "textarea", "id": "text", "label": "Tekst", "default": "Je schuift je board in de tas en hangt hem over je schouder. Zo heb je je handen vrij op weg naar zee." },
+    { "type": "text", "id": "punt1", "label": "Punt 1", "default": "Past op softtops en hardboards" },
+    { "type": "text", "id": "punt2", "label": "Punt 2", "default": "Brede schouderband, handen vrij" },
+    { "type": "text", "id": "punt3", "label": "Punt 3", "default": "Je natte board mag er gewoon in" },
+    { "type": "text", "id": "kies", "label": "Tekst boven de ontwerpen", "default": "Kies je ontwerp" },
+    { "type": "text", "id": "btn_label", "label": "Knop", "default": "Bekijk de draagtas" },
+    { "type": "text", "id": "link", "label": "Link als het product er niet is", "default": "/collections/draagtassen" },
+    { "type": "text", "id": "link2_label", "label": "Tweede link", "default": "Alle ontwerpen" },
+    { "type": "text", "id": "link2", "label": "Adres tweede link", "default": "/collections/draagtassen" }
+  ],
+  "blocks": [
+    {
+      "type": "ontwerp",
+      "name": "Ontwerp",
+      "settings": [
+        { "type": "text", "id": "naam", "label": "Naam", "default": "Tegel" },
+        { "type": "text", "id": "handle", "label": "Handle", "default": "draagtas-tegel" },
+        { "type": "text", "id": "fallback", "label": "Themafoto", "default": "tt-p-draagtas-tegel" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "TT: uitgelicht product" } ]
+}
+{% endschema %}

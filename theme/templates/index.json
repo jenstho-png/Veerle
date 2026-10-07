@@ -5,7 +5,7 @@
       "settings": {
         "text": "Tide Tode is een surfmerk voor de weg naar zee. Het begon met een draagtas voor je board, bedacht op surftrips door Australië, Midden- en Zuid-Amerika en Azië. Nu maken we ook kleding en surfgear met dezelfde zorg.",
         "fallback": "tt-foto-hero-home",
-        "stickers": true,
+        "stickers": false,
         "boards": false
       }
     },
@@ -47,59 +47,6 @@
         "usp-2",
         "usp-3",
         "usp-4"
-      ]
-    },
-    "koop": {
-      "type": "tt-koop",
-      "settings": {},
-      "blocks": {
-        "punt-1": {
-          "type": "punt",
-          "settings": {
-            "tekst": "Past op softtops en vollere boards én op hardboards"
-          }
-        },
-        "punt-2": {
-          "type": "punt",
-          "settings": {
-            "tekst": "Brede schouderband, je handen blijven vrij"
-          }
-        },
-        "punt-3": {
-          "type": "punt",
-          "settings": {
-            "tekst": "Je natte board mag er gewoon in"
-          }
-        },
-        "detail-4": {
-          "type": "detail",
-          "settings": {
-            "titel": "Wat past erin",
-            "tekst": "<p>Eén maat voor softtops en hardboards. In de <a href=\"/pages/maatwijzer\">maatwijzer</a> zie je welke boards passen.</p>"
-          }
-        },
-        "detail-5": {
-          "type": "detail",
-          "settings": {
-            "titel": "Materiaal",
-            "tekst": "<p>Zware, waterbestendige stof en sterke stiksels.</p>"
-          }
-        },
-        "detail-6": {
-          "type": "detail",
-          "settings": {
-            "titel": "Verzending en retour",
-            "tekst": "<p>We versturen door heel Europa. Je hebt 14 dagen bedenktijd.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "punt-1",
-        "punt-2",
-        "punt-3",
-        "detail-4",
-        "detail-5",
-        "detail-6"
       ]
     },
     "zo": {
@@ -386,12 +333,76 @@
         "punt-3",
         "punt-4"
       ]
+    },
+    "uitgelicht": {
+      "type": "tt-uitgelicht",
+      "settings": {
+        "bg": "creme"
+      },
+      "blocks": {
+        "ontwerp-1": {
+          "type": "ontwerp",
+          "settings": {
+            "naam": "Tegel",
+            "handle": "draagtas-tegel",
+            "fallback": "tt-p-draagtas-tegel"
+          }
+        },
+        "ontwerp-2": {
+          "type": "ontwerp",
+          "settings": {
+            "naam": "Golfjes",
+            "handle": "draagtas-golfjes",
+            "fallback": "tt-p-draagtas-golfjes"
+          }
+        },
+        "ontwerp-3": {
+          "type": "ontwerp",
+          "settings": {
+            "naam": "Zonsondergang",
+            "handle": "draagtas-zonsondergang",
+            "fallback": "tt-p-draagtas-zonsondergang"
+          }
+        },
+        "ontwerp-4": {
+          "type": "ontwerp",
+          "settings": {
+            "naam": "Navy",
+            "handle": "draagtas-navy",
+            "fallback": "tt-p-draagtas-navy"
+          }
+        },
+        "ontwerp-5": {
+          "type": "ontwerp",
+          "settings": {
+            "naam": "Salie",
+            "handle": "draagtas-salie",
+            "fallback": "tt-p-draagtas-salie"
+          }
+        },
+        "ontwerp-6": {
+          "type": "ontwerp",
+          "settings": {
+            "naam": "Duin",
+            "handle": "draagtas-duin",
+            "fallback": "tt-p-draagtas-duin"
+          }
+        }
+      },
+      "block_order": [
+        "ontwerp-1",
+        "ontwerp-2",
+        "ontwerp-3",
+        "ontwerp-4",
+        "ontwerp-5",
+        "ontwerp-6"
+      ]
     }
   },
   "order": [
     "hero",
     "usp",
-    "koop",
+    "uitgelicht",
     "probleem",
     "zo",
     "meer",
