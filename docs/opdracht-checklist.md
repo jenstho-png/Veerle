@@ -15,6 +15,7 @@ Bijgewerkt op woensdag 7 oktober 2026.
 | Minimaal 20 eigen producten | ✅ | 32 producten in `docs/producten/producten.csv`: 9 draagtassen, 7 surfgear en 16 kleding en accessoires, met studiofoto's uit `docs/producten/beelden/`. 🛠 Importeren via Producten > Importeren. 📝 Maak daarna screenshots van de gepubliceerde producten |
 | Minstens drie collecties | ✅ | Draagtassen, Surfgear, Kleding en accessoires, plus Alles (`/collections/all`, bestaat vanzelf). 🛠 Aanmaken als automatische collecties op tag, zie `docs/producten/overzicht.md` |
 | Privacybeleid, algemene voorwaarden, veelgestelde vragen | ✅ | Teksten in `docs/juridisch/`, FAQ-pagina bestaat al. 🛠 Plakken in Instellingen > Beleid, zie `docs/juridisch/README.md` |
+| Herroepingsknop (verplicht sinds 19 juni 2026) | ✅ 🛠 | Pagina "Bestelling herroepen" met formulier: maak een pagina met handle `herroepen` en template `page.herroepen`. Link staat in de footer en op de herroepingsrecht-pagina |
 | Herroepingsrecht en modelformulier | ✅ | `docs/juridisch/herroepingsrecht.html`. 🛠 Pagina "Herroepingsrecht" aanmaken met template `page.juridisch` |
 | Herroepingsknop (verplicht sinds 19 juni 2026) | 🛠 | Nog niet in de winkel. Er is alleen een link naar de uitlegpagina. Voeg een knop "Bestelling herroepen" toe die naar een formulier gaat en een bevestiging mailt. Zie `docs/wetgeving-concurrenten.md` |
 | Cookiemelding | 🛠 | Instellingen > Klantprivacy > Cookiebanner aanzetten, met Weigeren even groot als Accepteren. Nodig voor de Meta-pixel en Google Analytics. Het privacybeleid noemt de cookiemelding al |

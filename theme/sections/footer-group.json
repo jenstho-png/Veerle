@@ -52,7 +52,9 @@
             "l4_label": "Voorwaarden",
             "l4_link": "/policies/terms-of-service",
             "l5_label": "Herroepingsrecht",
-            "l5_link": "/pages/herroepingsrecht"
+            "l5_link": "/pages/herroepingsrecht",
+            "l6_label": "Bestelling herroepen",
+            "l6_link": "/pages/herroepen"
           }
         },
         "contact-4": {

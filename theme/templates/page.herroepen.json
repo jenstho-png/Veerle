@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "herroepen": {
+      "type": "tt-contact",
+      "settings": {
+        "label": "Herroepen",
+        "h1": true,
+        "heading": "Bestelling|herroepen",
+        "text": "Je hebt 14 dagen bedenktijd nadat je je bestelling hebt ontvangen. Wil je je bestelling of een deel ervan herroepen? Vul dit formulier in. Je krijgt binnen één werkdag een bevestiging per e-mail.",
+        "form_titel": "Herroep je bestelling",
+        "bericht_label": "Bestelnummer en welke producten",
+        "bericht_hint": "Bijvoorbeeld: bestelling 1042, de draagtas Tegel",
+        "knop": "Bestelling herroepen",
+        "ok_titel": "Je herroeping is ontvangen",
+        "ok": "We sturen je binnen één werkdag een bevestiging met de retourinstructies.",
+        "kaart_titel": "Gegevens",
+        "hand": "Tot snel"
+      }
+    }
+  },
+  "order": [
+    "herroepen"
+  ]
+}
