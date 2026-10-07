@@ -297,7 +297,57 @@ def zout(k):
             + f'<text x="500" y="960" {MONO} font-size="24" letter-spacing="10" fill="{k["hoofd"]}" text-anchor="middle">TIDE TODE</text>')
 
 
-ONTWERPEN = {'paklijst': paklijst, 'hawaii': hawaii, 'groeten': groeten, 'zout': zout, 'grootboard': grootboard, 'koudwater': koudwater, 'evenweg': evenweg, 'herhaling': herhaling, 'weerbericht': weerbericht, 'boog': boog, 'lijn': lijn, 'getij': getij, 'club': club, 'handen': handen, 'board': board, 'klok': klok, 'tegel': tegel}
+def _rand(pad_d, schaal, ox, oy):
+    """Buitenrand (convex omhulsel) van een logo-pad, geschaald."""
+    import re as _re, numpy as np
+    from scipy.spatial import ConvexHull
+    pts = np.array([[float(a), float(b)] for a, b in _re.findall(r'(-?\d+\.?\d*)[ ,](-?\d+\.?\d*)', pad_d)])
+    P = pts * schaal + [ox, oy]
+    return P[ConvexHull(P).vertices]
+
+
+def zon(k):
+    """Grote zon met stralen, de naam in een cirkel eromheen."""
+    import math
+    cx, cy = 500, 580
+    o = [f'<circle cx="{cx}" cy="{cy}" r="230" fill="{k["hoofd"]}"/>']
+    for i in range(24):
+        a = 2 * math.pi * i / 24
+        r1, r2 = 262, 262 + (70 if i % 2 == 0 else 42)
+        o.append(f'<line x1="{cx + math.cos(a) * r1:.1f}" y1="{cy + math.sin(a) * r1:.1f}" x2="{cx + math.cos(a) * r2:.1f}" y2="{cy + math.sin(a) * r2:.1f}" stroke="{k["hoofd"]}" stroke-width="14" stroke-linecap="round"/>')
+    o.append(f'<defs><path id="zc" d="M{cx - 400} {cy} a400 400 0 1 1 800 0 a400 400 0 1 1 -800 0"/></defs>')
+    o.append(f'<text {DISP} font-size="70" fill="{k["hoofd"]}"><textPath href="#zc" startOffset="0%" textLength="2500" lengthAdjust="spacing">TIDE TODE ✦ TIDE TODE ✦ TIDE TODE ✦ </textPath></text>')
+    return ''.join(o)
+
+
+def golf(k):
+    """Onze golf groot, de naam over de kam."""
+    L = BB.LOGO['icoonGolf']
+    br = 760
+    s = br / L['w']; ox = 500 - br / 2; oy = 640 - L['h'] * s / 2
+    return (f'<path transform="translate({ox:.1f} {oy:.1f}) scale({s:.4f})" fill="{k["hoofd"]}" d="{L["d"]}"/>'
+            f'<defs><path id="gk" d="M{ox + 40:.0f} {oy - 30:.0f} Q 500 {oy - 230:.0f} {ox + br - 40:.0f} {oy - 30:.0f}"/></defs>'
+            f'<text {DISP} font-size="96" letter-spacing="12" fill="{k["hoofd"]}"><textPath href="#gk" startOffset="50%" text-anchor="middle">TIDE TODE</textPath></text>')
+
+
+def vin(k):
+    """Een surfvin als grote vorm, met de naam langs de achterrand."""
+    pad = 'M300 1000 C320 800 360 560 470 380 C560 230 680 170 760 160 C700 300 670 520 690 760 C700 860 720 940 740 1000 Z'
+    return (f'<path d="{pad}" fill="{k["hoofd"]}"/>'
+            f'<defs><path id="vr" d="M820 170 C750 320 725 530 745 760 C755 860 775 940 795 1010"/></defs>'
+            f'<text {DISP} font-size="78" letter-spacing="12" fill="{k["hoofd"]}"><textPath href="#vr" startOffset="50%" text-anchor="middle">TIDE TODE</textPath></text>'
+            f'<line x1="250" y1="1040" x2="790" y2="1040" stroke="{k["hoofd"]}" stroke-width="8"/>')
+
+
+def tweeboards(k):
+    """Twee boards gekruist, de naam in een boog eronder."""
+    b = BB.board_in(0, 0, 760, k['hoofd'])
+    return (f'<g transform="translate(340 540)">{b}</g><g transform="translate(660 540)">{b}</g>'
+            f'<defs><path id="tb" d="M230 960 a300 200 0 0 0 540 0"/></defs>'
+            f'<text {DISP} font-size="88" letter-spacing="12" fill="{k["hoofd"]}"><textPath href="#tb" startOffset="50%" text-anchor="middle">TIDE TODE</textPath></text>')
+
+
+ONTWERPEN = {'zon': zon, 'golf': golf, 'vin': vin, 'tweeboards': tweeboards, 'paklijst': paklijst, 'hawaii': hawaii, 'groeten': groeten, 'zout': zout, 'grootboard': grootboard, 'koudwater': koudwater, 'evenweg': evenweg, 'herhaling': herhaling, 'weerbericht': weerbericht, 'boog': boog, 'lijn': lijn, 'getij': getij, 'club': club, 'handen': handen, 'board': board, 'klok': klok, 'tegel': tegel}
 
 if __name__ == '__main__':
     for naam, f in ONTWERPEN.items():

@@ -1307,10 +1307,10 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
   @keyframes tt-pagina-in { from { opacity: 0; transform: translate3d(0, 12px, 0); } }
 }
 
-/* ---------- rendering overslaan voor secties ver onder de vouw ---------- */
-.tt-vergelijk, .tt-kaarten, .tt-duurzaam, .tt-strand, .tt-raster, .tt-detail, .tt-aanraders, .surf-footer {
-  content-visibility: auto; contain-intrinsic-size: auto 900px;
-}
+/* ---------- rendering overslaan onderaan de pagina ----------
+   Alleen de footer: op secties midden op de pagina gaf content-visibility
+   verspringing (CLS) bij terugscrollen op trage telefoons. */
+.surf-footer { content-visibility: auto; contain-intrinsic-size: auto 700px; }
 
 /* ==========================================================================
    PRODUCTPAGINA

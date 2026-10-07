@@ -4,7 +4,7 @@ Eén stijl voor alles (stijl.py): recht van voren of recht van boven, gecentreer
 raamlicht linksboven. Basis is telkens een echte stockfoto van het blanco product op een effen achtergrond
 (docs/producten/stock/flatlay/, bronnen in docs/producten/stock/bronnen.json), vrijstaand geknipt.
 
-Gebruik: python3 tools/producten/flatlay_accessoires.py [proef|pet ...]
+Gebruik: python3 tools/producten/flatlay_accessoires.py [pet bucket tas handdoek stickers proef]
 """
 import pathlib, sys
 import cv2
@@ -619,9 +619,10 @@ def tas_rgba():
     # hengsel: alleen de lichte stof, niet de slagschaduw ernaast
     L = MK.helderheid(img)
     achter = float(np.median(L[:40, :40]))
-    hengsel = (L > achter + 0.10).astype(np.uint8)
+    hengsel = (cv2.GaussianBlur(L, (0, 0), 1.5) > achter + 0.035).astype(np.uint8)
+    hengsel = cv2.morphologyEx(hengsel, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11)))
     hengsel = cv2.morphologyEx(hengsel, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
-    stuk[:478] = stuk[:478] & hengsel[:478]
+    stuk[:490] = stuk[:490] & hengsel[:490]
     # kleine gaatjes dicht, de opening binnen het hengsel blijft open
     inv = (1 - stuk).astype(np.uint8)
     n2, lab2, st2, _ = cv2.connectedComponentsWithStats(inv)
@@ -631,7 +632,7 @@ def tas_rgba():
     stuk = cv2.erode(stuk, np.ones((3, 3), np.uint8))
     m = cv2.GaussianBlur(stuk.astype(np.float32), (0, 0), 1.1)
     img = E.poets(img, 1576, 1404, 84, 84)
-    img = np.clip(img * np.array([1.0, 0.975, 0.92], np.float32) * 1.03, 0, 1)        # naturel, ongebleekt katoen
+    img = np.clip(img * np.array([1.04, 1.0, 0.90], np.float32) * 1.04, 0, 1)        # naturel, ongebleekt katoen
     body = (m > 0.5).astype(np.float32)
     body[:480] = 0
     img = MK.zet_print(img, MK.laad_art(REF / 'hoodie-busje-rugprint-los.png'), 1214, 930, 520, verplaatsing=6,
@@ -655,6 +656,99 @@ def tas():
     opslaan(ST.leg(ST.achtergrond('zand', zaad=3), rgba, breedte=rgba.shape[1] * s, midden=mid, hoogte=5), 'canvas-tas-3')
 
 
+# ---------- stickers ----------
+def vinyl(rgba, zaad=1, glans=0.05, hoek=-35):
+    """Vinylglans: een brede zachte reflectie van het raam (linksboven) en een heel fijne papier-/vinylstructuur."""
+    h, w = rgba.shape[:2]
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    t = np.deg2rad(hoek)
+    u = (xx * np.cos(t) - yy * np.sin(t)) / max(h, w)
+    band = np.exp(-((u - 0.15) / 0.22) ** 2) * glans + np.exp(-((u + 0.25) / 0.06) ** 2) * glans * 0.4
+    rng = np.random.default_rng(zaad)
+    vezel = cv2.GaussianBlur(rng.normal(0, 1, (h, w)).astype(np.float32), (0, 0), 0.8) * 0.006
+    uit = rgba.copy()
+    uit[..., :3] = np.clip(rgba[..., :3] * (1 + vezel[..., None]) + band[..., None], 0, 1)
+    return uit
+
+
+def schaal_rgba(a, breedte):
+    h, w = a.shape[:2]
+    return cv2.resize(a, (int(breedte), int(round(breedte * h / w))), interpolation=cv2.INTER_AREA if breedte < w else cv2.INTER_CUBIC)
+
+
+def pel(rgba, diepte=0.30):
+    """Sticker met de rechteronderhoek een stukje losgetrokken: de omgevouwen flap toont de witte achterkant.
+    Geeft rgba en het flapmasker (voor de extra schaduw van de opstaande flap)."""
+    h, w = rgba.shape[:2]
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    c = (w + h) * (1 - diepte / 2)                       # vouwlijn x + y = c
+    a = rgba[..., 3]
+    los = (xx + yy > c).astype(np.float32)
+    # spiegelen over de lijn x + y = c: (x, y) -> (c - y, c - x)
+    mx, my = (c - yy), (c - xx)
+    flap_a = cv2.remap(a, mx, my, cv2.INTER_LINEAR, borderValue=0) * (xx + yy < c)
+    zacht = np.clip((c - (xx + yy)) / 2.0, 0, 1)
+    flap_a = flap_a * zacht
+    afstand = (c - (xx + yy)) / np.sqrt(2)                # 0 bij de vouw
+    rug = np.clip(0.97 - 0.10 * (afstand / (diepte * w * 0.7)) + 0.03 * np.exp(-(afstand / 6) ** 2), 0.8, 1.0)
+    rug_rgb = np.array([0.95, 0.945, 0.935], np.float32)[None, None] * rug[..., None]
+    uit = rgba.copy()
+    uit[..., 3] = a * (1 - los)
+    # waar de sticker al los is, schaduw van de flap op de sticker zelf
+    sch = cv2.GaussianBlur(np.roll(np.roll(flap_a, 6, 0), 4, 1), (0, 0), 5)
+    uit[..., :3] = uit[..., :3] * (1 - 0.25 * sch * (1 - flap_a))[..., None]
+    uit[..., :3] = uit[..., :3] * (1 - flap_a[..., None]) + rug_rgb * flap_a[..., None]
+    uit[..., 3] = np.maximum(uit[..., 3], flap_a)
+    # vouwlijn iets donker
+    vouw = np.exp(-(afstand / 1.5) ** 2) * (flap_a > 0.5)
+    uit[..., :3] = uit[..., :3] * (1 - 0.15 * vouw[..., None])
+    return uit, flap_a
+
+
+def leg_met_flap(doek, rgba, flap, breedte, midden, hoogte=2.5):
+    """ST.leg plus de extra, verdere schaduw van een opstaande flap."""
+    h, w = rgba.shape[:2]
+    s = breedte / w
+    M = cv2.getRotationMatrix2D((w / 2, h / 2), 0, s)
+    M[0, 2] += midden[0] - w / 2; M[1, 2] += midden[1] - h / 2
+    f = cv2.warpAffine(flap, M, (doek.shape[1], doek.shape[0]))
+    sch = cv2.GaussianBlur(cv2.warpAffine(f, np.float32([[1, 0, 16], [0, 1, 22]]), (doek.shape[1], doek.shape[0])), (0, 0), 12)
+    doek = doek * (1 - 0.22 * sch[..., None])
+    return ST.leg(doek, rgba, breedte=breedte, midden=midden, hoogte=hoogte)
+
+
+def stickers():
+    # 1: het hele vel recht van boven op crème papier
+    vel = MK.laad_art(ART / 'stickervel.png')
+    vel = vinyl(vel, 3, 0.045)
+    # hoekje rechtsonder komt een fractie omhoog: iets lichter en een zachte schaduwgradiënt
+    h, w = vel.shape[:2]
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    krul = np.clip(((xx / w) + (yy / h) - 1.72) / 0.28, 0, 1) ** 2
+    vel[..., :3] = np.clip(vel[..., :3] * (1 + 0.035 * krul[..., None]), 0, 1)
+    opslaan(ST.leg(ST.achtergrond('creme'), vel, breedte=1160, midden=(800, 1000), hoogte=3.5), 'stickerset-1')
+    # 2: zes losse stickers netjes in een raster op zandpapier, eentje half losgetrokken
+    doek = ST.achtergrond('zandpapier')
+    namen = ['zonsondergang', 'zegel', 'tegelcirkel', 'golfrand', 'ovaal', 'pil']
+    plekken = [(520, 560), (1080, 560), (520, 1060), (1080, 1060), (520, 1530), (1080, 1530)]
+    for i, (naam, (x, y)) in enumerate(zip(namen, plekken)):
+        st = vinyl(MK.laad_art(ART / f'sticker-{naam}.png'), 10 + i, 0.05)
+        br = 440 if naam not in ('ovaal', 'pil') else 470
+        if naam == 'zonsondergang':
+            st, flap = pel(st, 0.34)
+            doek = leg_met_flap(doek, st, flap, br, (x, y))
+        else:
+            doek = ST.leg(doek, st, breedte=br, midden=(x, y), hoogte=2.5)
+    opslaan(doek, 'stickerset-2')
+    # 3: detail, de losgetrokken sticker groot
+    doek = ST.achtergrond('zandpapier', zaad=3)
+    st = vinyl(MK.laad_art(ART / 'sticker-golfrand.png'), 21, 0.05)
+    doek = ST.leg(doek, st, breedte=1000, midden=(1500, 1820), hoogte=2.5)
+    st, flap = pel(vinyl(MK.laad_art(ART / 'sticker-zonsondergang.png'), 20, 0.06), 0.34)
+    doek = leg_met_flap(doek, st, flap, 1250, (760, 900), hoogte=3)
+    opslaan(doek, 'stickerset-3')
+
+
 def proef():
     PROEF.mkdir(parents=True, exist_ok=True)
     p, m, _ = pet_navy_rgba()
@@ -663,6 +757,6 @@ def proef():
 
 
 if __name__ == '__main__':
-    stappen = sys.argv[1:] or ['proef']
+    stappen = sys.argv[1:] or ['pet', 'bucket', 'tas', 'handdoek', 'stickers']
     for s in stappen:
         globals()[s]()

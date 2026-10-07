@@ -242,39 +242,6 @@ Achterkant, opslaan als `t-shirt-lijn-naar-zee-achter.png` (tekening: https://ra
 Use the attached drawing as reference. Create a flat lay of the same cream t-shirt seen from the back, with a large screen print: a terracotta half sun with cream horizontal cut lines rising above three navy wave lines, the words TIDE TODE in an arc above it and HANDEN VRIJ OP WEG NAAR ZEE in small type below, laid out neatly and seen from above. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
 ```
 
-## T-shirt Getijden
-
-Stuur mee:
-
-1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/t-shirt-getijden-tekening.png
-2. Tekening achterkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/t-shirt-getijden-tekening-achter.png
-3. Rugprint (exact artwork): https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/t-shirt-getijden-rugprint.png
-4. Borstprint (exact artwork): https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/t-shirt-getijden-borst.png
-
-Voorkant, opslaan als `t-shirt-getijden.png`
-
-```
-Use the attached drawing as reference. Create a flat lay of a navy heavyweight cotton t-shirt with the small stacked cream TIDE TODE logo on the left chest, laid out neatly and seen from above. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
-```
-
-Achterkant, opslaan als `t-shirt-getijden-achter.png` (tekening: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/beelden/t-shirt-getijden-2.jpg)
-
-```
-Use the attached drawing as reference. Create a flat lay of the same navy t-shirt seen from the back, with a print of six colourful sticker illustrations (wave, sun, shell, palm, starfish, camper van) and the small text TIDE TODE SURF CLUB below, laid out neatly and seen from above. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
-```
-
-## T-shirt Koud water
-
-Stuur mee:
-
-1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/t-shirt-koud-water-tekening.png
-
-Opslaan als `t-shirt-koud-water.png`
-
-```
-Use the attached drawing as reference. Create the product shown in the drawing. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
-```
-
 ## T-shirt Op weg naar zee
 
 Stuur mee:

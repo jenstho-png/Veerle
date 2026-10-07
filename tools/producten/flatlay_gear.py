@@ -542,7 +542,7 @@ def karabijn_rgba(naam):
     zone = np.maximum(m, cv2.GaussianBlur(glans, (0, 0), 1.2))
     uit = (k * (1 - zone[..., None]) + metaal * zone[..., None]).astype(np.float32)
     uit = E.gegoten_logo(uit, m, 760, 600, 250, 29.2, sterkte=1.0 if naam == 'messing' else 1.4)
-    L0, B0, CW_, CH_ = 360, 300, 2600, 3250
+    L0, B0, CW_, CH_ = 1350, 250, 3300, 3300
     hm = np.zeros((CH_, CW_), np.float32); hm[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = np.maximum(m, 0)
     za = np.zeros((CH_, CW_), np.float32); za[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = zone
     zc = np.zeros((CH_, CW_, 3), np.float32); zc[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = uit
@@ -570,20 +570,54 @@ def karabijn_rgba(naam):
     a = np.clip(1 - verschil / np.maximum(sch, 1e-3), 0, 1)
     a = np.where(a < 0.03, 0, a)
     kleur = np.clip(P / np.maximum(a[..., None], 1e-3), 0, 1)
-    rgba = ST.vrijstaand(kleur, a)
-    return rgba, Sd, r
+    rgba = np.dstack([kleur, a]).astype(np.float32)
+    # rechtop draaien: lange as (de lus) recht naar beneden
+    hoek = float(np.degrees(np.arctan2(r[0], r[1])))
+    return rond_af(roteer(rgba, -hoek)), Sd, r
 
 
-def karabijn_fotos(naam):
-    rgba, Sd, r = karabijn_rgba(naam)
+def rond_af(rgba):
+    """Kleur net buiten de rand doortrekken (geen donkere randjes bij het schalen) en bijsnijden op het product."""
+    a = rgba[..., 3]
+    som = cv2.GaussianBlur(rgba[..., :3] * a[..., None], (0, 0), 3)
+    gew = cv2.GaussianBlur(a, (0, 0), 3)[..., None]
+    vul = som / np.maximum(gew, 1e-4)
+    kleur = np.where(a[..., None] > 0.98, rgba[..., :3], rgba[..., :3] * a[..., None] + vul * (1 - a[..., None]))
+    ys, xs = np.where(a > 0.02)
+    y0, y1, x0, x1 = max(ys.min() - 4, 0), ys.max() + 5, max(xs.min() - 4, 0), xs.max() + 5
+    return np.dstack([np.clip(kleur, 0, 1), a])[y0:y1, x0:x1].astype(np.float32)
+
+
+def roteer(rgba, hoek):
+    """Draai een RGBA-laag (voorvermenigvuldigd, geen randjes) met een doek dat groot genoeg is."""
+    h, w = rgba.shape[:2]
+    M = cv2.getRotationMatrix2D((w / 2, h / 2), hoek, 1.0)
+    c, s_ = abs(M[0, 0]), abs(M[0, 1])
+    nw, nh = int(h * s_ + w * c) + 2, int(h * c + w * s_) + 2
+    M[0, 2] += nw / 2 - w / 2; M[1, 2] += nh / 2 - h / 2
+    pm = rgba.copy(); pm[..., :3] *= pm[..., 3:4]
+    uit = cv2.warpAffine(pm, M, (nw, nh), flags=cv2.INTER_CUBIC, borderValue=(0, 0, 0, 0))
+    uit[..., 3] = np.clip(uit[..., 3], 0, 1)
+    uit[..., :3] = np.clip(uit[..., :3] / np.maximum(uit[..., 3:4], 1e-4), 0, 1)
+    return uit
+
+
+def karabijn_fotos(naam, rgba=None):
+    if rgba is None:
+        rgba, _, _ = karabijn_rgba(naam)
     achter = KARABIJN[naam][6]
-    hoek = float(np.degrees(np.arctan2(r[0], r[1])))     # band recht naar beneden leggen
-    # 1: hero van boven, haak en lus groot in beeld, band recht
+    h, w = rgba.shape[:2]
+    # 1: hero van boven, haak, D-ring en lus recht onder elkaar, groot in beeld
     doek = ST.achtergrond(achter)
-    hgt = rgba.shape[0]
-    doek = ST.leg(doek, rgba, hoogte_px=None, breedte=rgba.shape[1] * 1720 / hgt, midden=(800, 1000), draai=-hoek, hoogte=9, contact=0.55)
+    doek = ST.leg(doek, rond_af(rgba), breedte=w * 1700 / h, midden=(800, 1000), hoogte=9, contact=0.55)
     bewaar(doek, f'karabijnhaak-{naam}-1')
-    return rgba, hoek
+    # 2: macro van de lus: geweven logo, stiksel en de D-ring (bovenkant van de lus in de bovenste helft)
+    doek = ST.achtergrond(achter, zaad=5)
+    schaal = 2.15 * 1700 / h
+    d_y = 0.40 * h                                           # punt in de laag dat in het midden van de foto komt
+    doek = ST.leg(doek, rond_af(rgba), breedte=w * schaal, midden=(800, 1000 + (h / 2 - d_y) * schaal), hoogte=16, contact=0.55)
+    bewaar(doek, f'karabijnhaak-{naam}-2')
+    return rgba
 
 
 if __name__ == '__main__':

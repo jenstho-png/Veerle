@@ -223,6 +223,34 @@ def tshirt_basis():
     return _CACHE['tee']
 
 
+# rechterhelft van de sweater (de linkermouw ligt gevouwen over de romp), van boven-midden met de klok mee naar onder-midden
+SWEAT_PUNTEN = [(1215, 196), (1300, 186), (1382, 170), (1450, 192), (1502, 198), (1648, 207), (1697, 222), (1752, 250),
+                (1801, 302), (1838, 393), (1899, 491), (1942, 601), (2020, 830), (2097, 1031), (2143, 1404), (2178, 1614),
+                (2160, 1640), (2073, 1649), (2011, 1638), (1999, 1544), (1957, 1482), (1856, 1311), (1793, 1249), (1782, 1257),
+                (1716, 1380), (1650, 1498), (1600, 1510), (1612, 1600), (1617, 1630), (1600, 1641), (1400, 1641), (1215, 1641)]
+SWEAT_CX = 1215.0
+
+
+def sweater_basis():
+    """Witte sweater (Mediamodifier, Unsplash): rechterhelft gespiegeld, zodat beide mouwen recht langs de romp liggen.
+    Teruggegeven in het coordinatenstelsel van de gespiegelde bron (goede mouw links)."""
+    if 'sweat' not in _CACHE:
+        img = MK.laad(FLAT / 'sweater-wit-plat-1.jpg')
+        W = img.shape[1]
+        pen = pen_masker(img, SWEAT_PUNTEN, SWEAT_CX, snap=False)
+        # wit kledingstuk op grijs papier en jeans: de rand komt uit de kleur, het pad begrenst en vult gaten
+        L = img.mean(-1); sat = img.max(-1) - img.min(-1)
+        auto = ((cv2.GaussianBlur(L, (0, 0), 1) > 0.84) & (sat < 0.07)).astype(np.uint8)
+        m = (auto & (cv2.dilate((pen > 0.5).astype(np.uint8), _k(14)) > 0)) | cv2.erode((pen > 0.5).astype(np.uint8), _k(30))
+        m = _vul_gaten(_grootste(cv2.morphologyEx(m.astype(np.uint8), cv2.MORPH_OPEN, _k(3))))
+        a = rand_vast(img, m, zoek=(-4, 4))
+        img, a = img[:, ::-1].copy(), a[:, ::-1].copy()
+        cx = W - 1 - SWEAT_CX
+        img, a = symmetrisch(img, a, cx, band=0, overgang=50)
+        _CACHE['sweat'] = (img, a, cx)
+    return _CACHE['sweat']
+
+
 def tshirt_rug(kleur, print_art, breedte_frac=0.50, top_y=330):
     """Achterkant: rugboord, rugprint hoog en gecentreerd. breedte_frac = printbreedte / rompbreedte (28 cm op 56 cm)."""
     img, a, cx = tshirt_basis()
