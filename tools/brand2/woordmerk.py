@@ -189,5 +189,15 @@ if __name__ == '__main__' and len(sys.argv) > 1 and sys.argv[1] == 'alles':
         n = _re.findall(r'-?\d+\.?\d*', m.group(2))
         return m.group(1) + ' '.join(f'{float(n[i]) - 4:.2f} {float(n[i + 1]) - 5:.2f}' for i in range(0, len(n), 2))
     bm = _re.sub(r'([MLC])([^MLCZ]*)', _schuif, ic); vbb = (318, 296)
-    json.dump({'gestapeld': {'d': st, 'w': vb[0], 'h': vb[1]}, 'liggend': {'d': li, 'w': vbl[0], 'h': vbl[1]}, 'board': {'d': bm, 'w': vbb[0], 'h': vbb[1]}}, open(HIER / 'logo2.json', 'w'))
+    # de drie iconen (A board met golven, B zon en zee, C tegel), strak bijgesneden
+    _I = json.load(open(HIER / 'iconen.json'))
+    def _strak(d):
+        n = [float(v) for v in _re.findall(r'-?\d+\.?\d*', d)]; xs, ys = n[0::2], n[1::2]
+        x0, y0 = min(xs), min(ys)
+        dd = _re.sub(r'([ML])([^MLZ]*)', lambda m: m.group(1) + ' '.join(f'{float(q[0]) - x0:.1f} {float(q[1]) - y0:.1f}' for q in zip(*[iter(_re.findall(r'-?\d+\.?\d*', m.group(2)))] * 2)), d)
+        return dd, round(max(xs) - x0, 1), round(max(ys) - y0, 1)
+    _A, _B, _C = (_strak(_I[k]) for k in ('board-golf', 'zon', 'tegel'))
+    bm, vbb = _A[0], (_A[1], _A[2])
+    _extra = {'icoonB': {'d': _B[0], 'w': _B[1], 'h': _B[2]}, 'icoonC': {'d': _C[0], 'w': _C[1], 'h': _C[2]}, 'icoonGolf': {'d': ic, 'w': 318, 'h': 296}}
+    json.dump({'gestapeld': {'d': st, 'w': vb[0], 'h': vb[1]}, 'liggend': {'d': li, 'w': vbl[0], 'h': vbl[1]}, 'board': {'d': bm, 'w': vbb[0], 'h': vbb[1]}, **_extra}, open(HIER / 'logo2.json', 'w'))
     print('logo2.json', vb, vbl, vbb)

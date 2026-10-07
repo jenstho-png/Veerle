@@ -3,6 +3,7 @@ Posterpagina's in 4:5, alles schaalt mee met de breedte (container query units).
 Fonts en foto's gaan als data-URI mee, zodat de pagina los te delen is."""
 import base64, json, math, pathlib
 import stickers as ST
+import tas as TAS
 
 HIER = pathlib.Path(__file__).parent
 ASSETS = HIER.parent.parent / 'theme' / 'assets'
@@ -30,6 +31,16 @@ def logo(soort, kleur, cls='', stijl=''):
 def icoon(kleur, cls='', stijl=''):
     b = LOGO['board']
     return f'<svg class="{cls}" style="{stijl}" viewBox="0 0 {b["w"]} {b["h"]}" aria-hidden="true"><path fill="{kleur}" d="{b["d"]}"/></svg>'
+
+
+def icsticker(naam, stijl, rond=False):
+    l = LOGO[naam]
+    m = 26
+    vorm = f'<path fill-rule="evenodd" d="{l["d"]}"/>'
+    rand = (f'<circle cx="{l["w"]/2}" cy="{l["h"]/2}" r="{max(l["w"], l["h"])/2 + m}" fill="{PAPIER}"/>' if rond else
+            f'<rect x="{-m}" y="{-m}" width="{l["w"] + 2*m}" height="{l["h"] + 2*m}" rx="{60 + m}" fill="{PAPIER}"/>')
+    return (f'<svg class="badge" style="position:absolute;{stijl}" viewBox="{-m - 4} {-m - 4} {l["w"] + 2*m + 8} {l["h"] + 2*m + 8}" aria-hidden="true">'
+            f'{rand}<g fill="{NAVY}">{vorm}</g></svg>')
 
 
 def tekening(naam, kleur, cls=''):
@@ -186,10 +197,10 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
 .familie > div > svg { width: 62%; }
 .familie .label { position: absolute; left: 4cqw; bottom: 3.4cqw; }
 .familie .duo { display: flex; align-items: center; gap: 5cqw; width: 78%; }
-.familie .duo svg:first-child { width: 20%; } .familie .duo svg:last-child { width: 80%; }
+.familie .duo svg:first-child { width: 7%; } .familie .duo svg:last-child { width: 80%; }
 .metic { display: grid; justify-items: center; gap: 3cqw; width: 62%; }
-.metic svg:first-child { width: 30%; } .metic svg:last-child { width: 100%; }
-.cover .icoon { position: absolute; left: 6cqw; bottom: 57cqw; width: 11cqw; }
+.metic svg:first-child { height: 9cqw; width: auto; } .metic svg:last-child { width: 100%; }
+.cover .icoon { position: absolute; left: 7cqw; bottom: 57cqw; height: 10cqw; width: auto; }
 
 /* 4 kleur en letter */
 .kleur { display: grid; grid-template-columns: repeat(5, 1fr); height: 52%; }
@@ -228,7 +239,7 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
 
 /* 9 drukwerk */
 .kaart-navy { position: absolute; left: 13cqw; right: 13cqw; top: 12cqw; height: 46cqw; background: var(--navy); overflow: hidden; box-shadow: 0 1.4cqw 3cqw rgba(0, 0, 0, .3); }
-.kaart-navy .groot { position: absolute; left: 3cqw; right: 3cqw; top: -2.6cqw; }
+.kaart-navy .groot { position: absolute; left: 4cqw; right: 4cqw; top: 4cqw; }
 .kaart-navy .links { position: absolute; left: 3cqw; bottom: 3cqw; color: var(--creme); font: 400 1.55cqw/1.6 var(--mono); }
 .kaart-navy .rechts { position: absolute; right: 3cqw; bottom: 3cqw; color: var(--creme); font: 400 1.55cqw/1.6 var(--mono); display: grid; grid-template-columns: auto auto; gap: 0 1.6cqw; align-items: baseline; }
 .kaart-navy .rechts .hand { font-size: 1.9cqw; }
@@ -251,6 +262,21 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
 .browser .hero-tekst { position: absolute; right: 3cqw; bottom: 4cqw; width: 30cqw; color: var(--creme); font: 400 1.35cqw/1.55 var(--mono); }
 .browser .knop { display: inline-block; margin-top: 1.6cqw; padding: 1.1cqw 2.2cqw; border-radius: 99px; background: var(--creme); color: var(--navy); font: 700 1.15cqw var(--mono); letter-spacing: .16em; }
 
+/* drie iconen */
+.drie { display: grid; grid-template-rows: auto 1fr auto; height: 100%; padding: 6cqw; gap: 3cqw; }
+.drie h2, .tasp h2 { margin: 0; font: 400 5.4cqw/1 var(--display); letter-spacing: .04em; }
+.drie .rij3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2cqw; }
+.drie .kol { display: grid; grid-template-rows: 1fr 1fr auto; gap: 1.6cqw; }
+.drie .tg { display: grid; place-items: center; }
+.drie .tg svg { height: 55%; width: auto; max-width: 70%; }
+.drie .rol { font: 400 1.55cqw/1.5 var(--mono); }
+.drie .rol b { display: block; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: .4cqw; }
+/* de tas */
+.tasp { display: grid; grid-template-rows: auto auto 1fr; height: 100%; padding: 6cqw; gap: 2.4cqw; }
+.tasp .lijn svg { width: 100%; }
+.tasp .foto { position: relative; background-size: cover; background-position: center; display: grid; place-items: center; }
+.tasp .foto svg { width: 76%; transform: rotate(-6deg); filter: drop-shadow(0 1cqw 1.4cqw rgba(0,0,0,.25)); }
+.tasp p { margin: 0; font: 400 1.7cqw/1.5 var(--mono); max-width: 60ch; }
 @media (max-width: 600px) { body { padding-inline: 12px; } }
 '''
 
@@ -275,6 +301,25 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
   <div style="background:var(--baby)"><div class="duo"><svg viewBox="0 0 {LOGO['board']['w']} {LOGO['board']['h']}"><path fill="{NAVY}" d="{LOGO['board']['d']}"/></svg>{logo('liggend', NAVY)}</div><span class="label">Liggend met beeldmerk</span></div>
   <div style="background:var(--rose)">{zegel(achter=ROSE, rand=ROSE).replace('class="badge"', 'style="width:62%"')}<span class="label">Zegel</span></div>
 </div></section>''')
+    # 3b drie iconen
+    def ic(naam, kleur):
+        l = LOGO[naam]
+        return f'<svg viewBox="0 0 {l["w"]} {l["h"]}"><path fill="{kleur}" fill-rule="evenodd" d="{l["d"]}"/></svg>'
+    kol = lambda naam, titel, rol: f'<div class="kol"><div class="tg" style="background:var(--creme)">{ic(naam, NAVY)}</div><div class="tg" style="background:var(--navy)">{ic(naam, CREME)}</div><p class="rol"><b>{titel}</b>{rol}</p></div>'
+    paginas.append(f'''<section class="pagina" aria-label="Drie iconen"><div class="drie">
+  <h2>DRIE ICONEN, ÉÉN FAMILIE</h2>
+  <div class="rij3">{kol('board', 'A, het board', 'Het hoofdicoon. Boven het logo, naast de liggende versie en op het label in de tas.')}{kol('icoonB', 'B, zon en zee', 'Het zegel. Profielfoto op Instagram, stempel op dozen en kaartjes.')}{kol('icoonC', 'C, de tegel', 'Klein en herkenbaar. Favicon, hanglabel en sticker, net als de tegelstof van de tas.')}</div>
+  <p class="label">Navy op crème, of crème op navy. Altijd één icoon tegelijk.</p>
+</div></section>''')
+    # 3c de tas
+    paginas.append(f'''<section class="pagina" aria-label="De draagtas"><div class="tasp">
+  <h2>DE DRAAGTAS</h2>
+  <p>Het board erop, het tegelpaneel eroverheen, de banden eromheen en de schouderband omhoog. Als lijntekening voor kaartjes en uitleg, als sticker in de kleuren van de stof.</p>
+  <div style="display:grid;grid-template-rows:1fr 1.2fr;gap:2cqw;min-height:0">
+    <div class="lijn" style="background:var(--creme);display:grid;place-items:center;padding:2cqw">{TAS.lijn()}</div>
+    <div class="foto" style="background-image:url({foto('zand')})">{TAS.sticker()}</div>
+  </div>
+</div></section>''')
     # 4 kleur en letter
     kleuren = [('Navy', NAVY, '#F3ECDD'), ('Crème', CREME, NAVY), ('Baby', BABY, NAVY), ('Rose', ROSE, NAVY), ('Zand', ZAND, NAVY)]
     strook = ''.join(f'<div style="background:{h};color:{t}"><span class="naam">{n}</span><span class="hex">{h}</span></div>' for n, h, t in kleuren)
@@ -287,7 +332,7 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
     # 5 stickers op zee
     paginas.append(f'''<section class="pagina stickers" aria-label="Stickers">
   <img class="bg" src="{foto('zee-zw')}" alt="">
-  {S('board', 14, 10, 30, -6)}{S('zon', 58, 8, 26, 0)}{S('schelp', 10, 46, 28, 4)}{S('zeester', 56, 40, 27, 12)}
+  {TAS.sticker('s', 'left:6cqw;top:12cqw;width:46cqw;transform:rotate(-8deg)')}{S('zon', 58, 8, 26, 0)}{S('schelp', 10, 46, 28, 4)}{S('zeester', 56, 40, 27, 12)}
   {S('golf', 30, 72, 44, -3)}{S('palm', 75, 64, 18, 6)}
   <p class="voet label">Stickers en illustraties</p></section>''')
     # 6 logostickers op zand
@@ -297,14 +342,15 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
   {zegel().replace('class="badge"', 'class="badge" style="left:58cqw;top:22cqw;width:34cqw;transform:rotate(9deg)"')}
   {golfrand().replace('class="badge"', 'class="badge" style="left:14cqw;top:58cqw;width:30cqw;transform:rotate(-4deg)"')}
   {pil().replace('class="badge"', 'class="badge" style="left:46cqw;top:78cqw;width:46cqw;transform:rotate(-12deg)"')}
-  {sticker('board', 's', 'position:absolute;left:52cqw;top:52cqw;width:20cqw;transform:rotate(14deg);filter:drop-shadow(0 .8cqw 1.4cqw rgba(0,0,0,.28))')}
+  {icsticker('icoonC', 'left:56cqw;top:56cqw;width:17cqw;transform:rotate(12deg)')}
+  {icsticker('icoonB', 'left:66cqw;top:4cqw;width:15cqw;transform:rotate(-10deg)', rond=True)}
 </section>''')
     # 7 illustraties
     paginas.append(f'''<section class="pagina" aria-label="Illustraties"><div class="ill">
   <h2>GETEKEND MET DE HAND</h2>
   <p class="m" style="grid-column:1/-1;font-size:1.8cqw;line-height:1.5;max-width:60ch">Eén lijndikte, ronde uiteinden, en net niet perfect. Voor kaartjes, de verpakking, de website en de binnenkant van de tas.</p>
   <figure>{tekening('parasol', NAVY)}<figcaption>aan het strand</figcaption></figure>
-  <figure>{tekening('tas', NAVY)}<figcaption>de draagtas</figcaption></figure>
+  <figure>{TAS.lijn()}<figcaption>de draagtas</figcaption></figure>
   <figure>{tekening('busje', NAVY)}<figcaption>op roadtrip</figcaption></figure>
   <figure>{tekening('golf', NAVY)}<figcaption>de golf</figcaption></figure>
 </div></section>''')

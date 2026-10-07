@@ -75,10 +75,9 @@ for s_ in ST.S:
     f"  Gebruik: {{% render 'tt-stk', naam: 'golf', class: '' %}}\n  Namen: {', '.join(s_['naam'] for s_ in ST.S)}\n{{%- endcomment -%}}\n"
     "{%- case naam -%}\n" + cases + "{%- endcase -%}\n")
 
-# favicon: board op navy
-bs = 150 / b['h']
-fav = (f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' rx='44' fill='%2322324F'/>"
-       f"<path transform='translate({100 - b['w'] * bs / 2:.1f} 25) scale({bs:.4f})' fill='%23F3ECDD' d='{b['d']}'/></svg>")
+# favicon: icoon C (de tegel) in navy, op transparant
+c = L['icoonC']
+fav = f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-8 -8 {c['w'] + 16} {c['h'] + 16}'><path fill='%2322324F' fill-rule='evenodd' d='{c['d']}'/></svg>"
 (THEMA / 'snippets' / 'tt-favicon.liquid').write_text(
     "{%- comment -%} Favicon met het board (gegenereerd). Wordt gebruikt als er in de thema-instellingen geen favicon is gekozen. {%- endcomment -%}\n"
     '<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,' + fav.replace('<', '%3C').replace('>', '%3E') + '">\n')
