@@ -11,6 +11,15 @@
 <section class="tt tt-hero{% if section.settings.pagina %} tt-hero--pagina{% endif %}" id="tt-hero-{{ section.id }}">
   {%- assign hero_fallback = section.settings.fallback | default: 'tt-foto-hero' -%}
   <div class="tt-hero__foto">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: hero_fallback, alt: section.settings.alt, sizes: '100vw', loading: 'eager' -%}</div>
+  {%- if section.settings.video != blank or section.settings.video_url != blank -%}
+    <div class="tt-hero__video" aria-hidden="true">
+      {%- if section.settings.video != blank -%}
+        {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'auto', image_size: '1920x' }}
+      {%- else -%}
+        <video src="{{ section.settings.video_url }}" autoplay loop muted playsinline preload="auto"></video>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
   {%- if section.settings.stickers -%}
   <div class="tt-hero__stickers" aria-hidden="true">
     <span class="hs hs--zon" data-tt-snelheid="0.5">{% render 'tt-stk', naam: 'zon' %}</span>
@@ -75,6 +84,17 @@
       "id": "pagina",
       "label": "Lagere versie (voor subpagina's)",
       "default": false
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video (speelt af zonder geluid, in een lus)",
+      "info": "Upload de video in Content > Bestanden en kies hem hier. De foto blijft staan tot de video speelt."
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Of: link naar een mp4"
     },
     {
       "type": "text",

@@ -1899,3 +1899,8 @@ main .shopify-section-group-footer-group, footer { position: relative; }
 .template-index .hs--zon { top: auto !important; bottom: 9%; right: 37% !important; width: clamp(64px, 6.5vw, 104px); }
 .template-index .hs--schelp { bottom: 5% !important; right: 17.5% !important; }
 .template-index .hs--ster { bottom: 3% !important; right: 2% !important; }
+
+/* ---------- hero met video: video over de foto, de foto blijft als poster ---------- */
+.tt-hero__video { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.tt-hero__video video { width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; display: block; }
+@media (prefers-reduced-motion: reduce) { .tt-hero__video { display: none; } }
