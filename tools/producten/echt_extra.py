@@ -510,6 +510,58 @@ def poncho():
                   verplaatsing=16, schaduw=1.15, structuur=0.9, blur=1.4)
     bewaar(p, 'surfponcho-tegel-2')
 
+    # 3. sfeer: over het open portier van een auto op het strand, naast een wetsuit (Pexels 6773753).
+    #    Het gestreepte hamamdoekje wordt onze poncho: effen zeeblauwe badstof, franjes weg, tegelband langs de zoom.
+    a = foto('autodeur-strand-1.jpg')
+    a = E.poets(a, 2155, 2758, 128, 112)                 # logo op het wetsuit
+    hsv = cv2.cvtColor((np.clip(a, 0, 1) * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
+    L = MK.helderheid(a)
+    blauw = (hsv[..., 0] >= 100) & (hsv[..., 0] <= 128) & (hsv[..., 1] > 55) & (hsv[..., 2] > 60)
+    def doek(rect, sluit, zeker_erode=31):
+        x0, y0, x1, y1 = rect
+        b = np.zeros(L.shape, np.uint8); b[y0:y1, x0:x1] = blauw[y0:y1, x0:x1]
+        b = cv2.morphologyEx(b, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (sluit, sluit)))
+        n, lab, st, _ = cv2.connectedComponentsWithStats(b)
+        b = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
+        vul = b.copy(); ff = np.zeros((b.shape[0] + 2, b.shape[1] + 2), np.uint8); cv2.floodFill(vul, ff, (0, 0), 1)
+        b = b | (1 - vul)
+        return b
+    voor = doek((1430, 2380, 1990, 4330), 61)
+    achter = doek((1380, 4600, 1820, 5160), 51)
+    binnen_m = masker_kleur(a, (78, 30, 40), (108, 255, 230), rect=(1440, 2480, 1612, 3240), sluit=31)
+    stof = np.maximum(voor, achter).astype(np.uint8)
+    m = grabcut(a, cv2.erode(stof, np.ones((25, 25), np.uint8)), cv2.dilate(stof, np.ones((35, 35), np.uint8)), schaal=0.3)
+    m = np.maximum(m * (cv2.dilate(stof, np.ones((35, 35), np.uint8)) > 0), 0)
+    # franjes: dunne lichte draadjes onder en rechts van het doek, weg (portier en zand lopen door)
+    franje = poly(a.shape, [(1965, 3700), (2025, 3800), (1930, 4120), (1790, 4380), (1700, 4480), (1600, 4480), (1640, 4330),
+                            (1780, 4150), (1890, 3920)]) | poly(a.shape, [(1440, 5080), (1800, 4960), (1820, 5230), (1440, 5240)])
+    weg = (franje & (m < 0.5) & (L > 0.55)).astype(np.uint8)
+    weg = cv2.dilate(weg, np.ones((7, 7), np.uint8))
+    a = cv2.inpaint((np.clip(a, 0, 1) * 255).astype(np.uint8), weg * 255, 6, cv2.INPAINT_TELEA).astype(np.float32) / 255
+    L = MK.helderheid(a)
+    if PROEF:
+        cv2.imwrite(str(UIT / 'proef-masker-poncho3.jpg'), (np.dstack([binnen_m, m, weg.astype(np.float32)]) * 255).astype(np.uint8)[::4, ::4])
+    # belichting van de stof zonder het patroon: de omhullende van de lichte (witte) draden, zacht gemaakt
+    def effen(img, mm, doel, schaal_licht=1.0):
+        Lx = MK.helderheid(img)
+        env = cv2.dilate(Lx, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (27, 27)))
+        env = cv2.GaussianBlur(env, (0, 0), 14)
+        ref = np.percentile(env[mm > 0.5], 92)
+        sch = np.clip(env / ref, 0, 1.15) * schaal_licht
+        rng = np.random.default_rng(11)
+        lus = cv2.GaussianBlur(rng.normal(0, 1, Lx.shape).astype(np.float32), (0, 0), 0.9) * 0.05
+        vlek = cv2.GaussianBlur(rng.normal(0, 1, Lx.shape).astype(np.float32), (0, 0), 6) * 0.06
+        nieuw = hexrgb(doel)[None, None] * (sch * (1 + lus + vlek))[..., None]
+        return img * (1 - mm[..., None]) + np.clip(nieuw, 0, 1) * mm[..., None]
+    a = effen(a, m, '#6A8BA8')
+    a = effen(a, binnen_m, '#3F6670', 0.95)               # door het getinte zijraam
+    licht = np.percentile(MK.helderheid(a)[m > 0.5], 80)
+    a = band_zoom(a, [(1690, 4300), (1780, 4170), (1870, 3990), (1960, 3760)], 82, strook2, omhoog='normaal', masker=m, ref=licht,
+                  verplaatsing=8, schaduw=1.0, structuur=0.6, blur=1.0)
+    a = band_zoom(a, [(1440, 5040), (1500, 5115), (1570, 5140), (1660, 5095), (1745, 5035), (1795, 4985)], 82, strook2, omhoog='normaal',
+                  masker=m, ref=licht, verplaatsing=8, schaduw=1.0, structuur=0.6, blur=1.0)
+    bewaar(a, 'surfponcho-tegel-3', uitsnede=(1000, 2350, 3200, 5100))
+
 
 if __name__ == '__main__':
     stappen = [a for a in sys.argv[1:] if not a.startswith('--')] or ['uv_shirt', 'poncho', 'waxkam']

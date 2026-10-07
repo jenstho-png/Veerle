@@ -24,8 +24,8 @@ UIT = ROOT / 'docs' / 'producten' / 'fotos'
 
 # naam: (stockfoto, ontwerp, instellingen voor sfeer_tas.maak)
 LIJST = {
-    'witte-muur-tegel': ('board-muur-4.jpg', 'draagtas-tegel', dict(lus=1, belicht=1.15, schaduw=(-6, 5, 0.35, 6), lus_schaduw=(-14, 5, 0.3, 5))),
-    'oker-muur-ruit': ('board-muur-3.jpg', 'draagtas-ruit', dict(lus=1, belicht=0.85, tint=(1.02, 1.0, 0.96), schaduw=(-4, 5, 0.3, 8), lus_schaduw=(-8, 6, 0.25, 8))),
+    'witte-muur-tegel': ('board-muur-4.jpg', 'draagtas-tegel', dict(lus=1, wit=(606, 790, 612, 830), schaduw=(-6, 5, 0.35, 6), lus_schaduw=(-14, 5, 0.3, 5))),
+    'oker-muur-ruit': ('board-muur-3.jpg', 'draagtas-ruit', dict(lus=1, wit=(818, 810, 826, 840), schaduw=(-4, 5, 0.3, 8), lus_schaduw=(-8, 6, 0.25, 8))),
     'rood-board-golfjes': ('board-zand-1.jpg', 'draagtas-golfjes', dict(lus=1, albedo=0.8, schaduw=(4, 5, 0.3, 6))),
     'zonsondergang-zand': ('board-zand-2.jpg', 'draagtas-zonsondergang', dict(lus=-1, albedo=0.8, tint=(1.04, 1.0, 0.93), schaduw=(2, 4, 0.25, 8))),
     'geel-board-navy': ('board-zand-3.jpg', 'draagtas-navy', dict(lus=1, albedo=0.8, lift=0.04, schaduw=(2, 4, 0.25, 8))),

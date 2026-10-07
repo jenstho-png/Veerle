@@ -400,7 +400,7 @@ def licht_op(L, t, s):
 # ---------------------------------------------------------------- samenstellen
 def maak(foto, naam, handle, lus=-1, stringer=0.0, kort=1.0, belicht=1.0, tint=(1.0, 1.0, 1.0), verzadiging=0.9,
          lift=0.0, zacht=0.5, korrel=None, schaduw=(6, 8, 0.35, 10), lus_schaduw=None, lus_licht=1.0, ondergrens=None,
-         occluder=None, plat=False, debug=False, lus_lengte_factor=1.0, albedo=None):
+         occluder=None, plat=False, debug=False, lus_lengte_factor=1.0, albedo=None, wit=None):
     """foto: float32 RGB 0..1. Geeft het samengestelde beeld.
     schaduw: (dx, dy, sterkte, zachtheid) van de band op het vak (fotopixels per 300 px boardbreedte).
     lus_schaduw: (dx, dy, sterkte, zachtheid) van de lus op de achtergrond, of None."""
@@ -445,6 +445,12 @@ def maak(foto, naam, handle, lus=-1, stringer=0.0, kort=1.0, belicht=1.0, tint=(
     # belichting t.o.v. de studio: uit de helderheid van het board (als we weten hoe licht het board zelf is), anders handmatig
     E = belicht * (L['ref'] / albedo if albedo else 1.0)
     tint = np.array(tint, np.float32)
+    if wit is not None:
+        # witte referentie in de foto (bv. een wit logo op het board): bepaalt belichting en kleur van het licht
+        x0w, y0w, x1w, y1w = wit
+        ref = np.median(foto[y0w:y1w, x0w:x1w].reshape(-1, 3), 0)
+        E = belicht * float(ref.max()) / 0.92
+        tint = tint * (ref / ref.max()).astype(np.float32)
 
     def kleurcorrectie(c, licht):
         c = c * (E * licht)[..., None] * tint

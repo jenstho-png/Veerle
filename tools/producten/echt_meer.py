@@ -451,6 +451,41 @@ def tegel_klein():
     return a[int(y0):int(y0 + t), int(x0):int(x0 + t)]
 
 
+def snap_omtrek(img, poly, zoek=22, stap=10, glad=7):
+    """Getekende omtrek nauwkeurig maken: elk punt (om de `stap` px) schuift langs de normaal naar de sterkste
+    helderheidsrand binnen +-zoek px; de verschuivingen worden langs de omtrek gladgestreken."""
+    L = cv2.GaussianBlur(MK.helderheid(img), (0, 0), 1.5)
+    gy, gx = np.gradient(L)
+    P = np.array(poly, np.float32)
+    pts = []
+    for a, b in zip(P, np.roll(P, -1, 0)):
+        n = max(int(np.linalg.norm(b - a) / stap), 1)
+        pts += [a + (b - a) * t for t in np.arange(n) / n]
+    pts = np.array(pts, np.float32)
+    raak = np.roll(pts, -1, 0) - np.roll(pts, 1, 0)
+    raak /= np.maximum(np.linalg.norm(raak, axis=1), 1e-6)[:, None]
+    nor = np.stack([raak[:, 1], -raak[:, 0]], 1)
+    offs = np.arange(-zoek, zoek + 1, dtype=np.float32)
+    best = np.zeros(len(pts), np.float32)
+    h, w = L.shape
+    for i, (p, n) in enumerate(zip(pts, nor)):
+        q = p[None] + offs[:, None] * n[None]
+        xs = np.clip(q[:, 0], 0, w - 1).astype(int); ys = np.clip(q[:, 1], 0, h - 1).astype(int)
+        g = np.abs(gx[ys, xs] * n[0] + gy[ys, xs] * n[1])
+        g = g * (1 - 0.3 * np.abs(offs) / zoek)            # bij gelijke rand: liever dicht bij de getekende lijn
+        best[i] = offs[np.argmax(g)]
+    k = glad
+    pad = np.concatenate([best[-k:], best, best[:k]])
+    best = np.array([np.median(pad[i:i + 2 * k + 1]) for i in range(len(best))], np.float32)
+    return (pts + nor * best[:, None]).astype(np.float32)
+
+
+def poly_masker(shape, poly, aa=1.0):
+    m = np.zeros(shape, np.uint8)
+    cv2.fillPoly(m, [np.round(np.array(poly) * 4).astype(np.int32)], 1, lineType=cv2.LINE_AA, shift=2)
+    return m
+
+
 def wit_masker(img, omtrek, band=20):
     """Wit kledingstuk: getekende omtrek + GrabCut in de band, en alleen lichte, kleurloze pixels (geen huid of jeans)."""
     m = grabcut_poly(img, omtrek, band=band)
@@ -471,10 +506,12 @@ def golf_voor():
               (909, 2013), (923, 2027), (1250, 1999), (1556, 1925), (1563, 1877), (1522, 1727), (1530, 1712), (1604, 1700),
               (1672, 1693), (1666, 1522), (1631, 1263), (1590, 1059), (1536, 895), (1413, 786), (1243, 756), (1222, 841),
               (1100, 909), (977, 882)]
-    m = wit_masker(t, omtrek)
+    m = wit_masker(t, omtrek) | poly_masker(t.shape[:2], snap_omtrek(t, omtrek))
+    m = m & (MK.helderheid(t) > 0.45) & (cv2.cvtColor((t * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)[..., 1] < 60)
+    m = vul_gaten(cv2.morphologyEx(m.astype(np.uint8), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8)))
     L = MK.helderheid(t)
     ref = float(np.percentile(L[m > 0], 80))
-    t, _ = kleur_rand(t, m, CREME_T, gamma=1.0, ref=ref, rand=3)
+    t, _ = kleur_rand(t, m, CREME_T, gamma=1.0, ref=ref, rand=2)
     mz = zacht(m, 1.0)
     t = MK.zet_print(t, E.art('icoon-navy.png', NAVY), 1285, 1035, 32, verplaatsing=2, masker=mz)
     t = MK.zet_print(t, mouwtekst(), 1584, 1300, 21, draai=5, verplaatsing=3, schaduw_sterkte=0.9, masker=mz)

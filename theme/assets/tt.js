@@ -1,10 +1,18 @@
 /* Tide-Tode: beweging en kopen voor de tt-secties. Geen libraries.
-   - Alles rekent in één requestAnimationFrame per scroll.
-   - 'Minder beweging' of de thema-editor: alles staat meteen op de eindstand. */
+   Regels voor vloeiende beweging:
+   - Eén requestAnimationFrame-lus voor alles wat met de scroll meebeweegt.
+     Posities worden één keer gemeten (en opnieuw bij resize of als de pagina
+     langer wordt), per frame wordt alleen nog geschreven: geen layout-reads.
+   - Alleen transform en opacity bewegen. Geen clip-path, filter of hoogte.
+   - In beeld komen: één IntersectionObserver voor de hele pagina. Wat samen
+     binnenkomt, komt na elkaar binnen (stagger).
+   - 'Minder beweging' of de thema-editor: alles staat meteen op de eindstand.
+   - Zonder JS (of als dit bestand niet laadt) is alles gewoon zichtbaar. */
 (() => {
   const root = document.documentElement;
   const stil = matchMedia('(prefers-reduced-motion: reduce)').matches || !!(window.Shopify && window.Shopify.designMode);
-  root.classList.add('tt-js');
+  const fijn = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  root.classList.add('tt-js', 'tt-klaar');
   if (stil) root.classList.add('tt-stil');
 
   const klem = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -13,38 +21,413 @@
     catch (e) { return '€' + (c % 100 ? (c / 100).toFixed(2).replace('.', ',') : String(c / 100)); }
   };
 
-  function start(scope = document) {
-    /* 1. In beeld komen */
-    /* collectie sorteren */
-    scope.querySelectorAll('[data-tt-sorteer]').forEach((el) => el.addEventListener('change', () => {
-      const u = new URL(location.href); u.searchParams.set('sort_by', el.value); u.searchParams.delete('page'); location.href = u;
+  /* ---------- 1. In beeld komen ---------- */
+  const DOELEN = '[data-tt-regels], .tt-onthul, .tt-in, .tt-stickerzee, .tt-teken';
+  const zichtbaar = (el) => el.classList.add('is-in');
+  /* een foto pas onthullen als hij geladen is (max. 1,2 s wachten), anders schuift er een leeg vlak open */
+  const onthul = (el) => {
+    const img = el.classList.contains('tt-onthul') && el.querySelector('img');
+    if (!img || img.complete) return zichtbaar(el);
+    let klaar = false;
+    const doe = () => { if (!klaar) { klaar = true; zichtbaar(el); } };
+    img.addEventListener('load', doe, { once: true });
+    img.addEventListener('error', doe, { once: true });
+    setTimeout(doe, 1200);
+  };
+  const io = (!stil && 'IntersectionObserver' in window) ? new IntersectionObserver((items) => {
+    const binnen = items.filter((e) => e.isIntersecting);
+    /* wat in hetzelfde frame binnenkomt: van boven naar beneden, van links naar rechts */
+    binnen.sort((a, b) => (a.boundingClientRect.top - b.boundingClientRect.top) || (a.boundingClientRect.left - b.boundingClientRect.left));
+    binnen.forEach((e, i) => {
+      e.target.style.setProperty('--tt-stap', `${Math.min(i * 0.08, 0.48).toFixed(2)}s`);
+      io.unobserve(e.target);
+      onthul(e.target);
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.01 }) : null;
+
+  /* ---------- 2. De scroll-lus ---------- */
+  /* Elk item: { el, soort, ... , top, h } met top/h in documentcoördinaten (gemeten aan de ouder). */
+  const items = [];
+  let vh = innerHeight, gemeten = false;
+  const meet = () => {
+    vh = innerHeight;
+    const y = scrollY;
+    /* eerst alles lezen ... */
+    const maten = items.map((it) => { const r = (it.meet || it.el.parentElement || it.el).getBoundingClientRect(); return [r.top + y, r.height, r.width]; });
+    /* ... dan pas opslaan */
+    maten.forEach(([t, h, w], i) => { items[i].top = t; items[i].h = h; items[i].w = w; });
+    items.forEach((it) => { if (it.soort === 'vul') it.n = -1; });
+    gemeten = true;
+  };
+  let doelY = scrollY, zachtY = scrollY, raf = 0, vorige = 0;
+  const frame = (t) => {
+    raf = 0;
+    if (!gemeten) meet();
+    const y = scrollY; doelY = y;
+    /* parallax loopt een fractie achter de scroll aan: dat voelt zacht, zonder de scroll zelf over te nemen */
+    const dt = vorige ? Math.min(64, t - vorige) : 16.7; vorige = t;
+    zachtY += (doelY - zachtY) * (1 - Math.pow(1 - 0.18, dt / 16.7));
+    if (Math.abs(doelY - zachtY) < 0.2) zachtY = doelY;
+    for (const it of items) {
+      const top = it.top - y; /* positie op het scherm (zonder de eigen verschuiving) */
+      if (top > vh + 200 || top + it.h < -200) { continue; }
+      switch (it.soort) {
+        case 'hero': {
+          const p = klem((zachtY - it.top) / Math.max(1, it.h), 0, 1);
+          it.el.style.translate = `0 ${(p * it.h * 0.22).toFixed(1)}px`;
+          if (it.inhoud) it.inhoud.style.opacity = (1 - p * 0.9).toFixed(3);
+          break;
+        }
+        case 'foto': { /* foto schuift binnen zijn kader: -1 onder in beeld, +1 boven */
+          const p = klem(((it.top - zachtY) + it.h / 2 - vh / 2) / (vh / 2 + it.h / 2), -1, 1);
+          it.el.style.translate = `0 ${(p * it.h * it.v).toFixed(1)}px`;
+          break;
+        }
+        case 'snelheid': {
+          const p = ((it.top - zachtY) + it.h / 2 - vh / 2) / vh;
+          it.el.style.translate = `0 ${(p * it.v * -300).toFixed(1)}px`;
+          break;
+        }
+        case 'schuif': {
+          const deel = it.w / 3 || 1;
+          it.el.style.transform = `translate3d(${(-((vh - (it.top - zachtY)) * 0.45) % deel).toFixed(1)}px,0,0)`;
+          break;
+        }
+        case 'vul': {
+          const v = klem((vh * 0.85 - top) / (it.h + vh * 0.3), 0, 1);
+          const n = Math.round(v * it.woorden.length * 1.1);
+          if (n !== it.n) {
+            const [a, b] = it.n < 0 ? [0, it.woorden.length] : [Math.min(n, it.n), Math.max(n, it.n)];
+            for (let i = a; i < b && i < it.woorden.length; i++) it.woorden[i].classList.toggle('is-vol', i < n);
+            it.n = n;
+          }
+          break;
+        }
+        default: break;
+      }
+    }
+    for (const el of draai) el.style.rotate = `${(zachtY * parseFloat(el.dataset.ttDraai)).toFixed(1)}deg`;
+    if (zachtY !== doelY) plan();
+  };
+  const draai = [];
+  const plan = () => { if (!raf) raf = requestAnimationFrame(frame); };
+  const opnieuw = () => { gemeten = false; plan(); };
+
+  function registreer(scope) {
+    if (stil) return;
+    const voeg = (el, soort, extra = {}) => {
+      if (el.dataset.ttLus) return; el.dataset.ttLus = '1';
+      items.push({ el, soort, top: 0, h: 0, w: 0, ...extra });
+    };
+    /* hero: foto zakt langzaam weg, tekst vervaagt */
+    scope.querySelectorAll('.tt-hero__foto').forEach((el) => voeg(el, 'hero', { meet: el.closest('.tt-hero'), inhoud: el.closest('.tt-hero').querySelector('.tt-hero__inhoud') }));
+    /* slotfoto en foto's in de verhalende secties: zachte parallax binnen het kader */
+    scope.querySelectorAll('.tt-slot__foto, .tt-verhaal__foto .tt-onthul, .tt-wie__foto .tt-onthul, .tt-probleem__foto, .tt-zo__foto, .tt-muur__item .tt-onthul, .tt-raster__vak--foto, .tt-col__beeld').forEach((kader) => {
+      const img = kader.querySelector(':scope > img');
+      if (!img) return;
+      kader.classList.add('tt-par');
+      voeg(img, 'foto', { meet: kader, v: kader.classList.contains('tt-slot__foto') ? 0.08 : 0.05 });
+    });
+    scope.querySelectorAll('[data-tt-snelheid]').forEach((el) => voeg(el, 'snelheid', { v: parseFloat(el.dataset.ttSnelheid) || 0.2 }));
+    scope.querySelectorAll('[data-tt-schuif]').forEach((el) => voeg(el, 'schuif', { meet: el }));
+    scope.querySelectorAll('[data-tt-vul]').forEach((el) => voeg(el, 'vul', { meet: el, woorden: [...el.querySelectorAll('.tt-w')], n: -1 }));
+    scope.querySelectorAll('[data-tt-draai]').forEach((el) => { if (!draai.includes(el)) draai.push(el); });
+    opnieuw();
+  }
+
+  if (!stil) {
+    addEventListener('scroll', plan, { passive: true });
+    addEventListener('resize', opnieuw, { passive: true });
+    /* de pagina wordt langer als foto's of lettertypes laden: dan opnieuw meten */
+    if ('ResizeObserver' in window) {
+      let h = 0;
+      new ResizeObserver(() => { const n = document.body.offsetHeight; if (n !== h) { h = n; opnieuw(); } }).observe(document.body);
+    }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(opnieuw);
+  }
+
+  /* ---------- 3. Hover: magnetische knoppen, kantelende kaarten ---------- */
+  function hover(scope) {
+    if (stil || !fijn) return;
+    scope.querySelectorAll('.tt-knop:not(.tt-knop--vol), .surf-icon-btn, [data-tt-magneet]').forEach((el) => {
+      if (el.dataset.ttMagneet === '1') return; el.dataset.ttMagneet = '1';
+      let r = null, f = 0, x = 0, y = 0;
+      const schrijf = () => { f = 0; el.style.translate = `${x.toFixed(1)}px ${y.toFixed(1)}px`; };
+      el.addEventListener('pointerenter', () => { r = el.getBoundingClientRect(); el.classList.add('is-magneet'); });
+      el.addEventListener('pointermove', (e) => {
+        if (!r) return;
+        x = klem((e.clientX - (r.left + r.width / 2)) * 0.22, -7, 7);
+        y = klem((e.clientY - (r.top + r.height / 2)) * 0.3, -5, 5);
+        if (!f) f = requestAnimationFrame(schrijf);
+      });
+      el.addEventListener('pointerleave', () => { r = null; x = 0; y = 0; el.classList.remove('is-magneet'); if (!f) f = requestAnimationFrame(schrijf); });
+    });
+    scope.querySelectorAll('[data-tt-kantel]').forEach((el) => {
+      if (el.dataset.ttKantelAan) return; el.dataset.ttKantelAan = '1';
+      let r = null, f = 0, x = 0, y = 0;
+      const schrijf = () => { f = 0; el.style.transform = r ? `perspective(900px) rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 6).toFixed(2)}deg) translateY(-4px)` : ''; };
+      el.addEventListener('pointerenter', () => { r = el.getBoundingClientRect(); });
+      el.addEventListener('pointermove', (e) => {
+        if (!r) return;
+        x = (e.clientX - r.left) / r.width - 0.5; y = (e.clientY - r.top) / r.height - 0.5;
+        if (!f) f = requestAnimationFrame(schrijf);
+      });
+      el.addEventListener('pointerleave', () => { r = null; if (!f) f = requestAnimationFrame(schrijf); });
+    });
+  }
+
+  /* ---------- 4. Productpagina: galerij, lightbox, varianten, toevoegen ---------- */
+  function galerij(sectie) {
+    const baan = sectie.querySelector('[data-tt-galerij]');
+    if (!baan) return null;
+    const dias = [...baan.querySelectorAll('[data-tt-dia]')];
+    const teller = sectie.querySelector('[data-tt-teller]');
+    const balkje = sectie.querySelector('[data-tt-voortgang]');
+    const duimen = [...sectie.querySelectorAll('[data-tt-duim]')];
+    let huidig = 0;
+    const zet = (i) => {
+      huidig = i;
+      if (teller) teller.textContent = String(i + 1);
+      if (balkje) balkje.style.transform = `translateX(${(i * 100).toFixed(0)}%)`;
+      duimen.forEach((d, n) => d.setAttribute('aria-current', String(n === i)));
+    };
+    if (balkje) balkje.style.width = `${100 / Math.max(1, dias.length)}%`;
+    /* welke foto staat in beeld: IntersectionObserver binnen de baan, geen scroll-handler */
+    if ('IntersectionObserver' in window && dias.length > 1) {
+      const zicht = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) zet(dias.indexOf(e.target)); }), { root: baan, threshold: 0.6 });
+      dias.forEach((d) => zicht.observe(d));
+    }
+    const naar = (i, gedrag) => {
+      const d = dias[i]; if (!d) return;
+      const horizontaal = getComputedStyle(baan).overflowX !== 'visible' && baan.scrollWidth > baan.clientWidth + 2;
+      if (horizontaal) baan.scrollTo({ left: d.offsetLeft - baan.offsetLeft - parseFloat(getComputedStyle(baan).paddingLeft || 0), behavior: stil ? 'auto' : (gedrag || 'smooth') });
+      else d.scrollIntoView({ behavior: stil ? 'auto' : 'smooth', block: 'nearest' });
+      zet(i);
+    };
+    duimen.forEach((d, n) => d.addEventListener('click', () => naar(n)));
+    /* klik op een foto: groot bekijken */
+    dias.forEach((d, n) => {
+      const knop = d.querySelector('[data-tt-zoom]');
+      if (knop) knop.addEventListener('click', () => lightbox(dias, n));
+    });
+    return { naar, dias };
+  }
+
+  let lb = null;
+  function lightbox(dias, start) {
+    if (!window.HTMLDialogElement) return;
+    if (!lb) {
+      lb = document.createElement('dialog');
+      lb.className = 'tt-lb';
+      lb.setAttribute('aria-label', 'Foto’s');
+      lb.innerHTML = '<div class="tt-lb__baan" data-lb-baan></div><p class="tt-lb__teller" aria-live="polite"><span data-lb-nr>1</span> / <span data-lb-tot>1</span></p><button type="button" class="tt-lb__knop tt-lb__sluit" data-lb-sluit aria-label="Sluiten"><span aria-hidden="true"></span></button><button type="button" class="tt-lb__knop tt-lb__vorige" data-lb-stap="-1" aria-label="Vorige foto">←</button><button type="button" class="tt-lb__knop tt-lb__volgende" data-lb-stap="1" aria-label="Volgende foto">→</button>';
+      document.body.appendChild(lb);
+      const baan = lb.querySelector('[data-lb-baan]');
+      lb.querySelector('[data-lb-sluit]').addEventListener('click', () => sluit());
+      lb.addEventListener('click', (e) => { if (e.target === lb) sluit(); });
+      lb.addEventListener('cancel', (e) => { e.preventDefault(); sluit(); });
+      lb.querySelectorAll('[data-lb-stap]').forEach((k) => k.addEventListener('click', () => stap(+k.dataset.lbStap)));
+      lb.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') stap(1); if (e.key === 'ArrowLeft') stap(-1); });
+      const stap = (s) => { const i = klem(lb._i + s, 0, lb._n - 1); baan.children[i].scrollIntoView({ behavior: stil ? 'auto' : 'smooth', inline: 'start', block: 'nearest' }); };
+      const sluit = () => {
+        if (stil) { lb.close(); return; }
+        lb.classList.add('is-dicht');
+        setTimeout(() => { lb.classList.remove('is-dicht'); lb.close(); }, 320);
+      };
+      /* zoomen: klik = 2x op die plek, bewegen = rondkijken */
+      baan.addEventListener('click', (e) => {
+        const fig = e.target.closest('.tt-lb__dia'); if (!fig) return;
+        const img = fig.querySelector('img');
+        const aan = !fig.classList.contains('is-zoom');
+        fig.classList.toggle('is-zoom', aan);
+        if (aan) { const r = fig.getBoundingClientRect(); img.style.transformOrigin = `${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`; }
+      });
+      let f = 0;
+      baan.addEventListener('pointermove', (e) => {
+        const fig = e.target.closest('.tt-lb__dia.is-zoom'); if (!fig || e.pointerType !== 'mouse' || f) return;
+        f = requestAnimationFrame(() => { f = 0; const r = fig.getBoundingClientRect(); fig.querySelector('img').style.transformOrigin = `${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`; });
+      });
+      const zicht = new IntersectionObserver((es) => es.forEach((e) => {
+        if (!e.isIntersecting) { e.target.classList.remove('is-zoom'); return; }
+        lb._i = [...baan.children].indexOf(e.target);
+        lb.querySelector('[data-lb-nr]').textContent = String(lb._i + 1);
+      }), { root: baan, threshold: 0.6 });
+      lb._zicht = zicht;
+    }
+    const baan = lb.querySelector('[data-lb-baan]');
+    baan.textContent = '';
+    dias.forEach((d) => {
+      const bron = d.querySelector('img'); if (!bron) return;
+      const fig = document.createElement('figure'); fig.className = 'tt-lb__dia';
+      const img = document.createElement('img');
+      img.src = bron.dataset.groot || bron.currentSrc || bron.src; img.alt = bron.alt || ''; img.decoding = 'async';
+      fig.appendChild(img); baan.appendChild(fig); lb._zicht.observe(fig);
+    });
+    lb._n = baan.children.length; lb._i = start;
+    lb.querySelector('[data-lb-tot]').textContent = String(lb._n);
+    lb.querySelector('[data-lb-nr]').textContent = String(start + 1);
+    lb.showModal();
+    requestAnimationFrame(() => { const d = baan.children[start]; if (d) baan.scrollLeft = d.offsetLeft; });
+  }
+
+  /* winkelwagen: teller bijwerken en het icoon een tikje laten maken */
+  function winkelwagen(aantal) {
+    const knop = document.getElementById('cart-icon-bubble');
+    if (!knop) return;
+    let bol = knop.querySelector('.surf-count');
+    if (!bol && aantal > 0) { bol = document.createElement('span'); bol.className = 'surf-count'; bol.setAttribute('aria-hidden', 'true'); knop.appendChild(bol); }
+    if (bol) bol.textContent = String(aantal);
+    knop.setAttribute('aria-label', `Winkelwagen (${aantal})`);
+    if (stil) return;
+    knop.classList.remove('is-tik'); void knop.offsetWidth; knop.classList.add('is-tik');
+    knop.addEventListener('animationend', () => knop.classList.remove('is-tik'), { once: true });
+  }
+  let melding = null;
+  function meld(titel, beeld) {
+    if (!melding) {
+      melding = document.createElement('div');
+      melding.className = 'tt-melding'; melding.setAttribute('role', 'status'); melding.setAttribute('aria-live', 'polite');
+      document.body.appendChild(melding);
+    }
+    const route = (window.routes && window.routes.cart_url) || '/cart';
+    melding.innerHTML = `<span class="tt-melding__beeld">${beeld ? `<img src="${beeld}" alt="">` : ''}</span><span class="tt-melding__tekst"><strong>In je winkelwagen</strong><span></span></span><a class="tt-melding__link" href="${route}">Bekijk</a>`;
+    melding.querySelector('.tt-melding__tekst span').textContent = titel;
+    melding.classList.remove('is-aan'); void melding.offsetWidth; melding.classList.add('is-aan');
+    clearTimeout(melding._t); melding._t = setTimeout(() => melding.classList.remove('is-aan'), 4200);
+  }
+
+  function koop(sectie) {
+    if (sectie.dataset.ttKoopAan) return; sectie.dataset.ttKoopAan = '1';
+    const gal = galerij(sectie);
+    const form = sectie.querySelector('[data-tt-form]');
+    if (!form) return;
+    const data = form.querySelector('[data-tt-varianten]');
+    const id = form.querySelector('[data-tt-variant]');
+    const knop = form.querySelector('[data-tt-koopknop]');
+    const tekst = form.querySelector('[data-tt-knoptekst]');
+    const fout = form.querySelector('[data-tt-fout]');
+    const was = sectie.querySelectorAll('[data-tt-prijs-was]');
+    let varianten = [];
+    try { varianten = data ? JSON.parse(data.textContent) : []; } catch (e) { varianten = []; }
+    const groepen = [...form.querySelectorAll('.tt-koop__optie')];
+    const kies = () => groepen.map((g) => (g.querySelector('input:checked') || {}).value);
+    /* welke waarden zijn met de rest van de keuze nog leverbaar? */
+    const markeer = () => {
+      const gekozen = kies();
+      groepen.forEach((g, gi) => g.querySelectorAll('input').forEach((inp) => {
+        const kan = varianten.some((v) => v.available && v.options[gi] === inp.value && v.options.every((o, oi) => oi === gi || o === gekozen[oi] || gekozen[oi] == null));
+        inp.parentElement.classList.toggle('is-op', !kan);
+      }));
+    };
+    const label = (s) => { if (tekst) tekst.textContent = s; };
+    if (varianten.length && groepen.length) {
+      form.addEventListener('change', (e) => {
+        if (!e.target.matches('.tt-koop__optie input')) return;
+        const gekozen = kies();
+        const v = varianten.find((x) => x.options.every((o, i) => o === gekozen[i]));
+        markeer();
+        groepen.forEach((g) => { const s = g.querySelector('[data-tt-gekozen]'); const c = g.querySelector('input:checked'); if (s && c) s.textContent = c.value; });
+        if (!v) { knop.disabled = true; label('Niet beschikbaar'); return; }
+        id.value = v.id; knop.disabled = !v.available;
+        label(v.available ? 'In winkelwagen' : 'Uitverkocht');
+        sectie.querySelectorAll('[data-tt-prijs-nu], .tt-balk__naam span').forEach((el) => { el.textContent = geld(v.price); });
+        was.forEach((el) => { el.hidden = !(v.compare_at_price > v.price); if (v.compare_at_price > v.price) el.textContent = geld(v.compare_at_price); });
+        try { const u = new URL(location.href); u.searchParams.set('variant', v.id); history.replaceState(history.state, '', u); } catch (err) { /* geen url */ }
+        if (gal && v.featured_media) { const i = gal.dias.findIndex((d) => d.dataset.mediaId === String(v.featured_media.id)); if (i > -1) gal.naar(i); }
+      });
+      markeer();
+    }
+    /* aantal: min en plus */
+    form.querySelectorAll('[data-tt-aantal]').forEach((k) => k.addEventListener('click', () => {
+      const inp = form.querySelector('input[name="quantity"]'); if (!inp) return;
+      inp.value = String(Math.max(1, (parseInt(inp.value, 10) || 1) + parseInt(k.dataset.ttAantal, 10)));
     }));
+    /* toevoegen zonder de pagina te verlaten; lukt fetch niet, dan gewoon het formulier versturen */
+    form.addEventListener('submit', async (e) => {
+      if (!window.fetch || !window.FormData || form.dataset.ttGewoon) return;
+      e.preventDefault();
+      if (knop.disabled) return;
+      const oud = tekst ? tekst.textContent : '';
+      knop.classList.add('is-bezig'); knop.setAttribute('aria-busy', 'true');
+      if (fout) { fout.hidden = true; fout.textContent = ''; }
+      try {
+        const add = ((window.routes && window.routes.cart_add_url) || '/cart/add').replace(/\.js$/, '') + '.js';
+        const r = await fetch(add, { method: 'POST', headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' }, body: new FormData(form) });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) throw Object.assign(new Error('mislukt'), { tekst: j.description || j.message });
+        knop.classList.remove('is-bezig'); knop.classList.add('is-klaar'); label('Toegevoegd');
+        setTimeout(() => { knop.classList.remove('is-klaar'); label(oud); }, 2200);
+        const cart = await fetch(((window.routes && window.routes.cart_url) || '/cart') + '.js', { headers: { Accept: 'application/json' } }).then((x) => x.json()).catch(() => null);
+        if (cart) winkelwagen(cart.item_count);
+        const img = sectie.querySelector('[data-tt-dia] img');
+        meld(j.product_title || (sectie.querySelector('h1, h2') || {}).textContent || '', j.image ? `${j.image}${j.image.includes('?') ? '&' : '?'}width=160` : (img && img.currentSrc));
+      } catch (err) {
+        knop.classList.remove('is-bezig');
+        if (err && err.tekst && fout) { fout.textContent = err.tekst; fout.hidden = false; }
+        else { form.dataset.ttGewoon = '1'; form.requestSubmit ? form.requestSubmit(knop) : form.submit(); }
+      }
+      knop.removeAttribute('aria-busy');
+    });
+    /* plakbalk: verschijnt als de koopknop uit beeld is, en verdwijnt weer bij de footer */
+    const balk = sectie.querySelector('[data-tt-balk]');
+    if (balk && 'IntersectionObserver' in window) {
+      document.body.appendChild(balk);
+      balk.querySelector('[data-tt-balkknop]').addEventListener('click', () => {
+        if (form.requestSubmit) form.requestSubmit(knop); else knop.click();
+      });
+      let voorbij = false, onder = false;
+      const zet = () => {
+        const aan = voorbij && !onder;
+        balk.classList.toggle('is-aan', aan);
+        balk.setAttribute('aria-hidden', String(!aan));
+        balk.querySelector('button').tabIndex = aan ? 0 : -1;
+      };
+      new IntersectionObserver(([e]) => { voorbij = !e.isIntersecting && e.boundingClientRect.top < 0; zet(); }).observe(knop);
+      const voet = document.querySelector('.surf-footer, footer');
+      if (voet) new IntersectionObserver(([e]) => { onder = e.isIntersecting; zet(); }).observe(voet);
+    }
+  }
+
+  /* aanraders: Shopify-aanbevelingen ophalen zodra de sectie bijna in beeld is */
+  function aanraders(scope) {
+    scope.querySelectorAll('[data-tt-aanraders][data-url]').forEach((s) => {
+      if (s.dataset.ttGeladen) return; s.dataset.ttGeladen = '1';
+      const haal = () => fetch(s.dataset.url).then((r) => r.text()).then((html) => {
+        const nieuw = new DOMParser().parseFromString(html, 'text/html').querySelector('[data-tt-aanraders] [data-tt-aanraders-lijst]');
+        if (!nieuw || !nieuw.children.length) return;
+        const lijst = s.querySelector('[data-tt-aanraders-lijst]');
+        lijst.replaceWith(nieuw);
+        s.hidden = false;
+        start(s);
+      }).catch(() => {});
+      if ('IntersectionObserver' in window) {
+        const w = new IntersectionObserver(([e]) => { if (e.isIntersecting) { w.disconnect(); haal(); } }, { rootMargin: '600px 0px' });
+        w.observe(s);
+      } else haal();
+    });
+  }
+
+  /* productkaart: de foto van de aangeklikte kaart vloeit over in de productpagina (View Transitions) */
+  document.addEventListener('click', (e) => {
+    const kaart = e.target.closest && e.target.closest('a.tt-pk');
+    if (!kaart || stil) return;
+    const img = kaart.querySelector('.tt-pk__img');
+    if (img) img.style.viewTransitionName = 'tt-productfoto';
+  });
+  addEventListener('pageshow', () => document.querySelectorAll('.tt-pk__img').forEach((i) => { i.style.viewTransitionName = ''; }));
+
+  function start(scope = document) {
+    /* collectie sorteren */
+    scope.querySelectorAll('[data-tt-sorteer]').forEach((el) => {
+      if (el.dataset.ttAan) return; el.dataset.ttAan = '1';
+      el.addEventListener('change', () => { const u = new URL(location.href); u.searchParams.set('sort_by', el.value); u.searchParams.delete('page'); location.href = u; });
+    });
     /* lijntekeningen: lengte van elke lijn meten zodat ze zichzelf kunnen tekenen */
     if (!stil) scope.querySelectorAll('.tt-teken .tt-ill path, .tt-teken .tt-ill line, .tt-teken .tt-ill circle').forEach((el) => {
       if (el.dataset.len || el.closest('defs')) return;
-      try { const l = Math.ceil(el.getTotalLength()); el.dataset.len = l; el.style.setProperty('--len', l); } catch (e) {}
+      try { const l = Math.ceil(el.getTotalLength()); el.dataset.len = l; el.style.setProperty('--len', l); } catch (e) { /* geen pad */ }
     });
-    /* kaarten kantelen een paar graden mee met de muis */
-    if (!stil && matchMedia('(hover: hover) and (pointer: fine)').matches) scope.querySelectorAll('[data-tt-kantel]').forEach((el) => {
-      if (el.dataset.ttKantelAan) return; el.dataset.ttKantelAan = '1';
-      el.addEventListener('pointermove', (e) => {
-        const r = el.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
-        el.style.transform = `perspective(900px) rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 6).toFixed(2)}deg) translateY(-4px)`;
-      });
-      el.addEventListener('pointerleave', () => { el.style.transform = ''; });
-    });
-    const doelen = scope.querySelectorAll('[data-tt-regels], .tt-onthul, .tt-in, .tt-stickerzee, .tt-teken');
-    if (stil || !('IntersectionObserver' in window)) {
-      doelen.forEach((el) => el.classList.add('is-in'));
-    } else {
-      const io = new IntersectionObserver((items) => items.forEach((e) => {
-        if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
-      }), { rootMargin: '0px 0px -10% 0px', threshold: 0.01 });
-      doelen.forEach((el) => io.observe(el));
-    }
-
-    /* 2. Tekst die volloopt: woorden splitsen */
+    /* tekst die volloopt: woorden splitsen */
     scope.querySelectorAll('[data-tt-vul]').forEach((p) => {
       if (p.dataset.ttKlaar) return;
       p.dataset.ttKlaar = '1';
@@ -57,56 +440,13 @@
       p.textContent = '';
       p.appendChild(frag);
     });
-
-    /* 3. Kopen: varianten kiezen en de plakbalk */
-    scope.querySelectorAll('[data-tt-koop]').forEach((sectie) => {
-      const form = sectie.querySelector('[data-tt-form]');
-      if (!form) return;
-      const data = form.querySelector('[data-tt-varianten]');
-      const id = form.querySelector('[data-tt-variant]');
-      const knop = form.querySelector('[data-tt-koopknop]');
-      const tekst = form.querySelector('[data-tt-knoptekst]');
-      if (data) {
-        const varianten = JSON.parse(data.textContent);
-        form.addEventListener('change', () => {
-          const gekozen = [...form.querySelectorAll('.tt-koop__optie')].map((f) => (f.querySelector('input:checked') || {}).value);
-          const v = varianten.find((x) => x.options.every((o, i) => o === gekozen[i]));
-          if (!v) { knop.disabled = true; tekst.textContent = 'Niet beschikbaar'; return; }
-          id.value = v.id; knop.disabled = !v.available;
-          tekst.textContent = v.available ? 'In winkelwagen' : 'Uitverkocht';
-          sectie.querySelectorAll('.tt-koop__prijs span, .tt-balk__naam span').forEach((el) => { el.textContent = geld(v.price); });
-        });
-      }
-      const galerij = sectie.querySelector('[data-tt-galerij]');
-      const teller = sectie.querySelector('[data-tt-teller]');
-      if (galerij && teller) {
-        galerij.addEventListener('scroll', () => {
-          const kind = galerij.firstElementChild;
-          if (!kind) return;
-          teller.textContent = String(Math.round(galerij.scrollLeft / (kind.offsetWidth + 8)) + 1);
-        }, { passive: true });
-      }
-      const balk = sectie.querySelector('[data-tt-balk]');
-      if (balk) {
-        document.body.appendChild(balk);
-        balk.querySelector('[data-tt-balkknop]').addEventListener('click', () => {
-          if (form.requestSubmit) form.requestSubmit(knop); else knop.click();
-        });
-        let zichtbaar = false;
-        const toon = () => {
-          const r = sectie.getBoundingClientRect();
-          const aan = r.bottom < 0 && document.documentElement.scrollHeight - scrollY - innerHeight > 600;
-          if (aan !== zichtbaar) {
-            zichtbaar = aan;
-            balk.classList.toggle('is-aan', aan);
-            balk.setAttribute('aria-hidden', String(!aan));
-            balk.querySelector('button').tabIndex = aan ? 0 : -1;
-          }
-        };
-        addEventListener('scroll', toon, { passive: true });
-        toon();
-      }
-    });
+    const doelen = scope.querySelectorAll(DOELEN);
+    if (!io) doelen.forEach(zichtbaar);
+    else doelen.forEach((el) => { if (!el.classList.contains('is-in')) io.observe(el); });
+    hover(scope);
+    registreer(scope);
+    scope.querySelectorAll('[data-tt-koop]').forEach(koop);
+    aanraders(scope);
   }
 
   /* 4. De maan van vanavond (eigen berekening, geen externe dienst) */
@@ -282,47 +622,4 @@
   start();
   startMaan(document); startCheck(document); startSurfcheck(document);
   document.addEventListener('shopify:section:load', (e) => { start(e.target); startMaan(e.target); startCheck(e.target); startSurfcheck(e.target); });
-
-  if (stil) return;
-
-  /* 7. Scroll: parallax en volloop-tekst */
-  let raf = 0;
-  const tick = () => {
-    raf = 0;
-    const vh = innerHeight;
-    document.querySelectorAll('[data-tt-hero]').forEach((el) => {
-      const r = el.parentElement.getBoundingClientRect();
-      if (r.bottom < 0) return;
-      const p = klem(-r.top / r.height, 0, 1);
-      el.style.translate = `0 ${(p * r.height * 0.28).toFixed(1)}px`;
-      el.style.opacity = (1 - p * 0.5).toFixed(3);
-    });
-    document.querySelectorAll('[data-tt-snelheid]').forEach((el) => {
-      const r = el.getBoundingClientRect();
-      if (r.bottom < -300 || r.top > vh + 300) return;
-      const p = (r.top + r.height / 2 - vh / 2) / vh;
-      el.style.translate = `0 ${(p * parseFloat(el.dataset.ttSnelheid) * -300).toFixed(1)}px`;
-    });
-    document.querySelectorAll('[data-tt-draai]').forEach((el) => {
-      el.style.rotate = `${(scrollY * parseFloat(el.dataset.ttDraai)).toFixed(1)}deg`;
-    });
-    document.querySelectorAll('[data-tt-schuif]').forEach((el) => {
-      const r = el.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > vh) return;
-      const deel = el.scrollWidth / 3;
-      el.style.transform = `translate3d(${(-((vh - r.top) * 0.45) % deel).toFixed(1)}px,0,0)`;
-    });
-    document.querySelectorAll('[data-tt-vul]').forEach((p) => {
-      const r = p.getBoundingClientRect();
-      const woorden = p.querySelectorAll('.tt-w');
-      const v = klem((vh * 0.85 - r.top) / (r.height + vh * 0.3), 0, 1);
-      const n = Math.round(v * woorden.length * 1.1);
-      woorden.forEach((w, i) => w.classList.toggle('is-vol', i < n));
-    });
-  };
-  const plan = () => { if (!raf) raf = requestAnimationFrame(tick); };
-  addEventListener('scroll', plan, { passive: true });
-  addEventListener('resize', plan);
-  tick();
-
 })();
