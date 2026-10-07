@@ -47,7 +47,8 @@ STIJL = {
     'draagtas-salie':         dict(deck='#D6E4F0', papier='rose'),
     'draagtas-navy':          dict(deck='#F1D9D2', lijn='#2A3A58', papier='zandpapier'),
 }
-RR = 42.0          # straal van de rail (px): hier loopt de deck naar beneden
+RR = 62.0          # breedte van de railronding (px): hier loopt de deck naar beneden
+RH = 58.0          # hoogteverschil over die ronding
 
 
 def smooth(a, b, x):
@@ -58,11 +59,11 @@ def smooth(a, b, x):
 def vorm():
     """Masker, afstand tot de rand, hoogte en normalen van het board."""
     bm = S.board_masker()
-    d = cv2.distanceTransform((bm > 0.5).astype(np.uint8), cv2.DIST_L2, 5).astype(np.float32)
+    d = cv2.distanceTransform((bm > 0.5).astype(np.uint8), cv2.DIST_L2, cv2.DIST_MASK_PRECISE).astype(np.float32)
     d = d + (bm - 0.5).clip(0, 0.5)                                   # zachte rand
     q = np.clip(d / RR, 0, 1)
-    z = RR * np.sqrt(1 - (1 - q) ** 2) + 14 * smooth(RR, 330, d)       # ronde rail + lichte bolling
-    zs = cv2.GaussianBlur(z, (0, 0), 1.6)
+    z = RH * (1 - (1 - q) ** 2.2) + 16 * smooth(RR, 330, d)           # ronde rail + lichte bolling
+    zs = cv2.GaussianBlur(z, (0, 0), 4.0)
     gy, gx = np.gradient(zs)
     gx, gy = np.clip(gx, -6, 6), np.clip(gy, -6, 6)
     n = np.dstack([-gx, -gy, np.ones_like(gx)])
@@ -74,7 +75,7 @@ def schaduwering(n, ka=0.56, glans=0.0, k=28):
     """Diffuus licht van het raam, genormaliseerd zodat een vlakke deck 1 is (+ optioneel glans)."""
     kd = 1 - ka
     nl = np.clip(n @ L, 0, 1)
-    sh = (ka + kd * nl) / (ka + kd * L[2])
+    sh = (ka + kd * nl) / (ka + kd * L[2]) * (0.82 + 0.18 * n[..., 2])    # schuin van boven gezien: iets donkerder
     if glans:
         Hv = L + np.array([0, 0, 1], np.float32); Hv /= np.linalg.norm(Hv)
         sp = np.clip(n @ Hv, 0, 1) ** k * glans
@@ -129,6 +130,9 @@ def teken_board(bm, d, n, stijl, zaad=1):
     vlek = cv2.GaussianBlur(rng.normal(0, 1, (CH // 4, CW // 4)).astype(np.float32), (0, 0), 14)
     vlek = cv2.resize(vlek / (vlek.std() + 1e-6), (CW, CH), interpolation=cv2.INTER_CUBIC) * 0.008
     fijn = cv2.GaussianBlur(rng.normal(0, 1, (CH, CW)).astype(np.float32), (0, 0), 0.8) * 0.006
+    # geschuurde finish: heel fijne krasjes in de lengte, nauwelijks zichtbaar
+    kras = cv2.GaussianBlur(rng.normal(0, 1, (CH, CW)).astype(np.float32), (0, 0), sigmaX=9, sigmaY=0.7)
+    fijn = fijn + kras / (kras.std() + 1e-6) * 0.004
     lum = deck.mean()
     dubbel = 1 + 0.35 * smooth(14, 0, d)
     kleur = (lum + (deck - lum) * dubbel[..., None]) * (1 + vlek + fijn)[..., None]
@@ -147,12 +151,36 @@ def teken_board(bm, d, n, stijl, zaad=1):
     hout = np.array([0.66, 0.50, 0.34], np.float32) * (0.94 + 0.06 * np.sin(xx / 13.0))[..., None]
     kleur = kleur * (1 - 0.85 * s[..., None]) + hout * 0.85 * s[..., None]
     # potlood bij de staart, naast de stringer; klein shapersteken eronder
-    x0 = int(S.BX0 + S.LB * 0.875)
+    x0 = int(S.BX0 + S.LB * 0.80)
+    font = cv2.FONT_HERSHEY_SCRIPT_SIMPLEX
+    bt = cv2.getTextSize("7'2 x 22 x 2", font, 16 / 22.0, 1)[0][0]
     kleur = potlood(kleur, [("7'2 x 22 x 2", 0)], x0, int(BY - 40), hoogte=16)
-    kleur = potlood(kleur, [("3/4", 0)], x0 + 148, int(BY - 48), hoogte=10, zaad=6)
-    kleur = potlood(kleur, [("#0412", 0)], x0 + 40, int(BY + 6), hoogte=13, zaad=7)
+    kleur = potlood(kleur, [("3/4", 0)], x0 + bt + 4, int(BY - 47), hoogte=10, zaad=6)
+    kleur = potlood(kleur, [("#0412", 0)], x0 + 44, int(BY + 6), hoogte=13, zaad=7)
     kleur = golfje(kleur, x0 + 4, int(BY + 14))
     return np.clip(kleur, 0, 1)
+
+
+def zandkorrels(beeld, bm, d, zaad=4, aantal=110):
+    """Een paar zandkorrels op de deck, vooral langs de rails en bij de staart (echt strand)."""
+    rng = np.random.default_rng(zaad)
+    zand = np.asarray(Image.open(ST.ZAND).convert('RGB')).astype(np.float32) / 255
+    kleuren = zand.reshape(-1, 3)[rng.integers(0, zand.shape[0] * zand.shape[1], 4000)]
+    ys, xs = np.where((bm > 0.99) & (d > 6) & (d < 110))
+    staart = (xs - S.BX0) / S.LB
+    w = np.exp(-d[ys, xs] / 35.0) + 0.6 * smooth(0.75, 0.95, staart) + 0.05
+    kies = rng.choice(len(ys), aantal, p=w / w.sum())
+    korrel = np.zeros(beeld.shape[:2], np.float32)
+    kk = np.zeros_like(beeld)
+    for i in kies:
+        y, x = ys[i], xs[i]
+        r = rng.uniform(0.7, 1.3)
+        c = kleuren[rng.integers(0, len(kleuren))] * np.array([0.92, 0.84, 0.72]) * rng.uniform(0.75, 1.0)
+        cv2.circle(korrel, (int(x * 4), int(y * 4)), int(r * 4), 1, -1, cv2.LINE_AA, shift=2)
+        cv2.circle(kk, (int(x * 4), int(y * 4)), int(r * 4 + 4), tuple(float(v) for v in c), -1, cv2.LINE_AA, shift=2)
+    sch = verschuif(korrel, 1.2, 0.9)
+    beeld = beeld * (1 - 0.35 * sch[..., None] * (1 - korrel[..., None]))
+    return beeld * (1 - korrel[..., None]) + kk * korrel[..., None]
 
 
 # ---------------------------------------------------------------- tas op het board
@@ -181,9 +209,10 @@ def bouw(handle):
     stijl = STIJL[handle]
     yy, xx = np.mgrid[0:CH, 0:CW].astype(np.float32)
     bm, d, n = vorm()
-    sh_d, spec = schaduwering(n, glans=0.07)
+    sh_d, spec = schaduwering(n, glans=0.10, k=22)
     board = teken_board(bm, d, n, stijl)
     board = np.clip(board * sh_d[..., None] + spec[..., None], 0, 1)
+    board = zandkorrels(board, bm, d)
 
     # stof: zelfde maten als scene.py, zoom alleen op de echte (schuine) randen van het vak
     hoeken = S.paneel_hoeken()
@@ -197,7 +226,7 @@ def bouw(handle):
     pm = pm * overhang
     # stof krijgt hetzelfde licht als de deck, plus wat minder hemellicht waar hij om de rail valt
     sh_s = schaduwering(n, ka=0.6)
-    ao = 0.9 + 0.1 * smooth(0, 55, d)
+    ao = 0.8 + 0.2 * smooth(0, 70, d)
     laag = laag * (sh_s * ao)[..., None]
     # randje schaduw van de dikke zoom op het board
     ps = verschuif(pm, 2.5, 2.2)
@@ -216,6 +245,10 @@ def bouw(handle):
     op_board = np.where(yy < BY, 1.0, 0.0) * 0 + bm                         # deel op het board
     zicht = np.where(yy < BY, 1.0, bm)                                       # onder de middellijn: om de rail naar de onderkant
     bmk = bmk * zicht
+    # dikte van de webbing: het randje naar het raam vangt licht, de andere kant is donkerder
+    gy, gx = np.gradient(cv2.GaussianBlur(bmk, (0, 0), 1.2))
+    naar_licht = -(gx * -SCH[0] + gy * -SCH[1])                      # >0 op de rand die naar het raam kijkt
+    bb = np.clip(bb * (1 + 0.9 * np.clip(naar_licht, 0, 0.3) - 1.4 * np.clip(-naar_licht, 0, 0.3))[..., None], 0, 1)
     sh_b, sp_b = schaduwering(n, ka=0.58, glans=0.035, k=18)
     sh_b = np.where(bm > 0.02, sh_b, 1.0)
     sp_b = np.where(bm > 0.02, sp_b, 0.0)
@@ -241,6 +274,23 @@ def staand(rgba):
 
 
 # ---------------------------------------------------------------- foto's
+def zand(zaad=0):
+    """stijl.achtergrond('zand'), met de allerfijnste korrel iets zachter (scherptediepte, en de jpg blijft klein)."""
+    z = ST.achtergrond('zand')
+    laag = cv2.GaussianBlur(z, (0, 0), 1.0)
+    return laag + (z - laag) * 0.6
+
+
+def bewaar(img, pad, max_kb=190):
+    """Altijd 1600 x 2000: alleen de kwaliteit zakt tot het bestand onder max_kb is."""
+    pad = pathlib.Path(pad)
+    im = Image.fromarray((np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8))
+    for q in range(90, 39, -2):
+        im.save(pad, quality=q, optimize=True, progressive=True)
+        if pad.stat().st_size < max_kb * 1000:
+            break
+    return q
+
 def zand_detail(schaal, zaad=0):
     """Zelfde zand als stijl.achtergrond('zand'), maar uit de volle resolutie voor close-ups."""
     img = np.asarray(Image.open(ZAND_HR).convert('RGB')).astype(np.float32) / 255
@@ -254,12 +304,39 @@ def zand_detail(schaal, zaad=0):
     return np.clip(img * ST._licht(), 0, 1)
 
 
+def alfa_op_doek(rgba, schaal, midden, doek):
+    """Zelfde plaatsing als stijl.leg, alleen het masker."""
+    h, w = rgba.shape[:2]
+    M = cv2.getRotationMatrix2D((w / 2, h / 2), 0, schaal)
+    M[0, 2] += midden[0] - w / 2
+    M[1, 2] += midden[1] - h / 2
+    return cv2.warpAffine(np.ascontiguousarray(rgba[..., 3]), M, (doek.shape[1], doek.shape[0]), flags=cv2.INTER_AREA)
+
+
+def slagschaduw(doek, a, lagen):
+    """Extra schaduw in dezelfde richting als stijl.LICHT: lagen = [(afstand, blur, sterkte), ...]."""
+    tot = np.zeros(a.shape, np.float32)
+    for afstand, blur, sterkte in lagen:
+        dx, dy = ST.LICHT / np.linalg.norm(ST.LICHT) * afstand
+        s = cv2.warpAffine(a, np.float32([[1, 0, dx], [0, 1, dy]]), (a.shape[1], a.shape[0]))
+        tot = np.maximum(tot, cv2.GaussianBlur(s, (0, 0), blur) * sterkte)
+    return doek * (1 - tot[..., None] * (1 - a[..., None]))
+
+
 def foto(doek, rgba_board, rgba_lus, cx, cy, schaal, board_hoogte=20):
     """Leg lus en board op de ondergrond; (cx, cy) = punt in het liggende canvas dat in het midden komt."""
     hb, wb = CW, CH                                    # staand formaat van de lagen
     px, py = CH - cy, cx                               # dat punt in het staande canvas
     midden = (ST.B / 2 + (wb / 2 - px) * schaal, ST.H / 2 + (hb / 2 - py) * schaal)
-    doek = ST.leg(doek, staand(rgba_lus), breedte=wb * schaal, midden=midden, hoogte=1.6 * schaal / 0.93, contact=0.6)
+    k = schaal / 0.93
+    rl, rb = staand(rgba_lus), staand(rgba_board)
+    # band op de grond: dikte (licht randje linksboven, donker rechtsonder) en een echte contactschaduw
+    a_l = alfa_op_doek(rl, schaal, midden, doek)
+    doek = slagschaduw(doek, a_l, [(1.5 * k, 1.3 * k, 0.55), (5 * k, 5 * k, 0.28)])
+    doek = ST.leg(doek, rl, breedte=wb * schaal, midden=midden, hoogte=1.6 * k, contact=0.6)
+    # board: ligt op zijn bolle onderkant, de rails los van het zand -> donkere spleet en een zachte slagschaduw
+    a_b = alfa_op_doek(rb, schaal, midden, doek)
+    doek = slagschaduw(doek, a_b, [(3 * k, 3 * k, 0.5), (14 * k, 12 * k, 0.32), (40 * k, 34 * k, 0.26)])
     doek = ST.leg(doek, staand(rgba_board), breedte=wb * schaal, midden=midden, hoogte=board_hoogte * schaal / 0.93,
                   zachtheid=0.9, contact=0.7)
     return doek
@@ -271,7 +348,7 @@ def maak_alles(handle):
     uit = []
     # 1: hero op zand, stringer in het midden, hele lus in beeld
     s1 = ST.B / 1720
-    uit.append(foto(ST.achtergrond('zand'), rb, rl, XM, BY, s1))
+    uit.append(foto(zand(), rb, rl, XM, BY, s1))
     # 2: heel board op fotopapier in een merkkleur
     s2 = ST.H / 2900 * 0.97
     uit.append(foto(ST.achtergrond(stijl['papier'], zaad=3), rb, rl, XM, BY - 40, s2))
@@ -282,12 +359,12 @@ def maak_alles(handle):
     s4 = ST.B / 1000
     uit.append(foto(zand_detail(s4 / s1, zaad=2), rb, rl, XM + 300, 880, s4))
     for i, img in enumerate(uit, 1):
-        ST.bewaar(ST.afwerking(img, zaad=7 + i), DOEL / f'{handle}-{i}.jpg')
+        bewaar(ST.afwerking(img, zaad=7 + i), DOEL / f'{handle}-{i}.jpg')
     if handle == 'draagtas-tegel':
         for i in (1, 2, 3):
             img = np.asarray(Image.open(DOEL / f'{handle}-{i}.jpg')).astype(np.float32) / 255
-            ST.bewaar(img, THEMA / f'tt-product-{i}.jpg')
-            ST.bewaar(cv2.resize(img, (800, 1000), interpolation=cv2.INTER_AREA), THEMA / f'tt-product-{i}-800.jpg')
+            bewaar(img, THEMA / f'tt-product-{i}.jpg')
+            bewaar(cv2.resize(img, (800, 1000), interpolation=cv2.INTER_AREA), THEMA / f'tt-product-{i}-800.jpg')
 
 
 if __name__ == '__main__':
