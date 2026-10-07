@@ -1,0 +1,149 @@
+{%- assign sorteer = collection.sort_by | default: collection.default_sort_by -%}
+<section class="tt tt-col tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap">
+    <header class="tt-col__kop">
+      <h1 class="tt-kop tt-kop--l">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}<div class="tt-col__intro">{{ collection.description }}</div>{%- endif -%}
+    </header>
+    {%- if section.blocks.size > 0 -%}
+    <nav class="tt-col__nav" aria-label="Collecties">
+      {%- for block in section.blocks -%}
+        {%- assign doel = routes.collections_url | append: '/' | append: block.settings.handle -%}
+        <a href="{{ doel }}" {{ block.shopify_attributes }}{% if collection.handle == block.settings.handle %} aria-current="page"{% endif %}>{{ block.settings.label }}</a>
+      {%- endfor -%}
+    </nav>
+    {%- endif -%}
+    <div class="tt-col__balk">
+      <p>{{ collection.products_count }} {% if collection.products_count == 1 %}product{% else %}producten{% endif %}</p>
+      {%- if collection.sort_options.size > 0 -%}
+      <label class="tt-col__sort"><span>Sorteer</span>
+        <select data-tt-sorteer>
+          {%- for o in collection.sort_options -%}<option value="{{ o.value }}"{% if o.value == sorteer %} selected{% endif %}>{{ o.name }}</option>{%- endfor -%}
+        </select>
+      </label>
+      {%- endif -%}
+    </div>
+    {%- paginate collection.products by section.settings.per_pagina -%}
+      <ul class="tt-col__grid">
+        {%- for product in collection.products -%}
+          <li class="tt-in" style="--d: {{ forloop.index0 | modulo: 4 | times: 0.08 }}s">
+            {%- if forloop.index < 5 -%}{%- render 'tt-productkaart', p: product, laden: 'eager' -%}{%- else -%}{%- render 'tt-productkaart', p: product -%}{%- endif -%}
+          </li>
+        {%- else -%}
+          <li class="tt-col__leeg">Er staan nog geen producten in deze collectie. <a href="{{ routes.all_products_collection_url }}">Bekijk alles</a></li>
+        {%- endfor -%}
+      </ul>
+      {%- if paginate.pages > 1 -%}<nav class="tt-col__paginas" aria-label="Pagina's">{{ paginate | default_pagination: next: 'Volgende', previous: 'Vorige' }}</nav>{%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: collectie",
+  "tag": "div",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "papier",
+          "label": "Papier"
+        },
+        {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        }
+      ],
+      "default": "creme"
+    },
+    {
+      "type": "range",
+      "id": "per_pagina",
+      "label": "Producten per pagina",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Collectieknop",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Tekst",
+          "default": "Alles"
+        },
+        {
+          "type": "text",
+          "id": "handle",
+          "label": "Handle van de collectie",
+          "default": "all"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: collectie",
+      "blocks": [
+        {
+          "type": "link",
+          "settings": {
+            "label": "Alles",
+            "handle": "all"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Draagtassen",
+            "handle": "draagtassen"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Surfgear",
+            "handle": "surfgear"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Kleding en merch",
+            "handle": "kleding-en-merch"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

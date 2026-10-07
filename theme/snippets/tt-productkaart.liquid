@@ -1,0 +1,24 @@
+{%- comment -%}
+  Productkaart in de Tide-Tode stijl. Tweede foto verschijnt bij hover.
+  Gebruik: {% render 'tt-productkaart', p: product, laden: 'lazy' %}
+{%- endcomment -%}
+{%- assign laad = laden | default: 'lazy' -%}
+<a class="tt-pk" href="{{ p.url }}">
+  <span class="tt-pk__beeld">
+    {%- if p.featured_media -%}
+      {%- assign alt1 = p.featured_media.alt | default: p.title -%}
+      {{ p.featured_media | image_url: width: 900 | image_tag: loading: laad, sizes: '(min-width: 990px) 25vw, 50vw', widths: '360, 540, 720, 900', class: 'tt-pk__img', alt: alt1 }}
+      {%- if p.media.size > 1 -%}
+        {%- assign tweede = p.media[1] -%}
+        {{ tweede | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 25vw, 50vw', widths: '360, 540, 720, 900', class: 'tt-pk__img tt-pk__img--2', alt: '' }}
+      {%- endif -%}
+    {%- else -%}
+      <span class="tt-pk__leeg">{%- render 'tt-logo', variant: 'maan-simpel' -%}</span>
+    {%- endif -%}
+    {%- unless p.available -%}<span class="tt-pk__label">Uitverkocht</span>{%- endunless -%}
+  </span>
+  <span class="tt-pk__info">
+    <span class="tt-pk__titel">{{ p.title }}</span>
+    <span class="tt-pk__prijs">{%- if p.price_varies -%}Vanaf {% endif -%}{{ p.price | money }}</span>
+  </span>
+</a>

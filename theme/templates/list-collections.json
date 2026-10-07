@@ -1,17 +1,50 @@
 {
   "sections": {
-    "main": {
-      "type": "main-list-collections",
-      "settings": {
-        "title": "Collections",
-        "sort": "alphabetical",
-        "image_ratio": "square",
-        "columns_desktop": 3,
-        "columns_mobile": "2"
-      }
+    "collecties": {
+      "type": "tt-collecties",
+      "settings": {},
+      "blocks": {
+        "collectie-1": {
+          "type": "collectie",
+          "settings": {
+            "label": "Draagtassen",
+            "handle": "draagtassen",
+            "kleur": "baby",
+            "ill": "draagtas"
+          }
+        },
+        "collectie-2": {
+          "type": "collectie",
+          "settings": {
+            "label": "Surfgear",
+            "handle": "surfgear",
+            "kleur": "rose",
+            "ill": "golf"
+          }
+        },
+        "collectie-3": {
+          "type": "collectie",
+          "settings": {
+            "label": "Kleding en merch",
+            "handle": "kleding-en-merch",
+            "kleur": "zand",
+            "ill": "busje"
+          }
+        }
+      },
+      "block_order": [
+        "collectie-1",
+        "collectie-2",
+        "collectie-3"
+      ]
+    },
+    "patroon": {
+      "type": "tt-patroon",
+      "settings": {}
     }
   },
   "order": [
-    "main"
+    "collecties",
+    "patroon"
   ]
 }

@@ -409,34 +409,50 @@ for p in P:
             alt = b[3]
         p['bestanden'].append((naam + '.jpg', alt))
 
-# ---------- csv ----------
-KOP = ['Handle', 'Title', 'Body (HTML)', 'Vendor', 'Product Category', 'Type', 'Tags', 'Published', 'Option1 Name', 'Option1 Value',
-       'Variant SKU', 'Variant Grams', 'Variant Inventory Tracker', 'Variant Inventory Qty', 'Variant Inventory Policy', 'Variant Fulfillment Service',
-       'Variant Price', 'Variant Compare At Price', 'Variant Requires Shipping', 'Variant Taxable', 'Image Src', 'Image Position', 'Image Alt Text',
-       'Gift Card', 'SEO Title', 'SEO Description', 'Variant Weight Unit', 'Status']
+# ---------- csv (zelfde kolommen als de Shopify-voorbeeldcsv) ----------
+KOP = ['Title', 'URL handle', 'Description', 'Vendor', 'Product category', 'Type', 'Tags', 'Published on online store', 'Status', 'SKU', 'Variant Barcodes',
+       'Option1 name', 'Option1 value', 'Option1 Linked To', 'Option2 name', 'Option2 value', 'Option2 Linked To', 'Option3 name', 'Option3 value', 'Option3 Linked To',
+       'Price', 'Compare-at price', 'Cost per item', 'Charge tax', 'Tax code', 'Unit price total measure', 'Unit price total measure unit', 'Unit price base measure',
+       'Unit price base measure unit', 'Inventory tracker', 'Inventory quantity', 'Continue selling when out of stock', 'Weight value (grams)', 'Weight unit for display',
+       'Requires shipping', 'Fulfillment service', 'Product image URL', 'Image position', 'Image alt text', 'Variant image URL', 'Gift card', 'SEO title', 'SEO description',
+       'Color (product.metafields.shopify.color-pattern)', 'Google Shopping / Google product category', 'Google Shopping / Gender', 'Google Shopping / Age group',
+       'Google Shopping / Manufacturer part number (MPN)', 'Google Shopping / Ad group name', 'Google Shopping / Ads labels', 'Google Shopping / Condition',
+       'Google Shopping / Custom product', 'Google Shopping / Custom label 0', 'Google Shopping / Custom label 1', 'Google Shopping / Custom label 2',
+       'Google Shopping / Custom label 3', 'Google Shopping / Custom label 4', 'Packed product length', 'Packed product width', 'Packed product height', 'Packed product dimension unit']
+SURF = 'Sporting Goods > Outdoor Recreation > Boating & Water Sports > Surfing'
+TSHIRT = 'Apparel & Accessories > Clothing > Clothing Tops > T-Shirts'
+CATEGORIE = {'Draagtas': SURF, 'Surfwax': SURF, 'Surfgear': SURF, 'T-shirt': TSHIRT, 'Longsleeve': TSHIRT}
+DOOS = {'Draagtas': (60, 35, 6), 'Surfwax': (10, 6, 3), 'Surfgear': (14, 10, 3), 'Stickers': (16, 12, 1), 'T-shirt': (30, 22, 3), 'Longsleeve': (30, 22, 4),
+        'UV-shirt': (30, 22, 3), 'Hoodie': (35, 28, 8), 'Poncho': (40, 30, 10), 'Pet': (25, 20, 12), 'Hoed': (25, 25, 10), 'Handdoek': (40, 30, 8), 'Tas': (35, 25, 3)}
+KLEDING_TYPES = ('T-shirt', 'Longsleeve', 'UV-shirt', 'Hoodie', 'Poncho', 'Pet', 'Hoed')
 rijen = []
 for p in P:
     tags = ', '.join(p['tags'] + [p['collectie']])
     maten = p.get('maten') or [None]
+    doos = DOOS.get(p['type'], (30, 20, 5))
     for vi, maat in enumerate(maten):
         r = dict.fromkeys(KOP, '')
-        r['Handle'] = p['handle']
+        r['URL handle'] = p['handle']
         if vi == 0:
-            r.update({'Title': p['titel'], 'Body (HTML)': p['tekst'], 'Vendor': 'Tide-Tode', 'Type': p['type'], 'Tags': tags, 'Published': 'TRUE',
-                      'Gift Card': 'FALSE', 'SEO Title': p['seo_titel'], 'SEO Description': p['seo_tekst'], 'Status': 'active'})
-        r['Option1 Name'] = 'Maat' if maat else 'Title'
-        r['Option1 Value'] = maat or 'Default Title'
-        r.update({'Variant SKU': 'TT-' + p['handle'].upper() + (f'-{maat}' if maat else ''), 'Variant Grams': p['gram'], 'Variant Inventory Tracker': 'shopify',
-                  'Variant Inventory Qty': 25, 'Variant Inventory Policy': 'deny', 'Variant Fulfillment Service': 'manual', 'Variant Price': p['prijs'],
-                  'Variant Requires Shipping': 'TRUE', 'Variant Taxable': 'TRUE', 'Variant Weight Unit': 'g'})
+            r.update({'Title': p['titel'], 'Description': p['tekst'], 'Vendor': 'Tide-Tode', 'Product category': CATEGORIE.get(p['type'], ''), 'Type': p['type'],
+                      'Tags': tags, 'Published on online store': 'TRUE', 'Status': 'Active', 'Gift card': 'FALSE', 'SEO title': p['seo_titel'], 'SEO description': p['seo_tekst'],
+                      'Google Shopping / Google product category': CATEGORIE.get(p['type'], ''), 'Google Shopping / Condition': 'New', 'Google Shopping / Custom product': 'FALSE',
+                      'Google Shopping / Custom label 0': p['collectie']})
+            if p['type'] in KLEDING_TYPES:
+                r.update({'Google Shopping / Gender': 'Unisex', 'Google Shopping / Age group': 'Adult (13+ years old)'})
+            r.update({'Option1 name': 'Maat' if maat else 'Title'})
+        r.update({'Option1 value': maat or 'Default Title', 'SKU': 'TT-' + p['handle'].upper() + (f'-{maat}' if maat else ''),
+                  'Price': p['prijs'], 'Charge tax': 'TRUE', 'Inventory tracker': 'shopify', 'Inventory quantity': 25, 'Continue selling when out of stock': 'DENY',
+                  'Weight value (grams)': p['gram'], 'Weight unit for display': 'g', 'Requires shipping': 'TRUE', 'Fulfillment service': 'manual',
+                  'Packed product length': doos[0], 'Packed product width': doos[1], 'Packed product height': doos[2], 'Packed product dimension unit': 'cm'})
         if vi < len(p['bestanden']):
             f, alt = p['bestanden'][vi]
-            r.update({'Image Src': RAW + f, 'Image Position': vi + 1, 'Image Alt Text': alt})
+            r.update({'Product image URL': RAW + f, 'Image position': vi + 1, 'Image alt text': alt})
         rijen.append(r)
     for bi in range(len(maten), len(p['bestanden'])):
         f, alt = p['bestanden'][bi]
         r = dict.fromkeys(KOP, '')
-        r.update({'Handle': p['handle'], 'Image Src': RAW + f, 'Image Position': bi + 1, 'Image Alt Text': alt})
+        r.update({'URL handle': p['handle'], 'Product image URL': RAW + f, 'Image position': bi + 1, 'Image alt text': alt})
         rijen.append(r)
 with open(DOCS / 'producten.csv', 'w', newline='', encoding='utf-8') as fh:
     w = csv.DictWriter(fh, fieldnames=KOP)

@@ -1052,3 +1052,49 @@ body { font-family: var(--tt-tekst); }
 .tt-tekst__inhoud thead th { background: var(--tt-deep); color: var(--tt-creme); font: 700 11px var(--tt-tekst); letter-spacing: .18em; text-transform: uppercase; }
 
 .tt-maat .tt-knop { width: auto; display: inline-flex; }
+
+/* footer: credit rechts */
+.surf-footer__credit { margin-left: auto; }
+.surf-footer__credit .creajt-credit { font-size: 12.5px; line-height: 1; }
+
+/* ===== Collecties en productkaarten ===== */
+.tt-col, .tt-cols { padding: clamp(110px, 12vw, 160px) 0 clamp(64px, 8vw, 110px); }
+.tt-col__kop { display: grid; gap: 14px; max-width: 760px; }
+.tt-col__intro { font: 400 15px/1.6 var(--tt-tekst); }
+.tt-col__nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 30px; }
+.tt-col__nav a { padding: 11px 18px; border: 1.5px solid var(--tt-deep); border-radius: 999px; color: var(--tt-deep); font: 700 12px var(--tt-tekst); letter-spacing: .16em; text-transform: uppercase; text-decoration: none; transition: background .3s, color .3s; }
+.tt-col__nav a:hover, .tt-col__nav a[aria-current] { background: var(--tt-deep); color: var(--tt-creme); }
+.tt-col__balk { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin: 34px 0 22px; padding-bottom: 14px; border-bottom: 1px solid rgba(34, 50, 79, .16); font: 700 12px var(--tt-tekst); letter-spacing: .16em; text-transform: uppercase; }
+.tt-col__sort { display: flex; align-items: center; gap: 10px; }
+.tt-col__sort select { appearance: none; border: 0; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2322324F' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right center; padding: 4px 18px 4px 0; color: var(--tt-deep); font: 700 12px var(--tt-tekst); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.tt-col__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(28px, 3vw, 44px) clamp(12px, 1.6vw, 24px); }
+.tt-col__leeg { grid-column: 1 / -1; font: 400 15px/1.6 var(--tt-tekst); }
+.tt-col__paginas { margin-top: 50px; display: flex; justify-content: center; gap: 10px; font: 700 13px var(--tt-tekst); letter-spacing: .12em; }
+.tt-col__paginas a, .tt-col__paginas span { padding: 8px 12px; color: var(--tt-deep); }
+.tt-col__paginas .current { background: var(--tt-deep); color: var(--tt-creme); }
+@media (max-width: 989px) { .tt-col__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 749px) { .tt-col__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tt-col__balk { flex-wrap: wrap; } }
+
+.tt-pk { display: grid; gap: 14px; color: var(--tt-deep); text-decoration: none; }
+.tt-pk__beeld { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; background: #EFE5D3; }
+.tt-pk__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .6s var(--tt-ease), transform 1.2s var(--tt-ease); }
+.tt-pk__img--2 { opacity: 0; }
+.tt-pk:hover .tt-pk__img--2 { opacity: 1; }
+.tt-pk:hover .tt-pk__img { transform: scale(1.04); }
+.tt-pk__leeg { position: absolute; inset: 0; display: grid; place-items: center; }
+.tt-pk__leeg svg { width: 22%; height: auto; fill: var(--tt-deep); opacity: .4; }
+.tt-pk__label { position: absolute; left: 12px; top: 12px; padding: 7px 12px; border-radius: 999px; background: var(--tt-deep); color: var(--tt-creme); font: 700 10.5px var(--tt-tekst); letter-spacing: .16em; text-transform: uppercase; }
+.tt-pk__info { display: grid; gap: 6px; }
+.tt-pk__titel { font: 700 13px/1.35 var(--tt-tekst); letter-spacing: .14em; text-transform: uppercase; }
+.tt-pk__prijs { font: 400 14px var(--tt-tekst); }
+.tt-pk:hover .tt-pk__titel { text-decoration: underline; text-underline-offset: 4px; }
+
+.tt-cols__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 1.6vw, 24px); margin-top: clamp(28px, 3vw, 44px); }
+.tt-cols__tegel { display: grid; gap: 10px; padding: clamp(18px, 2vw, 28px); color: var(--tt-deep); text-decoration: none; }
+.tt-cols__tegel--baby { background: var(--tt-baby); } .tt-cols__tegel--rose { background: var(--tt-rose); } .tt-cols__tegel--zand { background: #E3CFAE; }
+.tt-cols__beeld { display: grid; place-items: center; aspect-ratio: 4 / 5; overflow: hidden; background: rgba(251, 247, 239, .55); }
+.tt-cols__beeld img { width: 100%; height: 100%; object-fit: cover; }
+.tt-cols__beeld .tt-ill { width: 70%; height: auto; color: var(--tt-deep); }
+.tt-cols__naam { font: 400 clamp(24px, 2.4vw, 34px)/1 var(--tt-display); letter-spacing: .03em; text-transform: uppercase; margin-top: 8px; }
+.tt-cols__aantal { font: 700 11px var(--tt-tekst); letter-spacing: .18em; text-transform: uppercase; }
+@media (max-width: 749px) { .tt-cols__grid { grid-template-columns: 1fr; } }

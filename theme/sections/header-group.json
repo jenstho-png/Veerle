@@ -12,12 +12,16 @@
           "type": "tab",
           "settings": {
             "label": "Shop",
-            "link": "shopify://collections/all",
-            "dd1_label": "De draagtas",
-            "dd1_link": "shopify://collections/all",
-            "dd2_label": "Accessoires",
-            "dd2_link": "shopify://collections/all",
-            "dd_all_label": "Alles bekijken"
+            "link": "/collections",
+            "dd1_label": "Draagtassen",
+            "dd1_link": "/collections/draagtassen",
+            "dd2_label": "Surfgear",
+            "dd2_link": "/collections/surfgear",
+            "dd_all_label": "Alles bekijken",
+            "dd3_label": "Kleding en merch",
+            "dd3_link": "/collections/kleding-en-merch",
+            "dd4_label": "Maatwijzer",
+            "dd4_link": "/pages/maatwijzer"
           }
         },
         "tab-2": {

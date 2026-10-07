@@ -16,6 +16,10 @@ engine.registerTag('form', {
   parse(tk, remain) { this.tpls = []; const s = this.liquid.parser.parseStream(remain); s.on('tag:endform', () => s.stop()).on('template', (t) => this.tpls.push(t)); s.start(); },
   *render(ctx, emitter) { ctx.push({ form: { posted_successfully: false } }); emitter.write('<form method="post">'); yield this.liquid.renderer.renderTemplates(this.tpls, ctx, emitter); emitter.write('</form>'); ctx.pop(); },
 });
+engine.registerTag('paginate', {
+  parse(tk, remain) { this.tpls = []; const s = this.liquid.parser.parseStream(remain); s.on('tag:endpaginate', () => s.stop()).on('template', (t) => this.tpls.push(t)); s.start(); },
+  *render(ctx, emitter) { ctx.push({ paginate: { pages: 1 } }); yield this.liquid.renderer.renderTemplates(this.tpls, ctx, emitter); ctx.pop(); },
+});
 engine.registerTag('style', {
   parse(tk, remain) { this.tpls = []; const s = this.liquid.parser.parseStream(remain); s.on('tag:endstyle', () => s.stop()).on('template', (t) => this.tpls.push(t)); s.start(); },
   *render(ctx, emitter) { emitter.write('<style>'); yield this.liquid.renderer.renderTemplates(this.tpls, ctx, emitter); emitter.write('</style>'); },
@@ -23,7 +27,7 @@ engine.registerTag('style', {
 const F = {
   asset_url: (s) => s, image_url: (i) => i?.src || i, money: (c) => `€${(c / 100).toFixed(2).replace('.', ',')}`, money_without_trailing_zeros: (c) => `€${(c / 100).toFixed(2).replace('.00', '').replace('.', ',')}`,
   json: (v) => JSON.stringify(v ?? null), t: (k) => k, stylesheet_tag: (u) => `<link rel="stylesheet" href="${u}">`,
-  image_tag: (src, ...a) => `<img src="${src}" alt="">`, payment_type_svg_tag: () => '', payment_button: () => '<div class="shopify-payment-button"><button class="shopify-payment-button__button" style="width:100%;background:#5a31f4;color:#fff;border:0;padding:18px">Koop met Shop Pay</button></div>', divided_by: (a, b) => a / b, prepend: (a, b) => b + a, strip_html: (s) => String(s || '').replace(/<[^>]+>/g, ''), strip_newlines: (s) => String(s || '').replace(/\n/g, ''),
+  image_tag: (src, ...a) => { const kv = Object.fromEntries(a.filter(Array.isArray)); return `<img src="${src}" alt="${kv.alt || ''}" class="${kv.class || ''}" loading="${kv.loading || 'lazy'}">`; }, payment_type_svg_tag: () => '', payment_button: () => '<div class="shopify-payment-button"><button class="shopify-payment-button__button" style="width:100%;background:#5a31f4;color:#fff;border:0;padding:18px">Koop met Shop Pay</button></div>', divided_by: (a, b) => a / b, prepend: (a, b) => b + a, strip_html: (s) => String(s || '').replace(/<[^>]+>/g, ''), strip_newlines: (s) => String(s || '').replace(/\n/g, ''),
   preload_tag: (u) => `<link rel="preload" href="${u}" as="image">`,
   placeholder_svg_tag: (n, cls) => `<svg class="${cls || ''}" viewBox="0 0 10 10"></svg>`,
 };
@@ -108,4 +112,21 @@ globals.page = { title: 'Maatwijzer', content: '<p>Hier lees je welke boards in 
 await page('maatwijzer', 'page.maatwijzer.json', { request: { page_type: 'page', path: '/pages/maatwijzer' } });
 globals.page = { title: 'Actie', content: '' };
 await page('actie', 'page.actie.json', { request: { page_type: 'page', path: '/pages/actie' } });
+// collectie met de producten uit de csv
+{
+  const B = path.resolve(T, '../docs/producten/beelden');
+  for (const f of fs.readdirSync(B)) fs.copyFileSync(`${B}/${f}`, `${OUT}/${f}`);
+  const rijen = fs.readFileSync(path.resolve(T, '../docs/producten/producten.csv'), 'utf8');
+  const prod = {};
+  for (const m of rijen.matchAll(/^([^,\n]*),([a-z0-9-]+),/gm)) if (m[1] && !prod[m[2]]) prod[m[2]] = m[1];
+  const lijst = Object.entries(prod).map(([h, t]) => ({ title: t, url: `/products/${h}`, available: true, price: 4000, price_varies: false,
+    featured_media: { src: `${h}-1.jpg`, alt: t }, media: [{ src: `${h}-1.jpg` }, { src: fs.existsSync(`${B}/${h}-3.jpg`) ? `${h}-3.jpg` : `${h}-2.jpg` }] }));
+  const col = { title: 'Alle producten', handle: 'all', description: '<p>Draagtassen, surfgear en kleding van Tide-Tode.</p>', products: lijst, products_count: lijst.length,
+    sort_options: [{ value: 'manual', name: 'Uitgelicht' }, { value: 'price-ascending', name: 'Prijs, laag naar hoog' }], default_sort_by: 'manual' };
+  globals.collection = col;
+  globals.collections = { draagtassen: { products_count: 9, products: [lijst[0]] }, surfgear: { products_count: 7 }, 'kleding-en-merch': { products_count: 11 } };
+  globals.routes.collections_url = '/collections';
+  await page('collectie', 'collection.json', { request: { page_type: 'collection', path: '/collections/all' } });
+  await page('collecties', 'list-collections.json', { request: { page_type: 'list-collections', path: '/collections' } });
+}
 console.log('rendered');

@@ -15,6 +15,10 @@
 
   function start(scope = document) {
     /* 1. In beeld komen */
+    /* collectie sorteren */
+    scope.querySelectorAll('[data-tt-sorteer]').forEach((el) => el.addEventListener('change', () => {
+      const u = new URL(location.href); u.searchParams.set('sort_by', el.value); u.searchParams.delete('page'); location.href = u;
+    }));
     /* lijntekeningen: lengte van elke lijn meten zodat ze zichzelf kunnen tekenen */
     if (!stil) scope.querySelectorAll('.tt-teken .tt-ill path, .tt-teken .tt-ill line, .tt-teken .tt-ill circle').forEach((el) => {
       if (el.dataset.len || el.closest('defs')) return;

@@ -1,0 +1,176 @@
+<section class="tt tt-cols tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap">
+    <h1 class="tt-kop tt-kop--l">{{ section.settings.heading }}</h1>
+    <ul class="tt-cols__grid">
+      {%- for block in section.blocks -%}
+        {%- assign c = collections[block.settings.handle] -%}
+        {%- assign doel = routes.collections_url | append: '/' | append: block.settings.handle -%}
+        <li class="tt-in" style="--d: {{ forloop.index0 | times: 0.1 }}s" {{ block.shopify_attributes }}>
+          <a class="tt-cols__tegel tt-cols__tegel--{{ block.settings.kleur }}" href="{{ doel }}" data-tt-kantel>
+            <span class="tt-cols__beeld">
+              {%- if c.featured_image -%}{{ c.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', alt: '' }}
+              {%- elsif c.products.first.featured_media -%}{{ c.products.first.featured_media | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', alt: '' }}
+              {%- else -%}{%- render 'tt-ill', naam: block.settings.ill -%}{%- endif -%}
+            </span>
+            <span class="tt-cols__naam">{{ block.settings.label }}</span>
+            {%- if c.products_count > 0 -%}<span class="tt-cols__aantal">{{ c.products_count }} producten</span>{%- endif -%}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: alle collecties",
+  "tag": "div",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "papier",
+          "label": "Papier"
+        },
+        {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        }
+      ],
+      "default": "creme"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "default": "Shop"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collectie",
+      "name": "Collectie",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Naam",
+          "default": "Collectie"
+        },
+        {
+          "type": "text",
+          "id": "handle",
+          "label": "Handle",
+          "default": "all"
+        },
+        {
+          "type": "select",
+          "id": "kleur",
+          "label": "Kleur",
+          "options": [
+            {
+              "value": "baby",
+              "label": "Baby"
+            },
+            {
+              "value": "rose",
+              "label": "Rose"
+            },
+            {
+              "value": "zand",
+              "label": "Zand"
+            }
+          ],
+          "default": "baby"
+        },
+        {
+          "type": "select",
+          "id": "ill",
+          "label": "Tekening (als er nog geen foto is)",
+          "options": [
+            {
+              "value": "draagtas",
+              "label": "De draagtas"
+            },
+            {
+              "value": "golf",
+              "label": "Golf"
+            },
+            {
+              "value": "busje",
+              "label": "Busje"
+            },
+            {
+              "value": "zon",
+              "label": "Zon"
+            },
+            {
+              "value": "parasol",
+              "label": "Parasol"
+            }
+          ],
+          "default": "draagtas"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: alle collecties",
+      "blocks": [
+        {
+          "type": "collectie",
+          "settings": {
+            "label": "Draagtassen",
+            "handle": "draagtassen",
+            "kleur": "baby",
+            "ill": "draagtas"
+          }
+        },
+        {
+          "type": "collectie",
+          "settings": {
+            "label": "Surfgear",
+            "handle": "surfgear",
+            "kleur": "rose",
+            "ill": "golf"
+          }
+        },
+        {
+          "type": "collectie",
+          "settings": {
+            "label": "Kleding en merch",
+            "handle": "kleding-en-merch",
+            "kleur": "zand",
+            "ill": "busje"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

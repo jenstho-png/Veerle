@@ -1169,4 +1169,94 @@ schrijf('tt-maattabel', """
         {"type": "rij", "settings": {"cellen": "S|51 cm|71 cm"}}, {"type": "rij", "settings": {"cellen": "M|54 cm|74 cm"}},
         {"type": "rij", "settings": {"cellen": "L|57 cm|76 cm"}}, {"type": "rij", "settings": {"cellen": "XL|60 cm|78 cm"}}]}]})
 
+# ---------- COLLECTIE: kop, collectieknoppen, sorteren en productkaarten ----------
+schrijf('tt-collectie', """
+{%- assign sorteer = collection.sort_by | default: collection.default_sort_by -%}
+<section class="tt tt-col tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap">
+    <header class="tt-col__kop">
+      <h1 class="tt-kop tt-kop--l">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}<div class="tt-col__intro">{{ collection.description }}</div>{%- endif -%}
+    </header>
+    {%- if section.blocks.size > 0 -%}
+    <nav class="tt-col__nav" aria-label="Collecties">
+      {%- for block in section.blocks -%}
+        {%- assign doel = routes.collections_url | append: '/' | append: block.settings.handle -%}
+        <a href="{{ doel }}" {{ block.shopify_attributes }}{% if collection.handle == block.settings.handle %} aria-current="page"{% endif %}>{{ block.settings.label }}</a>
+      {%- endfor -%}
+    </nav>
+    {%- endif -%}
+    <div class="tt-col__balk">
+      <p>{{ collection.products_count }} {% if collection.products_count == 1 %}product{% else %}producten{% endif %}</p>
+      {%- if collection.sort_options.size > 0 -%}
+      <label class="tt-col__sort"><span>Sorteer</span>
+        <select data-tt-sorteer>
+          {%- for o in collection.sort_options -%}<option value="{{ o.value }}"{% if o.value == sorteer %} selected{% endif %}>{{ o.name }}</option>{%- endfor -%}
+        </select>
+      </label>
+      {%- endif -%}
+    </div>
+    {%- paginate collection.products by section.settings.per_pagina -%}
+      <ul class="tt-col__grid">
+        {%- for product in collection.products -%}
+          <li class="tt-in" style="--d: {{ forloop.index0 | modulo: 4 | times: 0.08 }}s">
+            {%- if forloop.index < 5 -%}{%- render 'tt-productkaart', p: product, laden: 'eager' -%}{%- else -%}{%- render 'tt-productkaart', p: product -%}{%- endif -%}
+          </li>
+        {%- else -%}
+          <li class="tt-col__leeg">Er staan nog geen producten in deze collectie. <a href="{{ routes.all_products_collection_url }}">Bekijk alles</a></li>
+        {%- endfor -%}
+      </ul>
+      {%- if paginate.pages > 1 -%}<nav class="tt-col__paginas" aria-label="Pagina's">{{ paginate | default_pagination: next: 'Volgende', previous: 'Vorige' }}</nav>{%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+""", {
+    "name": "TT: collectie", "tag": "div", "max_blocks": 8,
+    "settings": [bg("creme"), {"type": "range", "id": "per_pagina", "label": "Producten per pagina", "min": 8, "max": 48, "step": 4, "default": 24}],
+    "blocks": [{"type": "link", "name": "Collectieknop", "settings": [
+        {"type": "text", "id": "label", "label": "Tekst", "default": "Alles"},
+        {"type": "text", "id": "handle", "label": "Handle van de collectie", "default": "all"}]}],
+    "presets": [{"name": "TT: collectie", "blocks": [
+        {"type": "link", "settings": {"label": "Alles", "handle": "all"}},
+        {"type": "link", "settings": {"label": "Draagtassen", "handle": "draagtassen"}},
+        {"type": "link", "settings": {"label": "Surfgear", "handle": "surfgear"}},
+        {"type": "link", "settings": {"label": "Kleding en merch", "handle": "kleding-en-merch"}}]}]})
+
+# ---------- ALLE COLLECTIES ----------
+schrijf('tt-collecties', """
+<section class="tt tt-cols tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap">
+    <h1 class="tt-kop tt-kop--l">{{ section.settings.heading }}</h1>
+    <ul class="tt-cols__grid">
+      {%- for block in section.blocks -%}
+        {%- assign c = collections[block.settings.handle] -%}
+        {%- assign doel = routes.collections_url | append: '/' | append: block.settings.handle -%}
+        <li class="tt-in" style="--d: {{ forloop.index0 | times: 0.1 }}s" {{ block.shopify_attributes }}>
+          <a class="tt-cols__tegel tt-cols__tegel--{{ block.settings.kleur }}" href="{{ doel }}" data-tt-kantel>
+            <span class="tt-cols__beeld">
+              {%- if c.featured_image -%}{{ c.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', alt: '' }}
+              {%- elsif c.products.first.featured_media -%}{{ c.products.first.featured_media | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', alt: '' }}
+              {%- else -%}{%- render 'tt-ill', naam: block.settings.ill -%}{%- endif -%}
+            </span>
+            <span class="tt-cols__naam">{{ block.settings.label }}</span>
+            {%- if c.products_count > 0 -%}<span class="tt-cols__aantal">{{ c.products_count }} producten</span>{%- endif -%}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+""", {
+    "name": "TT: alle collecties", "tag": "div", "max_blocks": 6,
+    "settings": [bg("creme"), {"type": "text", "id": "heading", "label": "Kop", "default": "Shop"}],
+    "blocks": [{"type": "collectie", "name": "Collectie", "settings": [
+        {"type": "text", "id": "label", "label": "Naam", "default": "Collectie"},
+        {"type": "text", "id": "handle", "label": "Handle", "default": "all"},
+        {"type": "select", "id": "kleur", "label": "Kleur", "options": [{"value": v, "label": l} for v, l in [("baby", "Baby"), ("rose", "Rose"), ("zand", "Zand")]], "default": "baby"},
+        {"type": "select", "id": "ill", "label": "Tekening (als er nog geen foto is)", "options": [{"value": v, "label": l} for v, l in [("draagtas", "De draagtas"), ("golf", "Golf"), ("busje", "Busje"), ("zon", "Zon"), ("parasol", "Parasol")]], "default": "draagtas"}]}],
+    "presets": [{"name": "TT: alle collecties", "blocks": [
+        {"type": "collectie", "settings": {"label": "Draagtassen", "handle": "draagtassen", "kleur": "baby", "ill": "draagtas"}},
+        {"type": "collectie", "settings": {"label": "Surfgear", "handle": "surfgear", "kleur": "rose", "ill": "golf"}},
+        {"type": "collectie", "settings": {"label": "Kleding en merch", "handle": "kleding-en-merch", "kleur": "zand", "ill": "busje"}}]}]})
+
 print('klaar')

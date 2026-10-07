@@ -84,7 +84,6 @@
     <div class="surf-footer__bottom">
       <div class="surf-footer__regel">
         <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}{% if section.settings.legal != blank %}, {{ section.settings.legal }}{% endif %}</span>
-        {%- if section.settings.show_credit -%}{% render 'creajt-credit' %}{%- endif -%}
       </div>
       {%- if section.settings.show_payment and shop.enabled_payment_types.size > 0 -%}
         <ul class="surf-pay" aria-label="Betaalmethoden">
@@ -93,6 +92,7 @@
           {%- endfor -%}
         </ul>
       {%- endif -%}
+      {%- if section.settings.show_credit -%}<div class="surf-footer__credit">{% render 'creajt-credit' %}</div>{%- endif -%}
     </div>
   </div>
 </footer>

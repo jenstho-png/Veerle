@@ -4,18 +4,22 @@
   "sections": {
     "surf-footer": {
       "type": "surf-footer",
-      "settings": { "show_word": false },
+      "settings": {
+        "show_word": false
+      },
       "blocks": {
         "menu-1": {
           "type": "menu",
           "settings": {
             "heading": "Shop",
-            "l1_label": "De draagtas",
-            "l1_link": "shopify://collections/all",
-            "l2_label": "Accessoires",
-            "l2_link": "shopify://collections/all",
-            "l3_label": "Alle producten",
-            "l3_link": "shopify://collections/all"
+            "l1_label": "Draagtassen",
+            "l1_link": "/collections/draagtassen",
+            "l2_label": "Surfgear",
+            "l2_link": "/collections/surfgear",
+            "l3_label": "Kleding en merch",
+            "l3_link": "/collections/kleding-en-merch",
+            "l4_label": "Alles",
+            "l4_link": "/collections/all"
           }
         },
         "menu-2": {
@@ -24,10 +28,12 @@
             "heading": "Info",
             "l1_label": "Ons verhaal",
             "l1_link": "shopify://pages/over-ons",
-            "l2_label": "Veelgestelde vragen",
-            "l2_link": "shopify://pages/veelgestelde-vragen",
-            "l3_label": "Contact",
-            "l3_link": "shopify://pages/contact"
+            "l2_label": "Maatwijzer",
+            "l2_link": "/pages/maatwijzer",
+            "l3_label": "Veelgestelde vragen",
+            "l3_link": "shopify://pages/veelgestelde-vragen",
+            "l4_label": "Contact",
+            "l4_link": "shopify://pages/contact"
           }
         },
         "menu-3": {
@@ -41,7 +47,9 @@
             "l3_label": "Privacy",
             "l3_link": "/policies/privacy-policy",
             "l4_label": "Voorwaarden",
-            "l4_link": "/policies/terms-of-service"
+            "l4_link": "/policies/terms-of-service",
+            "l5_label": "Herroepingsrecht",
+            "l5_link": "/pages/herroepingsrecht"
           }
         },
         "contact-4": {
