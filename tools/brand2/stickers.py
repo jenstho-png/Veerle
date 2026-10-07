@@ -45,9 +45,6 @@ bo = Polygon(board_omtrek(200, 200, 300, 78, 35))
 lus = LineString([rot((236, 140), c, 35), rot((300, 175), c, 35), rot((300, 238), c, 35), rot((236, 262), c, 35)]).buffer(9, cap_style=1)
 vorm = unary_union([bo, lus.difference(bo.buffer(-2))])
 lj = [lijn([rot((200, 66), c, 35), rot((200, 330), c, 35)], 0.4)]
-for t in (-58, 52):
-    lj.append(lijn([rot((158, 200 + t), c, 35), rot((242, 200 + t), c, 35)], 0.3))
-    lj.append(lijn([rot((158, 200 + t + 14), c, 35), rot((242, 200 + t + 14), c, 35)], 0.3))
 S.append(sticker('board', vorm, lj, NAVY, CREME))
 
 # 2. Schelp
