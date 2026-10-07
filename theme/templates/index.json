@@ -358,6 +358,56 @@
         "regel-3"
       ]
     },
+    "duurzaam": {
+      "type": "tt-duurzaam",
+      "settings": {
+        "link": "/pages/duurzaamheid"
+      },
+      "blocks": {
+        "punt-1": {
+          "type": "punt",
+          "settings": {
+            "icoon": "tas",
+            "kleur": "baby",
+            "titel": "Gaat jaren mee",
+            "tekst": "Eén band van sterk nylon loopt in één stuk rond je board. De naden zijn stevig gestikt, juist waar de tas het zwaarst draagt."
+          }
+        },
+        "punt-2": {
+          "type": "punt",
+          "settings": {
+            "icoon": "tij",
+            "kleur": "rose",
+            "titel": "We repareren je tas",
+            "tekst": "Gaat er een band of naad stuk? Stuur ons een bericht. We maken hem eerst weer heel, voordat we het over een nieuwe hebben."
+          }
+        },
+        "punt-3": {
+          "type": "punt",
+          "settings": {
+            "icoon": "golfjes",
+            "kleur": "zand",
+            "titel": "Geen plastic in je pakket",
+            "tekst": "Je bestelling komt in een kartonnen doos, met papier als opvulling. Geen plastic zakjes, geen bubbeltjesfolie."
+          }
+        },
+        "punt-4": {
+          "type": "punt",
+          "settings": {
+            "icoon": "schelp",
+            "kleur": "baby",
+            "titel": "Drie dingen mee",
+            "tekst": "Neem na het surfen drie dingen mee van het strand. Een dop, een touwtje, een stukje plastic. Twee minuten werk."
+          }
+        }
+      },
+      "block_order": [
+        "punt-1",
+        "punt-2",
+        "punt-3",
+        "punt-4"
+      ]
+    },
     "faq": {
       "type": "surf-faq",
       "settings": {
@@ -435,6 +485,7 @@
     "wie",
     "surfcheck",
     "kaart",
+    "duurzaam",
     "faq",
     "patroon"
   ]

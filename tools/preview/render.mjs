@@ -110,6 +110,8 @@ globals.page = { title: 'Herroepingsrecht', content: fs.readFileSync(path.resolv
 await page('herroepingsrecht', 'page.juridisch.json', { request: { page_type: 'page', path: '/pages/herroepingsrecht' } });
 globals.page = { title: 'Maatwijzer', content: '<p>Hier lees je welke boards in de draagtas passen en welke maat kleding je kiest.</p>' };
 await page('maatwijzer', 'page.maatwijzer.json', { request: { page_type: 'page', path: '/pages/maatwijzer' } });
+globals.page = { title: 'Duurzaamheid', content: '' };
+await page('duurzaamheid', 'page.duurzaamheid.json', { request: { page_type: 'page', path: '/pages/duurzaamheid' } });
 globals.page = { title: 'Actie', content: '' };
 await page('actie', 'page.actie.json', { request: { page_type: 'page', path: '/pages/actie' } });
 // collectie met de producten uit de csv

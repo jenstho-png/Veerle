@@ -1259,4 +1259,92 @@ schrijf('tt-collecties', """
         {"type": "collectie", "settings": {"label": "Surfgear", "handle": "surfgear", "kleur": "rose", "ill": "golf"}},
         {"type": "collectie", "settings": {"label": "Kleding en merch", "handle": "kleding-en-merch", "kleur": "zand", "ill": "busje"}}]}]})
 
+# ---------- DUURZAAMHEID: wat we nu al doen, in een paar punten ----------
+# Alleen keuzes die echt zo zijn. Geen keurmerken, percentages of CO2-cijfers.
+schrijf('tt-duurzaam', """
+<section class="tt tt-duurzaam tt-bg--{{ section.settings.bg }}" id="duurzaamheid">
+  <div class="tt-wrap">
+    <div class="tt-duurzaam__kop">
+      <div>
+        {%- if section.settings.label != blank -%}<p class="tt-duurzaam__label tt-in">{{ section.settings.label }}</p>{%- endif -%}
+        {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+      </div>
+      {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <ul class="tt-duurzaam__punten tt-duurzaam__punten--{{ section.blocks.size }}">
+      {%- for block in section.blocks -%}
+        <li class="tt-duurzaam__punt tt-in" style="--d: {{ forloop.index0 | modulo: 4 | times: 0.1 }}s" {{ block.shopify_attributes }}>
+          <span class="tt-duurzaam__icoon tt-duurzaam__icoon--{{ block.settings.kleur }}">{% render 'tt-icoon', icoon: block.settings.icoon %}</span>
+          <h3>{{ block.settings.titel }}</h3>
+          <p>{{ block.settings.tekst }}</p>
+        </li>
+      {%- endfor -%}
+    </ul>
+    {%- if section.settings.noot != blank or section.settings.link_label != blank -%}
+    <div class="tt-duurzaam__onder tt-in">
+      {%- if section.settings.noot != blank -%}<p class="tt-duurzaam__noot">{{ section.settings.noot }}</p>{%- endif -%}
+      {%- if section.settings.link_label != blank -%}<a class="tt-link" href="{{ section.settings.link | default: '/pages/duurzaamheid' }}">{{ section.settings.link_label }}</a>{%- endif -%}
+    </div>
+    {%- endif -%}
+  </div>
+</section>
+""", {
+    "name": "TT: duurzaamheid", "tag": "div", "max_blocks": 6,
+    "settings": [
+        bg("papier"),
+        {"type": "text", "id": "label", "label": "Klein label boven de kop", "default": "Duurzaamheid"},
+        kop("Gemaakt om|*lang* mee te gaan"),
+        {"type": "textarea", "id": "text", "label": "Tekst", "default": "We zijn een klein en jong merk. Grote beloftes doen we niet. Dit doen we wel."},
+        {"type": "textarea", "id": "noot", "label": "Eerlijke noot onder de punten", "info": "Laat leeg op de homepage."},
+        {"type": "text", "id": "link_label", "label": "Link", "default": "Zo maken we het"},
+        {"type": "url", "id": "link", "label": "Link-adres", "info": "Leeg = /pages/duurzaamheid"},
+    ],
+    "blocks": [{"type": "punt", "name": "Punt", "settings": [
+        {"type": "select", "id": "icoon", "label": "Icoon", "options": ICONEN, "default": "tas"},
+        {"type": "select", "id": "kleur", "label": "Kleur van het rondje", "options": [{"value": v, "label": l} for v, l in [("baby", "Baby"), ("rose", "Rose"), ("zand", "Zand"), ("creme", "Crème")]], "default": "baby"},
+        {"type": "text", "id": "titel", "label": "Titel", "default": "Punt"},
+        {"type": "textarea", "id": "tekst", "label": "Tekst", "default": ""}]}],
+    "presets": [{"name": "TT: duurzaamheid", "blocks": [
+        {"type": "punt", "settings": {"icoon": "tas", "kleur": "baby", "titel": "Gaat jaren mee", "tekst": "Eén band van sterk nylon loopt in één stuk rond je board. De naden zijn stevig gestikt, juist waar de tas het zwaarst draagt."}},
+        {"type": "punt", "settings": {"icoon": "tij", "kleur": "rose", "titel": "We repareren je tas", "tekst": "Gaat er een band of naad stuk? Stuur ons een bericht. We maken hem eerst weer heel, voordat we het over een nieuwe hebben."}},
+        {"type": "punt", "settings": {"icoon": "golfjes", "kleur": "zand", "titel": "Geen plastic in je pakket", "tekst": "Je bestelling komt in een kartonnen doos, met papier als opvulling. Geen plastic zakjes, geen bubbeltjesfolie."}},
+        {"type": "punt", "settings": {"icoon": "schelp", "kleur": "baby", "titel": "Drie dingen mee", "tekst": "Neem na het surfen drie dingen mee van het strand. Een dop, een touwtje, een stukje plastic. Twee minuten werk."}}]}]})
+
+# ---------- STRAND: neem drie dingen mee ----------
+schrijf('tt-strand', """
+<section class="tt tt-strand tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap tt-strand__grid">
+    <div class="tt-strand__tekst">
+      {%- if section.settings.label != blank -%}<p class="tt-duurzaam__label tt-in">{{ section.settings.label }}</p>{%- endif -%}
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+      {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+      {%- if section.settings.hand != blank -%}<p class="tt-strand__hand tt-in">{{ section.settings.hand }}</p>{%- endif -%}
+    </div>
+    <ol class="tt-strand__lijst">
+      {%- for block in section.blocks -%}
+        <li class="tt-strand__ding tt-in" style="--d: {{ forloop.index0 | times: 0.12 }}s" {{ block.shopify_attributes }}>
+          <span class="tt-strand__nr" aria-hidden="true">{{ forloop.index }}</span>
+          <span class="tt-strand__wat"><strong>{{ block.settings.titel }}</strong>{%- if block.settings.tekst != blank -%}<span>{{ block.settings.tekst }}</span>{%- endif -%}</span>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+""", {
+    "name": "TT: drie dingen mee", "tag": "div", "max_blocks": 3,
+    "settings": [
+        bg("deep"),
+        {"type": "text", "id": "label", "label": "Klein label boven de kop", "default": "Na het surfen"},
+        kop("Neem drie dingen|mee van het strand"),
+        {"type": "textarea", "id": "text", "label": "Tekst", "default": "Het kost je twee minuten. Kijk op de terugweg om je heen en neem drie dingen mee die niet op het strand horen. Gooi ze in de eerste afvalbak die je tegenkomt."},
+        {"type": "text", "id": "hand", "label": "Handgeschreven regel", "default": "Laat het strand mooier achter dan je het vond"},
+    ],
+    "blocks": [{"type": "ding", "name": "Ding", "settings": [
+        {"type": "text", "id": "titel", "label": "Titel", "default": "Een dop"},
+        {"type": "text", "id": "tekst", "label": "Tekst"}]}],
+    "presets": [{"name": "TT: drie dingen mee", "blocks": [
+        {"type": "ding", "settings": {"titel": "Een dop", "tekst": "Van een fles of een blikje"}},
+        {"type": "ding", "settings": {"titel": "Een stuk touw", "tekst": "Of visdraad, waar vogels in verstrikt raken"}},
+        {"type": "ding", "settings": {"titel": "Een stukje plastic", "tekst": "Een zakje, een rietje, een snoeppapiertje"}}]}]})
+
 print('klaar')

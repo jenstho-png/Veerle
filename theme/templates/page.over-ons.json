@@ -18,7 +18,8 @@
     "verhaal": {
       "type": "tt-verhaal",
       "settings": {
-        "link_label": "",
+        "link_label": "Zo maken we de tas",
+        "link": "/pages/duurzaamheid",
         "heading": "“Dit moet stukken|comfortabeler kunnen.”",
         "text": "<p>Tijdens mijn reizen door Australië, Midden- en Zuid-Amerika en Azië liep ik me vaak te frustreren. Op hikes naar afgelegen surfspots sjouwde ik een longboard mee dat nergens lekker vast te houden is. En met een board onder je arm op de scooter of fiets naar het strand rijden is ook geen pretje.</p><p>Na een flinke hike naar een verstopte spot, met pijn in mijn schouders en schuurplekken van de wax onder mijn arm, dacht ik: dit moet stukken comfortabeler kunnen. Een tas waarmee je je handen vrij hebt en het gewicht makkelijk draagt.</p><p>Losse touwtjes, spanbanden en standaardhoezen hielden het geen van allen vol. In februari 2025 kwam er een vriend bij die net zo gek is op surfen en precies dezelfde frustratie kende. Toen zijn we het gewoon gaan maken.</p>"
       }

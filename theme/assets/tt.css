@@ -1098,3 +1098,47 @@ body { font-family: var(--tt-tekst); }
 .tt-cols__naam { font: 400 clamp(24px, 2.4vw, 34px)/1 var(--tt-display); letter-spacing: .03em; text-transform: uppercase; margin-top: 8px; }
 .tt-cols__aantal { font: 700 11px var(--tt-tekst); letter-spacing: .18em; text-transform: uppercase; }
 @media (max-width: 749px) { .tt-cols__grid { grid-template-columns: 1fr; } }
+
+/* ===== Duurzaamheid: wat we nu al doen, en drie dingen mee van het strand ===== */
+.tt-duurzaam { padding-block: var(--tt-ruimte); }
+.tt-duurzaam__kop { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 60px; margin-bottom: clamp(40px, 5vw, 72px); }
+.tt-duurzaam__label { margin-bottom: 18px !important; font: 700 12px var(--tt-tekst); letter-spacing: .22em; text-transform: uppercase; }
+.tt-duurzaam__punten { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--tt-kolom-gat); }
+.tt-duurzaam__punten--3, .tt-duurzaam__punten--6, .tt-duurzaam__punten--5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tt-duurzaam__punten--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tt-duurzaam__punt { display: grid; align-content: start; gap: 12px; padding-top: 26px; border-top: 1.5px solid var(--tt-lijn); }
+.tt-duurzaam__icoon { display: grid; place-items: center; width: 72px; height: 72px; margin-bottom: 8px; border-radius: 50%; color: var(--tt-deep); }
+.tt-duurzaam__icoon--baby { background: var(--tt-baby); } .tt-duurzaam__icoon--rose { background: var(--tt-rose); }
+.tt-duurzaam__icoon--zand { background: var(--tt-zand); } .tt-duurzaam__icoon--creme { background: var(--tt-creme); }
+.tt-duurzaam__icoon .tt-icoon { width: 40px; height: 40px; }
+.tt-duurzaam__punt h3 { font: 700 13px/1.3 var(--tt-tekst); letter-spacing: .18em; text-transform: uppercase; }
+.tt-duurzaam__punt p { font: 400 14.5px/1.65 var(--tt-tekst); color: var(--tt-zacht); max-width: 36ch; }
+.tt-duurzaam__onder { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 22px 60px; margin-top: clamp(40px, 5vw, 64px); }
+.tt-duurzaam__noot { max-width: 62ch; padding: 22px 26px; background: rgba(34, 50, 79, .06); font: 400 14.5px/1.65 var(--tt-tekst); }
+.tt-duurzaam__onder .tt-link:only-child { margin-left: auto; }
+.tt-duurzaam__punten--5 .tt-duurzaam__punt, .tt-duurzaam__punten--6 .tt-duurzaam__punt { padding-bottom: 18px; }
+@media (max-width: 989px) {
+  .tt-duurzaam__punten.tt-duurzaam__punten--4, .tt-duurzaam__punten--5, .tt-duurzaam__punten--6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .tt-duurzaam__punten[class] { grid-template-columns: 1fr; gap: 0; }
+  .tt-duurzaam__punt { grid-template-columns: 56px 1fr; column-gap: 18px; row-gap: 6px; padding: 22px 0; }
+  .tt-duurzaam__icoon { grid-row: span 2; width: 56px; height: 56px; margin: 0; }
+  .tt-duurzaam__icoon .tt-icoon { width: 32px; height: 32px; }
+  .tt-duurzaam__punt h3 { align-self: end; }
+  .tt-duurzaam__onder .tt-link:only-child { margin-left: 0; }
+}
+
+.tt-strand { padding-block: var(--tt-ruimte); }
+.tt-strand__grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(40px, 6vw, 110px); align-items: center; }
+.tt-strand .tt-lead { margin-top: 24px !important; }
+.tt-strand__hand { margin-top: 30px !important; font: 400 clamp(20px, 2vw, 28px)/1.4 var(--tt-hand); transform: rotate(-3deg); transform-origin: left; }
+.tt-strand__lijst { display: grid; gap: 0; }
+.tt-strand__ding { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: clamp(18px, 2vw, 30px); padding: clamp(18px, 2vw, 26px) 0; border-top: 1.5px solid var(--tt-lijn); }
+.tt-strand__ding:last-child { border-bottom: 1.5px solid var(--tt-lijn); }
+.tt-strand__nr { display: grid; place-items: center; width: clamp(64px, 6vw, 88px); aspect-ratio: 1; border: 1.5px solid currentColor; border-radius: 50%; font: 400 clamp(30px, 3vw, 44px)/1 var(--tt-display); padding-top: .08em; }
+.tt-strand__wat { display: grid; gap: 6px; }
+.tt-strand__wat strong { font: 700 14px/1.3 var(--tt-tekst); letter-spacing: .18em; text-transform: uppercase; }
+.tt-strand__wat span { font: 400 14.5px/1.55 var(--tt-tekst); color: var(--tt-zacht); }
+@media (max-width: 989px) { .tt-strand__grid { grid-template-columns: 1fr; } }
+@media (max-width: 749px) { .tt-strand__hand { font-size: 19px; } }

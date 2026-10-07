@@ -1,0 +1,136 @@
+<section class="tt tt-strand tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap tt-strand__grid">
+    <div class="tt-strand__tekst">
+      {%- if section.settings.label != blank -%}<p class="tt-duurzaam__label tt-in">{{ section.settings.label }}</p>{%- endif -%}
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+      {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+      {%- if section.settings.hand != blank -%}<p class="tt-strand__hand tt-in">{{ section.settings.hand }}</p>{%- endif -%}
+    </div>
+    <ol class="tt-strand__lijst">
+      {%- for block in section.blocks -%}
+        <li class="tt-strand__ding tt-in" style="--d: {{ forloop.index0 | times: 0.12 }}s" {{ block.shopify_attributes }}>
+          <span class="tt-strand__nr" aria-hidden="true">{{ forloop.index }}</span>
+          <span class="tt-strand__wat"><strong>{{ block.settings.titel }}</strong>{%- if block.settings.tekst != blank -%}<span>{{ block.settings.tekst }}</span>{%- endif -%}</span>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: drie dingen mee",
+  "tag": "div",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "papier",
+          "label": "Papier"
+        },
+        {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        }
+      ],
+      "default": "deep"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Klein label boven de kop",
+      "default": "Na het surfen"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
+      "default": "Neem drie dingen|mee van het strand"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Tekst",
+      "default": "Het kost je twee minuten. Kijk op de terugweg om je heen en neem drie dingen mee die niet op het strand horen. Gooi ze in de eerste afvalbak die je tegenkomt."
+    },
+    {
+      "type": "text",
+      "id": "hand",
+      "label": "Handgeschreven regel",
+      "default": "Laat het strand mooier achter dan je het vond"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ding",
+      "name": "Ding",
+      "settings": [
+        {
+          "type": "text",
+          "id": "titel",
+          "label": "Titel",
+          "default": "Een dop"
+        },
+        {
+          "type": "text",
+          "id": "tekst",
+          "label": "Tekst"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: drie dingen mee",
+      "blocks": [
+        {
+          "type": "ding",
+          "settings": {
+            "titel": "Een dop",
+            "tekst": "Van een fles of een blikje"
+          }
+        },
+        {
+          "type": "ding",
+          "settings": {
+            "titel": "Een stuk touw",
+            "tekst": "Of visdraad, waar vogels in verstrikt raken"
+          }
+        },
+        {
+          "type": "ding",
+          "settings": {
+            "titel": "Een stukje plastic",
+            "tekst": "Een zakje, een rietje, een snoeppapiertje"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

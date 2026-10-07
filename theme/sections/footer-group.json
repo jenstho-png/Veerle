@@ -28,12 +28,14 @@
             "heading": "Info",
             "l1_label": "Ons verhaal",
             "l1_link": "shopify://pages/over-ons",
-            "l2_label": "Maatwijzer",
-            "l2_link": "/pages/maatwijzer",
-            "l3_label": "Veelgestelde vragen",
-            "l3_link": "shopify://pages/veelgestelde-vragen",
-            "l4_label": "Contact",
-            "l4_link": "shopify://pages/contact"
+            "l2_label": "Duurzaamheid",
+            "l2_link": "/pages/duurzaamheid",
+            "l3_label": "Maatwijzer",
+            "l3_link": "/pages/maatwijzer",
+            "l4_label": "Veelgestelde vragen",
+            "l4_link": "shopify://pages/veelgestelde-vragen",
+            "l5_label": "Contact",
+            "l5_link": "shopify://pages/contact"
           }
         },
         "menu-3": {

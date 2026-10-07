@@ -1,0 +1,152 @@
+{
+  "sections": {
+    "hero": {
+      "type": "tt-hero",
+      "settings": {
+        "pagina": true,
+        "poster": false,
+        "kaart": false,
+        "heading": "Duurzaam,|eerlijk gezegd",
+        "text": "Wat we doen om de tas en de kleding lang mee te laten gaan. En wat jij na het surfen op het strand kunt doen.",
+        "btn_label": "Bekijk de draagtas",
+        "link_label": "Wat we nu doen",
+        "link_url": "/pages/duurzaamheid#duurzaamheid",
+        "image": "",
+        "filename": "tide-tode-duurzaamheid.jpg",
+        "alt": "Leeg strand bij avondlicht"
+      }
+    },
+    "duurzaam": {
+      "type": "tt-duurzaam",
+      "settings": {
+        "bg": "papier",
+        "label": "Hoe we het maken",
+        "heading": "Wat we nu|*al* doen",
+        "text": "Geen keurmerken en geen grote cijfers. Gewoon de keuzes die we maken bij het ontwerpen, maken en versturen.",
+        "noot": "Eerlijk is eerlijk: we zijn een jong merk. We hebben nog geen keurmerken en we noemen geen cijfers die we niet kunnen onderbouwen. Kunnen we iets beter doen, dan passen we het aan en zetten we het hier.",
+        "link_label": ""
+      },
+      "blocks": {
+        "punt-1": {
+          "type": "punt",
+          "settings": {
+            "icoon": "tas",
+            "kleur": "baby",
+            "titel": "Gaat jaren mee",
+            "tekst": "Eén band van sterk nylon loopt in één stuk rondom de tas en je board. Dat maakt hem sterk. De naden zijn stevig gestikt, juist op de plekken waar de tas het zwaarst draagt."
+          }
+        },
+        "punt-2": {
+          "type": "punt",
+          "settings": {
+            "icoon": "tij",
+            "kleur": "rose",
+            "titel": "Eerst repareren",
+            "tekst": "Gaat er toch een band of naad stuk? Dan repareren we je tas. Stuur ons een bericht met een foto, dan kijken we hoe we hem weer heel maken."
+          }
+        },
+        "punt-3": {
+          "type": "punt",
+          "settings": {
+            "icoon": "golfjes",
+            "kleur": "zand",
+            "titel": "Zonder plastic verstuurd",
+            "tekst": "Je bestelling gaat in een kartonnen doos, met papier als opvulling. Geen plastic zakjes en geen bubbeltjesfolie. De doos kan bij het oud papier."
+          }
+        },
+        "punt-4": {
+          "type": "punt",
+          "settings": {
+            "icoon": "maan",
+            "kleur": "baby",
+            "titel": "Kleine series",
+            "tekst": "We laten de tassen in kleine aantallen maken. Zo liggen er geen stapels die niemand koopt. Is een print op, dan duurt het soms even voor hij terug is."
+          }
+        },
+        "punt-5": {
+          "type": "punt",
+          "settings": {
+            "icoon": "zeester",
+            "kleur": "rose",
+            "titel": "Kleding van biologisch katoen",
+            "tekst": "Onze T-shirts, longsleeves en de hoodie zijn van biologisch katoen. De prints zijn gedrukt met inkt op waterbasis."
+          }
+        },
+        "punt-6": {
+          "type": "punt",
+          "settings": {
+            "icoon": "board",
+            "kleur": "zand",
+            "titel": "Minder losse spullen",
+            "tekst": "Voor het stuk naar de spot heb je geen touwtjes of spanbanden meer nodig. Gaat je board in het vliegtuig of op het dak? Dan blijft een dichte boardbag slim. De tas is voor onderweg naar het water."
+          }
+        }
+      },
+      "block_order": [
+        "punt-1",
+        "punt-2",
+        "punt-3",
+        "punt-4",
+        "punt-5",
+        "punt-6"
+      ]
+    },
+    "reparatie": {
+      "type": "tt-kaart",
+      "settings": {
+        "bg": "creme",
+        "heading": "We repareren|je tas",
+        "text": "<p>Een tas die jaren meegaat, krijgt ook wat te verduren. Scheurt er een naad of raakt een band los? Dan repareren we hem.</p><p>Stuur ons via het contactformulier een foto van de schade en je bestelnummer. We kijken eerst of we hem kunnen maken. Pas als dat echt niet lukt, hebben we het over een nieuwe.</p>",
+        "ill": "draagtas",
+        "naam": "",
+        "link_label": "Stuur ons een bericht",
+        "link": "/pages/contact"
+      },
+      "blocks": {},
+      "block_order": []
+    },
+    "strand": {
+      "type": "tt-strand",
+      "settings": {},
+      "blocks": {
+        "ding-1": {
+          "type": "ding",
+          "settings": {
+            "titel": "Een dop",
+            "tekst": "Van een fles of een blikje"
+          }
+        },
+        "ding-2": {
+          "type": "ding",
+          "settings": {
+            "titel": "Een stuk touw",
+            "tekst": "Of visdraad, waar vogels in verstrikt raken"
+          }
+        },
+        "ding-3": {
+          "type": "ding",
+          "settings": {
+            "titel": "Een stukje plastic",
+            "tekst": "Een zakje, een rietje, een snoeppapiertje"
+          }
+        }
+      },
+      "block_order": [
+        "ding-1",
+        "ding-2",
+        "ding-3"
+      ]
+    },
+    "patroon": {
+      "type": "tt-patroon",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "duurzaam",
+    "strand",
+    "reparatie",
+    "patroon"
+  ]
+}
