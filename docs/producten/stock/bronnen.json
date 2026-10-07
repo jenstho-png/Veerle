@@ -198,5 +198,21 @@
     "photographer": "engin akyurt (Unsplash)",
     "what": "White oversized boxy tee (rolled sleeves) worn by a female model, BACK view, torso crop (no face), pure white studio background",
     "notes": "1600x2229 (portrait). Thick, structured oversized fit with a clean large blank back, ideal for a big back print. Back-print centre is about (790,650); a back print about 480px wide looks right (back collar about y 150-200 centred x 770, shoulders x 250-1150, body x about 390-1230, hem about y 2030). There is no neck label, only a tiny loose thread at the collar at about (632,165), about 15px. The background is plain white, so it is less atmospheric; you could swap in a warm backdrop."
+  },
+  {
+    "file": "wax2-stapel-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/cxAZxTuL7Sk",
+    "image_url": "https://images.unsplash.com/photo-1542038335240-86aea625b913?w=2400&q=90&fm=jpg",
+    "photographer": "Annie Spratt (Unsplash)",
+    "what": "Stack of three soap bars, each with a plain paper wrapper band, on a pale wooden table against a white wall (stand-in for wrapped surf wax)",
+    "notes": "2400x3598 (portrait), stack small in the lower right. The bands are white linen-textured paper with a thin line of serif text (inpainted in echt_wax.py) and are almost frontal, so a print can be placed with a simple perspective quad. Band fronts: x about 1181 to 2073, y 2394 to 3292 (three bands). Bar ends are yellow, cream and speckled terracotta and are recoloured to the wax colour. Used for surfwax-*-1."
+  },
+  {
+    "file": "wax2-blok-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/TANmnf9bRKo",
+    "image_url": "https://images.unsplash.com/photo-1652233172336-6efc037a3766?w=3000&q=92&fm=jpg",
+    "photographer": "choose your stories (Unsplash)",
+    "what": "One white marbled soap bar standing upright on a wooden table with an old newspaper page and two dark leaves, warm beige wall, warm colour grade",
+    "notes": "3000x2000 (landscape, original size). The bar has embossed English text on the front (removed in echt_wax.py) and grey marble veins (removed with a greyscale closing and a smooth light fit). Bar silhouette about x 1312 to 2400, y 890 to 1731; a leaf overlaps the bottom edge around x 1650 to 2010. A 1600x2000 crop at x 1056 needs no scaling. Used for surfwax-*-2."
   }
 ]

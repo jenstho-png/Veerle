@@ -156,7 +156,7 @@ def band(shape, pad, w, kleur, op_stof=None, breed=None, ss=2):
     x0, y0 = int(max(P[:, 0].min() - w, 0)), int(max(P[:, 1].min() - w, 0))
     x1, y1 = int(min(P[:, 0].max() + w + 1, wd)), int(min(P[:, 1].max() + w + 1, h))
     if x1 <= x0 or y1 <= y0:
-        return np.zeros((h, wd, 3), np.float32), np.zeros((h, wd), np.float32), np.full((h, wd), -1, np.int32), Ls
+        return np.zeros((h, wd, 3), np.float32), np.zeros((h, wd), np.float32), np.full((h, wd), -1, np.float32), L
     yy, xx = np.mgrid[y0 * ss:y1 * ss, x0 * ss:x1 * ss].astype(np.float64)
     pts = np.stack([(xx.ravel() + 0.5) / ss - 0.5, (yy.ravel() + 0.5) / ss - 0.5], 1)
     d, idx = cKDTree(P).query(pts, distance_upper_bound=w)
@@ -204,10 +204,10 @@ def band(shape, pad, w, kleur, op_stof=None, breed=None, ss=2):
     B, H = x1 - x0, y1 - y0
     pa = cv2.resize(a_s, (B, H), interpolation=cv2.INTER_AREA)
     prgb = cv2.resize(rgb_s * a_s[..., None], (B, H), interpolation=cv2.INTER_AREA) / (pa[..., None] + 1e-6)
-    pidx = cv2.resize(np.where(a_s > 0.5, idx.reshape(yy.shape), -1).astype(np.float32), (B, H), interpolation=cv2.INTER_NEAREST).astype(np.int32)
-    rgb = np.zeros((h, wd, 3), np.float32); al = np.zeros((h, wd), np.float32); ix = np.full((h, wd), -1, np.int32)
-    rgb[y0:y1, x0:x1] = prgb; al[y0:y1, x0:x1] = pa; ix[y0:y1, x0:x1] = pidx
-    return rgb, al, ix, Ls
+    plang = cv2.resize(np.where(a_s > 0.01, Ls[idx].reshape(yy.shape), -1).astype(np.float32), (B, H), interpolation=cv2.INTER_NEAREST)
+    rgb = np.zeros((h, wd, 3), np.float32); al = np.zeros((h, wd), np.float32); lang = np.full((h, wd), -1, np.float32)
+    rgb[y0:y1, x0:x1] = prgb; al[y0:y1, x0:x1] = pa; lang[y0:y1, x0:x1] = plang
+    return rgb, al, lang, L
 
 
 _LOGO = None
@@ -279,12 +279,12 @@ def start_lus(E1, E2, d1, d2, L, w, g):
     binnen = 0.8 * w
 
     def vorm(D):
-        ctrl = [Eu, Eu + du * 0.8 * w,
+        ctrl = [Eu, Eu + (o + g) / 1.414 * 0.8 * w,
                 El + o * (binnen + 2 * Rb) + g * (np.dot(Eu - El, g) + 1.6 * w),
                 El + o * (binnen + 2 * Rb) + g * (D - Rb),
                 El + o * (binnen + Rb) + g * D,
                 El + o * binnen + g * (D - Rb),
-                El + dl * 0.9 * w + g * 0.6 * w, El]
+                El + o * 0.5 * w + g * 0.9 * w, El]
         return _catmull(ctrl, 40)
     lo, hi = 0.0, L
     for _ in range(40):
@@ -296,7 +296,7 @@ def start_lus(E1, E2, d1, d2, L, w, g):
     return P if boven_eerst else P[::-1]
 
 
-def simuleer_lus(E1, E2, d1, d2, L, w, botsing, g=(0.0, 1.0), stappen=1500, min_r=None, n=160, stijf=0.12):
+def simuleer_lus(E1, E2, d1, d2, L, w, botsing, g=(0.0, 1.0), stappen=500, min_r=None, n=120, stijf=0.12, iters=25):
     """Hangende lus tussen uittreepunten E1, E2 (beeld), beginrichtingen d1, d2 (naar buiten), vaste lengte L.
     botsing(P) -> (afstand tot board, + = buiten; richting naar buiten). Position-based: lengte, buigstijfheid,
     zwaartekracht, geen zelfdoorsnijding, niet door het board."""
@@ -306,21 +306,23 @@ def simuleer_lus(E1, E2, d1, d2, L, w, botsing, g=(0.0, 1.0), stappen=1500, min_
     l = L / (n - 1)
     min_r = min_r or 1.5 * w
     vorig = P.copy()
-    klem = max(int(round(0.35 * w / l)), 1)
-    klem1 = E1 + d1[None] * (np.arange(klem + 1) * l)[:, None]
-    klem2 = E2 + d2[None] * (np.arange(klem + 1) * l)[:, None]
+    # alleen het uittreepunt ligt vast: de band gaat om de ronde rail en kan daar alle kanten op
+    klem = 0
+    klem1 = E1[None]
+    klem2 = E2[None]
     rest2 = 2 * l * math.cos(min(l / min_r, 1.0) / 2)
     gap = int(math.ceil(2.5 * w / l)) + 2
     ii, jj = np.triu_indices(n, gap)
     for it in range(stappen):
-        v = np.clip((P - vorig) * 0.95, -l, l)
+        v = np.clip((P - vorig) * 0.9, -0.3 * l, 0.3 * l)
         vorig = P.copy()
-        P = P + v + g * 0.08 * l
-        for _ in range(4):
+        P = P + v + g * 0.02 * l
+        for _ in range(iters):
             dlt = P[1:] - P[:-1]
             dist = np.linalg.norm(dlt, axis=1) + 1e-9
             corr = ((dist - l) / dist)[:, None] * dlt * 0.5
             P[:-1] += corr; P[1:] -= corr
+            P[0] = E1; P[-1] = E2
             dlt = P[2:] - P[:-2]
             dist = np.linalg.norm(dlt, axis=1) + 1e-9
             doel = np.maximum(dist, rest2) * (1 - stijf) + 2 * l * stijf
@@ -415,7 +417,10 @@ def maak(foto, naam, handle, lus=-1, stringer=0.0, kort=1.0, belicht=1.0, tint=(
     pad, op_stof, info = band_pad(B, foto.shape[:2], w_band, plat=plat, lengte_factor=lus_lengte_factor, ondergrens=ondergrens)
     kleur = SC.hexkleur(SC.TASSEN[handle])
     breed = info['breed']
-    brgb, ba, bix, Ls = band((h, w), pad, w_band, kleur, op_stof=op_stof, breed=breed)
+    brgb, ba, blang, padL = band((h, w), pad, w_band, kleur, op_stof=op_stof, breed=breed)
+
+    def attr(naam_, ys, xs):
+        return np.interp(np.maximum(blang[ys, xs], 0), padL, info[naam_])
     # ---- licht voor alles samen
     E = belicht                            # belichting t.o.v. de studio (1 = zelfde licht als de studiofoto)
     tint = np.array(tint, np.float32)
@@ -440,14 +445,14 @@ def maak(foto, naam, handle, lus=-1, stringer=0.0, kort=1.0, belicht=1.0, tint=(
     if len(by):
         Pb = np.stack([bx, by], 1).astype(np.float64)
         tb_, sb_, _ = B.naar_ts(Pb)
-        op_board = info['op_board'][np.clip(bix[by, bx], 0, len(info['op_board']) - 1)]
+        op_board = attr('op_board', by, bx)
         l_board = licht_op(L, tb_, np.clip(sb_, -0.97, 0.97))
-        l_lus = info['lus_licht'][np.clip(bix[by, bx], 0, len(info['lus_licht']) - 1)] * lus_licht
+        l_lus = attr('lus_licht', by, bx) * lus_licht
         lb[by, bx] = np.where(op_board > 0.5, l_board * np.where(np.abs(sb_) > 0.86, 0.85, 1.0), l_lus)
     # band op het board alleen binnen het silhouet (om de lange rail verdwijnt hij), lus vrij
     clip = np.ones((h, w), np.float32)
     if len(by):
-        ob = info['op_board'][np.clip(bix[by, bx], 0, len(info['op_board']) - 1)]
+        ob = attr('op_board', by, bx)
         afst_b = (np.abs(sb_) - 1) * B.half(tb_)
         cb = np.clip(dik - afst_b + 0.5, 0, 1)
         # bij de lusrail mag de band eroverheen (hij gaat de lus in)

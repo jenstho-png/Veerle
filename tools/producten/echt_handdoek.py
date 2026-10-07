@@ -224,8 +224,8 @@ def weefsel(U, V, sterkte, garen=0.11):
     return 1 + sterkte * np.clip(t, -2.5, 2.5)
 
 
-def breng_aan(foto, masker, U, V, ppc, ontw, labelm=None, schoon=None, verplaatsing=0.35, detail=1.0, ref=None, gamma=1.0,
-              detail_sigma=1.3, schaduw_sigma=1.6, wrap=False, waas=0.0, weef=0.0, rust=None):
+def breng_aan(foto, masker, U, V, ppc, ontw, schoon=None, verplaatsing=0.35, detail=1.0, ref=None, gamma=1.0,
+              detail_sigma=1.3, schaduw_sigma=1.6, wrap=False, waas=0.0, weef=0.0, rust=None, mono=False):
     """Ontwerp (bij ppc px/cm) via de coördinaatkaarten U, V (cm) op de foto zetten.
 
     schoon: de foto zonder de streepjes van de stockhanddoek (voor de schaduw); detail: sterkte van de stofstructuur."""
@@ -250,19 +250,19 @@ def breng_aan(foto, masker, U, V, ppc, ontw, labelm=None, schoon=None, verplaats
         tint = np.median(schoon[masker > 0.5].reshape(-1, 3), axis=0)
         patroon = patroon * (1 - waas) + tint[None, None] * waas
     # schaduw en licht van de foto, per kleurkanaal (warme schaduwen in de zon blijven warm)
-    Ps = cv2.GaussianBlur(schoon, (0, 0), schaduw_sigma)
+    # (mono: alleen de helderheid, voor een gekleurde stockhanddoek zoals rood of turquoise)
+    Ps = cv2.GaussianBlur(np.dstack([L] * 3) if mono else schoon, (0, 0), schaduw_sigma)
     if ref is None:
         ref = np.percentile(Ps[masker > 0.5].reshape(-1, 3), 75, axis=0)
     ratio = np.clip(Ps / ref[None, None], 0, 1.5) ** gamma
     kleur = patroon * ratio
-    # stofstructuur als hoogdoorlaat
+    # stofstructuur als hoogdoorlaat (bij mono relatief aan de helderheid van de stockhanddoek)
     Lf = MK.helderheid(schoon)
     fijn = (Lf - cv2.GaussianBlur(Lf, (0, 0), detail_sigma))[..., None]
+    if mono:
+        fijn = fijn / max(float(ref[0]), 0.2) * 0.75
     donker = 0.55 + 0.45 * MK.helderheid(patroon)[..., None]   # op donker garen valt structuur minder op
     kleur = np.clip(kleur + fijn * detail * 1.6 * donker, 0, 1)
-    if labelm is not None:
-        lab = cv2.remap(labelm, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
-        kleur = kleur * (1 - 0.0 * lab[..., None])
     if weef:
         kleur = kleur * weefsel(U, V, weef)[..., None]
     m = masker[..., None]
@@ -305,6 +305,107 @@ def grade(img, warm=0.0, contrast=1.0, licht=1.0):
 def interp(punten, t):
     p = np.array(punten, np.float32)
     return np.interp(t, p[:, 0], p[:, 1]).astype(np.float32)
+
+
+# ---------- foto 1: packshot, twee gevouwen handdoeken op een stapel ----------
+def kleurmasker(img, tint):
+    hsv = cv2.cvtColor((np.clip(img, 0, 1) * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
+    H, S = hsv[..., 0].astype(int), hsv[..., 1].astype(int)
+    m = ((S > 70) & ((H < 12) | (H > 160))) if tint == 'rood' else ((S > 70) & (H > 75) & (H < 105))
+    m = cv2.morphologyEx(m.astype(np.uint8), cv2.MORPH_OPEN, np.ones((7, 7), np.uint8))
+    m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((15, 15), np.uint8))
+    n, lab, st, _ = cv2.connectedComponentsWithStats(m)
+    m = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
+    vul = m.copy(); ff = np.zeros((m.shape[0] + 2, m.shape[1] + 2), np.uint8); cv2.floodFill(vul, ff, (0, 0), 1)
+    return (m | (1 - vul)).astype(np.float32)
+
+
+def gevouwen_uv(xx, yy, B, C, D, x0, k_mid, h_mid, diepte, voor):
+    """Coördinaten op een gevouwen handdoek: bovenvlak van achterrand B tot vouwrug C (diepte cm),
+    dan de ronde vouw van C tot onderrand D (boog van voor cm). Langs de lengte groeit de schaal mee met het perspectief
+    (hoogte van de vouw als maat). Geeft (s, t) in cm."""
+    xs = np.arange(xx.shape[1], dtype=np.float32)
+    h = np.maximum(D(xs) - C(xs), 20)
+    k = k_mid * h / h_mid                       # px per cm langs de lengte
+    s = np.cumsum(1.0 / k) - np.cumsum(1.0 / k)[int(x0)]
+    S = np.broadcast_to(s[None, :], xx.shape)
+    b, c, d = B(xx), C(xx), D(xx)
+    t_boven = diepte * (yy - c) / np.maximum(c - b, 5)          # negatief: naar achteren
+    r = np.clip((yy - c) / np.maximum(d - c, 5), 0, 1)
+    t_voor = voor * np.arccos(1 - 2 * r) / np.pi
+    T = np.where(yy < c, t_boven, t_voor)
+    return S.astype(np.float32), T.astype(np.float32)
+
+
+def foto1():
+    f = MK.laad(STOCK / 'handdoek2-gevouwen-1.jpg')
+    # witbalans: de koele blauwige studio wordt warm gebroken wit (past bij crème)
+    f = np.clip(f * np.array([0.988, 0.947, 0.904], np.float32), 0, 1)
+    h, w = f.shape[:2]
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    ppc = 48
+    ontw = ontwerp(ppc)
+    uit = f.copy()
+    # gemeten op de foto (2400 px breed): achterrand, vouwrug en onderrand per handdoek
+    stapel = {
+        'rood': dict(B=[(181, 700), (286, 512), (386, 494), (586, 482), (786, 473), (886, 482), (1086, 534), (1286, 584), (1486, 604),
+                        (1686, 644), (1886, 669), (2086, 716), (2250, 760)],
+                     C=[(181, 700), (300, 640), (400, 600), (600, 690), (800, 735), (1000, 745), (1200, 765), (1400, 800), (1600, 830),
+                        (1800, 850), (2000, 860), (2150, 880), (2250, 900)],
+                     D=[(181, 740), (286, 834), (386, 875), (486, 908), (586, 938), (686, 954), (786, 979), (886, 1024), (986, 1050),
+                        (1086, 1071), (1186, 1100), (1286, 1125), (1386, 1158), (1486, 1174), (1586, 1197), (1686, 1219), (1786, 1249),
+                        (1886, 1250), (2000, 1250), (2250, 1250)],
+                     u0=34.0, v0=58.0),
+        'teal': dict(B=[(135, 1000), (240, 874), (340, 863), (440, 870), (2195, 1100)],
+                     C=[(135, 1040), (240, 1000), (340, 1030), (440, 1050), (640, 1080), (840, 1120), (1040, 1170), (1240, 1215),
+                        (1440, 1250), (1640, 1290), (1840, 1300), (2040, 1290), (2195, 1280)],
+                     D=[(135, 1093), (240, 1202), (340, 1236), (440, 1267), (540, 1295), (640, 1314), (740, 1344), (840, 1383), (940, 1414),
+                        (1040, 1455), (1140, 1485), (1240, 1512), (1340, 1540), (1440, 1575), (1540, 1605), (1640, 1634), (1740, 1649),
+                        (1840, 1650), (1940, 1640), (2195, 1640)],
+                     u0=40.0, v0=96.0),
+    }
+    rand = np.zeros((h, w), np.float32)
+    for naam, g in stapel.items():
+        m = cv2.dilate(kleurmasker(f, naam), np.ones((5, 5), np.uint8))
+        rand = np.maximum(rand, m)
+        B = lambda x, p=g['B']: interp(p, x)
+        C = lambda x, p=g['C']: interp(p, x)
+        D = lambda x, p=g['D']: interp(p, x)
+        s, t = gevouwen_uv(xx, yy, B, C, D, 1200, 45.0, float(D(np.float32(1200)) - C(np.float32(1200))), 22.0, 10.5)
+        U = g['u0'] + s
+        V = g['v0'] + t
+        mz = cv2.GaussianBlur(m, (0, 0), 1.2)
+        uit = breng_aan(uit, mz, U, V, ppc, ontw, schoon=f, verplaatsing=0.25, detail=0.9, mono=True, weef=0.01, waas=0.04,
+                        ref=np.full(3, np.percentile(MK.helderheid(f)[m > 0.5], 88), np.float32))
+    # losse rode en turquoise pluisjes langs de randen neutraal maken
+    zone = cv2.dilate(rand, np.ones((25, 25), np.uint8)) > 0
+    hsv = cv2.cvtColor((np.clip(uit, 0, 1) * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
+    Hh, Ss = hsv[..., 0].astype(int), hsv[..., 1].astype(int)
+    fel = zone & (Ss > 45) & ((Hh < 12) | (Hh > 160) | ((Hh > 75) & (Hh < 105)))
+    fel = cv2.GaussianBlur(fel.astype(np.float32), (0, 0), 1.5)[..., None]
+    grijs = MK.helderheid(uit)[..., None] * np.array([1.02, 1.0, 0.96], np.float32)
+    uit = uit * (1 - fel) + grijs * fel
+    global LAATSTE
+    LAATSTE = uit
+    bewaar(staand_packshot(uit), 'strandhanddoek-tegel-1')
+
+
+def staand_packshot(img):
+    """Liggend packshot naar 4:5: stapel klein genoeg in beeld, muur boven en tafel onder netjes verlengd."""
+    sch = 1500 / 2160
+    klein = cv2.resize(img, None, fx=sch, fy=sch, interpolation=cv2.INTER_AREA)
+    kh, kw = klein.shape[:2]
+    cx = int(1190 * sch)
+    klein = klein[:, max(0, cx - 800):max(0, cx - 800) + 1600]
+    boven, onder = 470, 2000 - kh - 470
+    muur = cv2.GaussianBlur(klein[:40], (0, 0), 8).mean(axis=0, keepdims=True)
+    muur = np.repeat(muur, boven, axis=0)
+    # tafel: de onderste strook uitrekken (dichterbij is groter, dus dat klopt met het perspectief)
+    n = kh - int(1665 * sch)                    # alleen tafel, onder de stapel
+    strook = klein[-n:]
+    tafel = cv2.resize(strook, (1600, onder + n), interpolation=cv2.INTER_CUBIC)
+    rest = klein[:-n]
+    return np.concatenate([muur, rest, tafel], axis=0)[:2000]
 
 
 # ---------- foto 2: op het zand ----------

@@ -328,6 +328,64 @@ def uv_shirt():
                       verplaatsing=12, schaduw=1.15, structuur=0.7, blur=2.0)
     bewaar(s, 'uv-shirt-lange-mouw-2', uitsnede=(760, 1450, 2400, 3500))
 
+    # 3. sfeer: aan een hanger te drogen over de reling aan zee, voor een roze strandlaken (Pexels 34215039)
+    #    het shirt komt van een echte foto van een shirt aan een houten hanger (Unsplash, studio), uitgeknipt en omgekleurd
+    h = foto('longsleeve-zwart-hanger-groot.jpg')
+    L = MK.helderheid(h)
+    u8 = (np.clip(h, 0, 1) * 255).astype(np.uint8)
+    hsv = cv2.cvtColor(u8, cv2.COLOR_RGB2HSV)
+    vak = np.zeros(L.shape, bool); vak[150:1960, 1990:3060] = True
+    stof = (L < 0.42) & vak
+    hout = (hsv[..., 1] > 70) & (hsv[..., 0] < 25) & (L < 0.75) & vak
+    stof = cv2.morphologyEx(stof.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    n, lab, st, _ = cv2.connectedComponentsWithStats(stof)
+    stof = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
+    links = poly(L.shape, [(1980, 150), (2098, 150), (2098, 1085), (2060, 1100), (1980, 1100)])
+    stof = stof * (~links)
+    gat = (1 - stof).astype(np.uint8)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(gat)
+    for i in range(1, n):
+        if st[i, cv2.CC_STAT_AREA] < 3000:
+            stof[lab == i] = 1
+    stof = cv2.erode(stof, np.ones((3, 3), np.uint8))
+    haak = np.zeros(L.shape, np.float32)
+    haak[150:340, 2440:2640] = np.clip((0.92 - L[150:340, 2440:2640]) / 0.22, 0, 1)
+    hout = cv2.morphologyEx(hout.astype(np.uint8), cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8)) * (1 - stof)
+    ms = cv2.GaussianBlur(stof.astype(np.float32), (0, 0), 1.0)
+    alfa = np.clip(np.maximum(np.maximum(ms, cv2.GaussianBlur(hout.astype(np.float32), (0, 0), 1.0)), haak), 0, 1)
+    if PROEF:
+        cv2.imwrite(str(UIT / 'proef-uitknip.png'), cv2.cvtColor((np.dstack([h, alfa]) * 255).astype(np.uint8)[150:1960, 1990:3060], cv2.COLOR_RGBA2BGRA))
+    h = kleur_lab(h, ms, NAVY, chroma=0.85, spreiding=0.4)
+    h = np.clip(h * 1.12, 0, 1)
+    licht = np.percentile(MK.helderheid(h)[ms > 0.5], 90)
+    h = druk(h, plaats(h.shape, borst, 2690, 760, 175), ref=licht, verplaatsing=3, schaduw=0.8, masker=ms, structuur=0.5)
+    h = band_zoom(h, [(2028, 1842), (2110, 1848), (2198, 1852)], 108, strook2, masker=ms, ref=licht, verplaatsing=3, schaduw=0.9, structuur=0.6)
+    h = band_zoom(h, [(2848, 1860), (2920, 1856), (2988, 1852)], 108, strook2, masker=ms, ref=licht, verplaatsing=3, schaduw=0.9, structuur=0.6)
+
+    r = foto('reling-zee-1.jpg')
+    r = E.poets(r, 2598, 1945, 86, 960)                 # ingeweven merknaam op het laken
+    origineel = r.copy()
+    s_ = 0.576
+    hw = cv2.resize(np.dstack([h, alfa]), None, fx=s_, fy=s_, interpolation=cv2.INTER_AREA)
+    hx, hy = 2530 * s_, 192 * s_                        # top van de haak in de verkleinde uitsnede
+    ox, oy = int(round(2790 - hx)), int(round(1447 - hy))
+    H, W = hw.shape[:2]
+    laag = np.zeros((r.shape[0], r.shape[1], 4), np.float32)
+    laag[oy:oy + H, ox:ox + W] = hw
+    a = laag[..., 3:4]
+    # zon: iets lichter en een tikje koeler, korrel als de foto
+    kleur = laag[..., :3] * np.array([0.98, 1.0, 1.04], np.float32) * 1.06
+    kleur += np.random.default_rng(4).normal(0, 0.012, kleur.shape[:2]).astype(np.float32)[..., None]
+    # schaduw van shirt en hanger op het laken (een paar cm erachter)
+    laken = masker_kleur(r, (160, 15, 150), (180, 120, 255), rect=(2500, 1400, 3700, 2460))
+    laken = np.maximum(laken, masker_kleur(r, (0, 15, 150), (12, 120, 255), rect=(2500, 1400, 3700, 2460)))
+    sch = cv2.GaussianBlur(np.roll(np.roll(a[..., 0], 26, 0), 34, 1), (0, 0), 16)
+    r = r * (1 - 0.38 * (sch * laken)[..., None])
+    r = r * (1 - a) + np.clip(kleur, 0, 1) * a
+    # haak gaat over de stang: het deel achter de stang weer bedekken
+    r[1440:1490, 2794:2830] = origineel[1440:1490, 2794:2830]
+    bewaar(r, 'uv-shirt-lange-mouw-3', uitsnede=(1990, 1100, 3590, 3100))
+
 
 if __name__ == '__main__':
     stappen = [a for a in sys.argv[1:] if not a.startswith('--')] or ['uv_shirt', 'poncho', 'waxkam']

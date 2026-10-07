@@ -154,7 +154,8 @@ def wax_kleur(img, m, kleur_hex, glad=0, gamma=0.75, vlak=0, laag=0.5):
         # grote lichte of donkere vlekken (zeepkorrels) uit het blok poetsen
         Lx = L(bron)
         Lm = cv2.medianBlur((Lx * 255).astype(np.uint8), 41).astype(np.float32) / 255
-        vlekken = ((np.abs(Lx - Lm) > 0.045) & (m > 0.3)).astype(np.uint8) * 255
+        binnen = cv2.erode((m > 0.5).astype(np.uint8), np.ones((17, 17), np.uint8)) > 0
+        vlekken = (((Lx - Lm) > 0.05) & binnen).astype(np.uint8) * 255
         vlekken = cv2.dilate(vlekken, np.ones((5, 5), np.uint8))
         bron = cv2.inpaint((np.clip(bron, 0, 1) * 255).astype(np.uint8), vlekken, 9, cv2.INPAINT_TELEA).astype(np.float32) / 255
     Lb = L(bron)
