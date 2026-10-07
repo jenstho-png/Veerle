@@ -558,7 +558,11 @@ def karabijn_rgba(naam):
     romp = cv2.erode(romp, np.ones((9, 9), np.uint8))
     grijs = (L < 0.935) & (cv2.dilate((m > 0.5).astype(np.uint8), np.ones((61, 61), np.uint8)) > 0)
     glans = cv2.morphologyEx((romp * grijs).astype(np.uint8), cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8)).astype(np.float32)
-    zone = np.maximum(m, cv2.GaussianBlur(glans, (0, 0), 1.2))
+    # glimlichten die het masker mist horen bij het metaal, maar alleen binnen de buis: de grijze slagschaduw van de
+    # oude fotoachtergrond net naast het metaal niet (anders een lichte rand om de haak)
+    binnen = cv2.morphologyEx((m > 0.5).astype(np.uint8), cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15)))
+    binnen = cv2.erode(binnen, np.ones((3, 3), np.uint8)).astype(np.float32)
+    zone = np.maximum(m, cv2.GaussianBlur(glans * binnen, (0, 0), 1.2))
     uit = (k * (1 - zone[..., None]) + metaal * zone[..., None]).astype(np.float32)
     uit = E.gegoten_logo(uit, m, 760, 600, 250, 29.2, sterkte=1.0 if naam == 'messing' else 1.4)
     L0, B0, CW_, CH_ = 1350, 250, 3300, 3300
@@ -645,9 +649,9 @@ def karabijn_fotos(naam, rgba=None):
     # 1: hero van de haak zelf: groot en in het midden, gegoten logo en schroefsluiting goed te zien;
     #    D-ring en het begin van de lus eronder, de lus loopt onderaan uit beeld
     doek = achtergrond(achter)
-    schaal = 1450 / (h * 0.37)                                # haak (ca. 37 procent van de lengte) ca. 1450 px hoog
-    midden_laag = h * 0.24                                    # dit punt van de laag komt iets boven het midden
-    doek = ST.leg(doek, rgba, breedte=w * schaal, midden=(800, 900 + (h / 2 - midden_laag) * schaal), hoogte=16, contact=0.55)
+    schaal = 1400 / (h * 0.37)                                # haak (ca. 37 procent van de lengte) ca. 1450 px hoog
+    midden_laag = h * 0.185                                   # midden van de haak, iets boven het midden van de foto
+    doek = ST.leg(doek, rgba, breedte=w * schaal, midden=(800, 870 + (h / 2 - midden_laag) * schaal), hoogte=16, contact=0.55)
     bewaar(doek, f'karabijnhaak-{naam}-1')
     # 2: het hele product van boven: haak, D-ring en de lus van 12 cm, recht onder elkaar
     doek = achtergrond(achter, zaad=2)

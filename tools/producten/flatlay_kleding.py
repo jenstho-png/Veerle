@@ -335,7 +335,7 @@ def tricot(h, w, wale, zaad=4, amp=0.07):
     return t * amp
 
 
-def macro(img, a, kader, prints, licht_hoek=True, wale_mm=0.85, kader_cm=None, maat=15.0, zaad=4, dof=3.0):
+def macro(img, a, kader, prints, licht_hoek=True, wale_mm=0.85, kader_cm=None, maat=15.0, zaad=4, dof=3.0, achtergrond=None):
     """Close-up van de eigen compositie op hogere resolutie: het stuk stof (zonder print) wordt vergroot, krijgt echte
     breisteekjes, en de prints worden er op die resolutie opnieuw in gedrukt. Met een beetje scherptediepte."""
     x0, y0, w = kader
@@ -343,7 +343,8 @@ def macro(img, a, kader, prints, licht_hoek=True, wale_mm=0.85, kader_cm=None, m
     f = ST.B / w
     M = np.float32([[f, 0, -x0 * f], [0, f, -y0 * f]])
     groot = cv2.warpAffine(img, M, (ST.B, ST.H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
-    ga = cv2.warpAffine(a, M, (ST.B, ST.H), flags=cv2.INTER_LINEAR, borderValue=0)
+    ga = cv2.warpAffine(a, M, (ST.B, ST.H), flags=cv2.INTER_CUBIC, borderValue=0)
+    ga = np.clip(cv2.GaussianBlur(ga, (0, 0), f * 0.45), 0, 1)
     groot = cv2.GaussianBlur(groot, (0, 0), f * 0.35)                 # vergroting is zacht; geen blokjes
     for art, cx, cy, br, kw in prints:
         groot = MK.zet_print(groot, inkt(art, br * f, 0.03), (cx - x0) * f, (cy - y0) * f, br * f,
@@ -355,6 +356,12 @@ def macro(img, a, kader, prints, licht_hoek=True, wale_mm=0.85, kader_cm=None, m
     ruis = cv2.GaussianBlur(np.random.default_rng(zaad + 1).normal(0, 1, (ST.H, ST.B)).astype(np.float32), (0, 0), 1.2)
     t = t + ruis / (ruis.std() + 1e-6) * 0.012
     groot = np.clip(groot * (1 + t[..., None]), 0, 1)
+    if achtergrond is not None:
+        # de rand van het kledingstuk ligt in beeld: op dezelfde ondergrond, met contactschaduw naar rechtsonder
+        doek = ST.achtergrond(achtergrond, zaad=3)
+        sch = cv2.GaussianBlur(np.roll(np.roll(ga, int(f * 5), 0), int(f * 4), 1), (0, 0), f * 6)
+        doek = doek * (1 - 0.30 * sch[..., None]) / ST._licht()
+        groot = doek * (1 - ga[..., None]) + groot * ga[..., None]
     # scherptediepte: scherp rond het midden, zacht naar boven en onder
     yy = np.mgrid[0:ST.H, 0:ST.B][0].astype(np.float32)
     d = np.clip((np.abs(yy - ST.H * 0.5) / (ST.H * 0.5) - 0.3) / 0.7, 0, 1) ** 1.4
@@ -441,13 +448,13 @@ def tees(*welke):
 
 
 
-def product(handle, voor, rug, achtergrond, macro_kader, macro_prints, maat, vulling=(0.90, 0.80), macro_img=None):
+def product(handle, voor, rug, achtergrond, macro_kader, macro_prints, maat, vulling=(0.90, 0.80), macro_img=None, macro_bg=False):
     """Drie beelden per product: -1 voorkant groot, -2 achterkant, -3 macro."""
     (v, va), (r, ra) = voor, rug
     bewaar(leg_neer(v, va, achtergrond, vulling=vulling[0]), f'{handle}-1')
     bewaar(leg_neer(r, ra, achtergrond, vulling=vulling[1], zaad=2), f'{handle}-2')
     mi, ma = macro_img
-    bewaar(macro(mi, ma, macro_kader, macro_prints, maat=maat), f'{handle}-3')
+    bewaar(macro(mi, ma, macro_kader, macro_prints, maat=maat, achtergrond=achtergrond if macro_bg else None), f'{handle}-3')
 
 
 def rugprint_macro_kader(pr, art, naam, maat_breed=1.12):
@@ -558,13 +565,13 @@ def longsleeve(handle, kleur, naam, achtergrond):
     product(handle, (v, a), (r, ra), achtergrond, rugprint_macro_kader(pr, art, naam), [pr], SW_MAAT, macro_img=(kaal, ra))
 
 
-def tegelband(h, w, tegel_px, zaad=0):
-    """Rij tegels (de tegelprint van de tas) als band, in px."""
-    t = MK.laad(ROOT / 'docs' / 'producten' / 'fabriek' / 'tegels-2x2.png')
-    s = tegel_px * 2 / t.shape[1]
-    t = cv2.resize(t, (int(t.shape[1] * s), int(t.shape[0] * s)), interpolation=cv2.INTER_AREA)
+def tegelband(h, w, tegel_px, dx=0, dy=0):
+    """Het merk-tegelpatroon (docs/producten/referentie/tegelprint.png, 6 x 6 tegels) als vlak, tegel_px per tegel."""
+    t = MK.laad(REF / 'tegelprint.png')
+    s = tegel_px * 6 / t.shape[1]
+    t = cv2.resize(t, (int(round(t.shape[1] * s)), int(round(t.shape[0] * s))), interpolation=cv2.INTER_AREA)
     reps = (h // t.shape[0] + 2, w // t.shape[1] + 2)
-    return np.tile(t, (reps[0], reps[1], 1))[:h, :w]
+    return np.roll(np.tile(t, (reps[0], reps[1], 1)), (dy, dx), (0, 1))[:h, :w]
 
 
 def uv_shirt():
@@ -584,7 +591,7 @@ def uv_shirt():
     band = cv2.GaussianBlur(band, (0, 0), 1.0)
     L = MK.helderheid(v)
     ref = float(np.median(L[band > 0.5])) if (band > 0.5).any() else 0.2
-    tegels = tegelband(H, W, int(4.5 * SW_MAAT))
+    tegels = tegelband(H, W, int(3.2 * SW_MAAT), dx=int(cx) % int(3.2 * SW_MAAT))
     sch = np.clip(L / max(ref, 1e-3), 0.6, 1.3)[..., None]
     fijn = (L - cv2.GaussianBlur(L, (0, 0), 1.5))[..., None]
     print_band = np.clip(tegels * 0.94 * sch + fijn * 0.8, 0, 1)
@@ -600,9 +607,100 @@ def uv_shirt():
     lb = 7 * SW_MAAT * smal
     r = druk(r, ra, logo, rcx, SW_KRAAG + 6.5 * SW_MAAT + lb * logo.shape[0] / logo.shape[1] / 2, lb, verplaatsing=2)
     # macro: manchet met de tegelband, linkermouw
-    kader_w = 330
-    kader = (325 - kader_w / 2, 1555 - kader_w * 1.25 / 2, kader_w)
-    product(handle, (v, a), (r, ra), achtergrond, kader, [], SW_MAAT, macro_img=(kaal_manchet, a))
+    kader_w = 300
+    mx = cx + (330 - cx) * smal                        # midden van de linkermanchet, na versmallen
+    kader = (mx - kader_w / 2, 1530 - kader_w * 1.25 / 2, kader_w)
+    product(handle, (v, a), (r, ra), achtergrond, kader, [], SW_MAAT, macro_img=(kaal_manchet, a), macro_bg=True)
+
+
+# ---------- hoodie ----------
+# rechterhelft van de blauwe hoodie (philippe wehrli, Unsplash), van boven-midden met de klok mee naar onder-midden
+HOOD_PUNTEN = [(1350, 838), (1420, 842), (1480, 850), (1540, 862), (1580, 880), (1600, 905), (1615, 950), (1625, 1000),
+               (1640, 1050), (1645, 1100), (1650, 1150), (1655, 1200), (1662, 1250), (1690, 1290), (1750, 1312), (1850, 1350),
+               (1950, 1390), (2030, 1440), (2055, 1475), (2100, 1560), (2150, 1650), (2200, 1740), (2250, 1830), (2290, 1900),
+               (2302, 1935), (2265, 1980), (2200, 2055), (2140, 2125), (2085, 2190), (2050, 2240), (2045, 2300), (2045, 2450),
+               (2045, 2600), (2035, 2638), (2000, 2642), (1700, 2642), (1350, 2642)]
+HOOD_CX = 1350.0
+HOOD_MAAT = 22.4                         # px per cm (romp 1390 px = 62 cm)
+
+
+def hoodie_basis():
+    """Blauwe hoodie: de schoenen over de zoom weg (zoomboord en buik aangevuld met stof van de hoodie zelf),
+    rechterhelft gespiegeld. Teruggegeven in het stelsel van de gespiegelde bron."""
+    if 'hood' in _CACHE:
+        return _CACHE['hood']
+    img = MK.laad(FLAT / 'hoodie-blauw-plat-1.jpg')
+    H, W = img.shape[:2]
+    cx = HOOD_CX
+    # buik onder de schoen: stof van 160 px hoger
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    buik = ((xx >= cx - 40) & (xx < 1712) & (yy >= 2350) & (yy < 2482)).astype(np.float32)
+    buik = cv2.GaussianBlur(buik, (0, 0), 4)
+    img = img * (1 - buik[..., None]) + np.roll(img, 160, axis=0) * buik[..., None]
+    # zoomboord: de zichtbare strook (x 1880 tot 2030) herhaald, telkens gespiegeld zodat er geen naad is
+    strook = img[2470:2650, 1880:2030]
+    rij = np.concatenate([strook, strook[:, ::-1]] * 6, axis=1)
+    x0 = int(cx) - 60
+    breedte = 1880 - x0
+    boord = np.zeros_like(img)
+    boord[2470:2650, x0:1880] = rij[:, -breedte:]
+    bm = ((xx >= x0) & (xx < 1886) & (yy >= 2476) & (yy < 2650)).astype(np.float32)
+    bm = cv2.GaussianBlur(bm, (0, 0), 3)
+    img = img * (1 - bm[..., None]) + boord * bm[..., None]
+    a = pen_masker(img, HOOD_PUNTEN, cx, zoek=6)
+    img, a = img[:, ::-1].copy(), a[:, ::-1].copy()
+    cx = W - 1 - cx
+    img, a = symmetrisch(img, a, cx, band=0, overgang=40)
+    _CACHE['hood'] = (img, a, cx)
+    return _CACHE['hood']
+
+
+def hoodie_rug(img, a, cx):
+    """Achterkant: kap plat met de buitenkant boven, middennaad over de kap, geen buidelzak."""
+    H, W = a.shape
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    # binnenkant van de kap (donker) wordt buitenstof: stof van de borst, op de lichtheid van de kapzijkant
+    kap = ((((xx - cx) / 255) ** 2 + ((yy - 1080) / 235) ** 2) < 1) | ((np.abs(xx - cx) < 120) & (yy > 1080) & (yy < 1330))
+    kap = cv2.GaussianBlur(kap.astype(np.float32), (0, 0), 10)
+    bron = np.roll(img, -600, axis=0)
+    L = MK.helderheid(img)
+    ref_kap = float(np.median(L[880:1250, int(cx) + 260:int(cx) + 290]))
+    ref_bron = float(np.median(L[1500:1800, int(cx) - 200:int(cx) + 200]))
+    bron = bron * (ref_kap / max(ref_bron, 1e-3))
+    img = img * (1 - kap[..., None]) + bron * kap[..., None]
+    # middennaad over de kap
+    naad = np.exp(-((xx - cx) / 2.2) ** 2) * (yy > 850) * (yy < 1320)
+    img = img * (1 - 0.18 * naad[..., None])
+    # buidelzak weg: stof van boven
+    zak = ((np.abs(xx - cx) < 400) & (yy > 1900) & (yy < 2440)).astype(np.float32)
+    zak = cv2.GaussianBlur(zak, (0, 0), 14)
+    img = img * (1 - zak[..., None]) + np.roll(img, 420, axis=0) * zak[..., None]
+    img, a = img[:, ::-1].copy(), a[:, ::-1].copy()
+    return img, a, W - 1 - cx
+
+
+def hoodie(handle, kleur, naam, achtergrond):
+    img, a, cx = hoodie_basis()
+    art = ontwerp(naam, kleur)
+    v = kleur_stof(img, a, kleur)
+    H, W = a.shape
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    # ons label binnen in de kap, achter in de nek
+    zicht = ((((xx - cx) / 160) ** 2 + ((yy - 1180) / 120) ** 2) < 1)
+    v = neklabel_in(v, kleur, cx, 1215, 5.0 * HOOD_MAAT, zicht)
+    ic = icoon(kleur)
+    hoogte = 8.0 * HOOD_MAAT
+    br = hoogte * ic.shape[1] / ic.shape[0]
+    v = druk(v, a, ic, cx + 10 * HOOD_MAAT, 1500 + 7 * HOOD_MAAT, br, verplaatsing=3)
+    r, ra, rcx = hoodie_rug(img, a, cx)
+    r = kaal = kleur_stof(r, ra, kleur)
+    r, pr = rugprint(r, ra, rcx, art, HOOD_MAAT, 1360, breedte_cm=26, max_cm=38, onder_kraag_cm=7)
+    product(handle, (v, a), (r, ra), achtergrond, rugprint_macro_kader(pr, art, naam), [pr], HOOD_MAAT, macro_img=(kaal, ra),
+            vulling=(0.84, 0.78))
+
+
+def hoodies():
+    hoodie('hoodie-twee-boards', '#26355A', 'tweeboards', 'rose')
 
 
 def sweaters():
