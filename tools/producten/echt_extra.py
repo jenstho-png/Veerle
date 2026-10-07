@@ -340,7 +340,7 @@ def uv_shirt():
     stof = cv2.morphologyEx(stof.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
     n, lab, st, _ = cv2.connectedComponentsWithStats(stof)
     stof = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
-    links = poly(L.shape, [(1980, 150), (2098, 150), (2098, 1085), (2060, 1100), (1980, 1100)])
+    links = poly(L.shape, [(1980, 150), (2085, 150), (2078, 520), (2034, 1100), (1980, 1100)])
     stof = stof * (~links)
     gat = (1 - stof).astype(np.uint8)
     n, lab, st, _ = cv2.connectedComponentsWithStats(gat)
