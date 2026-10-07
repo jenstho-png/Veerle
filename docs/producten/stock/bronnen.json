@@ -286,5 +286,29 @@
     "photographer": "Jonathan Cooper (Unsplash)",
     "what": "Flat peach plastic comb with a level, shot straight from the front (stand-in for a wax comb)",
     "notes": "4000x5600. Used in flatlay_gear.py for the waxkam: tooth pitch (slots x 1128 to 2701, about 75 px) and the plastic grain (noise spectrum measured on the plain strips beside the slots, x 1052 to 1108 and 2722 to 2790). The printed FLAT TOPPER text, level and script logo are not used. Unsplash License (free)."
+  },
+  {
+    "file": "flatlay/tshirt-wit-boxy-1.jpg",
+    "source_page": "https://www.pexels.com/photo/a-blank-white-shirt-12025472/",
+    "image_url": "https://images.pexels.com/photos/12025472/pexels-photo-12025472.jpeg?auto=compress&cs=tinysrgb&w=2600",
+    "photographer": "Mr Mockup (Pexels)",
+    "what": "Blank white boxy heavyweight crew-neck tee, flat lay from above on light grey",
+    "notes": "2600x1733. Base for all six t-shirts (flatlay_kleding.tshirt_basis): pen-path cutout of the left half (TEE_PUNTEN), mirrored around x=1240. About 15 px per cm."
+  },
+  {
+    "file": "flatlay/sweater-wit-plat-1.jpg",
+    "source_page": "https://unsplash.com/photos/7cERndkOyDw",
+    "image_url": "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=2400&q=85&fm=jpg",
+    "photographer": "Mediamodifier (Unsplash)",
+    "what": "White crewneck sweatshirt laid flat on grey paper next to jeans and props",
+    "notes": "2400x1803. Only the straight right half is used (SWEAT_PUNTEN), mirrored. Base for sweater-boards, both longsleeves (rib hem replaced by a stitched hem), the uv shirt (narrowed) and the hoodie (hood, pocket and cords added)."
+  },
+  {
+    "file": "flatlay/hoodie-blauw-plat-1.jpg",
+    "source_page": "https://unsplash.com/photos/h3qsf19IY9Y",
+    "image_url": "https://images.unsplash.com/photo-1739384994765-d44f7af12029?w=2400&q=85&fm=jpg",
+    "photographer": "philippe wehrli (Unsplash)",
+    "what": "Washed blue hoodie and jeans laid flat on a wooden floor, sneakers over the hem",
+    "notes": "Tried for hoodie-twee-boards and rejected: grainy, garment-dyed mottle and sneakers over the hem gave a blotchy result. Kept for reference only (flatlay_kleding.hoodie)."
   }
 ]

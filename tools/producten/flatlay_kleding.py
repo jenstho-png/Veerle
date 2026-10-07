@@ -730,8 +730,118 @@ def hoodie(handle, kleur, naam, achtergrond):
             vulling=(0.84, 0.78))
 
 
+HD_PAD = 720                              # extra ruimte boven de sweater voor de kap
+
+
+def hoodie_uit_sweater(rug=False):
+    """Hoodie op de schone sweaterbasis (zelfde fleece, zelfde licht): kraag weg, capuchon plat boven de schouders
+    (stof uit de romp van dezelfde sweater, dubbel gestikt met bies), buidelzak en koordjes op de voorkant."""
+    key = ('hd2', rug)
+    if key in _CACHE:
+        return _CACHE[key]
+    img, a, cx = sweater_basis()
+    S = SW_MAAT
+    # kraag eruit: rugstof in de halsuitsnijding (de kap ligt er straks overheen)
+    img, a = rugkant_tshirt(img, a, cx, hals=(178, 268, 240), boord=(0, 1, 1), verschuif=330, hoek=None)
+    H0, W = a.shape
+    img = np.vstack([np.repeat(img[:1], HD_PAD, 0) * 0, img]).astype(np.float32)
+    a = np.vstack([np.zeros((HD_PAD, W), np.float32), a])
+    H = img.shape[0]
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    X, Y = (xx - cx) / S, (yy - (HD_PAD + 300)) / S          # cm, oorsprong voor in de hals
+    # silhouet van de kap: superellips boven, recht naar de schouders
+    yc = -17.0
+    boven = (np.abs(X) / 20.5) ** 2.1 + (np.abs(Y - yc) / 18.5) ** 2.1 < 1
+    onder = (Y >= yc) & (Y <= 1.5 - 0.0 * X) & (np.abs(X) < 20.5 - 1.6 * np.clip((Y - yc) / 18.5, 0, 1))
+    kap = (boven & (Y < yc)) | onder
+    kap = kap & ~((Y > -1) & (np.abs(X) > 19.5 - 9 * (Y + 1) / 3))
+    ka = cv2.GaussianBlur(kap.astype(np.float32), (0, 0), 1.0)
+    # kapstof: fleece uit de romp, iets geschaald, met eigen plooien en afgeronde dubbele rand
+    bron = cv2.remap(img, ((xx - cx) * 0.9 + cx).astype(np.float32), ((yy - (HD_PAD - 650)) * 0.9 + HD_PAD + 600).astype(np.float32),
+                     cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+    d = cv2.distanceTransform(kap.astype(np.uint8), cv2.DIST_L2, 5) / S
+    rol = 1 - 0.13 * np.exp(-d / 1.3) + 0.04 * np.exp(-((d - 2.2) / 1.0) ** 2)
+    rng = np.random.default_rng(31)
+    vouw = cv2.GaussianBlur(rng.normal(0, 1, (H // 10, W // 10)).astype(np.float32), (0, 0), 4)
+    vouw = cv2.resize(vouw / (vouw.std() + 1e-6), (W, H), interpolation=cv2.INTER_CUBIC) * 0.025
+    stiksel = np.exp(-((d - 1.0) / 0.05) ** 2) * (np.sin((xx + yy) * 0.9) > -0.2)
+    kapstof = bron * (rol + vouw)[..., None] * (1 - 0.10 * stiksel)[..., None]
+    if rug:
+        naad = np.exp(-(X / 0.09) ** 2) * (Y < 0) * kap
+        kapstof = kapstof * (1 - 0.16 * naad)[..., None] * (1 + 0.04 * np.exp(-((X - 0.3) / 0.2) ** 2) * kap)[..., None]
+    else:
+        # opening met de voering; onderaan kruisen de randen in een V
+        opening = ((X / 12.0) ** 2 + ((Y + 13.5) / 15.5) ** 2 < 1) & (Y < 1.0 - np.abs(X) * 0.35)
+        oa = cv2.GaussianBlur(opening.astype(np.float32), (0, 0), 1.2)
+        diep = np.clip(0.66 + 0.12 * (1 - np.abs(X) / 12) + 0.12 * ((Y + 29) / 30) - 0.10 * np.exp(-((Y + 1) / 3) ** 2), 0.55, 0.92)
+        _CACHE['hd2_voering'] = (1 - oa * (1 - diep)).astype(np.float32)
+        do = cv2.distanceTransform((1 - opening).astype(np.uint8), cv2.DIST_L2, 5) / S
+        bies = np.exp(-((do - 1.2) / 0.9) ** 2) * kap * (1 - oa)
+        kapstof = kapstof * (1 + 0.06 * bies - 0.14 * np.exp(-(do / 0.25)))[..., None]
+        kapstof = kapstof * (1 - 0.10 * np.exp(-((do - 2.4) / 0.05) ** 2) * (np.sin((xx + yy) * 0.9) > -0.2))[..., None]
+    # schaduw van de kap op de schouders, dan de kap erop
+    sch = cv2.GaussianBlur(np.roll(np.roll(ka, 10, 0), 7, 1), (0, 0), 9) * (1 - ka)
+    img = img * (1 - 0.30 * sch)[..., None]
+    img = img * (1 - ka[..., None]) + kapstof * ka[..., None]
+    a = np.maximum(a, ka)
+    if not rug:
+        # buidelzak: trapezium met schuine insteek, zoom en stiksel, licht schaduw in de opening
+        top, bod = 44.0, 63.0
+        half = 15.5 + (Y - top) / (bod - top) * 3.0
+        zak = (Y > top) & (Y < bod) & (np.abs(X) < half)
+        insteek = (np.abs(X) > half - 6.5 + (Y - top) * 0.55) & zak
+        zd = cv2.distanceTransform(zak.astype(np.uint8), cv2.DIST_L2, 5) / S
+        rand = np.exp(-(zd / 0.22)) * zak
+        st = np.exp(-((zd - 0.7) / 0.05) ** 2) * zak * (np.sin((xx + yy) * 0.9) > -0.2)
+        schuin = np.exp(-((np.abs(X) - (half - 6.5 + (Y - top) * 0.55)) / 0.25) ** 2) * zak
+        img = img * (1 - 0.12 * rand - 0.10 * st - 0.18 * schuin)[..., None]
+        img = img * (1 - 0.05 * insteek)[..., None]
+        # koordjes: twee ronde koorden uit de kapopening
+        for kant in (-1, 1):
+            x0 = kant * 4.2
+            koord = np.zeros((H, W), np.float32)
+            mid = x0 + kant * 0.6 * np.sin(np.clip(Y, 0, 26) / 9)
+            afst = np.abs(X - mid)
+            koord = np.clip(1 - afst / 0.45, 0, 1) * (Y > 0.5) * (Y < 26)
+            rond = np.sqrt(np.clip(1 - (afst / 0.45) ** 2, 0, 1))
+            sch_k = cv2.GaussianBlur(np.roll(np.roll(koord, 5, 0), 4, 1), (0, 0), 3) * (1 - koord)
+            img = img * (1 - 0.25 * sch_k)[..., None]
+            kleur_k = img * (0.82 + 0.25 * rond)[..., None]
+            draai = 1 + 0.06 * np.sin((Y * 6 + X * 3))
+            eind = (Y > 23.5) & (Y < 26) & (afst < 0.5)
+            kleur_k = kleur_k * draai[..., None] * np.where(eind, 0.85, 1.0)[..., None]
+            ka2 = cv2.GaussianBlur((koord > 0).astype(np.float32), (0, 0), 0.8) * (koord > 0)
+            img = img * (1 - ka2[..., None]) + kleur_k * ka2[..., None]
+    _CACHE[key] = (img.astype(np.float32), a.astype(np.float32), cx)
+    return _CACHE[key]
+
+
+def hoodie2(handle, kleur, naam, achtergrond):
+    S = SW_MAAT
+    art = ontwerp(naam, kleur)
+    img, a, cx = hoodie_uit_sweater(False)
+    v = kleur_stof(img, a, kleur) * _CACHE['hd2_voering'][..., None]   # voering pas na het omkleuren donkerder
+    H, W = a.shape
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    X, Y = (xx - cx) / S, (yy - (HD_PAD + 300)) / S
+    zicht = ((X / 9) ** 2 + ((Y + 4) / 4) ** 2 < 1)
+    v = neklabel_in(v, kleur, cx, HD_PAD + 300 - 4.5 * S, 5.0 * S, zicht)
+    ic = icoon(kleur)
+    hoogte = 8.0 * S
+    br = hoogte * ic.shape[1] / ic.shape[0]
+    v = druk(v, a, ic, cx + 10 * S, HD_PAD + 300 + 8 * S, br, verplaatsing=3)
+    r, ra, rcx = hoodie_uit_sweater(True)
+    r = kaal = kleur_stof(r, ra, kleur)
+    W = ra.shape[1]
+    r, ra, kaal = r[:, ::-1].copy(), ra[:, ::-1].copy(), kaal[:, ::-1].copy()
+    rcx = W - 1 - rcx
+    r, pr = rugprint(r, ra, rcx, art, S, HD_PAD + 300, breedte_cm=26, max_cm=36, onder_kraag_cm=6)
+    product(handle, (v, a), (r, ra), achtergrond, rugprint_macro_kader(pr, art, naam), [pr], S, macro_img=(kaal, ra),
+            vulling=(0.86, 0.80))
+
+
 def hoodies():
-    hoodie('hoodie-twee-boards', '#26355A', 'tweeboards', 'rose')
+    hoodie2('hoodie-twee-boards', '#26355A', 'tweeboards', 'rose')
 
 
 # ---------- surfponcho (badstof) ----------
@@ -822,7 +932,7 @@ def poncho(handle='surfponcho-tegel', kleur='#5E7F9C', achtergrond='zand'):
     # tegelband aan de zoom (12 cm), ingeweven/gedrukt op de badstof: kleur van de tegels, licht en lusjes van de stof
     band = ((Y > 77.5) & (Y < 89.3)).astype(np.float32) * (np.abs(X) < 36.3)
     band = cv2.GaussianBlur(band, (0, 0), 1.0)
-    tegels = tegelband(H, W, int(5.9 * S), dx=int(cx) % int(5.9 * S), dy=int(y0 + 77.5 * S) % int(5.9 * S))
+    tegels = tegelband(H, W, int(11.8 * S), dx=int(cx) % int(11.8 * S), dy=int(y0 + 77.5 * S) % int(11.8 * S))
     tegelstof = tegels * (licht * (1 + (terry - 1) * 1.2))[..., None] * 0.95
     stof = stof * (1 - band[..., None]) + tegelstof * band[..., None]
     # naad boven de band
@@ -857,7 +967,7 @@ def poncho(handle='surfponcho-tegel', kleur='#5E7F9C', achtergrond='zand'):
     kapnaad = np.exp(-(X / 0.08) ** 2) * (Y < -0.5) * (Y > -32)
     rug = rug * (1 - 0.18 * kapnaad)[..., None]
     logo = E.art(REF / 'logo-navy.png', CREME)
-    lb = 34 * S
+    lb = 28 * S
     ly = y0 + 9 * S + lb * logo.shape[0] / logo.shape[1] / 2
     kaal = rug.copy()
     rug = druk(rug, a, logo, cx, ly, lb, verplaatsing=4, structuur=1.4, dekking=0.92)

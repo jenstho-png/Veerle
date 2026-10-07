@@ -534,7 +534,10 @@ def waxkam_fotos():
 # ---------- karabijnhaak ----------
 # buitenrand van het metaal langs neus en schroefsluiting (rechtsonder) op karabiner-zilver-1.jpg
 KARABIJN_RAND = [(1208, 500), (1203, 600), (1192, 650), (1162, 690), (1132, 730), (1108, 770), (1101, 800),
-                 (1045, 858), (987, 914), (967, 935), (902, 994), (860, 1032)]
+                 (1039, 852), (981, 908), (962, 930), (897, 991), (850, 1018), (800, 1042), (750, 1070), (700, 1095),
+                 (650, 1103), (600, 1104), (550, 1098), (500, 1085), (450, 1062), (400, 1035), (350, 1000), (325, 975)]
+# onderste uiteinde van de schroefsluiting: het lichte bovenvlak lijkt op de achtergrond en valt uit het masker
+KARABIJN_SLUITING = [(694, 990), (703, 973), (745, 951), (800, 912), (830, 893), (852, 880), (870, 930), (760, 1010), (700, 1030)]
 D_RING = 340          # D-ring: 27 mm breed (binnenmaat voor 25 mm band), draad 2 mm
 KARABIJN = {
     # naam: donker metaal, licht metaal, gamma, band, garen (stiksel), tekst (geweven logo), achtergrond
@@ -557,6 +560,9 @@ def karabijn_rgba(naam):
     weg = np.zeros_like(m, np.uint8)
     cv2.fillPoly(weg, [np.int32(np.concatenate([rand, (rand + 110)[::-1]]))], 1)
     m = m * (1 - cv2.GaussianBlur(weg.astype(np.float32), (0, 0), 0.8))
+    erbij = np.zeros_like(m, np.uint8)
+    cv2.fillPoly(erbij, [np.int32(KARABIJN_SLUITING)], 1)
+    m = np.maximum(m, cv2.GaussianBlur(erbij.astype(np.float32), (0, 0), 0.8))
     t = np.clip(L, 0, 1) ** gamma
     metaal = np.array(donker)[None, None] + (np.array(licht) - np.array(donker))[None, None] * t[..., None]
     glim = np.clip((L - 0.965) / 0.03, 0, 1)[..., None]
