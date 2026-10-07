@@ -15,7 +15,6 @@
       {%- endif -%}
     </div>
     <div class="tt-uit__tekst">
-      {%- if section.settings.label != blank -%}<p class="tt-uit__label tt-in">{{ section.settings.label }}</p>{%- endif -%}
       {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
       {%- if section.settings.text != blank -%}<p class="tt-uit__pitch tt-in">{{ section.settings.text }}</p>{%- endif -%}
       {%- if section.blocks.size > 0 -%}
@@ -62,7 +61,6 @@
     { "type": "text", "id": "handle", "label": "Handle van het product", "default": "draagtas-tegel" },
     { "type": "text", "id": "fallback", "label": "Themafoto zolang het product er niet is", "default": "tt-product-1" },
     { "type": "text", "id": "heading", "label": "Kop", "default": "Kies je *ontwerp*" },
-    { "type": "text", "id": "label", "label": "Klein label boven de kop", "default": "DE DRAAGTAS" },
     { "type": "textarea", "id": "text", "label": "Tekst", "default": "Zes prints, dezelfde stevige tas. Kies de print die bij jouw board past." },
     { "type": "checkbox", "id": "stickers", "label": "Stickers op de foto", "default": true },
     { "type": "text", "id": "btn_label", "label": "Knop", "default": "Bekijk dit ontwerp" },

@@ -2147,3 +2147,6 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
   .tt-wie__badge { left: 6px; bottom: 6px; width: 68px !important; height: 68px !important; font-size: 8px !important; gap: 2px !important; }
   .tt-wie__badge .tt-icoon { width: 16px !important; height: 16px !important; }
 }
+
+/* geen kleine labels boven koppen, nergens */
+.surf-eyebrow, .tt-duurzaam__label, .tt-col__label, .tt-koop__label, .tt-uit__label, .tt-tekst__label, .mk-label { display: none !important; }
