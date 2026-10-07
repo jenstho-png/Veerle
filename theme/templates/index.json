@@ -69,7 +69,7 @@
             "tekst": "Softtop of hardboard, nat of droog. Je hoeft hem niet eerst schoon te maken.",
             "fallback": "tt-foto-stap-1",
             "filename": "tide-tode-stap-1.jpg",
-            "alt": "De draagtas om de onderkant van een roze board"
+            "alt": "De draagtas Tegel om het board, de rand valt over de rail"
           }
         },
         "stap-2": {
@@ -80,7 +80,7 @@
             "tekst": "De brede schouderband draagt het gewicht. Je handen zijn vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
             "fallback": "tt-foto-stap-2",
             "filename": "tide-tode-stap-2.jpg",
-            "alt": "De schouderband en het geweven label van de draagtas"
+            "alt": "Het geweven label en de schouderband van de draagtas"
           }
         },
         "stap-3": {
@@ -91,7 +91,7 @@
             "tekst": "Lopend door de duinen, op de fiets of achterop de scooter. Op het strand haal je hem er zo weer uit.",
             "fallback": "tt-foto-stap-3",
             "filename": "tide-tode-stap-3.jpg",
-            "alt": "Surfer loopt over het duinpad naar zee met het board in de draagtas over de schouder"
+            "alt": "Drie boards met de draagtas op het zand, klaar om te gaan"
           }
         }
       },
