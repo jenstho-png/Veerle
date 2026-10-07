@@ -37,6 +37,31 @@
   const popup = document.getElementById('SurfPopup');
   if (!popup) return;
   const teaser = document.querySelector('[data-surf-popup-open]');
+  /* kortingsknop: na wegklikken alleen het rondje, en met het kruisje helemaal weg */
+  if (teaser) {
+    const opgeslagen = (() => { try { return JSON.parse(localStorage.getItem('surfPopup') || '{}'); } catch (e) { return {}; } })();
+    if (opgeslagen.klein) teaser.classList.add('is-klein');
+    const kruis = document.createElement('button');
+    kruis.type = 'button'; kruis.className = 'tt-pop__weg'; kruis.setAttribute('aria-label', 'Kortingsknop verbergen'); kruis.innerHTML = '<span aria-hidden="true">×</span>';
+    teaser.after(kruis);
+    const plaats = () => {
+      const r = teaser.getBoundingClientRect();
+      kruis.hidden = teaser.hidden || teaser.classList.contains('is-weg');
+      kruis.style.left = Math.round(r.right - 14) + 'px';
+      kruis.style.top = Math.round(r.top - 12) + 'px';
+    };
+    if (opgeslagen.weg) teaser.classList.add('is-weg');
+    new MutationObserver(plaats).observe(teaser, { attributes: true, attributeFilter: ['hidden', 'class'] });
+    if ('ResizeObserver' in window) new ResizeObserver(plaats).observe(teaser);
+    addEventListener('resize', plaats);
+    ['animationend', 'transitionend'].forEach((t) => teaser.addEventListener(t, plaats));
+    setTimeout(plaats, 1200);
+    kruis.addEventListener('click', () => {
+      teaser.classList.add('is-weg');
+      try { const o = JSON.parse(localStorage.getItem('surfPopup') || '{}'); o.weg = true; localStorage.setItem('surfPopup', JSON.stringify(o)); } catch (e) { /* geen opslag */ }
+    });
+    plaats();
+  }
   const KEY = 'surfPopup';
   const WEEK = 7 * 24 * 60 * 60 * 1000;
   const store = {
@@ -60,7 +85,7 @@
     popup.classList.remove('is-open');
     document.documentElement.classList.remove('tt-pop-open');
     setTimeout(() => { popup.hidden = true; }, 450);
-    if (teaser && !store.get().done) teaser.hidden = false;
+    if (teaser && !store.get().done) { teaser.hidden = false; teaser.classList.add('is-klein'); store.set({ ...store.get(), klein: true }); }
     if (vorige && vorige.focus) vorige.focus({ preventScroll: true });
   };
 

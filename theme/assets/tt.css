@@ -2322,3 +2322,23 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
 /* hero: kleine shopknop met tasje */
 .tt-knop--shop { display: inline-flex !important; align-items: center; gap: 10px; height: 46px !important; min-height: 0 !important; padding: 0 22px 0 18px !important; font-size: 12px !important; letter-spacing: .22em !important; }
 .tt-knop--shop svg { width: 18px; height: 18px; flex: none; }
+/* telefoon: 'gerealiseerd door CREAjt' gecentreerd onderaan */
+@media (max-width: 749px) {
+  .surf-footer__credit { margin-left: 0 !important; width: 100%; flex-basis: 100%; display: flex; justify-content: center; order: 99; padding-top: 6px; }
+}
+/* kortingsknop: op de telefoon kleiner, na wegklikken alleen het zonnerondje, met een kruisje helemaal weg */
+@media (max-width: 749px) {
+  .tt-pop__teaser { padding: 6px 14px 6px 6px !important; gap: 8px !important; }
+  .tt-pop__teaser-zon { width: 32px; height: 32px; }
+  .tt-pop__teaser-zon svg { width: 20px; height: 20px; }
+  .tt-pop__teaser-tekst strong { font-size: 10px; letter-spacing: .14em; }
+  .tt-pop__teaser-tekst small { font-size: 9.5px; }
+}
+.tt-pop__teaser.is-klein { padding: 5px !important; gap: 0 !important; border-radius: 50% !important; rotate: 0deg !important; }
+.tt-pop__teaser.is-klein .tt-pop__teaser-tekst { display: none !important; }
+.tt-pop__teaser.is-klein .tt-pop__teaser-zon { width: 44px; height: 44px; }
+@media (max-width: 749px) { .tt-pop__teaser.is-klein .tt-pop__teaser-zon { width: 38px; height: 38px; } }
+.tt-pop__teaser.is-weg { display: none !important; }
+.tt-pop__weg { position: fixed; z-index: 86; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: var(--tt-deep, #22324F); color: var(--tt-creme, #F3ECDD); font: 400 15px/22px var(--tt-tekst); text-align: center; cursor: pointer; box-shadow: 0 4px 10px -4px rgba(10, 20, 35, .5); transition: opacity .35s ease; }
+.tt-pop__weg[hidden], .tt-in-hero .tt-pop__weg, .tt-in-voet .tt-pop__weg, .tt-pop-open .tt-pop__weg { opacity: 0; pointer-events: none; }
+.tt-pop__weg[hidden] { display: none; }
