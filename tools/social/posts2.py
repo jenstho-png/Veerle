@@ -1,11 +1,10 @@
 """Social media-pakket, tweede ronde.
 
 Maakt in docs/social/:
-- post-01 tot en met post-12: vierkante Instagram-posts (1080x1080 jpg) die samen een raster vormen
 - profielfoto.png, highlight-*.png (story-formaat) en facebook-header.png
 
-Fotoposts zijn uitsneden van de studiobeelden in docs/producten/beelden/ en theme/assets/tt-foto-*.
-Tekstposts en covers zijn html, gerenderd met Playwright Chromium.
+De covers zijn html, gerenderd met Playwright Chromium.
+De Instagram-posts zelf (carrousels in 4:5) komen uit carrousels.py.
 
 Gebruik: python3 tools/social/posts2.py
 """
@@ -14,7 +13,6 @@ import pathlib
 import subprocess
 import sys
 
-from PIL import Image
 
 HIER = pathlib.Path(__file__).parent
 ROOT = HIER.parent.parent
@@ -25,7 +23,6 @@ UIT = HIER / 'uit2'
 UIT.mkdir(exist_ok=True)
 DOEL = ROOT / 'docs' / 'social'
 ASSETS = ROOT / 'theme' / 'assets'
-PB = ROOT / 'docs' / 'producten' / 'beelden'
 L = json.load(open(ROOT / 'tools' / 'brand2' / 'logo2.json'))
 IL = json.load(open(ROOT / 'tools' / 'brand2' / 'illustraties.json'))
 STK = {s['naam']: s for s in ST.S}
@@ -81,71 +78,6 @@ def hoeken(boven_l, boven_r, onder_l='', onder_r=''):
             f'<div class="rand label" style="bottom:62px;font-size:23px"><span>{onder_l}</span><span>{onder_r}</span></div>')
 
 
-# tekstposts (1080x1080) ----------------------------------------------------
-
-TEKSTPOSTS = {}
-
-# 01: merk
-TEKSTPOSTS['post-01-merk'] = (NAVY, CREME, hoeken('Tide Tode', 'Sinds 2025', 'Draagtassen', 'Kleding en gear') + f'''
-<div class="mid"><div style="display:grid;justify-items:center;gap:56px">
-{icoon(CREME, 110)}{logo(CREME, 560)}<p class="label" style="font-size:30px">Voor de weg naar zee</p></div></div>''')
-
-# 05: duurzaamheid
-dingen = [('Een dop', 'Van een fles of een blikje'),
-          ('Een stuk touw', 'Of visdraad, waar vogels in verstrikt raken'),
-          ('Een stukje plastic', 'Een zakje, een rietje, een snoeppapiertje')]
-rijen = ''.join(f'''<div style="display:grid;grid-template-columns:84px 1fr;gap:32px;align-items:center">
-<div style="width:84px;height:84px;border-radius:50%;background:{TERRA};color:{CREME};display:grid;place-items:center;font:400 44px 'Tide Tode Display'">{i}</div>
-<div><p class="label" style="font-size:30px">{t}</p><p class="tekst" style="font-size:31px">{s}</p></div></div>''' for i, (t, s) in enumerate(dingen, 1))
-TEKSTPOSTS['post-05-drie-dingen'] = (CREME, NAVY, hoeken('Na het surfen', 'Duurzaamheid', 'Elke keer dat je gaat', 'Zo blijft het strand mooi') + f'''
-<div style="position:absolute;left:96px;right:96px;top:150px;display:grid;gap:52px">
-<p class="kop" style="font-size:92px">Neem drie<br>dingen mee<br><span style="color:{TERRA}">van het strand</span></p>
-<div style="display:grid;gap:40px">{rijen}</div></div>
-<div style="position:absolute;right:86px;top:160px">{ill('golf', NAVY, 210)}</div>''')
-
-# 09: het begin, citaat van Veerle
-TEKSTPOSTS['post-09-verhaal'] = (TERRA, CREME, hoeken('Ons verhaal', 'Veerle') + f'''
-<div style="position:absolute;left:96px;right:96px;top:170px;display:grid;gap:56px">
-<p class="kop" style="font-size:98px">“Dit moet<br>stukken<br>comfortabeler<br>kunnen.”</p>
-<p class="tekst" style="font-weight:700;font-size:36px;max-width:860px">Na een lange hike naar een verstopte spot, met een longboard onder mijn arm, wist ik het: ik ga een tas maken.</p></div>
-<div style="position:absolute;left:96px;bottom:140px">{icoon(CREME, 90)}</div>''')
-
-# 10: zo werkt de draagtas
-stappen = [('Leg de tas om je board', 'Op het midden, het balanspunt'),
-           ('Trek de band aan', 'Eén band loopt in één stuk rondom'),
-           ('Over je schouder', 'Handen vrij, op weg naar zee')]
-rijen = ''.join(f'''<div style="display:grid;grid-template-columns:84px 1fr;gap:32px;align-items:center">
-<div style="width:84px;height:84px;border-radius:50%;background:{NAVY};color:{CREME};display:grid;place-items:center;font:400 44px 'Tide Tode Display'">{i}</div>
-<div><p class="label" style="font-size:30px">{t}</p><p class="tekst" style="font-size:31px">{s}</p></div></div>''' for i, (t, s) in enumerate(stappen, 1))
-TEKSTPOSTS['post-10-zo-werkt-het'] = (ROSE, NAVY, hoeken('De draagtas', 'In drie stappen') + f'''
-<div style="position:absolute;left:96px;right:96px;top:150px;display:grid;gap:60px">
-<p class="kop" style="font-size:100px">Zo werkt<br>de draagtas</p>
-<div style="display:grid;gap:44px">{rijen}</div></div>
-<div style="position:absolute;right:96px;top:140px;rotate:8deg">{sticker('board', 170)}</div>''')
-
-# fotoposts: (bestand, uitsnede) ---------------------------------------------
-# uitsnede = waar het vierkant verticaal begint, als fractie van de vrije ruimte (0 boven, 0.5 midden, 1 onder)
-FOTOPOSTS = {
-    'post-02-draagtas-tegel': (PB / 'draagtas-tegel-1.jpg', 0.5),
-    'post-03-t-shirt-board': (PB / 't-shirt-board-1.jpg', 0.5),
-    'post-04-onderweg': (ASSETS / 'tt-foto-avontuur.jpg', 0.75),
-    'post-06-pet-navy': (PB / 'pet-navy-1.jpg', 0.5),
-    'post-07-longsleeve-zon': (PB / 'longsleeve-zon-1.jpg', 0.5),
-    'post-08-draagtas-golfjes': (PB / 'draagtas-golfjes-1.jpg', 0.5),
-    'post-11-surfwax-koud': (PB / 'surfwax-koud-1.jpg', 0.5),
-    'post-12-draagtas-zonsondergang': (PB / 'draagtas-zonsondergang-1.jpg', 0.5),
-}
-
-
-def vierkant(bron, y):
-    im = Image.open(bron).convert('RGB')
-    w, h = im.size
-    z = min(w, h)
-    x0 = (w - z) // 2
-    y0 = round((h - z) * y)
-    return im.crop((x0, y0, x0 + z, y0 + z)).resize((1080, 1080), Image.LANCZOS)
-
-
 # profiel, highlights en facebook ------------------------------------------
 
 def covers():
@@ -188,32 +120,14 @@ await b.close();
 def main():
     for f in UIT.glob('*'):
         f.unlink()
-    for naam, (achter, kleur, inhoud) in TEKSTPOSTS.items():
-        pagina(naam, 1080, 1080, achter, inhoud, kleur)
     covers()
     subprocess.run(['node', '--input-type=module', '-e', RENDER], cwd=HIER, check=True)
 
-    # oude bestanden weg, zodat de map alleen de huidige set bevat
-    for f in list(DOEL.glob('post-*')) + list(DOEL.glob('highlight-*')):
+    for f in DOEL.glob('highlight-*'):
         f.unlink()
     for png in UIT.glob('*.png'):
-        if png.stem.startswith('post-'):
-            Image.open(png).convert('RGB').save(DOEL / f'{png.stem}.jpg', quality=90, optimize=True)
-        else:
-            png.replace(DOEL / png.name)
-    for png in UIT.glob('*.png'):
-        png.unlink()
-    for naam, (bron, y) in FOTOPOSTS.items():
-        vierkant(bron, y).save(DOEL / f'{naam}.jpg', quality=90, optimize=True)
-
-    # rasteroverzicht (zoals het profiel er straks uitziet)
-    posts = sorted(DOEL.glob('post-*.jpg'))
-    raster = Image.new('RGB', (3 * 360 + 8, 4 * 360 + 12), 'white')
-    for i, p in enumerate(posts):
-        im = Image.open(p).resize((358, 358), Image.LANCZOS)
-        raster.paste(im, ((i % 3) * 362, (i // 3) * 362))
-    raster.save(DOEL / 'raster-voorbeeld.jpg', quality=85)
-    print(f'klaar: {len(posts)} posts')
+        png.replace(DOEL / png.name)
+    print('klaar: profielfoto, highlights en facebook-header')
 
 
 if __name__ == '__main__':

@@ -107,7 +107,7 @@
           "type": "foto",
           "settings": {
             "fallback": "tt-foto-lifestyle-busje",
-            "alt": "De Tide Tode draagtas om een board tegen een busje"
+            "alt": "De Tide Tode draagtas om een board op het zand"
           }
         },
         "tekst-2": {
@@ -198,7 +198,7 @@
             "tekst": "Softtop of hardboard, nat of droog. Je hoeft hem niet eerst schoon te maken.",
             "fallback": "tt-foto-stap-1",
             "filename": "tide-tode-stap-1.jpg",
-            "alt": "Surfer met een board in de armen bij zee"
+            "alt": "Het geweven label van de draagtas"
           }
         },
         "stap-2": {
@@ -257,7 +257,7 @@
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-avontuur",
             "filename": "tide-tode-avontuur.jpg",
-            "alt": "Board met de Tide Tode draagtas tegen een busje in de duinen"
+            "alt": "Board met de Tide Tode draagtas op het zand"
           }
         }
       },

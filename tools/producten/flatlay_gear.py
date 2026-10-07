@@ -546,6 +546,38 @@ KARABIJN = {
 }
 
 
+def d_ring_door(img, onder_masker, S, richting, breedte, hoogte, draad, kleur_d, kleur_l):
+    """Metalen D-ring (zoals echt.d_ring), maar met een hogere boog: rechte kant bij S dwars op de band, de boog
+    (halve ellips, 'hoogte' px vanaf de rechte kant) loopt richting de haak, onder de staaf door en de opening in.
+    Waar de haak ligt (onder_masker) is de ring onzichtbaar. Middellijn exact getekend: overal dezelfde draaddikte."""
+    h, w = img.shape[:2]
+    r = np.array(richting, np.float32); r /= np.linalg.norm(r); n = np.array([-r[1], r[0]], np.float32)
+    S = np.float32(S); hb = breedte / 2
+    t = np.linspace(0, np.pi, 400)
+    boog = S[None] + n[None] * (hb * np.cos(t))[:, None] - r[None] * (hoogte * np.sin(t))[:, None]
+    lijn = np.concatenate([[S - n * hb], boog[::-1], [S + n * hb], [S - n * hb]])      # gesloten D
+    k = 4
+    x0, y0 = np.floor(lijn.min(0) - draad * 2).astype(int)
+    x1, y1 = np.ceil(lijn.max(0) + draad * 2).astype(int)
+    vel = np.full(((y1 - y0) * k, (x1 - x0) * k), 255, np.uint8)
+    cv2.polylines(vel, [np.int32((lijn - [x0, y0]) * k)], False, 0, 1, cv2.LINE_8)
+    dk = cv2.distanceTransform(vel, cv2.DIST_L2, 5) / k
+    dk = cv2.resize(dk, (x1 - x0, y1 - y0), interpolation=cv2.INTER_AREA)
+    d = np.full((h, w), 1e3, np.float32)
+    ya, yb, xa, xb = max(y0, 0), min(y1, h), max(x0, 0), min(x1, w)
+    d[ya:yb, xa:xb] = dk[ya - y0:yb - y0, xa - x0:xb - x0]
+    tt = draad / 2
+    a = np.clip(tt - d + 0.5, 0, 1)
+    nz = np.sqrt(np.clip(1 - (d / tt) ** 2, 0, 1))
+    gy, gx = np.gradient(d)
+    lic = np.clip(-(gx * -0.6 + gy * -0.8), -1, 1) * np.sqrt(np.clip(1 - nz ** 2, 0, 1))
+    hel = np.clip(0.25 + 0.55 * nz + 0.35 * lic, 0, 1) ** 1.2
+    kl = np.array(kleur_d)[None, None] + (np.array(kleur_l) - np.array(kleur_d))[None, None] * hel[..., None]
+    kl = kl + 0.35 * np.clip(nz - 0.8, 0, 1)[..., None] * (lic > 0)[..., None]
+    zicht = a * (1 - onder_masker)
+    return img * (1 - zicht[..., None]) + np.clip(kl, 0, 1) * zicht[..., None], zicht
+
+
 def karabijn_rgba(naam):
     """De karabijnhaak uit echt.karabijn() (gegoten logo, D-ring, lus van tasband) als vrijstaande laag.
     We bouwen hem twee keer op: op zwart en op wit. Het verschil geeft de dekking; de schaduwen die echt.py op de oude
@@ -597,21 +629,19 @@ def karabijn_rgba(naam):
     while m[int(round(eind[1] - r[1] * t)), int(round(eind[0] - r[0] * t))] > 0.5 or t < 20:
         t += 1
     staaf = t                                             # dikte van de staaf langs de as (px)
-    # D-ring door de haak: de boog komt in de opening boven de staaf uit (ca. 3,5 mm), loopt onder de staaf door,
-    # en de rechte kant (waar de lus omheen genaaid is) ligt ca. 2,5 mm onder de staaf
-    hb = D_RING / 2
-    top = eind - r * (staaf + 45)
-    Sd = top + r * hb + np.array([L0, B0])
+    # D-ring door de haak, als twee schakels van een ketting: de rechte kant (waar de lus omheen genaaid is) ligt
+    # ca. 3 mm onder de staaf, de boog loopt onder de staaf door en komt ca. 9 mm de opening van de haak in
+    onder_staaf, in_opening = 38, 115
+    Sd = eind + r * onder_staaf + np.array([L0, B0])
+    ring_hoogte = onder_staaf + staaf + in_opening
+    schakel = eind - r * (staaf / 2) + np.array([L0, B0])     # waar staaf en ring elkaar kruisen
     lagen = []
     for grond in (0.0, 1.0):
         doek = zc * za[..., None] + grond * (1 - za[..., None])
-        voor = doek.copy()
-        doek = E.d_ring(doek, hm, Sd, r, D_RING, 26, donker, licht)
-        if grond == 0.0:
-            ring = np.clip((doek - voor).max(-1) / 0.03, 0, 1) * (1 - hm)
-        # contactschaduw: waar de staaf over de ring ligt wordt de ring vlak naast de staaf donker
+        doek, ring = d_ring_door(doek, hm, Sd, r, D_RING, ring_hoogte, 26, donker, licht)
+        # contactschaduw: waar de staaf over de ring ligt wordt de ring vlak naast de staaf donker (aan beide kanten)
         afst = cv2.distanceTransform((hm < 0.5).astype(np.uint8), cv2.DIST_L2, 5)
-        ao = ring * np.exp(-afst / 7.0) * 0.55
+        ao = ring * np.exp(-afst / 6.0) * 0.6
         doek = doek * (1 - ao[..., None])
         doek = E.bandlabel(doek, tuple(Sd), tuple(r), 1450, 280, band, garen, tekst, buig=0.0, R=13)
         lagen.append(doek)
@@ -626,10 +656,13 @@ def karabijn_rgba(naam):
     rgba = np.dstack([kleur, a]).astype(np.float32)
     # rechtop draaien: lange as (de lus) recht naar beneden
     hoek = float(np.degrees(np.arctan2(r[0], r[1])))
-    return rond_af(roteer(rgba, -hoek)), Sd, r
+    gedraaid, M = roteer(rgba, -hoek, geef_matrix=True)
+    uit, (oy, ox) = rond_af(gedraaid, geef_hoek=True)
+    p = M @ np.array([schakel[0], schakel[1], 1.0])
+    return uit, (float(p[0] - ox), float(p[1] - oy)), r
 
 
-def rond_af(rgba):
+def rond_af(rgba, geef_hoek=False):
     """Kleur net buiten de rand doortrekken (geen donkere randjes bij het schalen) en bijsnijden op het product."""
     a = rgba[..., 3]
     som = cv2.GaussianBlur(rgba[..., :3] * a[..., None], (0, 0), 3)
@@ -638,10 +671,11 @@ def rond_af(rgba):
     kleur = np.where(a[..., None] > 0.98, rgba[..., :3], rgba[..., :3] * a[..., None] + vul * (1 - a[..., None]))
     ys, xs = np.where(a > 0.02)
     y0, y1, x0, x1 = max(ys.min() - 4, 0), ys.max() + 5, max(xs.min() - 4, 0), xs.max() + 5
-    return np.dstack([np.clip(kleur, 0, 1), a])[y0:y1, x0:x1].astype(np.float32)
+    uit = np.dstack([np.clip(kleur, 0, 1), a])[y0:y1, x0:x1].astype(np.float32)
+    return (uit, (y0, x0)) if geef_hoek else uit
 
 
-def roteer(rgba, hoek):
+def roteer(rgba, hoek, geef_matrix=False):
     """Draai een RGBA-laag (voorvermenigvuldigd, geen randjes) met een doek dat groot genoeg is."""
     h, w = rgba.shape[:2]
     M = cv2.getRotationMatrix2D((w / 2, h / 2), hoek, 1.0)
@@ -652,31 +686,32 @@ def roteer(rgba, hoek):
     uit = cv2.warpAffine(pm, M, (nw, nh), flags=cv2.INTER_CUBIC, borderValue=(0, 0, 0, 0))
     uit[..., 3] = np.clip(uit[..., 3], 0, 1)
     uit[..., :3] = np.clip(uit[..., :3] / np.maximum(uit[..., 3:4], 1e-4), 0, 1)
-    return uit
+    return (uit, M) if geef_matrix else uit
 
 
-def karabijn_fotos(naam, rgba=None):
+def karabijn_fotos(naam, rgba=None, schakel=None):
     if rgba is None:
-        rgba, _, _ = karabijn_rgba(naam)
-    rgba = rond_af(rgba)
+        rgba, schakel, _ = karabijn_rgba(naam)
     achter = KARABIJN[naam][6]
     h, w = rgba.shape[:2]
-    # 1: hero van de haak zelf: groot en in het midden, gegoten logo en schroefsluiting goed te zien;
-    #    D-ring en het begin van de lus eronder, de lus loopt onderaan uit beeld
-    doek = achtergrond(achter)
-    schaal = 1400 / (h * 0.37)                                # haak (ca. 37 procent van de lengte) ca. 1450 px hoog
-    midden_laag = h * 0.185                                   # midden van de haak, iets boven het midden van de foto
-    doek = ST.leg(doek, rgba, breedte=w * schaal, midden=(800, 870 + (h / 2 - midden_laag) * schaal), hoogte=16, contact=0.55)
+    sx, sy = schakel
+
+    def leg(doek, schaal, punt, waar, hoogte):
+        """Leg de laag zo dat 'punt' (in de laag) op 'waar' (in de foto) komt."""
+        mid = (waar[0] + (w / 2 - punt[0]) * schaal, waar[1] + (h / 2 - punt[1]) * schaal)
+        return ST.leg(doek, rgba, breedte=w * schaal, midden=mid, hoogte=hoogte, contact=0.55)
+
+    # 1: hero van de haak zelf: groot en in het midden, gegoten logo en schroefsluiting goed te zien; de D-ring door
+    #    de onderste staaf en het begin van de lus eronder, de lus loopt onderaan uit beeld
+    schaal = 1450 / sy                                        # bovenkant haak tot de schakel ca. 1450 px
+    doek = leg(achtergrond(achter), schaal, (w / 2, sy * 0.5), (800, 870), 16)
     bewaar(doek, f'karabijnhaak-{naam}-1')
     # 2: het hele product van boven: haak, D-ring en de lus van 12 cm, recht onder elkaar
     doek = achtergrond(achter, zaad=2)
     doek = ST.leg(doek, rgba, breedte=w * 1700 / h, midden=(800, 1000), hoogte=9, contact=0.55)
     bewaar(doek, f'karabijnhaak-{naam}-2')
-    # 3: macro van de band: geweven logo, stiksel en de D-ring bovenaan
-    doek = achtergrond(achter, zaad=5)
-    schaal = 2.3 * 1700 / h
-    d_y = 0.55 * h
-    doek = ST.leg(doek, rgba, breedte=w * schaal, midden=(800, 1000 + (h / 2 - d_y) * schaal), hoogte=16, contact=0.55)
+    # 3: macro precies op de schakel: staaf over de ring, boog in de opening, rechte kant met de lus eronder
+    doek = leg(achtergrond(achter, zaad=5), 2.4, (sx, sy), (800, 1000), 18)
     bewaar(doek, f'karabijnhaak-{naam}-3')
     return rgba
 

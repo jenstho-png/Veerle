@@ -310,5 +310,13 @@
     "photographer": "philippe wehrli (Unsplash)",
     "what": "Washed blue hoodie and jeans laid flat on a wooden floor, sneakers over the hem",
     "notes": "Tried for hoodie-twee-boards and rejected: grainy, garment-dyed mottle and sneakers over the hem gave a blotchy result. Kept for reference only (flatlay_kleding.hoodie)."
+  },
+  {
+    "file": "badstof-macro-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/Z5RevWAdYzI",
+    "image_url": "https://images.unsplash.com/photo-1639298107851-058984903954?w=4800&q=90&fm=jpg",
+    "photographer": "Rinku Shemar",
+    "what": "Crop of the same folded blue terry towel as handdoek-1.jpg, from the 4800 px version",
+    "notes": "1060x720 crop (x 2480-3540, y 2340-3060 of the 4800x4223 image): the sharpest, evenly lit patch of loops, about 55 px per cm. echt_poncho.py takes only the light-and-dark of the loops (no colour) and quilts it into seamless terry for the surf poncho."
   }
 ]
