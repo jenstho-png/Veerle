@@ -556,13 +556,14 @@ def d_ring_door(img, onder_masker, S, richting, breedte, hoogte, draad, kleur_d,
     t = np.linspace(0, np.pi, 400)
     boog = S[None] + n[None] * (hb * np.cos(t))[:, None] - r[None] * (hoogte * np.sin(t))[:, None]
     lijn = np.concatenate([[S - n * hb], boog[::-1], [S + n * hb], [S - n * hb]])      # gesloten D
-    k = 4
+    k = 8
     x0, y0 = np.floor(lijn.min(0) - draad * 2).astype(int)
     x1, y1 = np.ceil(lijn.max(0) + draad * 2).astype(int)
     vel = np.full(((y1 - y0) * k, (x1 - x0) * k), 255, np.uint8)
     cv2.polylines(vel, [np.int32((lijn - [x0, y0]) * k)], False, 0, 1, cv2.LINE_8)
     dk = cv2.distanceTransform(vel, cv2.DIST_L2, 5) / k
     dk = cv2.resize(dk, (x1 - x0, y1 - y0), interpolation=cv2.INTER_AREA)
+    dk = cv2.GaussianBlur(dk, (0, 0), 1.2)                # geen trapjes van de getekende middellijn in het licht
     d = np.full((h, w), 1e3, np.float32)
     ya, yb, xa, xb = max(y0, 0), min(y1, h), max(x0, 0), min(x1, w)
     d[ya:yb, xa:xb] = dk[ya - y0:yb - y0, xa - x0:xb - x0]
