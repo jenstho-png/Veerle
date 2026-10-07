@@ -72,9 +72,21 @@ def pet_basis():
     gc = grabcut(img, (440, 780, 1960, 1790))
     # bol: GrabCut is daar betrouwbaar; onder de klepbovenkant zit slagschaduw die er niet bij hoort
     bol = (gc > 0.5).astype(np.uint8)
-    bol[1632:] = 0
+    bol[1628:] = 0
     xs = np.where(bol[1585])[0]
     bol[1585:, :xs.min()] = 0; bol[1585:, xs.max() + 1:] = 0     # zijpanelen lopen recht naar beneden
+    # knoopje bovenop: GrabCut haakt daar in de achtergrond, dus als nette afgeronde vorm tekenen
+    bol[:886] = 0
+    knoop = np.zeros_like(bol)
+    cv2.rectangle(knoop, (1164, 851), (1238, 895), 1, -1)
+    cv2.ellipse(knoop, (1164, 869), (18, 18), 0, 0, 360, 1, -1)
+    cv2.ellipse(knoop, (1238, 869), (18, 18), 0, 0, 360, 1, -1)
+    cv2.rectangle(knoop, (1146, 869), (1256, 895), 1, -1)
+    bol = np.maximum(bol, knoop)
+    # gladde omtrek van de bol (de schaduwkant is in de foto rafelig)
+    glad = cv2.GaussianBlur(bol.astype(np.float32), (0, 0), 5)
+    bol = np.where(np.arange(bol.shape[0])[:, None] < 900, bol, (glad > 0.5).astype(np.uint8))
+    bol[1628:] = 0
     # klep: per kolom tot de donkere schaduwlijn eronder, per rij zo breed als het lichte klepvlak
     pts = []
     for x in range(600, 1800, 6):

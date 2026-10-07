@@ -60,7 +60,7 @@ def wax_vlak(b, h, inset=0.035):
     fijn = (L - cv2.GaussianBlur(L, (0, 0), 2.5)) / groot
     midden = (cv2.GaussianBlur(L, (0, 0), 2.5) - cv2.GaussianBlur(L, (0, 0), 22)) / groot
     # gele zeepvlekjes (donkerder, breed) dempen, putjes en snijsporen aanzetten
-    detail = 1 + np.clip(fijn * 2.4, -0.16, 0.08) + np.clip(midden * 1.5, -0.07, 0.05)
+    detail = 1 + np.clip(fijn * 3.2, -0.18, 0.09) + np.clip(midden * 1.5, -0.07, 0.05)
     middel = (groot / groot.mean()) ** 0.35
     return (detail * middel).astype(np.float32)
 
@@ -106,7 +106,7 @@ def zijlicht(d_boven):
     links en boven kijken naar het raam, rechts en onder liggen in de schaduw."""
     nx, ny, _ = naar_buiten(d_boven, glad=8)
     richting = nx * LICHT_NAAR[0] + ny * LICHT_NAAR[1]
-    return 0.80 + 0.13 * richting
+    return 0.89 + 0.11 * richting + 0.02 * np.clip(richting, 0, 1)
 
 
 ZIJ = (17, 12)      # zichtbare zijkant links/rechts en boven/onder (px op het blok), lens recht boven het midden
@@ -124,7 +124,7 @@ def wax_blok(soort, b=1450, h=1000, zaad=3):
     f_boven = Lv * schuine_rand(d_boven, 14, 0.10)
     # zijkant: gesneden wax, korrel uitgerekt langs de rand, iets ruwer
     Lz = cv2.GaussianBlur(Lv, (0, 0), sigmaX=3, sigmaY=3) * (1 + ruis((h, b), 0.03, 1.0, zaad + 3))
-    f_zij = Lz * zijlicht(d_boven) * (1 - 0.10 * np.clip(1 - d_buiten / 3, 0, 1))   # uiterste randje iets donkerder
+    f_zij = Lz * zijlicht(d_boven) * (1 - 0.05 * np.clip(1 - d_buiten / 2.5, 0, 1))   # uiterste randje iets donkerder
     f = f_boven * boven + f_zij * (1 - boven)
     # wax is satijnmat: heel zacht glanslicht naar het raam toe
     yy, xx = np.mgrid[0:h, 0:b].astype(np.float32)
@@ -203,11 +203,11 @@ def wikkel_pak(soort, b=1450, h=1000, zaad=5):
     r_rand = x1 + rand_x[::-1, None]
     bandm = np.clip(np.minimum(xg - l_rand + 0.5, r_rand - xg + 0.5), 0, 1)
     sch = np.clip(xg - r_rand, 0, None)
-    sch = cv2.GaussianBlur((np.exp(-sch / 3.0) * (sch > 0)).astype(np.float32), (0, 0), 1.2)
-    rgb = rgb * (1 - 0.22 * sch[..., None])
+    sch = cv2.GaussianBlur((np.exp(-sch / 4.0) * (sch > 0)).astype(np.float32), (0, 0), 2.0)
+    rgb = rgb * (1 - 0.13 * sch[..., None])
     links = np.exp(-np.abs(xg - l_rand - 1.2) / 1.0)
     vol = np.zeros_like(rgb)
-    vol[:, x0:x1] = band
+    vol[:, x0 - 3:x1 + 3] = cv2.copyMakeBorder(band, 0, 0, 3, 3, cv2.BORDER_REPLICATE)   # snijrand mag een fractie uitwijken
     vol = vol * (1 + 0.05 * links[..., None])
     uit = rgb * (1 - bandm[..., None]) + vol * bandm[..., None]
     # silhouet: waar de band zit loopt het papier recht door tot de onderkant van het blok
