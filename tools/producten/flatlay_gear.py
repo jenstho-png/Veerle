@@ -532,6 +532,9 @@ def waxkam_fotos():
 
 
 # ---------- karabijnhaak ----------
+# buitenrand van het metaal langs neus en schroefsluiting (rechtsonder) op karabiner-zilver-1.jpg
+KARABIJN_RAND = [(1208, 500), (1203, 600), (1192, 650), (1162, 690), (1132, 730), (1108, 770), (1101, 800),
+                 (1045, 858), (987, 914), (967, 935), (902, 994), (860, 1032)]
 D_RING = 340          # D-ring: 27 mm breed (binnenmaat voor 25 mm band), draad 2 mm
 KARABIJN = {
     # naam: donker metaal, licht metaal, gamma, band, garen (stiksel), tekst (geweven logo), achtergrond
@@ -548,6 +551,12 @@ def karabijn_rgba(naam):
     k = E.foto('karabiner-zilver-1.jpg')
     m = E.omkleur_masker(k, 0.15, (800, 589), vullen=False, sluit=81)
     L = MK.helderheid(k)
+    # het masker neemt rechtsonder van de neus en de schroefsluiting de grijze slagschaduw van de oude fotoachtergrond
+    # mee (band van 40 tot 50 px). Gemeten buitenrand van het metaal daar; alles erbuiten hoort niet bij de haak.
+    rand = np.float32(KARABIJN_RAND)
+    weg = np.zeros_like(m, np.uint8)
+    cv2.fillPoly(weg, [np.int32(np.concatenate([rand, (rand + 110)[::-1]]))], 1)
+    m = m * (1 - cv2.GaussianBlur(weg.astype(np.float32), (0, 0), 0.8))
     t = np.clip(L, 0, 1) ** gamma
     metaal = np.array(donker)[None, None] + (np.array(licht) - np.array(donker))[None, None] * t[..., None]
     glim = np.clip((L - 0.965) / 0.03, 0, 1)[..., None]

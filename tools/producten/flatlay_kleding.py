@@ -335,7 +335,7 @@ def tricot(h, w, wale, zaad=4, amp=0.07):
     return t * amp
 
 
-def macro(img, a, kader, prints, licht_hoek=True, wale_mm=0.85, kader_cm=None, maat=15.0, zaad=4, dof=3.0, achtergrond=None):
+def macro(img, a, kader, prints, licht_hoek=True, wale_mm=0.85, kader_cm=None, maat=15.0, zaad=4, dof=3.0, achtergrond=None, brei=True):
     """Close-up van de eigen compositie op hogere resolutie: het stuk stof (zonder print) wordt vergroot, krijgt echte
     breisteekjes, en de prints worden er op die resolutie opnieuw in gedrukt. Met een beetje scherptediepte."""
     x0, y0, w = kader
@@ -347,12 +347,20 @@ def macro(img, a, kader, prints, licht_hoek=True, wale_mm=0.85, kader_cm=None, m
     ga = np.clip(cv2.GaussianBlur(ga, (0, 0), f * 0.45), 0, 1)
     groot = cv2.GaussianBlur(groot, (0, 0), f * 0.35)                 # vergroting is zacht; geen blokjes
     for art, cx, cy, br, kw in prints:
-        groot = MK.zet_print(groot, inkt(art, br * f, 0.03), (cx - x0) * f, (cy - y0) * f, br * f,
-                             verplaatsing=kw.get('verplaatsing', 6) * f * 0.2, schaduw_sterkte=0.9,
-                             structuur=0.0, dekking=kw.get('dekking', 0.95), masker=ga)
+        # inkt drukken op een gladde versie van de stof (alleen plooien), daarna de fijne stofstructuur gedempt terug
+        glad = cv2.GaussianBlur(groot, (0, 0), f * 5)
+        geprint = MK.zet_print(glad, inkt(art, br * f, 0.03), (cx - x0) * f, (cy - y0) * f, br * f,
+                               verplaatsing=kw.get('verplaatsing', 6) * f * 0.2, schaduw_sterkte=0.9,
+                               structuur=0.0, dekking=kw.get('dekking', 0.95), masker=ga)
+        ah, aw = art.shape[:2]
+        sc = br * f / aw
+        Mp = cv2.getRotationMatrix2D((aw / 2, ah / 2), 0, sc)
+        Mp[0, 2] += (cx - x0) * f - aw / 2; Mp[1, 2] += (cy - y0) * f - ah / 2
+        pa = cv2.warpAffine(art[..., 3], Mp, (ST.B, ST.H), flags=cv2.INTER_LINEAR)[..., None]
+        groot = geprint + (groot - glad) * (1 - 0.75 * pa)
     # breisteekjes over stof en inkt samen: de inkt zit in de stof
     px_mm = f * maat / 10
-    t = tricot(ST.H, ST.B, max(3.0, wale_mm * px_mm), zaad=zaad, amp=0.035)
+    t = tricot(ST.H, ST.B, max(3.0, wale_mm * px_mm), zaad=zaad, amp=0.035) if brei else np.zeros((ST.H, ST.B), np.float32)
     ruis = cv2.GaussianBlur(np.random.default_rng(zaad + 1).normal(0, 1, (ST.H, ST.B)).astype(np.float32), (0, 0), 1.2)
     t = t + ruis / (ruis.std() + 1e-6) * 0.012
     groot = np.clip(groot * (1 + t[..., None]), 0, 1)
@@ -448,13 +456,13 @@ def tees(*welke):
 
 
 
-def product(handle, voor, rug, achtergrond, macro_kader, macro_prints, maat, vulling=(0.90, 0.80), macro_img=None, macro_bg=False):
+def product(handle, voor, rug, achtergrond, macro_kader, macro_prints, maat, vulling=(0.90, 0.80), macro_img=None, macro_bg=False, brei=True):
     """Drie beelden per product: -1 voorkant groot, -2 achterkant, -3 macro."""
     (v, va), (r, ra) = voor, rug
     bewaar(leg_neer(v, va, achtergrond, vulling=vulling[0]), f'{handle}-1')
     bewaar(leg_neer(r, ra, achtergrond, vulling=vulling[1], zaad=2), f'{handle}-2')
     mi, ma = macro_img
-    bewaar(macro(mi, ma, macro_kader, macro_prints, maat=maat, achtergrond=achtergrond if macro_bg else None), f'{handle}-3')
+    bewaar(macro(mi, ma, macro_kader, macro_prints, maat=maat, achtergrond=achtergrond if macro_bg else None, brei=brei), f'{handle}-3')
 
 
 def rugprint_macro_kader(pr, art, naam, maat_breed=1.12):
@@ -495,10 +503,10 @@ def sweater_rugkant(img, a, cx):
     return img[:, ::-1].copy(), a[:, ::-1].copy(), W - 1 - cx
 
 
-def rugprint(img, a, cx, art, maat, kraag, breedte_cm=25, max_cm=40, onder_kraag_cm=10.0):
+def rugprint(img, a, cx, art, maat, kraag, breedte_cm=25, max_cm=40, onder_kraag_cm=10.0, structuur=0.9):
     br = printmaat(art, breedte_cm * maat, max_cm * maat)
     cy = kraag + onder_kraag_cm * maat + br * art.shape[0] / art.shape[1] / 2
-    return druk(img, a, art, cx, cy, br), (art, cx, cy, br, {})
+    return druk(img, a, art, cx, cy, br, structuur=structuur), (art, cx, cy, br, {})
 
 
 def longsleeve_basis(smal=1.0):
@@ -619,7 +627,7 @@ HOOD_PUNTEN = [(1350, 838), (1420, 842), (1480, 850), (1540, 862), (1580, 880), 
                (1640, 1050), (1645, 1100), (1650, 1150), (1655, 1200), (1662, 1250), (1690, 1290), (1750, 1312), (1850, 1350),
                (1950, 1390), (2030, 1440), (2055, 1475), (2100, 1560), (2150, 1650), (2200, 1740), (2250, 1830), (2290, 1900),
                (2302, 1935), (2265, 1980), (2200, 2055), (2140, 2125), (2085, 2190), (2050, 2240), (2045, 2300), (2040, 2400),
-               (2025, 2480), (2003, 2540), (1992, 2600), (1978, 2640), (1940, 2648), (1700, 2648), (1350, 2648)]
+               (2025, 2452), (1995, 2470), (1992, 2600), (1985, 2636), (1940, 2638), (1700, 2638), (1350, 2638)]
 HOOD_CX = 1350.0
 HOOD_MAAT = 22.4                         # px per cm (romp 1390 px = 62 cm)
 
@@ -637,23 +645,42 @@ def hoodie_basis():
     cx = HOOD_CX
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
     # buik onder de schoen: stof van 200 px hoger
-    buik = ((xx >= cx - 40) & (xx < 1800) & (yy >= 2360) & (yy < 2452)).astype(np.float32)
+    buik = ((xx >= cx - 40) & (xx < 1800) & (yy >= 2340) & (yy < 2452)).astype(np.float32)
     buik = cv2.GaussianBlur(buik, (0, 0), 4)
-    img = img * (1 - buik[..., None]) + np.roll(img, 200, axis=0) * buik[..., None]
-    # zoomboord: de zichtbare strook (x 1800 tot 1950) herhaald, telkens gespiegeld zodat er geen naad is
-    strook = img[2440:2660, 1800:1950]
-    rij = np.concatenate([strook[:, ::-1], strook] * 8, axis=1)
+    img = img * (1 - buik[..., None]) + np.roll(img, 300, axis=0) * buik[..., None]
+    # zoomboord opnieuw opbouwen, recht: boordkleur van de zichtbare rib, met fijne verticale ribbels,
+    # een naadschaduw bovenaan en de omslag onderaan iets donkerder
+    basis = np.median(img[2485:2595, 1820:1900].reshape(-1, 3), axis=0)
+    romp = np.median(img[1700:2200, 1450:1900].reshape(-1, 3), axis=0)
+    basis = basis * (0.93 * romp.mean() / max(basis.mean(), 1e-3))
+    y_b0, y_b1 = 2440, 2670
     x0 = int(cx) - 60
-    breedte = 1800 - x0
-    boord = np.zeros_like(img)
-    boord[2440:2660, x0:1800] = rij[:, -breedte:]
-    bm = ((xx >= x0) & (xx < 1804) & (yy >= 2446) & (yy < 2660)).astype(np.float32)
-    bm = cv2.GaussianBlur(bm, (0, 0), 2.5)
+    bh, bw = y_b1 - y_b0, 2010 - x0
+    by, bx = np.mgrid[0:bh, 0:bw].astype(np.float32)
+    rng = np.random.default_rng(11)
+    streep = cv2.GaussianBlur(rng.normal(0, 1, (1, bw)).astype(np.float32), (0, 0), 1.0)
+    ruis = cv2.GaussianBlur(rng.normal(0, 1, (bh, bw)).astype(np.float32), (0, 0), 0.8)
+    t = by / (2640 - y_b0)
+    rib = (1 + 0.07 * np.sin(2 * np.pi * bx / 7.5) + 0.03 * streep / (streep.std() + 1e-6) + 0.025 * ruis
+           - 0.25 * np.exp(-(t / 0.05) ** 2) - 0.14 * np.clip((t - 0.86) / 0.14, 0, 1))
+    vlak = basis[None, None] * rib[..., None]
+    boord = img.copy()
+    boord[y_b0:y_b1, x0:2010] = vlak
+    bm = ((xx >= x0) & (xx < 2010) & (yy >= y_b0) & (yy < y_b1)).astype(np.float32)
+    bm = cv2.GaussianBlur(bm, (0, 0), 1.5)
     img = img * (1 - bm[..., None]) + boord * bm[..., None]
-    a = pen_masker(img, HOOD_PUNTEN, cx, zoek=6)
+    a = np.where(yy > 2560, pen_masker(img, HOOD_PUNTEN, cx, snap=False), pen_masker(img, HOOD_PUNTEN, cx, zoek=6))
     img, a = img[:, ::-1].copy(), a[:, ::-1].copy()
     cx = W - 1 - cx
     img, a = symmetrisch(img, a, cx, band=0, overgang=40)
+    # garment-dyed vlekken (schaal 10 tot 60 px) eruit: grote plooien en scherpe naden/vouwen blijven
+    L = MK.helderheid(img)
+    m = (a > 0.5).astype(np.float32)
+    ref = float(np.median(L[m > 0.5]))
+    grof = cv2.GaussianBlur(L, (0, 0), 60)
+    scherp = L - cv2.GaussianBlur(L, (0, 0), 6)
+    L2 = grof + scherp * 1.2
+    img = img * np.clip(L2 / np.maximum(L, 1e-3), 0.5, 1.8)[..., None] * m[..., None] + img * (1 - m[..., None])
     _CACHE['hood'] = (img, a, cx)
     return _CACHE['hood']
 
@@ -669,15 +696,15 @@ def hoodie_rug(img, a, cx):
     L = MK.helderheid(img)
     ref_kap = float(np.median(L[880:1250, int(cx) + 260:int(cx) + 290]))
     ref_bron = float(np.median(L[1500:1800, int(cx) - 200:int(cx) + 200]))
-    bron = bron * (ref_kap / max(ref_bron, 1e-3))
+    bron = bron * (0.5 * (ref_kap + ref_bron) / max(ref_bron, 1e-3))
     img = img * (1 - kap[..., None]) + bron * kap[..., None]
     # middennaad over de kap
     naad = np.exp(-((xx - cx) / 2.2) ** 2) * (yy > 850) * (yy < 1320)
     img = img * (1 - 0.18 * naad[..., None])
     # buidelzak weg: stof van boven
-    zak = ((np.abs(xx - cx) < 420) & (yy > 1925) & (yy < 2440)).astype(np.float32)
-    zak = cv2.GaussianBlur(zak, (0, 0), 12)
-    spiegel = cv2.remap(img, xx, (2 * 1915 - yy).astype(np.float32), cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+    zak = ((np.abs(xx - cx) < 430) & (yy > 1890) & (yy < 2446)).astype(np.float32)
+    zak = cv2.GaussianBlur(zak, (0, 0), 8)
+    spiegel = cv2.remap(img, xx, (2 * 1880 - yy).astype(np.float32), cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
     img = img * (1 - zak[..., None]) + spiegel * zak[..., None]
     img, a = img[:, ::-1].copy(), a[:, ::-1].copy()
     return img, a, W - 1 - cx
@@ -695,16 +722,150 @@ def hoodie(handle, kleur, naam, achtergrond):
     ic = icoon(kleur)
     hoogte = 8.0 * HOOD_MAAT
     br = hoogte * ic.shape[1] / ic.shape[0]
-    v = druk(v, a, ic, cx + 10 * HOOD_MAAT, 1500 + 7 * HOOD_MAAT, br, verplaatsing=3)
+    v = druk(v, a, ic, cx + 10 * HOOD_MAAT, 1500 + 7 * HOOD_MAAT, br, verplaatsing=3, structuur=0.3)
     r, ra, rcx = hoodie_rug(img, a, cx)
     r = kaal = kleur_stof(r, ra, kleur, fijn_donker=1.3, plooi_donker=1.5)
-    r, pr = rugprint(r, ra, rcx, art, HOOD_MAAT, 1360, breedte_cm=26, max_cm=38, onder_kraag_cm=7)
+    r, pr = rugprint(r, ra, rcx, art, HOOD_MAAT, 1360, breedte_cm=26, max_cm=38, onder_kraag_cm=7, structuur=0.3)
     product(handle, (v, a), (r, ra), achtergrond, rugprint_macro_kader(pr, art, naam), [pr], HOOD_MAAT, macro_img=(kaal, ra),
             vulling=(0.84, 0.78))
 
 
 def hoodies():
     hoodie('hoodie-twee-boards', '#26355A', 'tweeboards', 'rose')
+
+
+# ---------- surfponcho (badstof) ----------
+PO_MAAT = 20.0                           # px per cm op het werkdoek
+PO_B, PO_H = 2600, 3000
+PO_CX, PO_NEK = 1300.0, 900.0
+
+
+def badstof(h, w, schaal=0.75, zaad=5):
+    """Echte badstof (lusjes) uit docs/producten/stock/handdoek-1.jpg, met patch-quilting tot een naadloos vlak.
+    Geeft de relatieve lichtheid terug (gemiddeld 1)."""
+    if ('badstof', h, w) in _CACHE:
+        return _CACHE[('badstof', h, w)]
+    bron = MK.laad(ROOT / 'docs' / 'producten' / 'stock' / 'handdoek-1.jpg')[720:900, 560:1100]
+    L = MK.helderheid(bron)
+    L = L / cv2.GaussianBlur(L, (0, 0), 18)                  # alleen de lusjes, geen licht of vouw
+    L = cv2.resize(L, (int(L.shape[1] * schaal), int(L.shape[0] * schaal)), interpolation=cv2.INTER_AREA)
+    rng = np.random.default_rng(zaad)
+    P, O = 96, 28                                             # patch en overlap
+    st = P - O
+    uit = np.zeros((h + P, w + P), np.float32)
+    gew = np.zeros_like(uit)
+    ramp = np.minimum(np.minimum(np.arange(P) + 1, P - np.arange(P)) / O, 1).astype(np.float32)
+    venster = np.outer(ramp, ramp)
+    for y in range(0, h + 1, st):
+        for x in range(0, w + 1, st):
+            py, px = rng.integers(0, L.shape[0] - P), rng.integers(0, L.shape[1] - P)
+            stuk = L[py:py + P, px:px + P]
+            if rng.random() < 0.5:
+                stuk = stuk[:, ::-1]
+            uit[y:y + P, x:x + P] += stuk * venster
+            gew[y:y + P, x:x + P] += venster
+    uit = (uit / np.maximum(gew, 1e-6))[:h, :w]
+    # overlap middelt het contrast weg: terug op het contrast van de bron
+    uit = 1 + (uit - uit.mean()) * (L.std() / max(uit.std(), 1e-6))
+    _CACHE[('badstof', h, w)] = uit.astype(np.float32)
+    return _CACHE[('badstof', h, w)]
+
+
+def poncho_vorm(kap_boven):
+    """Silhouet (cm, oorsprong midden van de hals): T-vorm met korte brede mouwen, capuchon boven."""
+    S, cx, y0 = PO_MAAT, PO_CX, PO_NEK
+    def p(x, y):
+        return (cx + x * S, y0 + y * S)
+    rechts = [p(14, 0), p(30, 3), p(54, 7), p(56, 9), p(56.5, 34), p(55, 36.5), p(40, 38), p(37.5, 41), p(37.5, 60),
+              p(38, 88), p(37, 90.5), p(0, 90.6)]
+    links = [(2 * cx - x, y) for x, y in rechts[::-1]][1:]
+    rand = rechts + links[:-1]
+    kap = [p(-14, 0)] + [p(19.5 * np.sin(t), -16 - 16.5 * np.cos(t) if kap_boven else -16 - 16.5 * np.cos(t)) for t in np.linspace(-np.pi * 0.62, np.pi * 0.62, 40)] + [p(14, 0)]
+    pad = np.array(rand + kap[::-1], np.float32) if False else np.array([p(14, 0)] + rechts[1:] + links[:-1] + kap[1:-1][::-1][::-1], np.float32)
+    return pad
+
+
+def poncho_alpha():
+    S = 4
+    groot = np.zeros((PO_H * S, PO_B * S), np.uint8)
+    cv2.fillPoly(groot, [np.round(poncho_vorm(True) * S).astype(np.int32)], 255, lineType=cv2.LINE_AA)
+    a = cv2.resize(groot.astype(np.float32) / 255, (PO_B, PO_H), interpolation=cv2.INTER_AREA)
+    return a
+
+
+def poncho(handle='surfponcho-tegel', kleur='#5E7F9C', achtergrond='zand'):
+    H, W, S, cx, y0 = PO_H, PO_B, PO_MAAT, PO_CX, PO_NEK
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    X, Y = (xx - cx) / S, (yy - y0) / S                       # cm
+    a = poncho_alpha()
+    rng = np.random.default_rng(21)
+    # plooien: lage ruis + een paar zachte verticale valplooien in de romp en schuine in de mouwen
+    laag = cv2.GaussianBlur(rng.normal(0, 1, (H // 8, W // 8)).astype(np.float32), (0, 0), 6)
+    laag = cv2.resize(laag / (laag.std() + 1e-6), (W, H), interpolation=cv2.INTER_CUBIC)
+    plooi = np.zeros((H, W), np.float32)
+    for xc, br, d in [(-24, 3.5, 0.06), (-9, 2.5, 0.05), (7, 3.0, 0.05), (22, 4.0, 0.06), (31, 2.0, 0.04)]:
+        golf = np.exp(-((X - xc - 1.5 * np.sin(Y / 9)) / br) ** 2) * np.clip((Y - 30) / 25, 0, 1)
+        plooi += d * (golf - 0.6 * np.exp(-((X - xc - br - 1.5 * np.sin(Y / 9)) / br) ** 2) * np.clip((Y - 30) / 25, 0, 1))
+    plooi = plooi + plooi[:, ::-1] * 0.0
+    mouw = (np.abs(X) > 38) & (Y > 0) & (Y < 40)
+    plooi += 0.05 * np.sin((np.abs(X) * 0.6 + Y) / 3.2) * np.exp(-((np.abs(X) - 47) / 6) ** 2) * mouw
+    licht = 1 + 0.035 * laag + plooi
+    # randen: omgezoomde bies (1,2 cm) met stiksel, en iets donker waar de dikke stof afrondt
+    rand_d = cv2.distanceTransform((a > 0.5).astype(np.uint8), cv2.DIST_L2, 5) / S          # cm tot de rand
+    bies = np.clip(1 - rand_d / 1.2, 0, 1)
+    stiksel = np.exp(-((rand_d - 1.25) / 0.06) ** 2) * (np.sin((xx + yy) * 0.9) > -0.2)
+    licht = licht * (1 - 0.10 * np.exp(-rand_d / 0.35)) * (1 + 0.04 * bies) * (1 - 0.12 * stiksel)
+    terry = badstof(H, W)
+    terry = 1 + (terry - 1) * 0.9
+    basis = hexrgb(kleur)
+    stof = basis[None, None] * (licht * terry)[..., None]
+    # tegelband aan de zoom (12 cm), ingeweven/gedrukt op de badstof: kleur van de tegels, licht en lusjes van de stof
+    band = ((Y > 77.5) & (Y < 89.3)).astype(np.float32) * (np.abs(X) < 36.3)
+    band = cv2.GaussianBlur(band, (0, 0), 1.0)
+    tegels = tegelband(H, W, int(5.9 * S), dx=int(cx) % int(5.9 * S), dy=int(y0 + 77.5 * S) % int(5.9 * S))
+    tegelstof = tegels * (licht * (1 + (terry - 1) * 1.2))[..., None] * 0.95
+    stof = stof * (1 - band[..., None]) + tegelstof * band[..., None]
+    # naad boven de band
+    stof = stof * (1 - 0.15 * np.exp(-((Y - 77.4) / 0.12) ** 2) * (np.abs(X) < 37))[..., None]
+    stof = np.clip(stof, 0, 1).astype(np.float32)
+
+    def kap_schaduw(img, binnen):
+        # capuchon: dubbele laag, iets schaduw waar hij op de schouders ligt
+        rand_kap = np.exp(-((Y - 0.3) / 0.6) ** 2) * (np.abs(X) < 14)
+        return img * (1 - 0.18 * rand_kap)[..., None]
+
+    # voorkant: halsopening (rond, 11 cm diep) met de binnenkant van de kap erachter, buidelzak met stiksels, ons label
+    voor = stof.copy()
+    hals = (X / 12.5) ** 2 + (Y / 10.5) ** 2 < 1
+    binnenkap = ((X / 17.5) ** 2 + ((Y + 14) / 15) ** 2 < 1) | hals
+    binnen = binnenkap & (Y > -27)
+    schaduw_binnen = np.clip(0.55 + 0.35 * ((Y + 27) / 37), 0.45, 0.9)
+    bm = cv2.GaussianBlur((binnen & ((X / 13.5) ** 2 + ((Y + 12) / 13.5) ** 2 < 1)).astype(np.float32), (0, 0), 3)
+    voor = voor * (1 - bm[..., None] * (1 - schaduw_binnen[..., None]))
+    # kaprand (bies) rond de opening
+    kr = ((X / 13.5) ** 2 + ((Y + 12) / 13.5) ** 2)
+    kaprand = np.exp(-((np.sqrt(kr) - 1) / 0.05) ** 2) * (Y < 10.5)
+    voor = voor * (1 + 0.10 * kaprand[..., None]) * (1 - 0.15 * np.exp(-((np.sqrt(kr) - 1.07) / 0.03) ** 2))[..., None]
+    zak = (np.abs(X) < 21) & (Y > 50) & (Y < 70)
+    zakrand = np.exp(-((np.abs(X) - 21) / 0.15) ** 2) * (Y > 50) * (Y < 70) + np.exp(-((Y - 50) / 0.15) ** 2) * (np.abs(X) < 21)
+    zakst = (np.exp(-((np.abs(X) - 20.3) / 0.05) ** 2) * (Y > 50.6) * (Y < 70) +
+             np.exp(-((Y - 50.7) / 0.05) ** 2) * (np.abs(X) < 20.3)) * (np.sin((xx + yy) * 0.9) > -0.2)
+    voor = voor * (1 - 0.22 * zakrand - 0.12 * zakst)[..., None] * (1 + 0.03 * zak)[..., None]
+    voor = neklabel_in(voor.astype(np.float32), NAVY, cx, y0 + 4 * S, 5.5 * S, binnen & (Y > 0) & (Y < 9))
+    # achterkant: kap plat naar boven met middennaad, groot creme logo op de rug
+    rug = kap_schaduw(stof.copy(), None).astype(np.float32)
+    kapnaad = np.exp(-(X / 0.08) ** 2) * (Y < -0.5) * (Y > -32)
+    rug = rug * (1 - 0.18 * kapnaad)[..., None]
+    logo = E.art(REF / 'logo-navy.png', CREME)
+    lb = 34 * S
+    ly = y0 + 9 * S + lb * logo.shape[0] / logo.shape[1] / 2
+    kaal = rug.copy()
+    rug = druk(rug, a, logo, cx, ly, lb, verplaatsing=4, structuur=1.4, dekking=0.92)
+    # macro: hoek van de zoom met tegelband en badstof
+    kader_w = 32 * S
+    kader = (cx + 22 * S - kader_w / 2, y0 + 82 * S - kader_w * 1.25 * 0.55, kader_w)
+    product(handle, (voor, a), (rug, a), achtergrond, kader, [], S, vulling=(0.84, 0.80), macro_img=(kaal, a),
+            macro_bg=True, brei=False)
 
 
 def sweaters():
