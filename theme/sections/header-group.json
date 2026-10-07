@@ -5,7 +5,8 @@
     "surf-header": {
       "type": "surf-header",
       "settings": {
-        "overlay_home": false
+        "overlay_home": false,
+        "cta_link": "/products/draagtas-tegel"
       },
       "blocks": {
         "tab-1": {
