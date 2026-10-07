@@ -1,0 +1,224 @@
+"""Levensechte foto's voor drie producten die nog alleen een tekening hadden: uv-shirt-lange-mouw, surfponcho-tegel en waxkam.
+
+Werkwijze zoals echt.py: echte stockfoto's (Pexels, zie docs/producten/stock/bronnen.json), merkjes wegpoetsen, stof omkleuren
+met behoud van schaduw en plooien, en onze prints erop zetten die meebuigen met de stof (mockup.zet_print).
+Nieuw hier: tegelbanden om een mouw of langs een zoom (band_cilinder, band_zoom) en een uitgeknipte waxkam die we
+recht leggen (perspectief) zodat hij in andere foto's en in een studiofoto kan liggen.
+
+Gebruik: python3 tools/producten/echt_extra.py [uv_shirt] [poncho] [waxkam]
+"""
+import pathlib, sys
+import cv2
+import numpy as np
+
+HIER = pathlib.Path(__file__).parent
+ROOT = HIER.parent.parent
+sys.path.insert(0, str(HIER))
+import mockup as MK  # noqa: E402
+import echt as E  # noqa: E402
+
+STOCK = ROOT / 'docs' / 'producten' / 'stock'
+REF = ROOT / 'docs' / 'producten' / 'referentie'
+UIT = HIER / 'uit_extra'
+UIT.mkdir(exist_ok=True)
+DOEL = ROOT / 'docs' / 'producten' / 'beelden'
+NAVY, CREME, TERRA = '#22324F', '#F3ECDD', '#C0603E'
+ZEEBLAUW = '#5E7F9C'
+PROEF = '--proef' in sys.argv          # alleen kleine voorbeelden in uit_extra, niets in beelden
+
+
+def hexrgb(h):
+    return np.array([int(h[i:i + 2], 16) for i in (1, 3, 5)], np.float32) / 255
+
+
+def foto(naam):
+    return MK.laad(STOCK / naam)
+
+
+def bewaar(img, naam, uitsnede=None):
+    """Uitsnede (x0, y0, x1, y1) in 4:5, dan naar 1600 x 2000 en als jpg onder 190 kB."""
+    if uitsnede:
+        x0, y0, x1, y1 = uitsnede
+        img = img[y0:y1, x0:x1]
+    staand = MK.naar_staand(img, vul=1.0)
+    if PROEF:
+        MK.bewaar(cv2.resize(staand, (640, 800), interpolation=cv2.INTER_AREA), UIT / f'proef-{naam}.jpg')
+    else:
+        MK.bewaar(staand, DOEL / f'{naam}.jpg')
+    print('foto', naam)
+
+
+def uitsnede45(cx, cy, b, h_img, w_img, breedte):
+    """4:5-uitsnede met gegeven breedte rond (cx, cy), binnen het beeld geschoven."""
+    hoogte = int(round(breedte * 5 / 4))
+    x0 = int(np.clip(cx - breedte / 2, 0, w_img - breedte))
+    y0 = int(np.clip(cy - hoogte / 2, 0, h_img - hoogte))
+    return x0, y0, x0 + breedte, y0 + hoogte
+
+
+# ---------- artwork ----------
+def art(naam, kleur=None):
+    a = MK.laad_art(REF / naam)
+    if kleur:
+        a = a.copy(); a[..., :3] = hexrgb(kleur)
+    return a
+
+
+def knijp(a, sx=1.0, sy=1.0):
+    """Art vervormen (bijvoorbeeld smaller als het lijf van ons wegdraait)."""
+    h, w = a.shape[:2]
+    return cv2.resize(a, (max(1, int(w * sx)), max(1, int(h * sy))), interpolation=cv2.INTER_AREA)
+
+
+def tegelstrook(rijen=1, rand=None):
+    """Strook uit onze tegelprint: een rij (of meer) tegels, naadloos herhaalbaar in de breedte.
+    rand = (kleur, dikte als deel van de hoogte) geeft een smal effen biesje boven en onder."""
+    t = MK.laad(REF / 'tegelprint.png') if False else None
+    from PIL import Image
+    a = np.asarray(Image.open(REF / 'tegelprint.png').convert('RGB')).astype(np.float32) / 255
+    n = 6                                        # 6 x 6 tegels in de print
+    ts = a.shape[0] / n
+    strook = a[:int(round(ts * rijen))]
+    if rand:
+        kl, d = rand
+        h = strook.shape[0]; p = int(h * d)
+        strook = np.concatenate([np.ones((p, strook.shape[1], 3), np.float32) * hexrgb(kl), strook,
+                                 np.ones((p, strook.shape[1], 3), np.float32) * hexrgb(kl)], 0)
+    return np.dstack([strook, np.ones(strook.shape[:2], np.float32)])
+
+
+# ---------- druk op stof ----------
+def druk_laag(img, laag, **kw):
+    """Een volledige RGBA-laag (zelfde maat als img) op de stof drukken met de schaduw- en plooiwerking van mockup.zet_print."""
+    h, w = img.shape[:2]
+    return MK.zet_print(img, laag, w / 2, h / 2, w, **kw)
+
+
+def band_cilinder(img, C, n_dir, r, breedte, strook, e=0.15, tegels_per_hoogte=1.0, masker=None, **kw):
+    """Tegelband om een mouw (cilinder). C = midden van de band op de as, n_dir = richting dwars over de mouw
+    (van links naar rechts in beeld), r = halve mouwbreedte in pixels, breedte = bandbreedte langs de as.
+    e = hoe ver we op de mouwopening kijken (ellips); positieve e buigt de band naar de hand toe."""
+    h, w = img.shape[:2]
+    n = np.array(n_dir, np.float32); n /= np.linalg.norm(n)
+    a = np.array([-n[1], n[0]], np.float32)          # langs de as (naar de hand)
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    rx, ry = xx - C[0], yy - C[1]
+    u = (rx * n[0] + ry * n[1]) / r
+    sin_t = np.clip(u, -1, 1)
+    theta = np.arcsin(sin_t)
+    s = rx * a[0] + ry * a[1] - e * r * np.cos(theta)
+    sh, sw = strook.shape[:2]
+    tegel = sh / tegels_per_hoogte
+    # booglengte rond de mouw, in tegels: (theta * r) / breedte tegels
+    mx = ((theta + np.pi / 2) * r / breedte * tegel) % sw
+    my = (s / breedte + 0.5) * sh
+    laag = cv2.remap(strook, mx.astype(np.float32), my.astype(np.float32), cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
+    binnen = (np.abs(u) < 1.0) & (my >= 0) & (my <= sh - 1)
+    zacht = np.clip((1 - np.abs(u)) * r / 1.5, 0, 1)
+    laag[..., 3] *= binnen * zacht
+    if masker is not None:
+        laag[..., 3] *= masker
+    return druk_laag(img, laag, **kw)
+
+
+def band_zoom(img, zoom, hoogte, strook, omhoog=(0, -1), masker=None, **kw):
+    """Tegelband langs een zoom. zoom = lijst punten (x, y) van links naar rechts langs de onderrand,
+    hoogte in pixels (mag een lijst per punt zijn, voor perspectief), omhoog = richting van de zoom het kledingstuk in."""
+    h, w = img.shape[:2]
+    zoom = np.array(zoom, np.float32)
+    # gladde curve door de punten
+    t = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(zoom, axis=0), axis=1))])
+    tt = np.linspace(0, t[-1], 400)
+    px = np.interp(tt, t, zoom[:, 0]); py = np.interp(tt, t, zoom[:, 1])
+    k = 15
+    px = np.convolve(np.pad(px, k, mode='edge'), np.ones(2 * k + 1) / (2 * k + 1), 'valid')
+    py = np.convolve(np.pad(py, k, mode='edge'), np.ones(2 * k + 1) / (2 * k + 1), 'valid')
+    hs = np.interp(tt, t, np.broadcast_to(np.array(hoogte, np.float32), (len(zoom),)))
+    om = np.array(omhoog, np.float32); om /= np.linalg.norm(om)
+    sh, sw = strook.shape[:2]
+    laag = np.zeros((h, w, 4), np.float32)
+    lengte = 0.0
+    for i in range(len(tt) - 1):
+        p0, p1 = np.array([px[i], py[i]]), np.array([px[i + 1], py[i + 1]])
+        q0, q1 = p0 + om * hs[i], p1 + om * hs[i + 1]
+        seg = np.linalg.norm(p1 - p0)
+        u0 = lengte / hs[i] * sh; lengte += seg; u1 = lengte / hs[i + 1] * sh
+        # stukje strook (met herhaling) op dit vierhoekje
+        bron = np.float32([[u0, sh], [u1, sh], [u1, 0], [u0, 0]])
+        doel = np.float32([p0, p1, q1, q0])
+        x0, y0 = np.floor(doel.min(0)).astype(int) - 2
+        x1, y1 = np.ceil(doel.max(0)).astype(int) + 3
+        x0, y0 = max(x0, 0), max(y0, 0); x1, y1 = min(x1, w), min(y1, h)
+        if x1 <= x0 or y1 <= y0:
+            continue
+        M = cv2.getPerspectiveTransform(doel - np.float32([x0, y0]), bron)
+        gx, gy = np.meshgrid(np.arange(x0, x1, dtype=np.float32) - x0, np.arange(y0, y1, dtype=np.float32) - y0)
+        den = M[2, 0] * gx + M[2, 1] * gy + M[2, 2]
+        su = (M[0, 0] * gx + M[0, 1] * gy + M[0, 2]) / den
+        sv = (M[1, 0] * gx + M[1, 1] * gy + M[1, 2]) / den
+        stuk = cv2.remap(strook, (su % sw).astype(np.float32), sv.astype(np.float32), cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
+        poly = np.zeros((y1 - y0, x1 - x0), np.float32)
+        cv2.fillConvexPoly(poly, np.round((doel - np.float32([x0, y0])) * 4).astype(np.int32), 1, lineType=cv2.LINE_AA, shift=2)
+        stuk[..., 3] *= np.clip(poly * 1.0, 0, 1) * ((sv >= -0.5) & (sv <= sh + 0.5))
+        vak = laag[y0:y1, x0:x1]
+        a_n = stuk[..., 3:4]
+        vak[..., :3] = vak[..., :3] * (1 - a_n) + stuk[..., :3] * a_n
+        vak[..., 3:4] = np.maximum(vak[..., 3:4], a_n)
+    if masker is not None:
+        laag[..., 3] *= masker
+    return druk_laag(img, laag, **kw)
+
+
+def masker_kleur(img, laag_hsv, hoog_hsv, zaad=None, sluit=9, rect=None):
+    """Masker op kleur (OpenCV-HSV, 0..180 / 0..255), dichtgemaakt, eventueel alleen het stuk onder zaad of binnen rect."""
+    u8 = (np.clip(img, 0, 1) * 255).astype(np.uint8)
+    hsv = cv2.cvtColor(u8, cv2.COLOR_RGB2HSV)
+    m = cv2.inRange(hsv, np.array(laag_hsv, np.uint8), np.array(hoog_hsv, np.uint8))
+    if rect:
+        r = np.zeros_like(m); x0, y0, x1, y1 = rect; r[y0:y1, x0:x1] = 255; m &= r
+    m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((sluit, sluit), np.uint8))
+    m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    n, lab, st, _ = cv2.connectedComponentsWithStats((m > 0).astype(np.uint8))
+    if n > 1:
+        kies = lab[zaad[1], zaad[0]] if zaad else 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])
+        m = (lab == kies).astype(np.uint8)
+    vul = m.copy(); ff = np.zeros((m.shape[0] + 2, m.shape[1] + 2), np.uint8); cv2.floodFill(vul, ff, (0, 0), 1)
+    m = m | (1 - vul)
+    return cv2.GaussianBlur(m.astype(np.float32), (0, 0), 1.2)
+
+
+def kleur_om(img, m, doel_hex, ref=None, gamma=1.0):
+    """Als mockup.kleur_om, maar met een vaste referentiehelderheid (de lichte kant van de stof) zodat
+    zonlicht en schaduw van de foto gelijk blijven, en een gamma om het contrast van lichte stof wat te temperen."""
+    doel = hexrgb(doel_hex)
+    L = MK.helderheid(img)
+    if ref is None:
+        ref = np.median(L[m > 0.5])
+    schaduw = np.clip(L / ref, 0, 2.2) ** gamma
+    nieuw = np.clip(doel[None, None] * schaduw[..., None], 0, 1)
+    mm = m[..., None]
+    return img * (1 - mm) + nieuw * mm
+
+
+# ---------- UV-shirt ----------
+def uv_shirt():
+    strook = tegelstrook()
+    borst = art('uv-shirt-lange-mouw-borst-los.png')
+
+    # 1. voorkant, gedragen aan zee (Pexels 20849170)
+    s = foto('uvshirt-model-1.jpg')
+    s = E.poets(s, 1742, 1785, 104, 132)                  # merklogo op de borst
+    s = E.poets(s, 754, 3196, 86, 62)                     # tekst bij de zoom
+    m = masker_kleur(s, (95, 40, 20), (125, 255, 200), zaad=(1300, 2300))
+    if PROEF:
+        cv2.imwrite(str(UIT / 'proef-masker-uv1.jpg'), (m * 255).astype(np.uint8)[::4, ::4])
+    s = kleur_om(s, m, '#26385A', gamma=0.95)
+    s = MK.zet_print(s, knijp(borst, 0.82, 1.0), 1712, 1800, 150, draai=4, verplaatsing=5, masker=m, schaduw_sterkte=0.8)
+    s = band_cilinder(s, (1880, 3008), (0.995, 0.097), 104, 112, strook, e=0.12, masker=m, verplaatsing=4, schaduw_sterkte=0.85, structuur=0.4)
+    bewaar(s, 'uv-shirt-lange-mouw-1', uitsnede=(240, 650, 2400, 3350))
+
+
+if __name__ == '__main__':
+    stappen = [a for a in sys.argv[1:] if not a.startswith('--')] or ['uv_shirt', 'poncho', 'waxkam']
+    for st in stappen:
+        globals()[st]()

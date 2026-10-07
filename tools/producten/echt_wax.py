@@ -281,7 +281,7 @@ def blok(soort):
     cv2.fillPoly(band, [np.int32(BLOK_BAND)], 1)
     # kleurzweem van het licht in deze foto (warm), gemeten op het witte blok; half meenemen
     med = np.median(orig[cv2.erode(bar, np.ones((15, 15), np.uint8)) > 0], axis=0)
-    cast = (med / med.mean()) ** 0.5
+    cast = (med / med.mean()) ** 0.3
     # 1. licht op het blok zonder marmeraders: grijswaardensluiting haalt donkere aders weg, licht en randen blijven
     Lb = L(img)
     Lc = cv2.morphologyEx(Lb, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (41, 41)))
@@ -290,6 +290,14 @@ def blok(soort):
     # 2. uiteinden in waxkleur
     eind = ((bar > 0) & (band == 0)).astype(np.float32)
     eind = cv2.GaussianBlur(eind, (0, 0), 1.2) * cv2.GaussianBlur(bar.astype(np.float32), (0, 0), 1.0)
+    # aders die te breed zijn voor de sluiting: licht van de uiteinden ook als glad verloop, de aders vallen weg
+    for x0, x1 in [(1300, 1390), (1390, 1460), (2320, 2410)]:
+        stuk = np.zeros_like(bar); stuk[:, x0:x1] = 1
+        stuk = (stuk & cv2.erode(bar, np.ones((11, 11), np.uint8))).astype(bool)
+        helder = stuk & (Lc > np.percentile(Lc[stuk], 45))
+        fit = vlakfit(Lc, helder, graad=2)
+        zone = cv2.GaussianBlur(stuk.astype(np.float32), (0, 0), 4)
+        Lc = Lc * (1 - zone) + np.maximum(Lc, fit - 0.015) * zone
     ref = np.percentile(Lc[eind > 0.5], 60)
     f = np.clip((Lc / ref) ** 0.8, 0.55, 1.1)[..., None]
     nieuw = np.clip(hexrgb(d['kleur'])[None, None] * cast[None, None] * f, 0, 1)
@@ -306,7 +314,8 @@ def blok(soort):
     wit = np.percentile(Lp[band > 0], 90)
     img = druk(img, art(f'band-voor-{soort}'), BLOK_BAND, wit=wit, blur=1.0, structuur=0.0, licht=Lp, korrel=0.008, cast=cast, rand=1.0)
     # 5. blad op de voorgrond blijft ervoor (alleen het blad zelf: donker en doorlopend tot onder het blok)
-    donker = ((L(orig) < 0.45) & (np.mgrid[0:h, 0:w][0] > 1600)).astype(np.uint8)
+    yy, xx = np.mgrid[0:h, 0:w]
+    donker = ((L(orig) < 0.45) & (yy > 1650) & (xx > 1640) & (xx < 2010)).astype(np.uint8)
     n, lab, st, _ = cv2.connectedComponentsWithStats(donker)
     blad = np.zeros_like(donker)
     for i in range(1, n):
