@@ -1,0 +1,71 @@
+{
+  "sections": {
+    "tekst": {
+      "type": "tt-tekst",
+      "settings": {},
+      "blocks": {
+        "link-1": {
+          "type": "link",
+          "settings": {
+            "label": "Verzenden",
+            "link": "/policies/shipping-policy"
+          }
+        },
+        "link-2": {
+          "type": "link",
+          "settings": {
+            "label": "Retourneren",
+            "link": "/policies/refund-policy"
+          }
+        },
+        "link-3": {
+          "type": "link",
+          "settings": {
+            "label": "Herroepingsrecht",
+            "link": "/pages/herroepingsrecht"
+          }
+        },
+        "link-4": {
+          "type": "link",
+          "settings": {
+            "label": "Algemene voorwaarden",
+            "link": "/policies/terms-of-service"
+          }
+        },
+        "link-5": {
+          "type": "link",
+          "settings": {
+            "label": "Privacybeleid",
+            "link": "/policies/privacy-policy"
+          }
+        },
+        "link-6": {
+          "type": "link",
+          "settings": {
+            "label": "Veelgestelde vragen",
+            "link": "/pages/veelgestelde-vragen"
+          }
+        },
+        "link-7": {
+          "type": "link",
+          "settings": {
+            "label": "Contact",
+            "link": "/pages/contact"
+          }
+        }
+      },
+      "block_order": [
+        "link-1",
+        "link-2",
+        "link-3",
+        "link-4",
+        "link-5",
+        "link-6",
+        "link-7"
+      ]
+    }
+  },
+  "order": [
+    "tekst"
+  ]
+}

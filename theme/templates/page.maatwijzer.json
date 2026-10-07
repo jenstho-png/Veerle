@@ -1,0 +1,204 @@
+{
+  "sections": {
+    "tekst": {
+      "type": "tt-tekst",
+      "settings": {
+        "label": "Klantenservice",
+        "datum": ""
+      },
+      "blocks": {
+        "link-1": {
+          "type": "link",
+          "settings": {
+            "label": "Draagtassen",
+            "link": "/collections/draagtassen"
+          }
+        },
+        "link-2": {
+          "type": "link",
+          "settings": {
+            "label": "Kleding en merch",
+            "link": "/collections/kleding-en-merch"
+          }
+        },
+        "link-3": {
+          "type": "link",
+          "settings": {
+            "label": "Veelgestelde vragen",
+            "link": "/pages/veelgestelde-vragen"
+          }
+        },
+        "link-4": {
+          "type": "link",
+          "settings": {
+            "label": "Contact",
+            "link": "/pages/contact"
+          }
+        }
+      },
+      "block_order": [
+        "link-1",
+        "link-2",
+        "link-3",
+        "link-4"
+      ]
+    },
+    "check": {
+      "type": "tt-check",
+      "settings": {
+        "bevestigd": true
+      }
+    },
+    "tas": {
+      "type": "tt-maattabel",
+      "settings": {
+        "anker": "draagtas",
+        "heading": "Draagtas",
+        "kolommen": "Board|Lengte|Past",
+        "text": "De draagtas heeft één maat. Hij sluit om het midden van je board, dus de lengte maakt weinig uit. Het gaat vooral om de breedte en dikte.",
+        "noot": "Twijfel je? Stuur ons de maten van je board, dan kijken we mee.",
+        "btn_label": "Bekijk de draagtassen",
+        "btn_link": "/collections/draagtassen"
+      },
+      "blocks": {
+        "rij-1": {
+          "type": "rij",
+          "settings": {
+            "cellen": "Shortboard|5'6\" tot 6'6\"|Ja"
+          }
+        },
+        "rij-2": {
+          "type": "rij",
+          "settings": {
+            "cellen": "Fish|5'4\" tot 6'4\"|Ja"
+          }
+        },
+        "rij-3": {
+          "type": "rij",
+          "settings": {
+            "cellen": "Funboard of mini-mal|6'8\" tot 8'0\"|Ja"
+          }
+        },
+        "rij-4": {
+          "type": "rij",
+          "settings": {
+            "cellen": "Softtop|7'0\" tot 9'0\"|Ja"
+          }
+        },
+        "rij-5": {
+          "type": "rij",
+          "settings": {
+            "cellen": "Longboard|9'0\" en langer|Vraag het ons"
+          }
+        }
+      },
+      "block_order": [
+        "rij-1",
+        "rij-2",
+        "rij-3",
+        "rij-4",
+        "rij-5"
+      ]
+    },
+    "kleding": {
+      "type": "tt-maattabel",
+      "settings": {
+        "anker": "kleding",
+        "heading": "T-shirts, longsleeves en hoodies",
+        "kolommen": "Maat|Borstbreedte|Lengte",
+        "text": "Gemeten op een plat neergelegd shirt, van oksel tot oksel en van schouder tot zoom. Onze shirts vallen ruim.",
+        "noot": "Tussen twee maten? Kies de kleinste voor een normale pasvorm, de grootste voor oversized.",
+        "btn_label": "Bekijk de kleding",
+        "btn_link": "/collections/kleding-en-merch"
+      },
+      "blocks": {
+        "rij-1": {
+          "type": "rij",
+          "settings": {
+            "cellen": "S|51 cm|71 cm"
+          }
+        },
+        "rij-2": {
+          "type": "rij",
+          "settings": {
+            "cellen": "M|54 cm|74 cm"
+          }
+        },
+        "rij-3": {
+          "type": "rij",
+          "settings": {
+            "cellen": "L|57 cm|76 cm"
+          }
+        },
+        "rij-4": {
+          "type": "rij",
+          "settings": {
+            "cellen": "XL|60 cm|78 cm"
+          }
+        }
+      },
+      "block_order": [
+        "rij-1",
+        "rij-2",
+        "rij-3",
+        "rij-4"
+      ]
+    },
+    "rash": {
+      "type": "tt-maattabel",
+      "settings": {
+        "anker": "uv-shirt",
+        "heading": "UV-shirt",
+        "kolommen": "Maat|Borstomtrek|Lengte",
+        "text": "Het UV-shirt zit strak, zodat het in het water niet opbolt.",
+        "bg": "zand"
+      },
+      "blocks": {
+        "rij-1": {
+          "type": "rij",
+          "settings": {
+            "cellen": "XS|80 tot 86 cm|64 cm"
+          }
+        },
+        "rij-2": {
+          "type": "rij",
+          "settings": {
+            "cellen": "S|86 tot 92 cm|66 cm"
+          }
+        },
+        "rij-3": {
+          "type": "rij",
+          "settings": {
+            "cellen": "M|92 tot 98 cm|68 cm"
+          }
+        },
+        "rij-4": {
+          "type": "rij",
+          "settings": {
+            "cellen": "L|98 tot 104 cm|70 cm"
+          }
+        },
+        "rij-5": {
+          "type": "rij",
+          "settings": {
+            "cellen": "XL|104 tot 110 cm|72 cm"
+          }
+        }
+      },
+      "block_order": [
+        "rij-1",
+        "rij-2",
+        "rij-3",
+        "rij-4",
+        "rij-5"
+      ]
+    }
+  },
+  "order": [
+    "tekst",
+    "check",
+    "tas",
+    "kleding",
+    "rash"
+  ]
+}

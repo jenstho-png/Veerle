@@ -89,9 +89,9 @@ await page('popup', 'index.json', { popup: true, code: 'TIDE10' });
 // productpagina met een nep-product en losse foto's als 'productfoto's'
 {
   const foto = (f) => ({ media_type: 'image', alt: 'De Tide-Tode draagtas', preview_image: { src: f } });
-  globals.product = { ...settings.tt_product, description: '<p>Voor iedereen die zijn board een eind moet dragen. Leg je board in de tas, trek de banden aan en hang hem op je rug.</p>',
-    vendor: 'Tide-Tode', url: '/products/de-draagtas', featured_media: foto('tt-foto-product-1.jpg'),
-    media: ['tt-foto-product-1.jpg', 'tt-foto-stap-1.jpg', 'tt-foto-product-2.jpg', 'tt-foto-stap-3.jpg', 'tt-foto-stap-2.jpg'].map(foto),
+  // zonder eigen media: dan toont de galerij de getekende productbeelden
+  globals.product = { ...settings.tt_product, title: 'Draagtas Tegel', description: '<p>De Tide-Tode draagtas in tegelprint. Je schuift je surfboard in de tas en hangt hem over je schouder.</p>',
+    vendor: 'Tide-Tode', url: '/products/draagtas-tegel', featured_media: null, media: [],
     variants: [{ id: 1, price: 4000, available: true, url: '/products/de-draagtas?variant=1', sku: 'TT-01', options: [] }] };
   globals.template = { name: 'product' };
   globals.cart = { ...globals.cart, currency: { iso_code: 'EUR' } };
@@ -100,4 +100,12 @@ await page('popup', 'index.json', { popup: true, code: 'TIDE10' });
 }
 await page('over-ons', 'page.over-ons.json', { request: { page_type: 'page' } });
 await page('faq', 'page.veelgestelde-vragen.json', { request: { page_type: 'page' } });
+globals.page = { title: 'Contact', content: '' };
+await page('contact', 'page.contact.json', { request: { page_type: 'page', path: '/pages/contact' } });
+globals.page = { title: 'Herroepingsrecht', content: fs.readFileSync(path.resolve(T, '../docs/juridisch/herroepingsrecht.html'), 'utf8') };
+await page('herroepingsrecht', 'page.juridisch.json', { request: { page_type: 'page', path: '/pages/herroepingsrecht' } });
+globals.page = { title: 'Maatwijzer', content: '<p>Hier lees je welke boards in de draagtas passen en welke maat kleding je kiest.</p>' };
+await page('maatwijzer', 'page.maatwijzer.json', { request: { page_type: 'page', path: '/pages/maatwijzer' } });
+globals.page = { title: 'Actie', content: '' };
+await page('actie', 'page.actie.json', { request: { page_type: 'page', path: '/pages/actie' } });
 console.log('rendered');

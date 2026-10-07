@@ -75,9 +75,11 @@
         {%- elsif section.settings.text != blank -%}
           <p class="tt-koop__pitch tt-in">{{ section.settings.text }}</p>
         {%- endif -%}
+        {%- for block in section.blocks -%}{%- if block.type == '@app' -%}<div class="tt-koop__app">{% render block %}</div>{%- endif -%}{%- endfor -%}
         <ul class="tt-koop__punten tt-in">
           {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span class="tt-koop__vinkje" aria-hidden="true"></span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
         </ul>
+        {%- if section.settings.maat_link != blank and section.settings.maat_label != blank -%}<a class="tt-link tt-koop__maat tt-in" href="{{ section.settings.maat_link }}">{{ section.settings.maat_label }}</a>{%- endif -%}
         {%- if p != blank and v.available and section.settings.voorraad != blank -%}<p class="tt-koop__voorraad tt-in"><span class="tt-koop__stip" aria-hidden="true"></span>{{ section.settings.voorraad }}</p>{%- endif -%}
         <div class="tt-koop__form tt-in">
           {%- if p != blank -%}
@@ -253,6 +255,18 @@
       "default": true
     },
     {
+      "type": "text",
+      "id": "maat_label",
+      "label": "Link naar de maatwijzer",
+      "default": "Past mijn board? Bekijk de maatwijzer"
+    },
+    {
+      "type": "text",
+      "id": "maat_link",
+      "label": "Adres maatwijzer",
+      "default": "/pages/maatwijzer"
+    },
+    {
       "type": "checkbox",
       "id": "extra_beelden",
       "label": "Getekende productbeelden tonen zolang het product geen foto's heeft",
@@ -337,6 +351,9 @@
           "default": "Handen vrij"
         }
       ]
+    },
+    {
+      "type": "@app"
     },
     {
       "type": "detail",

@@ -223,9 +223,11 @@ schrijf('tt-koop', PRIJS + """
         {%- elsif section.settings.text != blank -%}
           <p class="tt-koop__pitch tt-in">{{ section.settings.text }}</p>
         {%- endif -%}
+        {%- for block in section.blocks -%}{%- if block.type == '@app' -%}<div class="tt-koop__app">{% render block %}</div>{%- endif -%}{%- endfor -%}
         <ul class="tt-koop__punten tt-in">
           {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span class="tt-koop__vinkje" aria-hidden="true"></span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
         </ul>
+        {%- if section.settings.maat_link != blank and section.settings.maat_label != blank -%}<a class="tt-link tt-koop__maat tt-in" href="{{ section.settings.maat_link }}">{{ section.settings.maat_label }}</a>{%- endif -%}
         {%- if p != blank and v.available and section.settings.voorraad != blank -%}<p class="tt-koop__voorraad tt-in"><span class="tt-koop__stip" aria-hidden="true"></span>{{ section.settings.voorraad }}</p>{%- endif -%}
         <div class="tt-koop__form tt-in">
           {%- if p != blank -%}
@@ -315,6 +317,8 @@ schrijf('tt-koop', PRIJS + """
         {"type": "checkbox", "id": "snel_betalen", "label": "Snelle betaalknoppen tonen (Shop Pay, Apple Pay, enz.)", "default": False},
         {"type": "text", "id": "voorraad", "label": "Voorraadregel (als hij op voorraad is)", "default": "Op voorraad, binnen 2 werkdagen verstuurd"},
         {"type": "checkbox", "id": "betaal_iconen", "label": "Betaalmethoden tonen onder de knop", "default": True},
+        {"type": "text", "id": "maat_label", "label": "Link naar de maatwijzer", "default": "Past mijn board? Bekijk de maatwijzer"},
+        {"type": "text", "id": "maat_link", "label": "Adres maatwijzer", "default": "/pages/maatwijzer"},
         {"type": "checkbox", "id": "extra_beelden", "label": "Getekende productbeelden tonen zolang het product geen foto's heeft", "default": True},
         {"type": "header", "content": "Vertrouwen onder de knop"},
         {"type": "text", "id": "v1", "label": "Regel 1", "default": "Verzending door heel Europa"},
@@ -323,6 +327,7 @@ schrijf('tt-koop', PRIJS + """
     ] + s1 + s2,
     "blocks": [
         {"type": "punt", "name": "Voordeel", "settings": [{"type": "text", "id": "tekst", "label": "Tekst", "default": "Handen vrij"}]},
+        {"type": "@app"},
         {"type": "detail", "name": "Uitklapper", "settings": [{"type": "text", "id": "titel", "label": "Titel", "default": "Materiaal"}, {"type": "richtext", "id": "tekst", "label": "Tekst", "default": "<p>Tekst</p>"}]},
     ],
     "presets": [{"name": "TT: kopen", "blocks": [
@@ -582,8 +587,8 @@ schrijf('tt-check', PRODUCT + """
         <g data-tt-check-board>
           <path class="tt-check__board" d=""/>
           <line class="tt-check__stringer" x1="100" x2="100"/>
-          <rect class="tt-check__band" x="52" width="96" height="16" rx="5"/>
-          <rect class="tt-check__band" x="52" width="96" height="16" rx="5"/>
+          <path class="tt-check__paneel" d=""/>
+          <path class="tt-check__schouder" d=""/>
         </g>
       </svg>
     </div>
@@ -1001,5 +1006,167 @@ schrijf('tt-kaarten', """
         {"type": "kaart", "settings": {"kleur": "rose", "ill": "golf", "titel": "14 dagen bedenktijd", "tekst": "Past hij toch niet bij je board? Stuur hem binnen 14 dagen terug, ongebruikt en met label."}},
         {"type": "kaart", "settings": {"kleur": "zand", "ill": "zon", "titel": "Gemaakt om mee te gaan", "tekst": "Sterke stiksels en zware stof. Voor jaren aan surftrips, niet voor één zomer."}}]}]})
 
-print('klaar')
+# ---------- CONTACT: formulier en gegevens ----------
+GEGEVENS = """
+      <dl class="tt-gegevens">
+        {%- if settings.tt_email != blank -%}<div><dt>E-mail</dt><dd><a href="mailto:{{ settings.tt_email }}">{{ settings.tt_email }}</a></dd></div>{%- endif -%}
+        {%- if settings.tt_telefoon != blank -%}<div><dt>Telefoon</dt><dd><a href="tel:{{ settings.tt_telefoon | remove: ' ' }}">{{ settings.tt_telefoon }}</a></dd></div>{%- endif -%}
+        {%- if settings.tt_adres != blank -%}<div><dt>Adres</dt><dd>{{ settings.tt_bedrijf }}<br>{{ settings.tt_adres | newline_to_br }}</dd></div>{%- endif -%}
+        {%- if settings.tt_kvk != blank -%}<div><dt>KvK</dt><dd>{{ settings.tt_kvk }}</dd></div>{%- endif -%}
+        {%- if settings.tt_btw != blank -%}<div><dt>Btw</dt><dd>{{ settings.tt_btw }}</dd></div>{%- endif -%}
+      </dl>"""
 
+schrijf('tt-contact', """
+{%- assign form_id = 'tt-contact-' | append: section.id -%}
+<section class="tt tt-contact tt-bg--{{ section.settings.bg }}" id="contact">
+  <div class="tt-wrap tt-contact__grid">
+    <div class="tt-contact__links">
+      {%- if section.settings.h1 -%}
+        <h1 class="tt-kop tt-kop--l">{{ section.settings.heading | default: page.title }}</h1>
+      {%- else -%}
+        {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}<p class="tt-contact__intro">{{ section.settings.text }}</p>{%- endif -%}
+      {%- form 'contact', id: form_id, class: 'tt-form' -%}
+        {%- if form.posted_successfully? -%}
+          <p class="tt-form__ok" role="status" tabindex="-1" autofocus>{{ section.settings.ok }}</p>
+        {%- elsif form.errors -%}
+          <div class="tt-form__fout" role="alert">{{ form.errors | default_errors }}</div>
+        {%- endif -%}
+        <input type="hidden" name="contact[Pagina]" value="{{ section.settings.bron | default: page.title | escape }}">
+        <div class="tt-form__rij">
+          <label class="tt-veld"><span>Naam</span><input type="text" name="contact[Naam]" autocomplete="name" value="{{ form.name }}" required></label>
+          <label class="tt-veld"><span>E-mail</span><input type="email" name="contact[email]" autocomplete="email" spellcheck="false" autocapitalize="off" value="{{ form.email }}" required></label>
+        </div>
+        {%- if section.settings.extra -%}
+        <div class="tt-form__rij">
+          <label class="tt-veld"><span>Telefoon <em>(niet verplicht)</em></span><input type="tel" name="contact[Telefoon]" autocomplete="tel" value="{{ form.phone }}"></label>
+          <label class="tt-veld"><span>Bestelnummer <em>(niet verplicht)</em></span><input type="text" name="contact[Bestelnummer]"></label>
+        </div>
+        {%- endif -%}
+        <label class="tt-veld"><span>{{ section.settings.bericht_label }}</span><textarea name="contact[Bericht]" rows="6" required>{{ form.body }}</textarea></label>
+        <button type="submit" class="tt-knop tt-knop--vol"><span>{{ section.settings.knop }}</span></button>
+      {%- endform -%}
+    </div>
+    {%- if section.settings.gegevens -%}
+    <aside class="tt-contact__kaart" data-tt-kantel>
+      <div class="tt-contact__icoon">{%- render 'tt-logo', variant: 'maan' -%}</div>
+      <p class="tt-contact__kaarttitel">{{ section.settings.kaart_titel }}</p>""" + GEGEVENS + """
+      {%- if settings.tt_reactietijd != blank -%}<p class="tt-contact__tijd">{{ settings.tt_reactietijd }}</p>{%- endif -%}
+      <ul class="tt-contact__social">
+        {%- if settings.social_instagram_link != blank -%}<li><a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener">Instagram</a></li>{%- endif -%}
+        {%- if settings.social_tiktok_link != blank -%}<li><a href="{{ settings.social_tiktok_link }}" target="_blank" rel="noopener">TikTok</a></li>{%- endif -%}
+        {%- if settings.social_pinterest_link != blank -%}<li><a href="{{ settings.social_pinterest_link }}" target="_blank" rel="noopener">Pinterest</a></li>{%- endif -%}
+        {%- if settings.social_facebook_link != blank -%}<li><a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener">Facebook</a></li>{%- endif -%}
+      </ul>
+    </aside>
+    {%- endif -%}
+  </div>
+</section>
+""", {
+    "name": "TT: contact", "tag": "div",
+    "settings": [
+        bg("creme"),
+        {"type": "checkbox", "id": "h1", "label": "Kop is de paginatitel (h1)", "default": True},
+        {"type": "text", "id": "heading", "label": "Kop", "default": "Contact"},
+        {"type": "textarea", "id": "text", "label": "Intro", "default": "Vraag over je bestelling, je board of de tas? Stuur ons een bericht."},
+        {"type": "text", "id": "bericht_label", "label": "Label berichtveld", "default": "Bericht"},
+        {"type": "checkbox", "id": "extra", "label": "Telefoon en bestelnummer vragen", "default": True},
+        {"type": "text", "id": "knop", "label": "Knop", "default": "Verstuur"},
+        {"type": "text", "id": "ok", "label": "Bevestiging", "default": "Bedankt, je bericht is verstuurd. We reageren binnen één werkdag."},
+        {"type": "text", "id": "bron", "label": "Bron in de e-mail (leeg = paginatitel)"},
+        {"type": "checkbox", "id": "gegevens", "label": "Bedrijfsgegevens tonen", "default": True},
+        {"type": "text", "id": "kaart_titel", "label": "Titel gegevenskaart", "default": "Gegevens"},
+    ],
+    "presets": [{"name": "TT: contact"}]})
+
+# ---------- TEKSTPAGINA: juridische pagina's en andere lange teksten ----------
+schrijf('tt-tekst', """
+{%- liquid
+  assign inhoud = page.content | replace: '[EMAIL]', settings.tt_email | replace: '[TELEFOON]', settings.tt_telefoon | replace: '[KVK]', settings.tt_kvk | replace: '[BTW]', settings.tt_btw | replace: '[BEDRIJF]', settings.tt_bedrijf
+  assign adres = settings.tt_adres | newline_to_br
+  assign inhoud = inhoud | replace: '[ADRES]', adres
+-%}
+<section class="tt tt-tekst tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap tt-tekst__grid">
+    <header class="tt-tekst__kop">
+      {%- if section.settings.label != blank -%}<p class="tt-tekst__label">{{ section.settings.label }}</p>{%- endif -%}
+      <h1 class="tt-kop tt-kop--l">{{ page.title }}</h1>
+      {%- if section.settings.datum != blank -%}<p class="tt-tekst__datum">Laatst bijgewerkt op {{ section.settings.datum }}</p>{%- endif -%}
+    </header>
+    <div class="tt-tekst__inhoud rte">{{ inhoud }}</div>
+    <aside class="tt-tekst__zij">
+      <div class="tt-tekst__kaart">
+        <p class="tt-tekst__kaarttitel">{{ settings.tt_bedrijf }}</p>""" + GEGEVENS + """
+      </div>
+      {%- if section.blocks.size > 0 -%}
+      <nav class="tt-tekst__links" aria-label="Meer informatie">
+        <p class="tt-tekst__kaarttitel">Meer informatie</p>
+        <ul>{%- for block in section.blocks -%}<li {{ block.shopify_attributes }}><a href="{{ block.settings.link }}"{% if block.settings.link == request.path %} aria-current="page"{% endif %}>{{ block.settings.label }}</a></li>{%- endfor -%}</ul>
+      </nav>
+      {%- endif -%}
+    </aside>
+  </div>
+</section>
+""", {
+    "name": "TT: tekstpagina", "tag": "div",
+    "settings": [
+        bg("papier"),
+        {"type": "text", "id": "label", "label": "Label boven de titel", "default": "Klantenservice"},
+        {"type": "text", "id": "datum", "label": "Laatst bijgewerkt", "default": "7 oktober 2026"},
+        {"type": "paragraph", "content": "In de paginatekst worden [BEDRIJF], [EMAIL], [TELEFOON], [ADRES], [KVK] en [BTW] vervangen door de gegevens uit Thema-instellingen > Tide-Tode."},
+    ],
+    "blocks": [{"type": "link", "name": "Link", "settings": [
+        {"type": "text", "id": "label", "label": "Tekst", "default": "Link"},
+        {"type": "text", "id": "link", "label": "Adres", "default": "/pages/contact"}]}],
+    "presets": [{"name": "TT: tekstpagina", "blocks": [
+        {"type": "link", "settings": {"label": "Verzenden", "link": "/policies/shipping-policy"}},
+        {"type": "link", "settings": {"label": "Retourneren", "link": "/policies/refund-policy"}},
+        {"type": "link", "settings": {"label": "Herroepingsrecht", "link": "/pages/herroepingsrecht"}},
+        {"type": "link", "settings": {"label": "Algemene voorwaarden", "link": "/policies/terms-of-service"}},
+        {"type": "link", "settings": {"label": "Privacybeleid", "link": "/policies/privacy-policy"}},
+        {"type": "link", "settings": {"label": "Veelgestelde vragen", "link": "/pages/veelgestelde-vragen"}},
+        {"type": "link", "settings": {"label": "Contact", "link": "/pages/contact"}}]}]})
+
+# ---------- MAATTABEL ----------
+schrijf('tt-maattabel', """
+{%- assign koppen = section.settings.kolommen | split: '|' -%}
+<section class="tt tt-maat tt-bg--{{ section.settings.bg }}" id="{{ section.settings.anker | default: section.id }}">
+  <div class="tt-wrap">
+    <div class="tt-maat__kop">
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
+      {%- if section.settings.text != blank -%}<p>{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <div class="tt-maat__wrap">
+      <table class="tt-maat__tabel">
+        <thead><tr>{%- for k in koppen -%}<th scope="col">{{ k }}</th>{%- endfor -%}</tr></thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            {%- assign cellen = block.settings.cellen | split: '|' -%}
+            <tr {{ block.shopify_attributes }}>{%- for c in cellen -%}{%- if forloop.first -%}<th scope="row">{{ c }}</th>{%- else -%}<td>{{ c }}</td>{%- endif -%}{%- endfor -%}</tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+    {%- if section.settings.noot != blank -%}<p class="tt-maat__noot">{{ section.settings.noot }}</p>{%- endif -%}
+    {%- if section.settings.btn_label != blank -%}<a class="tt-knop tt-knop--vol" href="{{ section.settings.btn_link | default: routes.all_products_collection_url }}"><span>{{ section.settings.btn_label }}</span></a>{%- endif -%}
+  </div>
+</section>
+""", {
+    "name": "TT: maattabel", "tag": "div", "max_blocks": 12,
+    "settings": [
+        bg("creme"),
+        {"type": "text", "id": "anker", "label": "Anker (voor links naar dit deel)", "default": "maten"},
+        kop("Maten"),
+        {"type": "textarea", "id": "text", "label": "Intro", "default": ""},
+        {"type": "text", "id": "kolommen", "label": "Kolommen (gescheiden door |)", "default": "Maat|Borst|Lengte"},
+        {"type": "textarea", "id": "noot", "label": "Noot onder de tabel"},
+        {"type": "text", "id": "btn_label", "label": "Knop"},
+        {"type": "text", "id": "btn_link", "label": "Knop-link"},
+    ],
+    "blocks": [{"type": "rij", "name": "Rij", "settings": [{"type": "text", "id": "cellen", "label": "Cellen (gescheiden door |)", "default": "M|54 cm|74 cm"}]}],
+    "presets": [{"name": "TT: maattabel", "blocks": [
+        {"type": "rij", "settings": {"cellen": "S|51 cm|71 cm"}}, {"type": "rij", "settings": {"cellen": "M|54 cm|74 cm"}},
+        {"type": "rij", "settings": {"cellen": "L|57 cm|76 cm"}}, {"type": "rij", "settings": {"cellen": "XL|60 cm|78 cm"}}]}]})
+
+print('klaar')

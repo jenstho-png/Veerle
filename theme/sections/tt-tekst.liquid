@@ -1,0 +1,170 @@
+{%- liquid
+  assign inhoud = page.content | replace: '[EMAIL]', settings.tt_email | replace: '[TELEFOON]', settings.tt_telefoon | replace: '[KVK]', settings.tt_kvk | replace: '[BTW]', settings.tt_btw | replace: '[BEDRIJF]', settings.tt_bedrijf
+  assign adres = settings.tt_adres | newline_to_br
+  assign inhoud = inhoud | replace: '[ADRES]', adres
+-%}
+<section class="tt tt-tekst tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap tt-tekst__grid">
+    <header class="tt-tekst__kop">
+      {%- if section.settings.label != blank -%}<p class="tt-tekst__label">{{ section.settings.label }}</p>{%- endif -%}
+      <h1 class="tt-kop tt-kop--l">{{ page.title }}</h1>
+      {%- if section.settings.datum != blank -%}<p class="tt-tekst__datum">Laatst bijgewerkt op {{ section.settings.datum }}</p>{%- endif -%}
+    </header>
+    <div class="tt-tekst__inhoud rte">{{ inhoud }}</div>
+    <aside class="tt-tekst__zij">
+      <div class="tt-tekst__kaart">
+        <p class="tt-tekst__kaarttitel">{{ settings.tt_bedrijf }}</p>
+      <dl class="tt-gegevens">
+        {%- if settings.tt_email != blank -%}<div><dt>E-mail</dt><dd><a href="mailto:{{ settings.tt_email }}">{{ settings.tt_email }}</a></dd></div>{%- endif -%}
+        {%- if settings.tt_telefoon != blank -%}<div><dt>Telefoon</dt><dd><a href="tel:{{ settings.tt_telefoon | remove: ' ' }}">{{ settings.tt_telefoon }}</a></dd></div>{%- endif -%}
+        {%- if settings.tt_adres != blank -%}<div><dt>Adres</dt><dd>{{ settings.tt_bedrijf }}<br>{{ settings.tt_adres | newline_to_br }}</dd></div>{%- endif -%}
+        {%- if settings.tt_kvk != blank -%}<div><dt>KvK</dt><dd>{{ settings.tt_kvk }}</dd></div>{%- endif -%}
+        {%- if settings.tt_btw != blank -%}<div><dt>Btw</dt><dd>{{ settings.tt_btw }}</dd></div>{%- endif -%}
+      </dl>
+      </div>
+      {%- if section.blocks.size > 0 -%}
+      <nav class="tt-tekst__links" aria-label="Meer informatie">
+        <p class="tt-tekst__kaarttitel">Meer informatie</p>
+        <ul>{%- for block in section.blocks -%}<li {{ block.shopify_attributes }}><a href="{{ block.settings.link }}"{% if block.settings.link == request.path %} aria-current="page"{% endif %}>{{ block.settings.label }}</a></li>{%- endfor -%}</ul>
+      </nav>
+      {%- endif -%}
+    </aside>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: tekstpagina",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "papier",
+          "label": "Papier"
+        },
+        {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        }
+      ],
+      "default": "papier"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label boven de titel",
+      "default": "Klantenservice"
+    },
+    {
+      "type": "text",
+      "id": "datum",
+      "label": "Laatst bijgewerkt",
+      "default": "7 oktober 2026"
+    },
+    {
+      "type": "paragraph",
+      "content": "In de paginatekst worden [BEDRIJF], [EMAIL], [TELEFOON], [ADRES], [KVK] en [BTW] vervangen door de gegevens uit Thema-instellingen > Tide-Tode."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Tekst",
+          "default": "Link"
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": "Adres",
+          "default": "/pages/contact"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: tekstpagina",
+      "blocks": [
+        {
+          "type": "link",
+          "settings": {
+            "label": "Verzenden",
+            "link": "/policies/shipping-policy"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Retourneren",
+            "link": "/policies/refund-policy"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Herroepingsrecht",
+            "link": "/pages/herroepingsrecht"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Algemene voorwaarden",
+            "link": "/policies/terms-of-service"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Privacybeleid",
+            "link": "/policies/privacy-policy"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Veelgestelde vragen",
+            "link": "/pages/veelgestelde-vragen"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Contact",
+            "link": "/pages/contact"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

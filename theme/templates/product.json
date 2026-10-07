@@ -533,6 +533,12 @@
     "tt-patroon": {
       "type": "tt-patroon",
       "settings": {}
+    },
+    "reviews": {
+      "type": "apps",
+      "settings": {
+        "include_margins": true
+      }
     }
   },
   "order": [
@@ -545,6 +551,7 @@
     "tt-check",
     "tt-vergelijk",
     "tt-kaarten",
+    "reviews",
     "faq",
     "tt-raster",
     "tt-patroon"

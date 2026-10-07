@@ -1,0 +1,81 @@
+{
+  "sections": {
+    "hero": {
+      "type": "tt-hero",
+      "settings": {
+        "pagina": true,
+        "poster": false,
+        "heading": "10% korting op|je eerste tas",
+        "text": "Vertel ons wat je van de draagtas vindt. Na het versturen zie je meteen je kortingscode.",
+        "btn_label": "Naar het formulier",
+        "btn_link": "#contact",
+        "link_label": "",
+        "kaart": false
+      }
+    },
+    "kaarten": {
+      "type": "tt-kaarten",
+      "settings": {
+        "heading": "Waarom surfers hem dragen"
+      },
+      "blocks": {
+        "kaart-1": {
+          "type": "kaart",
+          "settings": {
+            "kleur": "baby",
+            "ill": "draagtas",
+            "titel": "Handen vrij",
+            "tekst": "Board in de tas, tas over je schouder. Zo fiets en loop je makkelijk naar de spot."
+          }
+        },
+        "kaart-2": {
+          "type": "kaart",
+          "settings": {
+            "kleur": "rose",
+            "ill": "golf",
+            "titel": "Nat en zanderig mag",
+            "tekst": "Je hoeft je board niet eerst droog of schoon te maken. Hij mag zo de tas in."
+          }
+        },
+        "kaart-3": {
+          "type": "kaart",
+          "settings": {
+            "kleur": "zand",
+            "ill": "busje",
+            "titel": "Mee op reis",
+            "tekst": "De tas neem je makkelijk mee in het vliegtuig, in je koffer of je boardbag."
+          }
+        }
+      },
+      "block_order": [
+        "kaart-1",
+        "kaart-2",
+        "kaart-3"
+      ]
+    },
+    "contact": {
+      "type": "tt-contact",
+      "settings": {
+        "h1": false,
+        "heading": "Jouw reactie",
+        "text": "Wat vind je van de draagtas? Welk patroon zou jij kiezen? We lezen alles en gebruiken je reactie voor de volgende versie.",
+        "bericht_label": "Jouw reactie",
+        "extra": false,
+        "knop": "Verstuur en ontvang 10% korting",
+        "ok": "Bedankt voor je reactie! Je kortingscode is WELKOM10. Vul hem in bij het afrekenen.",
+        "bron": "Landingspagina actie",
+        "gegevens": false
+      }
+    },
+    "stickerzee": {
+      "type": "tt-stickerzee",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "kaarten",
+    "contact",
+    "stickerzee"
+  ]
+}

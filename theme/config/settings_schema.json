@@ -21,6 +21,56 @@
         "id": "tt_meteo_key",
         "label": "Open-Meteo API-sleutel (surfcheck)",
         "info": "Open-Meteo is gratis voor niet-commercieel gebruik. Voor een webshop heb je een abonnement nodig (open-meteo.com/en/pricing). Vul hier de sleutel in; dan gebruikt de surfcheck het betaalde adres."
+      },
+      {
+        "type": "header",
+        "content": "Bedrijfsgegevens"
+      },
+      {
+        "type": "paragraph",
+        "content": "Deze gegevens staan op de contactpagina, in de footer en in de juridische pagina's (daar vervangen ze [EMAIL], [TELEFOON], [ADRES], [KVK] en [BTW])."
+      },
+      {
+        "type": "text",
+        "id": "tt_bedrijf",
+        "label": "Bedrijfsnaam",
+        "default": "Tide-Tode"
+      },
+      {
+        "type": "text",
+        "id": "tt_email",
+        "label": "E-mailadres",
+        "default": "hallo@tidetode.nl"
+      },
+      {
+        "type": "text",
+        "id": "tt_telefoon",
+        "label": "Telefoonnummer",
+        "default": "+31 6 12345678"
+      },
+      {
+        "type": "textarea",
+        "id": "tt_adres",
+        "label": "Adres (retouren en post)",
+        "default": "Hogeschoollaan 1\n4818 CR Breda"
+      },
+      {
+        "type": "text",
+        "id": "tt_kvk",
+        "label": "KvK-nummer",
+        "default": "41104408"
+      },
+      {
+        "type": "text",
+        "id": "tt_btw",
+        "label": "Btw-nummer",
+        "default": "NL000000000B01"
+      },
+      {
+        "type": "text",
+        "id": "tt_reactietijd",
+        "label": "Reactietijd",
+        "default": "We reageren binnen één werkdag"
       }
     ]
   },

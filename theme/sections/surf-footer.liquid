@@ -57,12 +57,16 @@
               </ul>
             {%- else -%}
               <ul>
-                {%- if block.settings.email != blank -%}
-                  <li><a href="mailto:{{ block.settings.email }}">{{ block.settings.email }}</a></li>
+                {%- assign f_email = block.settings.email | default: settings.tt_email -%}
+                {%- assign f_tel = block.settings.phone | default: settings.tt_telefoon -%}
+                {%- if f_email != blank -%}
+                  <li><a href="mailto:{{ f_email }}">{{ f_email }}</a></li>
                 {%- endif -%}
-                {%- if block.settings.phone != blank -%}
-                  <li><a href="tel:{{ block.settings.phone | remove: ' ' }}">{{ block.settings.phone }}</a></li>
+                {%- if f_tel != blank -%}
+                  <li><a href="tel:{{ f_tel | remove: ' ' }}">{{ f_tel }}</a></li>
                 {%- endif -%}
+                {%- if settings.tt_adres != blank -%}<li>{{ settings.tt_bedrijf }}<br>{{ settings.tt_adres | newline_to_br }}</li>{%- endif -%}
+                {%- if settings.tt_kvk != blank -%}<li>KvK {{ settings.tt_kvk }}</li>{%- endif -%}
                 {%- if block.settings.note != blank -%}
                   <li>{{ block.settings.note }}</li>
                 {%- endif -%}

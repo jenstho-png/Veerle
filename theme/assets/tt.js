@@ -152,7 +152,8 @@
       const uitleg = s.querySelector('[data-tt-check-uitleg]');
       const board = s.querySelector('.tt-check__board');
       const stringer = s.querySelector('.tt-check__stringer');
-      const banden = s.querySelectorAll('.tt-check__band');
+      const paneel = s.querySelector('.tt-check__paneel');
+      const schouder = s.querySelector('.tt-check__schouder');
       const maxlijn = s.querySelector('[data-tt-check-maxlijn]');
       const maxtekst = s.querySelector('[data-tt-check-maxtekst]');
       const H = 560, onder = 540, perInch = 500 / 132;
@@ -164,13 +165,16 @@
         const h = i * perInch, top = onder - h, b = Math.min(58, 30 + i * 0.22);
         board.setAttribute('d', `M100 ${top}C${100 + b * 1.15} ${top + h * 0.18} ${100 + b} ${top + h * 0.82} 100 ${onder}C${100 - b} ${top + h * 0.82} ${100 - b * 1.15} ${top + h * 0.18} 100 ${top}Z`);
         stringer.setAttribute('y1', top + 6); stringer.setAttribute('y2', onder - 6);
-        banden[0].setAttribute('y', top + h * 0.28); banden[1].setAttribute('y', top + h * 0.66);
+        /* de tas: tegelvak om het midden van het board, schouderband aan de zijkant */
+        const py = top + h * 0.4, ph = Math.min(150, h * 0.26), pb = b * 0.92;
+        paneel.setAttribute('d', `M${100 - pb * 0.8} ${py}L${100 + pb * 0.8} ${py}L${100 + pb} ${py + ph}L${100 - pb} ${py + ph}Z`);
+        schouder.setAttribute('d', `M${100 - pb * 0.8} ${py + 6}L${100 - pb - 34} ${py + ph * 0.5}L${100 - pb} ${py + ph - 6}`);
         const cm = Math.round(i * 2.54);
         waarde.textContent = `${voet(i)} (${cm} cm)`;
         schuif.style.setProperty('--p', `${((i - 48) / 84) * 100}%`);
         const past = i >= min && i <= max;
         s.classList.toggle('is-past', past); s.classList.toggle('is-niet', !past);
-        if (past) { antwoord.textContent = 'Ja, die past.'; uitleg.textContent = `Een board van ${voet(i)} gaat in de tas. Banden strak, op je rug en gaan.`; }
+        if (past) { antwoord.textContent = 'Ja, die past.'; uitleg.textContent = `Een board van ${voet(i)} gaat in de tas. Erin schuiven, over je schouder en gaan.`; }
         else if (i > max) { antwoord.textContent = 'Net te lang.'; uitleg.textContent = `Deze tas past op boards tot ${voet(max)}. Een grotere maat staat op de planning.`; }
         else { antwoord.textContent = 'Te klein voor deze tas.'; uitleg.textContent = `Deze tas is gemaakt voor boards vanaf ${voet(min)}.`; }
       };

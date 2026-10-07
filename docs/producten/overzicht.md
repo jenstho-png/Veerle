@@ -1,6 +1,6 @@
 # Assortiment Tide-Tode
 
-22 producten in 3 collecties. Importeren: Shopify admin, Producten, Importeren, `producten.csv`.
+27 producten in 3 collecties. Importeren: Shopify admin, Producten, Importeren, `producten.csv`.
 
 De beelden zijn getekend in de merkstijl en worden bij de import van GitHub opgehaald. Vervang ze door echte foto's zodra die er zijn.
 
@@ -34,10 +34,15 @@ De beelden zijn getekend in de merkstijl en worden bij de import van GitHub opge
 
 | Product | Prijs | Handle |
 |---|---|---|
-| T-shirt logo crème | € 32,00 | `t-shirt-creme` |
-| T-shirt logo navy | € 32,00 | `t-shirt-navy` |
+| T-shirt Zonsopkomst | € 34,00 | `t-shirt-zonsopkomst` |
+| T-shirt Stickers | € 34,00 | `t-shirt-stickers` |
+| Longsleeve Golf | € 42,00 | `longsleeve-golf` |
+| Longsleeve Tegel | € 42,00 | `longsleeve-tegel` |
+| UV-shirt lange mouw | € 45,00 | `uv-shirt-lange-mouw` |
+| Hoodie Busje | € 69,00 | `hoodie-busje` |
+| Surfponcho | € 59,00 | `surfponcho-tegel` |
 | Pet navy | € 28,00 | `pet-navy` |
-| Bucket hat tegel | € 30,00 | `bucket-hat-tegel` |
+| Bucket hat | € 30,00 | `bucket-hat-tegel` |
 | Strandhanddoek tegel | € 45,00 | `strandhanddoek-tegel` |
 | Canvas tas | € 22,00 | `canvas-tas` |
 
@@ -54,6 +59,6 @@ Maak in Shopify drie automatische collecties (Producten, Collecties, Collectie m
 ## Nog controleren met Veerle
 
 - Prijzen (alleen de € 40 van de draagtas komt uit de intake, de rest is een voorstel).
-- Materiaal T-shirts (biologisch katoen), maat handdoek en canvas tas.
+- Materialen en gewichten van de kleding, de UPF van het UV-shirt, maat handdoek en canvas tas.
 - Temperaturen van de wax.
 - Voorraad staat op 25 per variant als testwaarde.

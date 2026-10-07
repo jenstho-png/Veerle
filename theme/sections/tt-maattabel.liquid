@@ -1,0 +1,153 @@
+{%- assign koppen = section.settings.kolommen | split: '|' -%}
+<section class="tt tt-maat tt-bg--{{ section.settings.bg }}" id="{{ section.settings.anker | default: section.id }}">
+  <div class="tt-wrap">
+    <div class="tt-maat__kop">
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
+      {%- if section.settings.text != blank -%}<p>{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <div class="tt-maat__wrap">
+      <table class="tt-maat__tabel">
+        <thead><tr>{%- for k in koppen -%}<th scope="col">{{ k }}</th>{%- endfor -%}</tr></thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            {%- assign cellen = block.settings.cellen | split: '|' -%}
+            <tr {{ block.shopify_attributes }}>{%- for c in cellen -%}{%- if forloop.first -%}<th scope="row">{{ c }}</th>{%- else -%}<td>{{ c }}</td>{%- endif -%}{%- endfor -%}</tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+    {%- if section.settings.noot != blank -%}<p class="tt-maat__noot">{{ section.settings.noot }}</p>{%- endif -%}
+    {%- if section.settings.btn_label != blank -%}<a class="tt-knop tt-knop--vol" href="{{ section.settings.btn_link | default: routes.all_products_collection_url }}"><span>{{ section.settings.btn_label }}</span></a>{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: maattabel",
+  "tag": "div",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "papier",
+          "label": "Papier"
+        },
+        {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        }
+      ],
+      "default": "creme"
+    },
+    {
+      "type": "text",
+      "id": "anker",
+      "label": "Anker (voor links naar dit deel)",
+      "default": "maten"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
+      "default": "Maten"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Intro",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "kolommen",
+      "label": "Kolommen (gescheiden door |)",
+      "default": "Maat|Borst|Lengte"
+    },
+    {
+      "type": "textarea",
+      "id": "noot",
+      "label": "Noot onder de tabel"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Knop"
+    },
+    {
+      "type": "text",
+      "id": "btn_link",
+      "label": "Knop-link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "rij",
+      "name": "Rij",
+      "settings": [
+        {
+          "type": "text",
+          "id": "cellen",
+          "label": "Cellen (gescheiden door |)",
+          "default": "M|54 cm|74 cm"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: maattabel",
+      "blocks": [
+        {
+          "type": "rij",
+          "settings": {
+            "cellen": "S|51 cm|71 cm"
+          }
+        },
+        {
+          "type": "rij",
+          "settings": {
+            "cellen": "M|54 cm|74 cm"
+          }
+        },
+        {
+          "type": "rij",
+          "settings": {
+            "cellen": "L|57 cm|76 cm"
+          }
+        },
+        {
+          "type": "rij",
+          "settings": {
+            "cellen": "XL|60 cm|78 cm"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

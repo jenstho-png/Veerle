@@ -368,55 +368,44 @@ for g in GEAR:
                   tekst=g['tekst'] + VERZENDING, seo_titel=f"{g['titel']} | Tide-Tode", seo_tekst=g['seo_tekst'],
                   beelden=[('pack', g['svg'], g['achter'], g['label'], g['alt']), ('sfeer', g['svg'], g['regel'], g['alt'] + ' als sticker op een foto van de zee')]))
 
-MATEN = ['S', 'M', 'L', 'XL']
-KLEDING = [
-    dict(handle='t-shirt-creme', titel='T-shirt logo crème', type='T-shirt', prijs='32.00', gram=200, maten=MATEN,
-         tekst='<p>Crème T-shirt van biologisch katoen met het Tide-Tode logo in navy op de borst. Ruime pasvorm.</p>',
-         seo_tekst='Crème T-shirt van biologisch katoen met het Tide-Tode logo. Maten S tot XL.',
-         svg=lambda: (shirt(CREME, NAVY), '0 0 600 600', 1350, 0), achter=BABY, label='Crème', alt='Crème T-shirt met het Tide-Tode logo in navy', regel='Van surfers, voor surfers'),
-    dict(handle='t-shirt-navy', titel='T-shirt logo navy', type='T-shirt', prijs='32.00', gram=200, maten=MATEN,
-         tekst='<p>Navy T-shirt van biologisch katoen met het Tide-Tode logo in crème op de borst. Ruime pasvorm.</p>',
-         seo_tekst='Navy T-shirt van biologisch katoen met het Tide-Tode logo. Maten S tot XL.',
-         svg=lambda: (shirt(NAVY, CREME), '0 0 600 600', 1350, 0), achter=ZAND, label='Navy', alt='Navy T-shirt met het Tide-Tode logo in crème', regel='Van surfers, voor surfers'),
-    dict(handle='pet-navy', titel='Pet navy', type='Pet', prijs='28.00', gram=90,
-         tekst='<p>Navy pet van katoen met ons board-icoon geborduurd op de voorkant. Verstelbaar aan de achterkant, één maat.</p>',
-         seo_tekst='Navy katoenen pet met geborduurd Tide-Tode icoon. Verstelbaar, één maat.',
-         svg=lambda: (pet(NAVY), '0 0 600 600', 1600, 0), achter=ROSE, label='Navy', alt='Navy pet met het geborduurde board-icoon', regel='Zon in je ogen'),
-    dict(handle='bucket-hat-tegel', titel='Bucket hat tegel', type='Hoed', prijs='30.00', gram=90,
-         tekst='<p>Crème bucket hat met een band in terracotta en ons board-icoon. Katoen, één maat.</p>',
-         seo_tekst='Crème bucket hat met terracotta band en Tide-Tode icoon. Katoen, één maat.',
-         svg=lambda: (bucket('b'), '0 0 600 600', 1600, 0), achter=BABY, label='Crème', alt='Crème bucket hat met terracotta band', regel='Voor lange stranddagen'),
-    dict(handle='strandhanddoek-tegel', titel='Strandhanddoek tegel', type='Handdoek', prijs='45.00', gram=600,
-         tekst='<p>Grote strandhanddoek van katoen in onze tegelprint, met franjes aan de korte kant. 90 bij 170 cm.</p>',
-         seo_tekst='Katoenen strandhanddoek in de Tide-Tode tegelprint, 90 bij 170 cm.',
-         svg=lambda: (handdoek('h'), '0 0 600 600', 1500, -4), achter=ZAND, label='Tegelprint', alt='Strandhanddoek in tegelprint met franjes', regel='Na de sessie'),
-    dict(handle='canvas-tas', titel='Canvas tas', type='Tas', prijs='22.00', gram=250,
-         tekst='<p>Stevige canvas tas met het Tide-Tode logo. Voor je handdoek, wetsuit en lunch. 38 bij 42 cm.</p>',
-         seo_tekst='Canvas tas met Tide-Tode logo voor handdoek, wetsuit en lunch. 38 bij 42 cm.',
-         svg=lambda: (tote(), '0 0 600 600', 1300, 0), achter=ROSE, label='Canvas', alt='Crème canvas tas met het Tide-Tode logo', regel='Alles mee naar het strand'),
-]
-for k in KLEDING:
-    P.append(dict(handle=k['handle'], titel=k['titel'], type=k['type'], collectie='Kleding en merch', prijs=k['prijs'], gram=k['gram'], tags=['merch'], maten=k.get('maten'),
-                  tekst=k['tekst'] + VERZENDING, seo_titel=f"{k['titel']} | Tide-Tode", seo_tekst=k['seo_tekst'],
-                  beelden=[('pack', k['svg'], k['achter'], k['label'], k['alt']), ('sfeer', k['svg'], k['regel'], k['alt'] + ' als sticker op een foto van de zee')]))
+exec(open(HIER / 'kleding.py', encoding='utf-8').read())
 
 
 # ---------- beelden schrijven ----------
+# Staat er een echte foto (png met transparante achtergrond) in docs/producten/fotos, dan gebruiken we die in plaats van de tekening.
+FOTOS = DOCS / 'fotos'
+FOTOS.mkdir(exist_ok=True)
+
+
+def foto(handle, kant=''):
+    for ext in ('png', 'webp', 'jpg'):
+        f = FOTOS / f'{handle}{kant}.{ext}'
+        if f.exists():
+            return f
+    return None
+
+
+def met_foto(f, breedte):
+    return (f'<image href="file://{f}" x="0" y="0" width="600" height="600" preserveAspectRatio="xMidYMid meet"/>', '0 0 600 600', breedte, 0)
+
+
 for p in P:
     p['bestanden'] = []
     for i, b in enumerate(p['beelden'], 1):
         naam = f"{p['handle']}-{i}"
         soort = b[0]
         if soort == 'pack':
-            svg, vb, br, dr = b[1]()
+            f = foto(p['handle'], '-achter' if b[3] == 'Achterkant' else '')
+            svg, vb, br, dr = met_foto(f, 1500) if f else b[1]()
             packshot(naam, b[2], svg, p['titel'] if len(p['titel']) < 26 else p['type'], b[3], vb, br, dr)
             alt = b[4]
         elif soort == 'macro':
             macro(naam, b[1], 'De stof')
             alt = b[2]
         else:
-            svg, vb, br, dr = b[1]()
-            sfeer(naam, svg, vb, br * .82, dr if dr else -6, b[2])
+            f = foto(p['handle'], '-achter') or foto(p['handle'])
+            svg, vb, br, dr = met_foto(f, 1450) if f else b[1]()
+            sfeer(naam, svg, vb, br * .82, dr if dr else -6, b[2] if p['collectie'] == 'Draagtassen' else '')
             alt = b[3]
         p['bestanden'].append((naam + '.jpg', alt))
 
@@ -468,8 +457,78 @@ regels += ['## Collecties aanmaken', '',
            '| Kleding en merch | Producttag is gelijk aan `Kleding en merch` | `kleding-en-merch` |', '',
            '## Nog controleren met Veerle', '',
            '- Prijzen (alleen de € 40 van de draagtas komt uit de intake, de rest is een voorstel).',
-           '- Materiaal T-shirts (biologisch katoen), maat handdoek en canvas tas.',
+           '- Materialen en gewichten van de kleding, de UPF van het UV-shirt, maat handdoek en canvas tas.',
            '- Temperaturen van de wax.',
            '- Voorraad staat op 25 per variant als testwaarde.', '']
 (DOCS / 'overzicht.md').write_text('\n'.join(regels))
 print(len(P), 'producten,', sum(len(p['bestanden']) for p in P), 'beelden')
+
+# ---------- prompts voor echte productfoto's ----------
+TAS_EN = ('a surfboard carry bag. It is a trapezoid-shaped fabric sleeve that wraps around the middle of a cream surfboard, '
+          'made of thick woven jacquard fabric with {kleur}. A wide padded {band} shoulder strap is stitched to the two top corners of the sleeve '
+          'and forms a loop above it. There are NO other straps, NO buckles and NO extra belts around the board')
+PATROON_EN = {
+    'tegel': 'a square tile pattern in terracotta, dusty blue, rust and cream, each tile with a cream diamond and a small navy dot',
+    'tegel-navy': 'a square tile pattern in navy, baby blue and cream, each tile with a diamond and a small dot',
+    'golfjes': 'rows of baby blue wavy lines on navy',
+    'zonsondergang': 'horizontal stripes in soft rose, sand, terracotta and cream',
+    'schelp': 'a scallop shell scale pattern in soft rose with cream outlines',
+    'ruit': 'a baby blue and cream checkerboard',
+    'duin': 'diagonal stripes in sand and cream',
+    'salie': 'a square tile pattern in sage green, sand and cream with small navy dots',
+    'effen-navy': 'a plain navy colour with a subtle woven texture',
+}
+BAND_EN = {BLAUW: 'dusty blue', NAVY: 'navy', BABY: 'baby blue', TERRA: 'terracotta', ROSE: 'soft rose'}
+OVERIG_EN = {
+    'surfwax-koud': 'a rounded rectangular block of surf wax in pale baby blue, with a small cream paper label showing a navy surfboard icon and the text TIDE TODE KOUD WATER',
+    'surfwax-koel': 'a rounded rectangular block of surf wax in warm sand colour, with a small cream paper label showing a navy surfboard icon and the text TIDE TODE KOEL WATER',
+    'surfwax-warm': 'a rounded rectangular block of surf wax in soft rose, with a small cream paper label showing a navy surfboard icon and the text TIDE TODE WARM WATER',
+    'waxkam': 'a navy plastic surf wax comb with a row of teeth on one side and a straight scraper edge, with a small cream surfboard icon printed on it',
+    'karabijnhaak-messing': 'a brushed brass carabiner with a spring gate',
+    'karabijnhaak-zwart': 'a matte black metal carabiner with a spring gate',
+    'stickerset': 'a sheet of six die-cut vinyl stickers with white borders on cream paper: a blue wave, a sand coloured sun, a pink shell, a navy palm tree, a cream starfish and a pink camper van',
+    'pet-navy': 'a navy cotton baseball cap with a small embroidered cream surfboard icon on the front',
+    'bucket-hat-tegel': 'a cream cotton bucket hat with a terracotta band and a small embroidered navy surfboard icon',
+    'strandhanddoek-tegel': 'a folded cotton beach towel with a tile pattern in terracotta, dusty blue, rust and cream and short fringes on the end',
+    'canvas-tas': 'a cream heavy canvas tote bag with sand coloured handles and the stacked TIDE TODE logo printed in navy',
+}
+KLEDING_EN = {
+    't-shirt-zonsopkomst': ('a cream heavyweight cotton t-shirt with a tiny navy surfboard icon on the left chest',
+                            'the same cream t-shirt seen from the back, with a large screen print: a terracotta half sun with cream horizontal cut lines rising above three navy wave lines, the words TIDE TODE in an arc above it and HANDEN VRIJ OP WEG NAAR ZEE in small type below'),
+    't-shirt-stickers': ('a navy heavyweight cotton t-shirt with the small stacked cream TIDE TODE logo on the left chest',
+                         'the same navy t-shirt seen from the back, with a print of six colourful sticker illustrations (wave, sun, shell, palm, starfish, camper van) and the small text TIDE TODE SURF CLUB below'),
+    'longsleeve-golf': ('a cream cotton long sleeve t-shirt with a tiny navy surfboard icon on the chest and the words HANDEN VRIJ printed vertically along the left sleeve',
+                        'the same cream long sleeve seen from the back, with a large navy single-line drawing of a curling wave and the words HANDEN VRIJ below'),
+    'longsleeve-tegel': ('a navy cotton long sleeve t-shirt with one small tile print on the chest',
+                         'the same navy long sleeve seen from the back, with a large rectangular tile print in terracotta, dusty blue, rust and cream and the cream stacked TIDE TODE logo below'),
+    'uv-shirt-lange-mouw': ('a navy fitted long sleeve surf rash vest with flatlock seams, the cream stacked TIDE TODE logo on the chest and tile pattern cuffs in terracotta, dusty blue and cream',
+                            'the same navy rash vest seen from the back, with a small cream surfboard icon and TIDE TODE between the shoulders'),
+    'hoodie-busje': ('a heavyweight baby blue cotton hoodie with kangaroo pocket, navy drawstrings and the small stacked navy TIDE TODE logo on the chest',
+                     'the same baby blue hoodie seen from the back, with a large navy single-line drawing of a camper van with a surfboard on the roof and OP WEG NAAR ZEE below'),
+    'surfponcho-tegel': ('a sea blue terry cotton surf changing poncho with hood and short wide sleeves, a tile pattern border at the bottom hem and a small cream surfboard icon on the chest',
+                         'the same sea blue surf poncho seen from the back, with the large cream stacked TIDE TODE logo and the tile pattern border at the bottom'),
+}
+STIJL = ('Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, '
+         'subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. '
+         'Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.')
+regels = ['# Prompts voor echte productfoto\'s', '',
+          'Zo maak je met ChatGPT een echte productfoto van elk product, waarna het script alle productbeelden opnieuw opbouwt met die foto.', '',
+          '1. Open ChatGPT en upload de tekening die bij het product staat (link hieronder). Upload bij de draagtassen ook de fabrieksfoto van de tas, dan klopt de vorm beter.',
+          '2. Plak de prompt. Vraag om een **png met transparante achtergrond**.',
+          '3. Sla de foto op in `docs/producten/fotos/` met precies de naam die erbij staat. Bij kleding maak je twee foto\'s: voorkant en achterkant.',
+          '4. Vraag mij om de productbeelden opnieuw te maken. Het script zet je foto dan in de packshot, het sfeerbeeld met stickerrand en alle labels.', '',
+          'Let op: een AI-foto is een visualisatie. Laat de echte tas en kleding later fotograferen, zodat klanten zien wat ze krijgen.', '']
+for p in P:
+    h = p['handle']
+    regels += [f"## {p['titel']}", '', f"Tekening: {RAW}{h}-1.jpg", '']
+    if p['collectie'] == 'Draagtassen':
+        t = next(x for x in TASSEN if x[0] == h)
+        wat = TAS_EN.format(kleur=PATROON_EN[t[2]], band=BAND_EN.get(t[3], 'dusty blue'))
+        regels += [f'Opslaan als `{h}.png`', '', '```', f'Use the attached drawing and photo as reference. Create {wat}. Show it standing upright on the tail of the surfboard, nose up. {STIJL}', '```', '']
+    elif h in KLEDING_EN:
+        voor, achter = KLEDING_EN[h]
+        regels += [f'Voorkant, opslaan als `{h}.png`', '', '```', f'Use the attached drawing as reference. Create a flat lay of {voor}, laid out neatly and seen from above. {STIJL}', '```', '',
+                   f'Achterkant, opslaan als `{h}-achter.png` (tekening: {RAW}{h}-2.jpg)', '', '```', f'Use the attached drawing as reference. Create a flat lay of {achter}, laid out neatly and seen from above. {STIJL}', '```', '']
+    else:
+        regels += [f'Opslaan als `{h}.png`', '', '```', f'Use the attached drawing as reference. Create {OVERIG_EN[h]}. {STIJL}', '```', '']
+(DOCS / 'chatgpt-prompts.md').write_text('\n'.join(regels))
