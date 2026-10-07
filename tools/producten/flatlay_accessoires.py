@@ -616,6 +616,12 @@ def tas_rgba():
     stuk = (grabcut(img, (700, 90, 1760, 1530), schaal=0.5, iter_=10) > 0.5).astype(np.uint8)
     n, lab, st, _ = cv2.connectedComponentsWithStats(stuk)
     stuk = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
+    # hengsel: alleen de lichte stof, niet de slagschaduw ernaast
+    L = MK.helderheid(img)
+    achter = float(np.median(L[:40, :40]))
+    hengsel = (L > achter + 0.10).astype(np.uint8)
+    hengsel = cv2.morphologyEx(hengsel, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    stuk[:478] = stuk[:478] & hengsel[:478]
     # kleine gaatjes dicht, de opening binnen het hengsel blijft open
     inv = (1 - stuk).astype(np.uint8)
     n2, lab2, st2, _ = cv2.connectedComponentsWithStats(inv)
