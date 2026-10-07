@@ -43,6 +43,7 @@
 
       <div class="surf-footer__cols">
         {%- for block in section.blocks -%}
+          {%- if block.type == 'juridisch' -%}{%- continue -%}{%- endif -%}
           <div {{ block.shopify_attributes }}>
             <h2>{{ block.settings.heading }}</h2>
             {%- if block.type == 'menu' -%}
@@ -84,6 +85,17 @@
     <div class="surf-footer__bottom">
       <div class="surf-footer__regel">
         <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}{% if section.settings.legal != blank %}, {{ section.settings.legal }}{% endif %}</span>
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'juridisch' -%}
+            <ul class="surf-footer__juridisch" aria-label="{{ block.settings.heading | default: 'Juridisch' }}" {{ block.shopify_attributes }}>
+              {%- for i in (1..6) -%}
+                {%- assign lk = 'l' | append: i | append: '_label' -%}
+                {%- assign uk = 'l' | append: i | append: '_link' -%}
+                {%- if block.settings[lk] != blank -%}<li><a href="{{ block.settings[uk] | default: '#' }}">{{ block.settings[lk] }}</a></li>{%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        {%- endfor -%}
       </div>
       {%- if section.settings.show_payment and shop.enabled_payment_types.size > 0 -%}
         <ul class="surf-pay" aria-label="Betaalmethoden">
@@ -256,6 +268,78 @@
           "id": "note",
           "label": "Extra regel",
           "default": "We reageren binnen één werkdag."
+        }
+      ]
+    },
+    {
+      "type": "juridisch",
+      "name": "Juridische links (onderaan)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titel",
+          "default": "Juridisch"
+        },
+        {
+          "type": "text",
+          "id": "l1_label",
+          "label": "Link 1"
+        },
+        {
+          "type": "url",
+          "id": "l1_link",
+          "label": "URL 1"
+        },
+        {
+          "type": "text",
+          "id": "l2_label",
+          "label": "Link 2"
+        },
+        {
+          "type": "url",
+          "id": "l2_link",
+          "label": "URL 2"
+        },
+        {
+          "type": "text",
+          "id": "l3_label",
+          "label": "Link 3"
+        },
+        {
+          "type": "url",
+          "id": "l3_link",
+          "label": "URL 3"
+        },
+        {
+          "type": "text",
+          "id": "l4_label",
+          "label": "Link 4"
+        },
+        {
+          "type": "url",
+          "id": "l4_link",
+          "label": "URL 4"
+        },
+        {
+          "type": "text",
+          "id": "l5_label",
+          "label": "Link 5"
+        },
+        {
+          "type": "url",
+          "id": "l5_link",
+          "label": "URL 5"
+        },
+        {
+          "type": "text",
+          "id": "l6_label",
+          "label": "Link 6"
+        },
+        {
+          "type": "url",
+          "id": "l6_link",
+          "label": "URL 6"
         }
       ]
     }

@@ -335,8 +335,8 @@ def uv_shirt():
     u8 = (np.clip(h, 0, 1) * 255).astype(np.uint8)
     hsv = cv2.cvtColor(u8, cv2.COLOR_RGB2HSV)
     vak = np.zeros(L.shape, bool); vak[150:1960, 1990:3060] = True
-    stof = (L < 0.42) & vak
     hout = (hsv[..., 1] > 70) & (hsv[..., 0] < 25) & (L < 0.75) & vak
+    stof = (L < 0.42) & vak & ~cv2.dilate(hout.astype(np.uint8), np.ones((5, 5), np.uint8)).astype(bool)
     stof = cv2.morphologyEx(stof.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
     n, lab, st, _ = cv2.connectedComponentsWithStats(stof)
     stof = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
@@ -360,8 +360,8 @@ def uv_shirt():
     yy, xx = np.mgrid[0:h.shape[0], 0:h.shape[1]].astype(np.float32)
     zon = 1.22 - 0.22 * np.clip((xx - 2000) / 1000, 0, 1) - 0.12 * np.clip((yy - 400) / 1500, 0, 1)
     h = np.clip(h * (1 + (zon[..., None] - 1) * ms[..., None]), 0, 1)
-    haak = np.clip(haak * 1.6, 0, 1)
-    h[150:340, 2440:2640] = np.where(haak[150:340, 2440:2640, None] > 0, h[150:340, 2440:2640] * 0.8, h[150:340, 2440:2640])
+    haak = np.clip(haak * 2.2, 0, 1)
+    h[150:340, 2440:2640] = np.where(haak[150:340, 2440:2640, None] > 0, h[150:340, 2440:2640] * 0.5, h[150:340, 2440:2640])
     alfa = np.maximum(alfa, haak)
     licht = np.percentile(MK.helderheid(h)[ms > 0.5], 90)
     h = druk(h, plaats(h.shape, borst, 2690, 760, 175), ref=licht, verplaatsing=3, schaduw=0.8, masker=ms, structuur=0.5)
@@ -385,12 +385,12 @@ def uv_shirt():
     # schaduw van shirt en hanger op het laken (een paar cm erachter)
     laken = masker_kleur(r, (160, 15, 150), (180, 120, 255), rect=(2500, 1400, 3700, 2460))
     laken = np.maximum(laken, masker_kleur(r, (0, 15, 150), (12, 120, 255), rect=(2500, 1400, 3700, 2460)))
-    sch = cv2.GaussianBlur(np.roll(np.roll(a[..., 0], 26, 0), 34, 1), (0, 0), 16)
-    r = r * (1 - 0.38 * (sch * laken)[..., None])
+    sch = cv2.GaussianBlur(np.roll(np.roll(a[..., 0], 40, 0), 46, 1), (0, 0), 18)
+    r = r * (1 - 0.45 * (sch * laken)[..., None])
     r = r * (1 - a) + np.clip(kleur, 0, 1) * a
     # haak gaat over de stang: het deel achter de stang weer bedekken
     r[1440:1490, 2794:2830] = origineel[1440:1490, 2794:2830]
-    bewaar(r, 'uv-shirt-lange-mouw-3', uitsnede=(1990, 1100, 3590, 3100))
+    bewaar(r, 'uv-shirt-lange-mouw-3', uitsnede=(2060, 1180, 3500, 2980))
 
 
 if __name__ == '__main__':

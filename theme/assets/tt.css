@@ -1162,3 +1162,16 @@ body { font-family: var(--tt-tekst); }
   .tt-meer__item { flex: 0 0 68%; scroll-snap-align: start; }
 }
 .tt-patroon__knoppen { justify-content: center; flex-direction: column; gap: 16px; }
+
+/* footer: compacter, juridische links onderaan naast elkaar */
+.surf-footer { padding-top: clamp(48px, 5vw, 72px); padding-bottom: 24px; }
+.surf-footer__top { gap: 32px; padding-bottom: 36px; }
+.surf-footer ul { gap: 8px; }
+.surf-footer__cols h2 { margin-bottom: 14px !important; }
+.surf-footer__brand p { margin-top: 14px; }
+.surf-footer .surf-brief { margin-top: 20px; }
+.surf-footer__juridisch { display: flex !important; flex-wrap: wrap; gap: 6px 22px !important; }
+.surf-footer__juridisch a { font-size: 13px; }
+@media (min-width: 990px) { .surf-footer__cols { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.surf-footer__cols li { font-size: 15px; line-height: 1.5; }
+.surf-footer__cols li:not(:has(a)) { opacity: .88; }

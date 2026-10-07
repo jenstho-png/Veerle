@@ -3,9 +3,10 @@
 Geen AI: echte stockfoto's van effen handdoeken (Unsplash, zie docs/producten/stock/bronnen.json) met ons eigen ontwerp erop.
 
 Ontwerp (90 x 170 cm, geweven jacquard in twee kleuren):
-- de motieven komen uit de echte tegelstof van de draagtas (docs/producten/fabriek/tegel-0*.png). Elke tegel wordt
-  4-voudig symmetrisch gemaakt (dat zijn echte tegels ook) en teruggebracht tot twee garens: navy op crème;
-- 6 tegels van 14 cm over de breedte en 10 over de lengte, een dun navy kader rond het tegelveld;
+- de motieven komen uit de foto van de echte tegelstof van de draagtas (docs/producten/fabriek/stof-lap.jpg). Per motief
+  worden alle exemplaren gemiddeld en 4-voudig symmetrisch gemaakt (dat zijn echte tegels ook), en teruggebracht tot
+  drie garens: navy, baby blue en crème;
+- 5 tegels van 16,8 cm over de breedte en 8 over de lengte, met dunne navy voegen en een navy kader rond het veld;
 - aan beide korte kanten een terracotta band met twee crème biesjes, daarna de franjes;
 - een klein geweven navy label met TIDE TODE in de zijzoom.
 
@@ -50,20 +51,31 @@ BREED, LANG = 90.0, 170.0          # cm
 TEGEL = 16.8                        # cm per tegel: 5 over de breedte, 8 over de lengte
 VELD = (3.0, 17.8, 87.0, 152.2)     # tegelveld u0, v0, u1, v1 in cm
 KADER_V = VELD[1] - 1.3             # dun navy kader rond het veld
-MOTIEVEN = [1, 5, 2, 0, 3]          # tegels uit de stof die als jacquard goed lezen
-SPIEGEL = {2: False}                # de molen (tegel 2) is alleen draaisymmetrisch
+# De motieven komen uit de foto van de echte tasstof (stof-lap.jpg, raster van 10 x 6 tegels van ca. 196 x 230 px).
+# Per motief worden alle tegels waarin het voorkomt gemiddeld; dat haalt de ruis van de foto weg.
+STOF_RASTER = (195.6, 229.8)
+MOTIEVEN = {
+    'bloem': [(1, 2), (2, 0), (3, 3), (3, 5), (5, 7), (5, 9)],           # medaillon met bloem
+    'ruit': [(1, 1), (1, 5), (2, 3), (2, 8), (3, 1), (0, 3), (0, 8), (4, 7), (5, 5)],   # ruit met vierpas
+    'harten': [(1, 4), (3, 7), (4, 2), (4, 9), (5, 4), (0, 0)],           # vier harten
+    'ster': [(2, 6), (4, 3), (4, 5), (4, 8)],                             # ster met punten
+    'kruis': [(0, 1), (0, 4), (1, 7), (2, 4), (3, 2), (3, 8), (4, 0), (4, 6)],   # kruis met driehoekjes
+}
+VOLGORDE = ['bloem', 'harten', 'kruis', 'ruit', 'ster']
 
 
-# ---------- ontwerp ----------
-def motief(i, n=480):
+def motief(naam, n=480):
     """Tegel uit de echte stof als zachte toonkaart. Geeft (X - drempel navy, X - drempel blauw) in eenheden van de spreiding."""
-    t = np.asarray(Image.open(FABRIEK / f'tegel-0{i}.png').convert('RGB')).astype(np.float32) / 255
-    L = MK.helderheid(t)
-    L = cv2.GaussianBlur(cv2.resize(L, (n, n), interpolation=cv2.INTER_CUBIC), (0, 0), n / 130)
-    acc = [np.rot90(L, k) for k in range(4)]
-    if SPIEGEL.get(i, True):
-        acc += [np.fliplr(a) for a in acc]
-    X = cv2.GaussianBlur(np.mean(acc, 0), (0, 0), n / 160)
+    stof = np.asarray(Image.open(FABRIEK / 'stof-lap.jpg').convert('RGB')).astype(np.float32) / 255
+    sw, sh = STOF_RASTER
+    acc = []
+    for r, c in MOTIEVEN[naam]:
+        t = stof[int(r * sh) + 3:int((r + 1) * sh) - 3, int(c * sw) + 3:int((c + 1) * sw) - 3]
+        L = cv2.resize(MK.helderheid(t), (n, n), interpolation=cv2.INTER_CUBIC)
+        L = (L - L.mean()) / (L.std() + 1e-6)
+        for k in range(4):
+            acc += [np.rot90(L, k), np.fliplr(np.rot90(L, k))]
+    X = cv2.GaussianBlur(np.mean(acc, 0), (0, 0), n / 260)
     X = (X - X.mean()) / (X.std() + 1e-6)
     uit = []
     for pct in (30, 58):
@@ -72,9 +84,9 @@ def motief(i, n=480):
         for teken in (1, -1):
             m = (teken * Y > 0).astype(np.uint8)
             n_, lab, st, _ = cv2.connectedComponentsWithStats(m, connectivity=4)
-            klein = np.isin(lab, 1 + np.where(st[1:, cv2.CC_STAT_AREA] < (n / 45) ** 2)[0])
+            klein = np.isin(lab, 1 + np.where(st[1:, cv2.CC_STAT_AREA] < (n / 50) ** 2)[0])
             Y = np.where(klein, -teken * np.maximum(np.abs(Y), 0.3), Y)
-        uit.append(cv2.GaussianBlur(Y, (0, 0), n / 400))
+        uit.append(cv2.GaussianBlur(Y, (0, 0), n / 500))
     return np.dstack(uit)
 
 
@@ -100,14 +112,14 @@ def ontwerp(ppc):
     # tegelveld
     u0, v0, u1, v1 = VELD
     tp = int(round(TEGEL * ppc))
-    for i in MOTIEVEN:
+    for i in VOLGORDE:
         if (i, tp) not in _MOT:
             _MOT[(i, tp)] = cv2.resize(motief(i), (tp, tp), interpolation=cv2.INTER_CUBIC)
     nk, nr = int(round((u1 - u0) / TEGEL)), int(round((v1 - v0) / TEGEL))
     veld = np.ones((nr * tp, nk * tp, 2), np.float32)
     for r in range(nr):
         for c in range(nk):
-            i = MOTIEVEN[(r * 2 + c * 1 + (r // 2)) % len(MOTIEVEN)]
+            i = VOLGORDE[(r * 2 + c * 1 + (r // 2)) % len(VOLGORDE)]
             veld[r * tp:(r + 1) * tp, c * tp:(c + 1) * tp] = _MOT[(i, tp)]
     # drie garens: navy, baby blue en crème, met een zachte rand (scherpte past bij de schaal)
     k = 3.0 * max(1.0, ppc / 12)

@@ -276,14 +276,14 @@
           979.9,
           801.0
         ],
-        "width_at_middle_px": 159.2,
+        "width_at_middle_px": 155.5,
         "middle_point": [
-          971.1,
+          971.5,
           532.1
         ],
         "notes": "Whole board visible, vertical. Medium-small (board is ~55% of frame height). Black 'Elsa'-style tag and small logos on deck; fins visible at the tail.",
         "axis_unit_to_nose": [
-          -0.03752,
+          -0.03751,
           -0.9993
         ],
         "mask": "maskers/board-auto-1.png",
@@ -331,22 +331,22 @@
       "size": "1600x1124",
       "board": {
         "nose_tip": [
-          795.0,
-          98.4
+          794.4,
+          98.5
         ],
         "tail_tip": [
-          877.5,
-          1007.6
+          877.9,
+          1007.7
         ],
         "width_at_middle_px": 284.1,
         "middle_point": [
           836.5,
-          553.0
+          553.1
         ],
         "notes": "Tail in the sand (tail_tip = lowest visible point). Leash cord wrapped around the nose area (y~270), dirty deck, small logo at (820,430), 'SLASH' on right rail.",
         "axis_unit_to_nose": [
-          -0.09038,
-          -0.99591
+          -0.09145,
+          -0.99581
         ],
         "mask": "maskers/board-zand-2.png",
         "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"

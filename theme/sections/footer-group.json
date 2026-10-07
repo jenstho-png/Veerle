@@ -39,9 +39,9 @@
           }
         },
         "menu-3": {
-          "type": "menu",
+          "type": "juridisch",
           "settings": {
-            "heading": "Service",
+            "heading": "Juridisch",
             "l1_label": "Verzending",
             "l1_link": "/policies/shipping-policy",
             "l2_label": "Retourneren",
