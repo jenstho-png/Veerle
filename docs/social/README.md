@@ -251,10 +251,9 @@ Geweven tegels in rood, terracotta, blauw, groen en crème. Het patroon loopt ov
 
 ### 01 `post-01-ons-verhaal`
 
-1. De tas om een board tegen het busje, met het label ZO BEGON HET
-2. Het pad door de duinen
-3. Voeten in het zand
-4. Het strand bij zonsondergang, met Veerle in handschrift
+1. Draagtas Duin om een navy board op het zand, met het label ONS VERHAAL
+2. Twee boards in hun tas, met voetstappen ernaast in het zand
+3. Draagtas Salie om een rose board
 
 ```
 Zo begon het.

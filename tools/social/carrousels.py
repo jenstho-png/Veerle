@@ -95,9 +95,9 @@ def fa(naam):
 
 POSTS = [
     ('post-01-ons-verhaal', [
-        (fa('tt-foto-slot'), 0.5, 1, label('Zo begon het', plek='rechtsonder')),
-        (fa('tt-foto-probleem-2'), 0.55, 1, ''),
-        (fa('tt-foto-hero'), 0.7, 1, hand('Veerle')),
+        (fa('tt-foto-avontuur'), 0.5, 1, label('Ons verhaal', plek='rechtsonder', kleur=CREME)),
+        (fa('tt-foto-stap-3'), 0.5, 1, ''),
+        (fa('tt-foto-beginner'), 0.5, 1, ''),
     ]),
     ('post-02-draagtas-tegel', [
         (pb('draagtas-tegel-1'), 0.5, 1, label('Draagtas Tegel', plek='rechtsonder')),
