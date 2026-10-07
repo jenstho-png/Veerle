@@ -89,7 +89,8 @@
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": {{ shop.url | append: routes.search_url | append: '?q={search_term_string}' | json }}
+            {%- assign zoekterm = '{search_term_string}' -%}
+            "urlTemplate": {{ shop.url | append: routes.search_url | append: '?q=' | append: zoekterm | json }}
           },
           "query-input": "required name=search_term_string"
         }

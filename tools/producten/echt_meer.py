@@ -320,6 +320,75 @@ def karabijn_laag(naam):
     return np.dstack([kleur_v, voorwerp]).astype(np.float32)
 
 
+def haak_punten(laag):
+    """Binnenkant bovenin de haak (waar een band of ring in de haak rust) en het midden van de bandlus, in render-pixels."""
+    al = laag[..., 3]
+    haak = (al > 0.5).astype(np.uint8); haak[1400:] = 0
+    n, lab, st, _ = cv2.connectedComponentsWithStats(haak)
+    haak = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
+    v = haak.copy(); ff = np.zeros((v.shape[0] + 2, v.shape[1] + 2), np.uint8); cv2.floodFill(v, ff, (0, 0), 1)
+    gat = (1 - v).astype(np.uint8)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(gat)
+    ys, xs = np.where(lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA]))
+    pts = np.stack([xs, ys], 1).astype(np.float32)
+    c = pts.mean(0); as_ = np.linalg.svd(pts - c, full_matrices=False)[2][0]
+    if as_[1] > 0:
+        as_ = -as_                                   # wijst naar de smalle bovenkant (rechtsboven)
+    proj = (pts - c) @ as_
+    contact = pts[proj >= np.percentile(proj, 99.7)].mean(0)
+    r = np.array([-0.215, 0.977]); C = np.array([592 + 360, 1068 + 300]); band_mid = C + r * 150 + r * 725
+    return contact, band_mid
+
+
+def plaats_karabijn(scene, laag, px_per_cm, contact_doel, hoek, schaduw=(10, 22, 16, 0.28), zacht_s=0.9,
+                    verzadiging=0.9, licht=1.0, korrel=0.012):
+    """Zet de laag in de foto: schalen naar echte grootte, draaien om het contactpunt, schaduw, scherpte en korrel
+    van de foto overnemen. Geeft (beeld, dekking) terug."""
+    contact, _ = haak_punten(laag)
+    s = px_per_cm / PX_PER_CM_RENDER
+    pre = np.dstack([laag[..., :3] * laag[..., 3:], laag[..., 3:]])
+    klein = cv2.resize(pre, None, fx=s, fy=s, interpolation=cv2.INTER_AREA)
+    cx, cy = contact * s
+    M = cv2.getRotationMatrix2D((float(cx), float(cy)), hoek, 1.0)
+    M[0, 2] += contact_doel[0] - cx; M[1, 2] += contact_doel[1] - cy
+    h, w = scene.shape[:2]
+    gl = cv2.warpAffine(klein, M, (w, h), flags=cv2.INTER_CUBIC, borderValue=(0, 0, 0, 0))
+    if zacht_s > 0:
+        gl = cv2.GaussianBlur(gl, (0, 0), zacht_s)
+    a = np.clip(gl[..., 3], 0, 1)
+    kl = np.clip(gl[..., :3] / np.maximum(a, 1e-4)[..., None], 0, 1)
+    grijs = MK.helderheid(kl)[..., None]
+    kl = np.clip((grijs + (kl - grijs) * verzadiging) * licht, 0, 1)
+    rng = np.random.default_rng(11)
+    kl = np.clip(kl + cv2.GaussianBlur(rng.normal(0, korrel, (h, w)).astype(np.float32), (0, 0), 0.7)[..., None], 0, 1)
+    dx, dy, bl, op = schaduw
+    sch = cv2.GaussianBlur(np.roll(np.roll(a, int(dy), 0), int(dx), 1), (0, 0), bl)
+    uit = scene * (1 - op * sch[..., None])
+    uit = uit * (1 - a[..., None]) + kl * a[..., None]
+    return uit, a
+
+
+def karabijn_zwart():
+    """Zwarte karabijnhaak aan de schouderband van een zwarte leren rugzak die aan een haak tegen een witte muur hangt."""
+    sc = foto('karabijn-rugzak-muur-1.jpg')
+    laag = karabijn_laag('zwart')
+    contact, mid = haak_punten(laag)
+    v = mid - contact
+    hoek = -(90 - np.degrees(np.arctan2(v[1], v[0])))          # band-midden recht onder het contactpunt
+    doel = (2770, 3770)
+    uit, a = plaats_karabijn(sc, laag, 48, doel, hoek)
+    # de band loopt door de haak: links ligt hij voor de haak (daar de originele band terug)
+    L = MK.helderheid(sc)
+    band = (L < 0.35).astype(np.uint8)
+    band[:3730] = 0; band[3830:] = 0; band[:, :2600] = 0; band[:, 2950:] = 0
+    band = zacht(cv2.dilate(band, np.ones((3, 3), np.uint8)), 1.0)
+    links = zacht((np.arange(sc.shape[1]) < doel[0] - 4)[None, :].repeat(sc.shape[0], 0), 2)
+    voor = band * links
+    uit = uit * (1 - voor[..., None]) + sc * voor[..., None]
+    np.save('/tmp/claude-0/-home-user-Veerle/e622134c-148a-50b2-bdf1-45d3e9d54d8e/scratchpad/em/kz.npy', uit[2700:4900, 1700:3500])
+    E.bewaar(uit, 'karabijnhaak-zwart-2', vul=1.0, uitsnede=(1820, 2850, 3500, 4950))
+
+
 def borduur_op(img, L_bron, ref, a, cx, cy, breedte, draai=0, sterkte=0.8):
     """E.borduur, en daarna het licht van de stof (uit de bronfoto) ook over het borduursel."""
     uit = E.borduur(img, a, cx, cy, breedte, draai)

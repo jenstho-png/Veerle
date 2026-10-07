@@ -48,7 +48,17 @@ def kop(default, label="Kop"):
     return {"type": "text", "id": "heading", "label": label, "info": KOP_INFO, "default": default}
 
 
+def zonder_lege_defaults(schema):
+    """Shopify weigert een sectie met een lege standaardwaarde (default: ''), dus die laten we weg."""
+    for lijst in [schema.get('settings', [])] + [b.get('settings', []) for b in schema.get('blocks', [])]:
+        for st in lijst:
+            if st.get('default') == '':
+                del st['default']
+    return schema
+
+
 def schrijf(naam, body, schema):
+    schema = zonder_lege_defaults(schema)
     (T / f'{naam}.liquid').write_text(body.strip() + "\n\n{% schema %}\n" + json.dumps(schema, indent=2, ensure_ascii=False) + "\n{% endschema %}\n")
 
 

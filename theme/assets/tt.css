@@ -1175,3 +1175,8 @@ body { font-family: var(--tt-tekst); }
 @media (min-width: 990px) { .surf-footer__cols { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .surf-footer__cols li { font-size: 15px; line-height: 1.5; }
 .surf-footer__cols li:not(:has(a)) { opacity: .88; }
+
+/* logo in de menubalk altijd in navy */
+.surf-header__logo, .surf-header__logo .tt-lock { color: var(--surf-deep, #22324F); }
+/* het display-font heeft alleen hoofdletters: koppen altijd in kapitalen */
+h1, h2, .h0, .h1, .h2, .title { text-transform: uppercase; }

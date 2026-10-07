@@ -170,7 +170,7 @@ def band_zoom(img, zoom, hoogte, strook, omhoog=(0, -1), masker=None, **kw):
     return druk(img, laag, **kw)
 
 
-def masker_kleur(img, laag_hsv, hoog_hsv, zaad=None, sluit=9, rect=None):
+def masker_kleur(img, laag_hsv, hoog_hsv, zaad=None, sluit=9, rect=None, vullen=True):
     """Masker op kleur (OpenCV-HSV, 0..180 / 0..255), dichtgemaakt, eventueel alleen het stuk onder zaad of binnen rect."""
     u8 = (np.clip(img, 0, 1) * 255).astype(np.uint8)
     hsv = cv2.cvtColor(u8, cv2.COLOR_RGB2HSV)
@@ -181,10 +181,13 @@ def masker_kleur(img, laag_hsv, hoog_hsv, zaad=None, sluit=9, rect=None):
     m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
     n, lab, st, _ = cv2.connectedComponentsWithStats((m > 0).astype(np.uint8))
     if n > 1:
-        kies = lab[zaad[1], zaad[0]] if zaad else 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])
+        kies = lab[zaad[1], zaad[0]] if zaad else 0
+        if kies == 0:
+            kies = 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])
         m = (lab == kies).astype(np.uint8)
-    vul = m.copy(); ff = np.zeros((m.shape[0] + 2, m.shape[1] + 2), np.uint8); cv2.floodFill(vul, ff, (0, 0), 1)
-    m = m | (1 - vul)
+    if vullen:
+        vul = m.copy(); ff = np.zeros((m.shape[0] + 2, m.shape[1] + 2), np.uint8); cv2.floodFill(vul, ff, (0, 0), 1)
+        m = m | (1 - vul)
     return cv2.GaussianBlur(m.astype(np.float32), (0, 0), 1.2)
 
 
@@ -391,6 +394,32 @@ def uv_shirt():
     # haak gaat over de stang: het deel achter de stang weer bedekken
     r[1440:1490, 2794:2830] = origineel[1440:1490, 2794:2830]
     bewaar(r, 'uv-shirt-lange-mouw-3', uitsnede=(2060, 1180, 3500, 2980))
+
+
+# ---------- surfponcho ----------
+def poncho():
+    strook2 = tegelstrook(2)
+    icoon = art('icoon-navy.png', CREME)
+    rug = art('surfponcho-tegel-rugprint-los.png')
+
+    # 1. voorkant, gedragen bij een strandhut (Pexels 36527913): middelste poncho wordt zeeblauw met tegelband en icoon
+    p = foto('poncho-voor-1.jpg')
+    for x, y, b, h in [(1180, 2207, 72, 98), (846, 1978, 64, 84), (1546, 2096, 64, 84), (1053, 1914, 50, 44),
+                       (1190, 2045, 120, 100), (1352, 2058, 100, 76)]:
+        p = E.poets(p, x, y, b, h)                      # merklogo's op de ponchos en de pet, letters op de hut
+    m = masker_kleur(p, (72, 25, 140), (102, 255, 255), zaad=(1050, 2500), sluit=15)
+    oranje = masker_kleur(p, (5, 120, 120), (22, 255, 255), zaad=(760, 2300), sluit=15, rect=(450, 1700, 1000, 2600), vullen=False)
+    petrol = masker_kleur(p, (88, 60, 25), (110, 255, 150), zaad=(1500, 2400), sluit=15, rect=(1320, 1760, 1800, 2720))
+    if PROEF:
+        cv2.imwrite(str(UIT / 'proef-masker-poncho1.jpg'), (np.dstack([petrol, m, oranje]) * 255).astype(np.uint8)[::4, ::4])
+    p = kleur_lab(p, m, ZEEBLAUW, chroma=0.9, spreiding=0.5)
+    p = kleur_lab(p, oranje, '#CDB894', chroma=0.8, spreiding=0.3)
+    p = kleur_lab(p, petrol, '#3B4046', chroma=0.6, spreiding=0.3)
+    licht = np.percentile(MK.helderheid(p)[m > 0.5], 85)
+    p = druk(p, plaats(p.shape, icoon, 1182, 2212, 25), ref=licht, verplaatsing=3, schaduw=0.9, structuur=1.0, dekking=0.92, masker=m, blur=0.5)
+    p = band_zoom(p, [(840, 2866), (962, 2876), (1115, 2879), (1256, 2867)], 78, strook2, masker=m, ref=licht,
+                  verplaatsing=10, schaduw=1.15, structuur=0.9, blur=0.6)
+    bewaar(p, 'surfponcho-tegel-1', uitsnede=(470, 1860, 1470, 3110))
 
 
 if __name__ == '__main__':

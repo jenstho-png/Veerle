@@ -471,6 +471,52 @@ def foto2():
     bewaar(uit, 'strandhanddoek-tegel-2')
 
 
+# ---------- foto 3: detail van stof, band, label en franjes ----------
+ZOOM_3 = [(0, 1450), (100, 1420), (500, 1330), (900, 1250), (1100, 1180), (1300, 1110), (1400, 1060), (1500, 1000), (1600, 900),
+          (1700, 780), (1800, 640), (1900, 520), (2000, 420), (2100, 330), (2200, 220), (2300, 120), (2400, 40)]
+HOEK_3 = 2350          # hier (x) vouwt de zijkant van de handdoek weg: u = 90 cm
+UITSNEDE_3 = (600, 0, 2200, 2000)
+
+
+def langs_zoom(punten, xx, yy, dicht=4000):
+    """Voor elk pixel: booglengte van het dichtstbijzijnde punt op de zoom en de afstand tot de zoom (px)."""
+    from scipy.spatial import cKDTree
+    p = np.array(punten, np.float32)
+    seg = np.linspace(0, len(p) - 1, dicht)
+    i0 = np.minimum(np.floor(seg).astype(int), len(p) - 2)
+    f = (seg - i0)[:, None]
+    q = p[i0] * (1 - f) + p[i0 + 1] * f
+    boog = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(q, axis=0), axis=1))])
+    d, idx = cKDTree(q).query(np.stack([xx.ravel(), yy.ravel()], 1), workers=-1)
+    # aan welke kant van de zoom: de stof ligt linksboven (normaal wijst naar de stof)
+    t = np.gradient(q, axis=0)
+    nrm = np.stack([t[:, 1], -t[:, 0]], 1)
+    kant = np.sign(((np.stack([xx.ravel(), yy.ravel()], 1) - q[idx]) * nrm[idx]).sum(1))
+    return boog[idx].reshape(xx.shape), (d * kant).reshape(xx.shape), np.interp(HOEK_3, q[:, 0], boog)
+
+
+def foto3():
+    f = MK.laad(STOCK / 'handdoek2-franje-1.jpg')
+    # koel grijs licht wordt warm daglicht; de witte franjes worden zo vanzelf crème
+    f = np.clip(f * np.array([1.06, 1.0, 0.9], np.float32) * 1.04, 0, 1)
+    h, w = f.shape[:2]
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    ppc = 50.0
+    boog, afst, boog_hoek = langs_zoom(ZOOM_3, xx, yy)
+    if np.median(afst[:300, :300]) < 0:
+        afst = -afst
+    U = BREED - (boog_hoek - boog) / ppc
+    V = afst / ppc
+    masker = np.clip((afst - 4) / 6, 0, 1).astype(np.float32)
+    ontw, _ = ontwerp_met_label(ppc)
+    uit = breng_aan(f, masker, U, V, ppc, ontw, verplaatsing=0.25, detail=1.0, mono=True, gamma=0.9, weef=0.008, waas=0.03,
+                    detail_sigma=2.0)
+    global LAATSTE
+    LAATSTE = uit
+    x0, y0, x1, y1 = UITSNEDE_3
+    bewaar(uit[y0:y1, x0:x1], 'strandhanddoek-tegel-3')
+
+
 if __name__ == '__main__':
     stappen = sys.argv[1:] or ['label', 'foto1', 'foto2', 'foto3']
     for st in stappen:

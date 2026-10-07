@@ -123,6 +123,21 @@ def huid(handle):
     laag, pm = SC.leg_stof(stof, hk)
     laag = SC.zoom(laag, pm, hk)
     canvas = laag * pm[..., None]
+    # stof is nooit helemaal vlak: zachte spanning en kleine golvingen
+    H_, W_ = pm.shape
+    r = np.random.default_rng(len(handle))
+    golf = cv2.GaussianBlur(r.normal(0, 1, (H_ // 8, W_ // 8)).astype(np.float32), (0, 0), 6)
+    golf = cv2.resize(golf, (W_, H_), interpolation=cv2.INTER_CUBIC)
+    golf = golf / (np.abs(golf).max() + 1e-6)
+    yy, xx = np.mgrid[0:H_, 0:W_].astype(np.float32)
+    # de band trekt de stof iets aan: net naast de band een lichte kuil
+    kuil = np.zeros((H_, W_), np.float32)
+    for kant in (-1, 1):
+        p0 = np.array([XM + kant * STR_LANG, Y0 + HS]); p1 = np.array([XM + kant * STR_KORT, Y0])
+        u = (p1 - p0) / np.linalg.norm(p1 - p0); n = np.array([-u[1], u[0]])
+        d = np.abs((xx - p0[0]) * n[0] + (yy - p0[1]) * n[1]) - SC.BAND / 2
+        kuil += np.exp(-np.clip(d, 0, None) / 22.0) * (d > 0)
+    canvas = canvas * (1 + 0.035 * golf - 0.07 * kuil)[..., None]
     canvas = SC.label(canvas, (XM, Y0 + 75 + 14))
     # label valt binnen het vak, masker blijft pm
     return canvas, pm
@@ -435,8 +450,16 @@ def maak(foto, naam, handle, lus=-1, stringer=0.0, kort=1.0, belicht=1.0, tint=(
     uit = foto.copy()
     # schaduw van de vakrand (dikte van de stof) op het board
     sub = uit[y0:y1, x0:x1]
-    sch = cv2.GaussianBlur(np.roll(np.roll(va, int(round(schaduw[1] * schaal * 0.3)), 0), int(round(schaduw[0] * schaal * 0.3)), 1), (0, 0), 2.0 * schaal + 0.6)
-    sub = sub * (1 - 0.35 * np.clip(sch - va, 0, 1) * (zicht > 0.5))[..., None]
+    # dikte van de stof met zoom (~3 mm): smalle schaduw naast de vakrand, in de lichtrichting
+    ld = np.array(schaduw[:2], np.float64); ld /= np.linalg.norm(ld) + 1e-9
+    off = max(0.006 * B.W, 1.0)
+    M = np.float32([[1, 0, ld[0] * off], [0, 1, ld[1] * off]])
+    sch = cv2.warpAffine(va, M, (va.shape[1], va.shape[0]))
+    sch = cv2.GaussianBlur(sch, (0, 0), 0.5 + 0.004 * B.W)
+    sub = sub * (1 - 0.45 * np.clip(sch - va, 0, 1) * (zicht > 0.5))[..., None]
+    # contactschaduw rondom (stof ligt op het board)
+    con = cv2.GaussianBlur(va, (0, 0), 0.8 + 0.01 * B.W)
+    sub = sub * (1 - 0.18 * np.clip(con - va, 0, 1) * (zicht > 0.5))[..., None]
     vak_k = kleurcorrectie(vak, lichtmap)
     sub = sub * (1 - va[..., None]) + vak_k * va[..., None]
     uit[y0:y1, x0:x1] = sub
@@ -515,7 +538,8 @@ def band_pad(B, shape, w, plat=False, lengte_factor=1.0, ondergrens=None):
         sig_lus = (2 * (Ys - Y0) / HS - 1) * SMAX            # < 0 aan de luskant
         t = B.tb + (Xs - XM) / B.kx
         grens = -SMAX * B.half(t) / B.href                   # silhouet aan de luskant
-        op_lus = sig_lus >= grens
+        # lange rail: de band verdwijnt om de rail naar de onderkant (stopt op het silhouet)
+        op_lus = (sig_lus >= grens) & op
         Pb, Ys_, Xs_ = Pb[op_lus], Ys[op_lus], Xs[op_lus]
         # vlakke richting bij het uittreepunt (zonder ronding): lijn in huid -> beeld bij 0,85 van de breedte
         Ep = Pb[-1]
