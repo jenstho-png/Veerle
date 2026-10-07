@@ -2005,3 +2005,46 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
   .tt-wie__foto { width: 96px; }
 }
 .tt .tt-wie__grid .tt-wie__kaart { padding: 14px 22px 14px 14px !important; }
+
+/* ---------- menu: Shop is een link, het menu klapt open bij hover ---------- */
+.surf-nav__hoofd { color: inherit; text-decoration: none; }
+
+/* ---------- kortingsknop: zonnetje, vrolijk maar netjes ---------- */
+.tt-pop__teaser {
+  padding: 10px 20px 10px 10px !important; gap: 12px !important; background: var(--tt-creme, #F3ECDD) !important; color: var(--tt-deep) !important;
+  box-shadow: 0 0 0 1.5px var(--tt-deep), 0 16px 30px -14px rgba(10, 20, 35, .45) !important; rotate: -2deg !important; text-transform: none !important; letter-spacing: 0 !important;
+}
+.tt-pop__teaser:hover { rotate: 0deg !important; transform: translateY(-3px) scale(1.03); }
+.tt-pop__teaser-zon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--tt-terra, #C0603E); color: var(--tt-creme, #F3ECDD); }
+.tt-pop__teaser-zon svg { width: 26px; height: 26px; animation: tt-zon-draai 14s linear infinite; }
+.tt-pop__teaser-tekst { display: grid; gap: 3px; text-align: left; }
+.tt-pop__teaser-tekst strong { font: 700 12px/1 var(--tt-tekst); letter-spacing: .18em; text-transform: uppercase; }
+.tt-pop__teaser-tekst small { font: 400 11px/1 var(--tt-tekst); opacity: .7; }
+@keyframes tt-zon-draai { to { rotate: 360deg; } }
+@media (prefers-reduced-motion: reduce) { .tt-pop__teaser-zon svg { animation: none; } }
+
+/* ---------- productpagina draagtas: snel een ander ontwerp kiezen ---------- */
+.tt-koop__ontwerpen { margin: 22px 0 6px; }
+.tt-koop__ontwerpen-kop { margin: 0 0 10px !important; font: 700 11px/1 var(--tt-tekst); letter-spacing: .2em; text-transform: uppercase; }
+.tt-koop__ontwerpen ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.tt-koop__ontwerpen a { display: block; width: 56px; aspect-ratio: 4 / 5; border-radius: 4px; overflow: hidden; opacity: .75; transition: opacity .3s, transform .4s cubic-bezier(.22, 1, .36, 1); }
+.tt-koop__ontwerpen a:hover { opacity: 1; transform: translateY(-2px); }
+.tt-koop__ontwerpen a[aria-current="true"] { opacity: 1; box-shadow: 0 0 0 2px var(--tt-deep); }
+.tt-koop__ontwerpen img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ---------- balk bovenaan: een rustig doorlopende band met kleine icoontjes ---------- */
+.surf-balk { overflow: hidden; background: var(--tt-deep, #22324F); color: var(--tt-creme, #F3ECDD); }
+.surf-balk__link { display: block; color: inherit; text-decoration: none; }
+.surf-balk__baan { display: flex; width: max-content; }
+.surf-balk__spoor { display: flex; align-items: center; flex-shrink: 0; padding: 9px 0; }
+.surf-balk__item { padding: 0 26px; font: 700 10.5px/1 var(--tt-tekst); letter-spacing: .22em; text-transform: uppercase; white-space: nowrap; }
+.surf-balk__ster { display: inline-grid; place-items: center; color: #EDBDB8; }
+.surf-balk__ster svg { width: 15px; height: 15px; display: block; }
+.surf-balk__ster:nth-of-type(3n+2) { color: #BFD3EA; }
+.surf-balk__ster:nth-of-type(3n) { color: #E3CFAE; }
+.surf-balk__baan { animation: tt-balk-loop 38s linear infinite; }
+.surf-balk:hover .surf-balk__baan { animation-play-state: paused; }
+@keyframes tt-balk-loop { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .surf-balk__baan { animation: none; } }
+.surf-header summary:has(.surf-nav__hoofd) { gap: 4px; }
+.surf-nav__hoofd { padding: 0 !important; }

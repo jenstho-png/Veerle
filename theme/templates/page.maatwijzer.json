@@ -1,48 +1,5 @@
 {
   "sections": {
-    "tekst": {
-      "type": "tt-tekst",
-      "settings": {
-        "label": "",
-        "datum": ""
-      },
-      "blocks": {
-        "link-1": {
-          "type": "link",
-          "settings": {
-            "label": "Draagtassen",
-            "link": "/collections/draagtassen"
-          }
-        },
-        "link-2": {
-          "type": "link",
-          "settings": {
-            "label": "Kleding en accessoires",
-            "link": "/collections/kleding-en-accessoires"
-          }
-        },
-        "link-3": {
-          "type": "link",
-          "settings": {
-            "label": "Veelgestelde vragen",
-            "link": "/pages/veelgestelde-vragen"
-          }
-        },
-        "link-4": {
-          "type": "link",
-          "settings": {
-            "label": "Contact",
-            "link": "/pages/contact"
-          }
-        }
-      },
-      "block_order": [
-        "link-1",
-        "link-2",
-        "link-3",
-        "link-4"
-      ]
-    },
     "check": {
       "type": "tt-check",
       "settings": {
@@ -278,7 +235,6 @@
     }
   },
   "order": [
-    "tekst",
     "check",
     "tas",
     "kleding",

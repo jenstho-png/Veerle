@@ -39,7 +39,7 @@
             -%}
             {%- if subs > 0 -%}
               <details>
-                <summary>{{ block.settings.label }} {% render 'surf-icon', icon: 'chevron' %}</summary>
+                <summary>{%- if block.settings.link != blank -%}<a class="surf-nav__hoofd" href="{{ block.settings.link }}">{{ block.settings.label }}</a>{%- else -%}{{ block.settings.label }}{%- endif -%} {% render 'surf-icon', icon: 'chevron' %}</summary>
                 <ul class="surf-dd">
                   {%- if block.settings.link != blank and block.settings.dd_all_label != blank -%}
                     <li class="surf-dd__alles"><a href="{{ block.settings.link }}">{{ block.settings.dd_all_label }}</a></li>

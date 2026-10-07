@@ -251,7 +251,11 @@
         "bg": "creme",
         "label": "Tide Tode",
         "heading": "Meer dan|een *tas*",
-        "text": "Eerst was er de tas. Toen wilden we ook een shirt dat goed zit na een koude sessie, een pet tegen de zon en een haak voor je sleutels. Gemaakt zoals we de tas maken: stevig, simpel en bedacht in het zand."
+        "text": "We maken weinig, en dat goed. Stevige stof, sterke naden en katoen dat jaren meegaat. Gaat er toch iets stuk, dan repareren we het.",
+        "btn1_label": "Alle artikelen",
+        "btn1_link": "/collections/all",
+        "btn2_label": "",
+        "btn2_link": ""
       }
     },
     "wie": {
@@ -406,10 +410,10 @@
   "order": [
     "hero",
     "usp",
-    "uitgelicht",
     "zo",
-    "meer",
     "wie",
+    "uitgelicht",
+    "meer",
     "duurzaam",
     "faq",
     "patroon"

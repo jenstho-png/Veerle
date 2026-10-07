@@ -44,7 +44,8 @@
   </div>
   {%- if settings.surf_popup_teaser != blank -%}
     <button type="button" class="tt-pop__teaser" data-surf-popup-open hidden>
-      <span class="tt-pop__teaser-tekst">{{ settings.surf_popup_teaser }}</span><span class="tt-pop__teaser-pijl" aria-hidden="true">→</span>
+      <span class="tt-pop__teaser-zon" aria-hidden="true">{%- render 'tt-icoon', icoon: 'zon' -%}</span>
+      <span class="tt-pop__teaser-tekst"><strong>{{ settings.surf_popup_teaser }}</strong><small>op je eerste bestelling</small></span>
     </button>
   {%- endif -%}
 {%- endif -%}

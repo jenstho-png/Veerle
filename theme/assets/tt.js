@@ -187,6 +187,15 @@
     });
   }
 
+  /* ---------- menu: de shop klapt open als je erover gaat; klikken op 'Shop' gaat naar alle producten ---------- */
+  if (matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll('[data-surf-header] nav details').forEach((d) => {
+      const item = d.closest('li') || d;
+      item.addEventListener('mouseenter', () => { d.open = true; });
+      item.addEventListener('mouseleave', () => { d.open = false; });
+    });
+  }
+
   /* ---------- uitgelicht product: grote foto wisselt mee met het ontwerp onder je muis ---------- */
   document.querySelectorAll('[data-tt-uit]').forEach((sec) => {
     const groot = sec.querySelector('.tt-uit__foto img');

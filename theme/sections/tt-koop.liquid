@@ -150,6 +150,18 @@
           {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}{%- assign b_toon = block.settings.toon | default: 'alle' -%}{%- assign zie = false -%}{%- if b_toon == 'alle' or b_toon == groep -%}{%- assign zie = true -%}{%- elsif b_toon == 'anders' and groep != 'draagtas' -%}{%- assign zie = true -%}{%- endif -%}{%- if zie -%}<li {{ block.shopify_attributes }}><span class="tt-koop__vinkje" aria-hidden="true"></span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endif -%}{%- endfor -%}
         {%- endcapture -%}
         {%- if punten != blank -%}<ul class="tt-koop__punten tt-in">{{ punten }}</ul>{%- endif -%}
+        {%- if groep == 'draagtas' and collections['draagtassen'].products.size > 1 -%}
+          <div class="tt-koop__ontwerpen tt-in">
+            <p class="tt-koop__ontwerpen-kop">Kies je ontwerp</p>
+            <ul>
+              {%- for op in collections['draagtassen'].products limit: 12 -%}
+                <li><a href="{{ op.url }}"{% if op.id == p.id %} aria-current="true"{% endif %} title="{{ op.title | escape }}">
+                  {%- if op.featured_media -%}{{ op.featured_media | image_url: width: 160 | image_tag: loading: 'lazy', alt: op.title, sizes: '64px', widths: '80, 160' }}{%- endif -%}
+                </a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
         <div class="tt-koop__form tt-in">
           {%- if p != blank and v != blank -%}
             {%- form 'product', p, class: 'tt-koop__formulier', data-tt-form: '', novalidate: 'novalidate' -%}
