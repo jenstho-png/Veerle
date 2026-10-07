@@ -94,7 +94,7 @@ def regel(font, tekst, spatie, r, board_i=False):
         if ch == 'I' and board_i:
             g, w = glyf(font, 'I')
             minx, miny, maxx, maxy = g.bounds
-            bw = (maxx - minx) * 1.05; bh = (maxy - miny) * 1.12
+            bw = (maxx - minx) * 1.2; bh = (maxy - miny) * 1.14
             vormen.append(board(bh, bw, x + (minx + maxx)/2, miny - (maxy-miny)*0.03))
             x += w + spatie; continue
         g, w = glyf(font, ch)
@@ -114,18 +114,25 @@ def pad(g, H):
         ps.append(ring(p.exterior.coords) + ''.join(ring(i.coords) for i in p.interiors))
     return ''.join(ps)
 
-def maak(fontnaam, spatie_f=0.32, r_f=0.022, amp_f=0.012, regel_gat=0.18):
+def maak(fontnaam, spatie_f=0.05, r_f=0.022, amp_f=0.008, regel_gat=0.05):
+    """Gestapeld als één blok: strak gespatieerd, beide regels exact even breed, weinig ruimte ertussen."""
     font = TTFont(HIER / 'fonts' / fontnaam)
     upm = font['head'].unitsPerEm
-    boven, wb, cap = regel(font, 'TIDE', upm*spatie_f, upm*r_f, board_i=True)
+    breed = lambda g: g.bounds[2] - g.bounds[0]
     onder, wo, _ = regel(font, 'TODE', upm*spatie_f, upm*r_f)
+    boven, wb, cap = regel(font, 'TIDE', upm*spatie_f, upm*r_f, board_i=True)
+    for _ in range(3):  # TIDE is smaller (de I): extra spatie tot hij net zo breed is als TODE
+        extra = (breed(onder) - breed(boven)) / 3
+        boven, wb, cap = regel(font, 'TIDE', upm*spatie_f + extra + (0 if _ == 0 else 0), upm*r_f, board_i=True) if _ == 0 else regel(font, 'TIDE', huidig + extra, upm*r_f, board_i=True)
+        huidig = (upm*spatie_f + extra) if _ == 0 else huidig + extra
+    wb = wo = breed(onder)
     # beide regels even breed: TODE iets wijder spatiëren is lastig; centreren
     W = max(wb, wo)
     b0 = boven.bounds; o0 = onder.bounds
     hb = b0[3] - b0[1]; ho = o0[3] - o0[1]
     gat = upm*regel_gat
-    boven = affinity.translate(boven, (W - wb)/2 - b0[0] + 0, ho + gat - b0[1])
-    onder = affinity.translate(onder, (W - wo)/2 - o0[0], -o0[1])
+    boven = affinity.translate(boven, -b0[0], ho + gat - b0[1])
+    onder = affinity.translate(onder, -o0[0], -o0[1])
     alles = unary_union([boven, onder])
     alles = golf(alles, upm*amp_f, 2*math.pi/(upm*0.9))
     minx, miny, maxx, maxy = alles.bounds
@@ -144,7 +151,7 @@ if __name__ == '__main__' and (len(sys.argv) < 2 or sys.argv[1] != 'alles'):
     print('ok', list(uit))
 
 
-def liggend(fontnaam='Kavoon-Regular.ttf', spatie_f=0.32, r_f=0.022, amp_f=0.012, woordgat=0.9):
+def liggend(fontnaam='Kavoon-Regular.ttf', spatie_f=0.08, r_f=0.022, amp_f=0.008, woordgat=0.5):
     font = TTFont(HIER / 'fonts' / fontnaam)
     upm = font['head'].unitsPerEm
     a, wa, _ = regel(font, 'TIDE', upm*spatie_f, upm*r_f, board_i=True)

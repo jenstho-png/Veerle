@@ -189,7 +189,7 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
 .familie .duo svg:first-child { width: 20%; } .familie .duo svg:last-child { width: 80%; }
 .metic { display: grid; justify-items: center; gap: 3cqw; width: 62%; }
 .metic svg:first-child { width: 30%; } .metic svg:last-child { width: 100%; }
-.cover .icoon { position: absolute; left: 6cqw; bottom: 51cqw; width: 11cqw; }
+.cover .icoon { position: absolute; left: 6cqw; bottom: 57cqw; width: 11cqw; }
 
 /* 4 kleur en letter */
 .kleur { display: grid; grid-template-columns: repeat(5, 1fr); height: 52%; }
