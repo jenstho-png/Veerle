@@ -191,8 +191,10 @@
   if (matchMedia('(hover: hover)').matches) {
     document.querySelectorAll('[data-surf-header] nav details').forEach((d) => {
       const item = d.closest('li') || d;
-      item.addEventListener('mouseenter', () => { d.open = true; });
-      item.addEventListener('mouseleave', () => { d.open = false; });
+      let dicht = null;
+      /* even wachten met sluiten, zodat je rustig naar de lijst kunt bewegen */
+      item.addEventListener('mouseenter', () => { clearTimeout(dicht); d.open = true; });
+      item.addEventListener('mouseleave', () => { clearTimeout(dicht); dicht = setTimeout(() => { d.open = false; }, 400); });
     });
   }
 

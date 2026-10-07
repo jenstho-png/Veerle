@@ -2156,3 +2156,31 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
 .tt-uit__meer span { position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; font: 700 clamp(15px, 1.5vw, 20px)/1 var(--tt-tekst); letter-spacing: .04em; }
 .tt-uit__meer:hover { transform: translateY(-3px); }
 .tt-uit__meer:focus-visible { outline: 2px solid var(--tt-deep, #22324F); outline-offset: 4px; }
+
+/* collectie: compacte kop, producten meteen in beeld */
+.tt-col { padding-top: 0 !important; }
+.tt-col__held, .tt-col__held--beeld { grid-template-columns: 1fr !important; padding-top: clamp(112px, 9vw, 132px) !important; padding-bottom: 0 !important; margin-bottom: 18px !important; gap: 8px !important; }
+.tt-col__held .tt-kop--l { font-size: clamp(36px, 4.2vw, 56px) !important; line-height: 1 !important; }
+.tt-col__intro { margin-top: 10px !important; font-size: 14px !important; line-height: 1.6 !important; max-width: 60ch; }
+.tt-col__intro p { margin: 0 !important; }
+.tt-col__drie, .tt-col__beeld { display: none !important; }
+@media (max-width: 749px) {
+  .tt-col__held, .tt-col__held--beeld { padding-top: 96px !important; margin-bottom: 12px !important; }
+  .tt-col__intro { display: none; }
+}
+.tt-col__held, .tt-col__held--beeld { padding-top: clamp(104px, 8vw, 116px) !important; }
+@media (max-width: 749px) {
+  .tt-col__held, .tt-col__held--beeld { padding-top: 92px !important; }
+  .tt-col__nav { flex-wrap: nowrap !important; overflow-x: auto; scrollbar-width: none; margin-inline: -20px; padding-inline: 20px; }
+  .tt-col__nav::-webkit-scrollbar { display: none; }
+  .tt-col__nav a { flex: none; white-space: nowrap; }
+  .tt-col__balk { row-gap: 12px !important; }
+  .tt-col__balk [class*="aantal"], .tt-col__aantal { white-space: nowrap; }
+}
+@media (max-width: 749px) {
+  .tt-col__acties { display: flex !important; align-items: center; gap: 12px; width: 100%; min-width: 0; }
+  .tt-col__acties > :not(.tt-col__aantal) { flex: 1 1 auto; min-width: 0; }
+  .tt-col__acties select, .tt-col__acties .select { width: 100%; min-width: 0; }
+}
+/* onzichtbare brug over het gaatje tussen Shop en de lijst, zodat het menu open blijft */
+.surf-dd::before { content: ""; position: absolute; left: 0; right: 0; top: -16px; height: 16px; }

@@ -3,7 +3,8 @@
     "collectie": {
       "type": "tt-collectie",
       "settings": {
-        "fallback": "tt-foto-stap-3"
+        "fallback": "tt-foto-stap-3",
+        "beeld": false
       },
       "blocks": {
         "link-1": {
