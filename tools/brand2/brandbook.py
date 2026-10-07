@@ -23,6 +23,16 @@ def foto(naam):
     return b64(HIER / 'foto' / f'{naam}.jpg', 'image/jpeg')
 
 
+def productfoto(pad, breedte=900):
+    """Foto uit docs/producten, verkleind zodat het merkboek licht blijft."""
+    import io
+    from PIL import Image
+    im = Image.open(pad).convert('RGB')
+    im = im.resize((breedte, int(im.height * breedte / im.width)), Image.LANCZOS)
+    buf = io.BytesIO(); im.save(buf, 'JPEG', quality=80, optimize=True)
+    return 'data:image/jpeg;base64,' + base64.b64encode(buf.getvalue()).decode()
+
+
 def logo(soort, kleur, cls='', stijl=''):
     l = LOGO[soort]
     return f'<svg class="{cls}" style="{stijl}" viewBox="0 0 {l["w"]} {l["h"]}" role="img" aria-label="Tide Tode"><path fill="{kleur}" d="{l["d"]}"/></svg>'
@@ -272,6 +282,16 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
 .drie .rol { font: 400 1.55cqw/1.5 var(--mono); }
 .drie .rol b { display: block; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: .4cqw; }
 /* de tas */
+.fotop { display: grid; grid-template-rows: auto auto 1fr; height: 100%; padding: 6cqw; gap: 2.4cqw; }
+.fotop h2 { margin: 0; font: 400 5.4cqw/1 var(--display); letter-spacing: .04em; }
+.fotop p { margin: 0; font: 400 1.7cqw/1.5 var(--mono); max-width: 60ch; }
+.fotogrid { display: grid; grid-template-columns: 1.5fr 1fr; grid-template-rows: 1fr 1fr; gap: 1.6cqw; min-height: 0; }
+.fotogrid div, .negen figure div, .twee div { background-size: cover; background-position: center; }
+.fotogrid .groot { grid-row: span 2; background-position: 78% 50% !important; }
+.negen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4cqw; min-height: 0; }
+.negen figure { margin: 0; display: grid; grid-template-rows: 1fr auto; gap: .8cqw; min-height: 0; }
+.negen figcaption { font: 700 1.2cqw var(--mono); letter-spacing: .2em; }
+.twee { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6cqw; min-height: 0; }
 .tasp { display: grid; grid-template-rows: auto auto 1fr; height: 100%; padding: 6cqw; gap: 2.4cqw; }
 .tasp .lijn svg { width: 100%; }
 .tasp .foto { position: relative; background-size: cover; background-position: center; display: grid; place-items: center; }
@@ -318,6 +338,34 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
   <div style="display:grid;grid-template-rows:1fr 1.2fr;gap:2cqw;min-height:0">
     <div class="lijn" style="background:var(--creme);display:grid;place-items:center;padding:2cqw">{TAS.lijn()}</div>
     <div class="foto" style="background-image:url({foto('zand')})">{TAS.sticker()}</div>
+  </div>
+</div></section>''')
+    # 3d productfotografie
+    PB = HIER.parent.parent / 'docs' / 'producten'
+    paginas.append(f'''<section class="pagina" aria-label="Productfotografie"><div class="fotop">
+  <h2>PRODUCTFOTO'S</h2>
+  <p>Van bovenaf op een crème studiodoek. Altijd de echte stof, de band in een lus en het label zichtbaar. Eén vaste opstelling voor elk ontwerp.</p>
+  <div class="fotogrid">
+    <div class="groot" style="background-image:url({productfoto(PB / 'beelden' / 'draagtas-tegel-1.jpg', 1100)})"></div>
+    <div style="background-image:url({productfoto(PB / 'beelden' / 'draagtas-tegel-3.jpg', 700)})"></div>
+    <div style="background-image:url({productfoto(PB / 'beelden' / 'draagtas-tegel-2.jpg', 700)})"></div>
+  </div>
+</div></section>''')
+    # 3e negen ontwerpen
+    namen = ['tegel', 'tegel-navy', 'golfjes', 'zonsondergang', 'schelp', 'ruit', 'duin', 'salie', 'navy']
+    tegels9 = ''.join(f'<figure><div style="background-image:url({productfoto(PB / "beelden" / f"draagtas-{n}-1.jpg", 520)})"></div><figcaption>{n.replace("-", " ").upper()}</figcaption></figure>' for n in namen)
+    paginas.append(f'''<section class="pagina" aria-label="Negen ontwerpen"><div class="fotop">
+  <h2>NEGEN ONTWERPEN</h2>
+  <p>De schouderband krijgt per ontwerp een eigen kleur: dusty blue, navy, baby blue, terracotta of rose.</p>
+  <div class="negen">{tegels9}</div>
+</div></section>''')
+    # 3f onderweg
+    paginas.append(f'''<section class="pagina" aria-label="Onderweg"><div class="fotop">
+  <h2>ONDERWEG</h2>
+  <p>Sfeerbeelden: echte plekken, natuurlijk licht, de tas in gebruik. Geen poses, geen studio.</p>
+  <div class="twee">
+    <div style="background-image:url({productfoto(PB / 'fabriek' / 'lifestyle-busje.jpg', 800)})"></div>
+    <div style="background-image:url({productfoto(PB / 'fabriek' / 'lifestyle-knuffel.jpg', 800)})"></div>
   </div>
 </div></section>''')
     # 4 kleur en letter

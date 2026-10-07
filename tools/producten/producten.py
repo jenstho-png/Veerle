@@ -305,7 +305,7 @@ VERZENDING = '<p>Verzending door heel Europa. Binnen 14 dagen retour.</p>'
 
 TASSEN = [
     # handle, naam, patroon, band, achtergrond, prijs, kleuromschrijving, regel
-    ('draagtas-tegel', 'Tegel', 'tegel', BLAUW, '#EFE5D3', '40.00', 'tegelprint in terracotta, dusty blue, roest en crème', 'Het origineel'),
+    ('draagtas-tegel', 'Tegel', 'tegel', BLAUW, '#EFE5D3', '40.00', 'geweven jacquard met een patchwork van tegels in rood, terracotta, blauw, groen en crème', 'Het origineel'),
     ('draagtas-tegel-navy', 'Tegel Navy', 'tegel-navy', NAVY, BABY, '40.00', 'tegelprint in navy, baby blue en crème', 'Donkere versie van de tegel'),
     ('draagtas-golfjes', 'Golfjes', 'golfjes', BABY, '#DCE6F1', '40.00', 'baby blue golfjes op navy', 'Golfjes op navy'),
     ('draagtas-zonsondergang', 'Zonsondergang', 'zonsondergang', TERRA, ROSE, '40.00', 'strepen in rose, zand, terracotta en crème', 'Strepen in zachte kleuren'),
@@ -323,14 +323,14 @@ for handle, naam, pat, band, achter, prijs, kleur, regel in TASSEN:
         tags=['draagtas', 'surfboard', 'tas'] + (['origineel'] if pat == 'tegel' else []),
         tekst=(f'<p>De Tide-Tode draagtas in {kleur}. Je schuift je surfboard in de tas en hangt hem over je schouder. '
                f'Zo heb je je handen vrij als je naar het strand loopt, fietst of op de scooter zit.</p>'
-               '<ul><li>Eén maat, voor softtops en hardboards</li><li>Brede schouderband</li><li>Zware geweven stof met sterke stiksels</li><li>Je natte board mag er gewoon in</li></ul>'
+               '<ul><li>Eén maat, voor softtops en hardboards</li><li>Stevige nylon schouderband, fijn geweven zodat hij zacht in je hand ligt</li><li>De band loopt in één stuk rondom de tas, dat maakt hem sterk</li><li>Zware geweven stof met sterke stiksels</li><li>Je natte board mag er gewoon in</li></ul>'
                + VERZENDING),
         seo_titel=f'Draagtas {naam} voor je surfboard | Tide-Tode',
         seo_tekst=f'Surfboard draagtas in {kleur}. Board in de tas, tas over je schouder en je handen zijn vrij. Voor softtops en hardboards.',
         beelden=[
-            ('pack', lambda pat=pat, band=band, h=handle: (tas(pat, band, h.replace('-', '')), '0 0 600 300', 1640, -90), achter, naam, f'Draagtas {naam}, staand vooraanzicht'),
-            ('macro', pat, f'De stof van draagtas {naam} van dichtbij'),
-            ('sfeer', lambda pat=pat, band=band, h=handle: (tas(pat, band, h.replace('-', '') + 's'), '-30 -30 660 360', 1250, -9), 'Handen vrij, op weg naar zee', f'Draagtas {naam} als sticker op een foto van de zee'),
+            ('extern', f'Draagtas {naam} om een crème surfboard, met de schouderband in een lus'),
+            ('extern', f'Draagtas {naam} om het midden van een surfboard, van bovenaf'),
+            ('extern', f'Geweven Tide-Tode label en de schouderband met ingeweven logo van draagtas {naam}'),
         ]))
 
 WAX = [('surfwax-koud', 'Surfwax koud water', BABY, 'KOUD WATER', 'onder 14 graden', 'Voor de Noordzee in het voorjaar en najaar.'),
@@ -394,6 +394,9 @@ for p in P:
     for i, b in enumerate(p['beelden'], 1):
         naam = f"{p['handle']}-{i}"
         soort = b[0]
+        if soort == 'extern':
+            p['bestanden'].append((naam + '.jpg', b[1]))   # studiofoto uit tools/tas/scene.py
+            continue
         if soort == 'pack':
             f = foto(p['handle'], '-achter' if b[3] == 'Achterkant' else '')
             svg, vb, br, dr = met_foto(f, 1500) if f else b[1]()

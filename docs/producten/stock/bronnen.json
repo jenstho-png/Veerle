@@ -1,0 +1,130 @@
+[
+  {
+    "file": "tshirt-wit-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/4rUYuwJ2vGw",
+    "image_url": "https://images.unsplash.com/photo-1651761179569-4ba2aa054997?w=1600&q=85&fm=jpg",
+    "photographer": "mockupbee",
+    "what": "White short-sleeve t-shirt, flat lay",
+    "notes": "Straight from the front, whole shirt, centred. Even light grey background, soft light. Completely blank. Best t-shirt base."
+  },
+  {
+    "file": "tshirt-creme-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/fiA7sq2PdnQ",
+    "image_url": "https://images.unsplash.com/photo-1722310752951-4d459d28c678?w=1600&q=85&fm=jpg",
+    "photographer": "Jonathan Mattson",
+    "what": "Off-white / cream short-sleeve t-shirt, hanging on a white plastic hanger",
+    "notes": "Front view, whole shirt, white wall, even light. Portrait format. WATCH OUT: small printed 'UNIQLO U' brand label inside the back neck is visible; retouch it out (small area, plain fabric around it). Chest and front are blank."
+  },
+  {
+    "file": "tshirt-navy-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/2wA3pDt4M_4",
+    "image_url": "https://images.unsplash.com/photo-1666358057084-5f63d94d6958?w=1600&q=85&fm=jpg",
+    "photographer": "Or Hakim",
+    "what": "Dark navy short-sleeve t-shirt (curved hem), flat lay",
+    "notes": "Front view, whole shirt, pure white background. Shirt fills only about 30% of the frame, so crop. WATCH OUT: white printed 'BROOTZ' neck label inside the collar and a tiny tag at the lower left hem; both need retouching. Curved scoop hem, not a classic straight hem."
+  },
+  {
+    "file": "tshirt-zwart-basis-navy-2.jpg",
+    "unsplash_page": "https://unsplash.com/photos/iiqg2xbmvk0",
+    "image_url": "https://images.unsplash.com/photo-1562135291-7728cc647783?w=1600&q=85&fm=jpg",
+    "photographer": "Md Salman",
+    "what": "Two black short-sleeve t-shirts on black wire hangers (navy substitute)",
+    "notes": "Front view, both shirts whole, white wall, even light, no labels visible. Black, not navy: recolour to navy or crop to one shirt. Wide 2:1 format."
+  },
+  {
+    "file": "longsleeve-wit-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/7cERndkOyDw",
+    "image_url": "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=1600&q=85&fm=jpg",
+    "photographer": "Mediamodifier",
+    "what": "White long-sleeve crewneck, flat lay",
+    "notes": "Front view, whole garment, blank. Light grey background, but with props around it (sneakers, plant, jeans under the right sleeve, basket, burlap); crop or clean these up. The garment is a heavier sweatshirt with ribbed cuffs and hem, not a thin long-sleeve tee."
+  },
+  {
+    "file": "longsleeve-zwart-basis-navy-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/Cs4GVbMqKGY",
+    "image_url": "https://images.unsplash.com/photo-1610502778270-c5c6f4c7d575?w=1600&q=85&fm=jpg",
+    "photographer": "Ryan Hoffman",
+    "what": "Three black tops on wooden hangers: long-sleeve, short-sleeve, long-sleeve (navy substitute)",
+    "notes": "White background, even light, no prints or labels visible. The right garment (washed black long-sleeve) is front-facing and whole; the left one looks like a back view. Black, not navy: crop the right garment and recolour to navy. The middle tee also works as an extra short-sleeve base."
+  },
+  {
+    "file": "hoodie-wit-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/kJXGTOY1wLQ",
+    "image_url": "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?w=1600&q=85&fm=jpg",
+    "photographer": "Mediamodifier",
+    "what": "White pullover hoodie on a white hanger, hanging from a rope",
+    "notes": "Front view, whole hoodie, blank (white drawstrings with black tips, kangaroo pocket). Styled background: white and beige wall, dried palm leaves left, ripped jeans right, a frame with the word 'natur...' in the bottom right corner (background, not on the garment); crop it out. Can be recoloured light blue or grey."
+  },
+  {
+    "file": "pet-navy-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/IShFMdVzW9E",
+    "image_url": "https://images.unsplash.com/photo-1727761873747-05bc4057910d?w=1600&q=85&fm=jpg",
+    "photographer": "OTTO CAP",
+    "what": "Navy 5-panel baseball cap, three-quarter view",
+    "notes": "Studio product shot cut out on pure white, sharp and even light. The front panel is completely blank. WATCH OUT: the brim has a removable OTTO sticker that is clearly visible; retouch it out (plain twill brim with stitching lines)."
+  },
+  {
+    "file": "buckethat-olijf-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/WasjFbEQy38",
+    "image_url": "https://images.unsplash.com/photo-1723797447445-a7a81aa8078a?w=1600&q=85&fm=jpg",
+    "photographer": "OTTO CAP",
+    "what": "Washed cotton twill bucket hat, olive / grey-green",
+    "notes": "Studio product shot cut out on pure white, slightly side-front view, completely blank (only eyelets and stitching). Olive, not cream: recolour to cream or beige (washed texture helps it look natural)."
+  },
+  {
+    "file": "tote-naturel-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/smTDI-z1rlY",
+    "image_url": "https://images.unsplash.com/photo-1574365569389-a10d488ca3fb?w=1600&q=85&fm=jpg",
+    "photographer": "Brando Makes Branding",
+    "what": "Natural cotton canvas tote bag, flat lay",
+    "notes": "Front view, whole bag including handles, centred on an even mid-grey background, soft light. WATCH OUT: small navy circle-'b' logo in the bottom right corner of the bag; retouch it out (small, plain canvas around it). Otherwise blank."
+  },
+  {
+    "file": "wax-zeep-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/UZm4Etsk6Go",
+    "image_url": "https://images.unsplash.com/photo-1607006555271-0939bf0333eb?w=1600&q=85&fm=jpg",
+    "photographer": "Sincerely Media",
+    "what": "Plain off-white soap bar on a ceramic dish, top-down (stand-in for surf wax)",
+    "notes": "Top-down view, blank bar with no stamp, beige background with dappled leaf shadows on the right. The rounded square bar can pass for a wax bar; the top surface can take a print or label."
+  },
+  {
+    "file": "wax-zeep-2.jpg",
+    "unsplash_page": "https://unsplash.com/photos/i75xzmj7Vb0",
+    "image_url": "https://images.unsplash.com/photo-1607006344152-62699f97b42c?w=1600&q=85&fm=jpg",
+    "photographer": "Sincerely Media",
+    "what": "Stack of four plain white soap bars (stand-in for surf wax)",
+    "notes": "Side or three-quarter view, blank bars, cream background with dappled light shadows. Portrait format. Better for a stack or lifestyle look than for showing a label."
+  },
+  {
+    "file": "wax-bijenwas-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/xlPnCRV7yTs",
+    "image_url": "https://images.unsplash.com/photo-1727715493181-33c7de8f6e55?w=1600&q=85&fm=jpg",
+    "photographer": "Sperry Honey",
+    "what": "Yellow beeswax blocks with two small bars",
+    "notes": "Real wax texture, warm wood surface and log-cabin background (not plain). The large blocks are blank; the small bars on top have a faint embossed word. Use as wax texture or colour reference rather than as a clean base."
+  },
+  {
+    "file": "karabiner-zilver-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/8-gJ-h3OjHQ",
+    "image_url": "https://images.unsplash.com/photo-1541690090176-17d35a190b6c?w=1600&q=85&fm=jpg",
+    "photographer": "Mel Baylon",
+    "what": "Silver D-shaped screw-gate carabiner (stand-in for brass and black)",
+    "notes": "Lying diagonally on a plain white background, sharp, no markings. Silver, not brass or black: recolour (gold or brass tint, or dark anodised black). It is a screw-gate, not a wire-gate or keychain style."
+  },
+  {
+    "file": "handdoek-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/Z5RevWAdYzI",
+    "image_url": "https://images.unsplash.com/photo-1639298107851-058984903954?w=1600&q=85&fm=jpg",
+    "photographer": "Rinku Shemar",
+    "what": "Folded blue terry towel",
+    "notes": "Three-quarter view on a white wooden surface against a white wall, even daylight, blank (only a woven dobby border band). Bath or hand towel, not a large beach towel; easy to recolour."
+  },
+  {
+    "file": "surfboard-lichtblauw-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/28Mhs01R8r8",
+    "image_url": "https://images.unsplash.com/photo-1526918761918-da528d9558c5?w=2000&q=85&fm=jpg",
+    "photographer": "Roman Raizen",
+    "what": "Pale aqua shortboard with dark navy rails and nose, standing upright in white sand (PARTIAL MATCH, fallback only)",
+    "notes": "2000x1496. Straight-on deck view, no stickers or logos, very plain pale background (white sand, hazy sea and sky). Real film photo (Mamiya 645 scan), so it has film grain and a few dust specks. Does NOT fully meet the brief: the tail is buried in sand (about 15% of the board not visible), the deck is pale aqua rather than cream (recolourable, but the dark rails and nose are part of the board), and there are faint scuff or drip marks on the lower deck. No clean, whole, cream or white, sticker-free board seen top-down on a plain background was found on free Unsplash."
+  }
+]

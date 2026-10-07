@@ -454,8 +454,8 @@
         "foto-1": {
           "type": "foto",
           "settings": {
-            "fallback": "tt-foto-stap-3",
-            "alt": "Surfer loopt met een geel board over het strand"
+            "fallback": "tt-foto-lifestyle-busje",
+            "alt": "De Tide-Tode draagtas om een board tegen een busje"
           }
         },
         "tekst-2": {
@@ -483,8 +483,8 @@
         "foto-5": {
           "type": "foto",
           "settings": {
-            "fallback": "tt-foto-mood-5",
-            "alt": "Twee surfers lopen de zee in"
+            "fallback": "tt-product-1",
+            "alt": "De draagtas Tegel om een crème surfboard"
           }
         },
         "logo-6": {
@@ -497,8 +497,8 @@
         "foto-7": {
           "type": "foto",
           "settings": {
-            "fallback": "tt-foto-mood-6",
-            "alt": "Surfboard tegen een busje in de duinen"
+            "fallback": "tt-product-3",
+            "alt": "Geweven label en schouderband van de draagtas"
           }
         },
         "tekst-8": {
@@ -513,8 +513,8 @@
         "foto-9": {
           "type": "foto",
           "settings": {
-            "fallback": "tt-foto-stap-1",
-            "alt": "Wit surfboard rechtop in het zand"
+            "fallback": "tt-foto-lifestyle-knuffel",
+            "alt": "Surfer houdt een board met de draagtas vast"
           }
         }
       },
