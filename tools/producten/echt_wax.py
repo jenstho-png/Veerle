@@ -107,7 +107,7 @@ def art(naam):
     return a
 
 
-def druk(img, a, quad, wit, blur=0.7, structuur=0.5, rand=0.8, licht=None, korrel=0.008):
+def druk(img, a, quad, wit, blur=0.7, structuur=0.5, rand=0.8, licht=None, korrel=0.008, cast=None):
     """Druk art (RGBA) in perspectief op het vlak quad (lb, rb, ro, lo) van wit papier.
     Kleur = inkt x licht van de foto (vermenigvuldigen), plus de fijne papierstructuur."""
     h, w = img.shape[:2]
@@ -123,9 +123,9 @@ def druk(img, a, quad, wit, blur=0.7, structuur=0.5, rand=0.8, licht=None, korre
     laag = cv2.warpPerspective(pm, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
     laag[..., :3] /= np.maximum(laag[..., 3:4], 1e-4)
     Lb = L(img) if licht is None else licht
-    lichtf = np.clip(cv2.GaussianBlur(Lb, (0, 0), 1.5) / wit, 0, 1.08)[..., None]
+    lichtf = np.clip(cv2.GaussianBlur(Lb, (0, 0), 0.8) / wit, 0, 1.08)[..., None]
     fijn = (Lb - cv2.GaussianBlur(Lb, (0, 0), 1.6))[..., None]
-    kleur = laag[..., :3] * lichtf + fijn * structuur
+    kleur = laag[..., :3] * lichtf * (1 if cast is None else cast[None, None]) + fijn * structuur
     if blur:
         a0 = laag[..., 3:4]
         kleur = cv2.GaussianBlur(kleur * a0, (0, 0), blur) / np.maximum(cv2.GaussianBlur(a0, (0, 0), blur)[..., None], 1e-4)
@@ -251,6 +251,72 @@ def stapel(soort):
     return img
 
 
+# ---------- -2: één blok rechtop, warm licht ----------
+# gemeten op wax2-blok-1.jpg (3000 x 2000)
+BLOK_SILHOUET = [(1318, 906), (1332, 896), (2386, 890), (2400, 902), (2398, 1722), (2388, 1732), (1342, 1730), (1331, 1718)]
+BLOK_BAND = [(1455, 897), (2327, 891), (2327, 1731), (1455, 1730)]
+
+
+def vlakfit(Lb, m, graad=2):
+    """Glad lichtverloop: polynoom in x en y door de pixels in m."""
+    ys, xs = np.nonzero(m)
+    sel = np.random.default_rng(0).choice(len(xs), min(len(xs), 40000), replace=False)
+    xs, ys = xs[sel], ys[sel]
+    cx, cy, sx, sy = xs.mean(), ys.mean(), xs.std() + 1, ys.std() + 1
+    termen = lambda X, Y: np.stack([X ** i * Y ** j for i in range(graad + 1) for j in range(graad + 1 - i)], -1)
+    A = termen((xs - cx) / sx, (ys - cy) / sy)
+    c, *_ = np.linalg.lstsq(A, Lb[ys, xs], rcond=None)
+    Y, X = np.mgrid[0:Lb.shape[0], 0:Lb.shape[1]].astype(np.float32)
+    return (termen((X - cx) / sx, (Y - cy) / sy) @ c).astype(np.float32)
+
+
+def blok(soort):
+    d = SOORTEN[soort]
+    img = MK.laad(STOCK / 'wax2-blok-1.jpg')
+    orig = img.copy()
+    h, w = img.shape[:2]
+    bar = np.zeros((h, w), np.uint8)
+    cv2.fillPoly(bar, [np.int32(BLOK_SILHOUET)], 1)
+    band = np.zeros_like(bar)
+    cv2.fillPoly(band, [np.int32(BLOK_BAND)], 1)
+    # kleurzweem van het licht in deze foto (warm), gemeten op het witte blok; half meenemen
+    med = np.median(orig[cv2.erode(bar, np.ones((15, 15), np.uint8)) > 0], axis=0)
+    cast = (med / med.mean()) ** 0.5
+    # 1. licht op het blok zonder marmeraders: grijswaardensluiting haalt donkere aders weg, licht en randen blijven
+    Lb = L(img)
+    Lc = cv2.morphologyEx(Lb, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (41, 41)))
+    Lc = cv2.GaussianBlur(cv2.medianBlur((Lc * 255).astype(np.uint8), 9).astype(np.float32) / 255, (0, 0), 2)
+    Lc += cv2.GaussianBlur(np.random.default_rng(5).normal(0, 0.006, Lc.shape).astype(np.float32), (0, 0), 1.0)
+    # 2. uiteinden in waxkleur
+    eind = ((bar > 0) & (band == 0)).astype(np.float32)
+    eind = cv2.GaussianBlur(eind, (0, 0), 1.2) * cv2.GaussianBlur(bar.astype(np.float32), (0, 0), 1.0)
+    ref = np.percentile(Lc[eind > 0.5], 60)
+    f = np.clip((Lc / ref) ** 0.8, 0.55, 1.1)[..., None]
+    nieuw = np.clip(hexrgb(d['kleur'])[None, None] * cast[None, None] * f, 0, 1)
+    img = img * (1 - eind[..., None]) + nieuw * eind[..., None]
+    # 3. schaduwrandje van de wikkel op de wax
+    bz = cv2.GaussianBlur(band.astype(np.float32), (0, 0), 3.5)
+    rand = np.clip(bz - band, 0, 1) * bar
+    img = img * (1 - 0.3 * rand[..., None])
+    # 4. de wikkel: papier is vlak, dus een glad lichtverloop over het voorvlak, plus de randjes van het blok
+    kern = cv2.erode(band, np.ones((31, 31), np.uint8))
+    Lp = vlakfit(Lc, kern > 0)
+    randlicht = np.clip(Lc - cv2.GaussianBlur(Lc, (0, 0), 6), -0.08, 0.08)
+    Lp = Lp + randlicht * (1 - kern)
+    wit = np.percentile(Lp[band > 0], 90)
+    img = druk(img, art(f'band-voor-{soort}'), BLOK_BAND, wit=wit, blur=1.0, structuur=0.0, licht=Lp, korrel=0.008, cast=cast, rand=1.0)
+    # 5. blad op de voorgrond blijft ervoor (alleen het blad zelf: donker en doorlopend tot onder het blok)
+    donker = ((L(orig) < 0.45) & (np.mgrid[0:h, 0:w][0] > 1600)).astype(np.uint8)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(donker)
+    blad = np.zeros_like(donker)
+    for i in range(1, n):
+        if st[i, cv2.CC_STAT_TOP] + st[i, cv2.CC_STAT_HEIGHT] > 1745 and st[i, cv2.CC_STAT_AREA] > 2000:
+            blad[lab == i] = 1
+    blad = cv2.GaussianBlur(cv2.dilate(blad, np.ones((3, 3), np.uint8)).astype(np.float32), (0, 0), 1.5)[..., None]
+    img = img * (1 - blad) + orig * blad
+    return img
+
+
 if __name__ == '__main__':
     if sys.argv[1:2] == ['art']:
         art_html(); sys.exit()
@@ -258,3 +324,5 @@ if __name__ == '__main__':
     for soort in SOORTEN:
         if 'stapel' in stappen:
             bewaar(stapel(soort), f'surfwax-{soort}-1', 728, 1298, 1840, rechts=168)
+        if 'blok' in stappen:
+            bewaar(blok(soort), f'surfwax-{soort}-2', 1056, 0, 1600)

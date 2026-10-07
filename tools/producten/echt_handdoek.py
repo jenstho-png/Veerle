@@ -63,7 +63,7 @@ def motief(i, n=480):
     acc = [np.rot90(L, k) for k in range(4)]
     if SPIEGEL.get(i, True):
         acc += [np.fliplr(a) for a in acc]
-    X = cv2.GaussianBlur(np.mean(acc, 0), (0, 0), n / 200)
+    X = cv2.GaussianBlur(np.mean(acc, 0), (0, 0), n / 160)
     X = (X - X.mean()) / (X.std() + 1e-6)
     return np.dstack([X - np.percentile(X, 30), X - np.percentile(X, 58)])
 
@@ -99,14 +99,8 @@ def ontwerp(ppc):
         for c in range(nk):
             i = MOTIEVEN[(r * 2 + c * 1 + (r // 2)) % len(MOTIEVEN)]
             veld[r * tp:(r + 1) * tp, c * tp:(c + 1) * tp] = _MOT[(i, tp)]
-    # jacquard: het patroon bestaat uit bindingspunten van ca. 2,5 mm, dus licht getrapte randen
-    cel = 0.25 * ppc
-    if cel >= 2.5:
-        kl = cv2.resize(veld, (int(veld.shape[1] / cel), int(veld.shape[0] / cel)), interpolation=cv2.INTER_AREA)
-        trap = cv2.resize(kl, (veld.shape[1], veld.shape[0]), interpolation=cv2.INTER_NEAREST)
-        veld = cv2.GaussianBlur(trap, (0, 0), cel * 0.18) * 0.7 + veld * 0.3
     # drie garens: navy, baby blue en crème, met een zachte rand (scherpte past bij de schaal)
-    k = 2.2 * max(1.0, ppc / 12)
+    k = 1.4 * max(1.0, ppc / 12)
     aN = np.clip(veld[..., 0] * k + 0.5, 0, 1)[..., None]
     aB = np.clip(veld[..., 1] * k + 0.5, 0, 1)[..., None]
     x0, y0 = int(round(u0 * ppc)), int(round(v0 * ppc))
@@ -243,7 +237,7 @@ def breng_aan(foto, masker, U, V, ppc, ontw, labelm=None, schoon=None, verplaats
     ratio = np.clip(Ps / ref[None, None], 0, 1.5) ** gamma
     kleur = patroon * ratio
     # stofstructuur als hoogdoorlaat
-    Lf = MK.helderheid(foto)
+    Lf = MK.helderheid(schoon)
     fijn = (Lf - cv2.GaussianBlur(Lf, (0, 0), detail_sigma))[..., None]
     donker = 0.55 + 0.45 * MK.helderheid(patroon)[..., None]   # op donker garen valt structuur minder op
     kleur = np.clip(kleur + fijn * detail * 1.6 * donker, 0, 1)
@@ -259,10 +253,10 @@ def bewaar(img, naam, max_kb=190):
     ontruisen (vooral kleurruis; zandkorrels kosten veel bytes) en dan pas de kwaliteit verder omlaag."""
     import io
     u8 = (np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8)
-    for h, hk in ((0, 0), (3, 10), (5, 14), (6, 16)):
+    for h, hk in ((0, 0), (3, 10), (4, 12)):
         b = u8 if not h else cv2.cvtColor(cv2.fastNlMeansDenoisingColored(cv2.cvtColor(u8, cv2.COLOR_RGB2BGR), None, h, hk, 5, 15), cv2.COLOR_BGR2RGB)
         im = Image.fromarray(b)
-        for q in range(88, 60, -3):
+        for q in range(88, 48, -3):
             buf = io.BytesIO()
             im.save(buf, 'JPEG', quality=q, optimize=True, progressive=True)
             if buf.tell() < max_kb * 1000:

@@ -94,6 +94,20 @@ def kleur_rand(img, hard, doel_hex, gamma=1.0, ref=None, rand=6):
     return np.where((band[..., None] > 0) | (hard[..., None] > 0), uit, img), a
 
 
+def rest_tint(img, m, doel_hex, ring=10, hue=(60, 115), smin=18, sterkte=1.0):
+    """Restjes van de oude stofkleur (bv. een donker randje van de rand) net buiten het masker
+    krijgen de nieuwe tint, met behoud van hun helderheid."""
+    k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * ring + 1, 2 * ring + 1))
+    zone = cv2.dilate((m > 0.5).astype(np.uint8), k).astype(bool)
+    hsv = cv2.cvtColor((np.clip(img, 0, 1) * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
+    sel = zone & (hsv[..., 0] >= hue[0]) & (hsv[..., 0] <= hue[1]) & (hsv[..., 1] >= smin)
+    a = zacht(sel, 1.0)[..., None] * sterkte
+    doel = hexrgb(doel_hex)
+    L = MK.helderheid(img)[..., None]
+    nieuw = np.clip(doel[None, None] * L / MK.helderheid(doel[None, None])[..., None], 0, 1)
+    return img * (1 - a) + nieuw * a
+
+
 def component(binair, zaad):
     """Alleen het samenhangende stuk onder het zaadpunt (x, y)."""
     n, lab = cv2.connectedComponents(binair.astype(np.uint8))
@@ -171,16 +185,28 @@ def pet():
 def bucket():
     """Gedragen tegen een klimopmuur: de (grijsgroene) bucket hat wordt crème met het kleine navy board geborduurd."""
     b = foto('buckethat-gedragen-1.jpg')
-    omtrek = [(733, 845), (764, 745), (827, 673), (955, 627), (1118, 613), (1318, 624), (1464, 655), (1573, 718), (1636, 827),
-              (1673, 973), (1700, 1040), (1800, 1120), (1890, 1180), (1955, 1230), (1945, 1290), (1900, 1340), (1840, 1400),
-              (1795, 1420), (1760, 1350), (1715, 1250), (1700, 1130), (1600, 1121), (1400, 1113), (1200, 1118), (1000, 1130),
+    omtrek = [(745, 880), (790, 790), (850, 722), (910, 678), (975, 648), (1050, 628), (1118, 613), (1318, 624), (1464, 655),
+              (1573, 718), (1636, 827), (1673, 973), (1700, 1040), (1800, 1100), (1890, 1130), (1955, 1150), (1950, 1200),
+              (1925, 1250), (1880, 1295), (1830, 1320), (1785, 1300), (1750, 1240), (1725, 1170),
+              (1705, 1130), (1600, 1121), (1400, 1113), (1200, 1118), (1000, 1130),
               (900, 1152), (830, 1195), (790, 1250), (752, 1340), (740, 1440), (690, 1478), (570, 1485), (590, 1440),
-              (660, 1395), (725, 1320), (740, 1200), (735, 1050)]
+              (660, 1395), (725, 1320), (740, 1200), (738, 1050)]
     m = grabcut_poly(b, omtrek, band=22)
     m = component(m, (1200, 900)).astype(np.uint8)
     L = MK.helderheid(b)
-    ref = float(np.percentile(L[m > 0], 65))
-    b, _ = kleur_rand(b, m, '#F1E5CC', gamma=0.85, ref=ref, rand=4)
+    ref = float(np.percentile(L[m > 0], 58))
+    bron = b.copy()
+    b, _ = kleur_rand(b, m, '#F2E6CD', gamma=0.85, ref=ref, rand=4)
+    b = rest_tint(b, m, '#F2E6CD', ring=9, hue=(68, 130), smin=8)
+    # onderrand van de rand boven het gezicht: een vloeiende lijn (geen trapjes), de zoom crème in de schaduw
+    yy, xx = np.mgrid[0:b.shape[0], 0:b.shape[1]].astype(np.float32)
+    rand_y = np.interp(xx, [880, 960, 1020, 1080, 1140, 1200, 1260, 1320, 1380, 1440, 1500, 1560, 1620, 1680, 1745],
+                       [1165, 1155, 1145, 1140, 1130, 1129, 1131, 1132, 1129, 1136, 1140, 1145, 1147, 1153, 1152])
+    binnen_x = ((xx > 880) & (xx < 1745)).astype(np.float32)
+    onder = np.clip((yy - rand_y - 1) / 2.0, 0, 1) * (yy < rand_y + 60) * binnen_x
+    b = b * (1 - onder[..., None]) + bron * onder[..., None]
+    zoom = np.clip(1 - np.abs(yy - (rand_y - 5)) / 7.0, 0, 1) * binnen_x
+    b = b * (1 - zoom[..., None]) + kleur(bron, np.ones_like(L), '#F2E6CD', gamma=0.85, ref=ref) * zoom[..., None]
     b = borduur_op(b, L, ref, E.art('icoon-navy.png', NAVY), 1230, 885, 62, draai=-2)
     E.bewaar(b, 'bucket-hat-tegel-2', vul=1.0, uitsnede=(340, 250, 2260, 2650))
 
