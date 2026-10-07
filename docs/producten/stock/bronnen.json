@@ -214,5 +214,13 @@
     "photographer": "choose your stories (Unsplash)",
     "what": "One white marbled soap bar standing upright on a wooden table with an old newspaper page and two dark leaves, warm beige wall, warm colour grade",
     "notes": "3000x2000 (landscape, original size). The bar has embossed English text on the front (removed in echt_wax.py) and grey marble veins (removed with a greyscale closing and a smooth light fit). Bar silhouette about x 1312 to 2400, y 890 to 1731; a leaf overlaps the bottom edge around x 1650 to 2010. A 1600x2000 crop at x 1056 needs no scaling. Used for surfwax-*-2."
+  },
+  {
+    "file": "zand-bovenaf-hr.jpg",
+    "unsplash_page": "https://unsplash.com/photos/AHaaWiSZJbY",
+    "image_url": "https://images.unsplash.com/photo-1608114759160-ad0b1bac35b2?w=3200&q=85&fm=jpg",
+    "photographer": "Dongsh",
+    "what": "Fine light beige beach sand with gentle wind ripples, shot from straight above (3200x4262)",
+    "notes": "Same photo as lifestyle/textuur-zand-1.jpg, at full resolution. Used by tools/tas/studio2.py for the close-up details (-3, -4) of the bags, so the sand grain keeps its real size when zoomed in. Soft overcast light, no objects."
   }
 ]

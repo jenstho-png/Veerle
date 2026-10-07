@@ -1,8 +1,31 @@
 {%- comment -%}
-  Productkaart in de Tide-Tode stijl. Tweede foto verschijnt bij hover.
+  Productkaart in de Tide-Tode stijl: foto 4:5, tweede foto bij hover,
+  naam, prijs en een hint met maten of kleuren. Label NIEUW met de producttag 'nieuw'.
   Gebruik: {% render 'tt-productkaart', p: product, laden: 'lazy' %}
 {%- endcomment -%}
-{%- assign laad = laden | default: 'lazy' -%}
+{%- liquid
+  assign laad = laden | default: 'lazy'
+  assign hint = ''
+  for o in p.options_with_values
+    assign on = o.name | downcase
+    if on == 'maat' or on == 'size'
+      if o.values.size > 1
+        assign hint = o.values.first | append: ' tot ' | append: o.values.last
+      endif
+    elsif on == 'kleur' or on == 'color'
+      if o.values.size > 1
+        assign hint = o.values.size | append: ' kleuren'
+      endif
+    endif
+  endfor
+  assign nieuw = false
+  for t in p.tags
+    assign tl = t | downcase
+    if tl == 'nieuw' or tl == 'new'
+      assign nieuw = true
+    endif
+  endfor
+-%}
 <a class="tt-pk" href="{{ p.url }}">
   <span class="tt-pk__beeld">
     {%- if p.featured_media -%}
@@ -13,12 +36,19 @@
         {{ tweede | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 25vw, 50vw', widths: '360, 540, 720, 900', class: 'tt-pk__img tt-pk__img--2', alt: '' }}
       {%- endif -%}
     {%- else -%}
-      <span class="tt-pk__leeg">{%- render 'tt-logo', variant: 'maan-simpel' -%}</span>
+      <span class="tt-pk__leeg">{%- render 'tt-logo', variant: 'maan-simpel' -%}<span>Foto volgt</span></span>
     {%- endif -%}
-    {%- unless p.available -%}<span class="tt-pk__label">Uitverkocht</span>{%- endunless -%}
+    {%- if p.available == false -%}<span class="tt-pk__label tt-pk__label--op">Uitverkocht</span>
+    {%- elsif nieuw -%}<span class="tt-pk__label">Nieuw</span>
+    {%- elsif p.compare_at_price > p.price -%}<span class="tt-pk__label tt-pk__label--actie">Actie</span>
+    {%- endif -%}
+    <span class="tt-pk__kijk" aria-hidden="true">Bekijk</span>
   </span>
   <span class="tt-pk__info">
     <span class="tt-pk__titel">{{ p.title }}</span>
-    <span class="tt-pk__prijs">{%- if p.price_varies -%}Vanaf {% endif -%}{{ p.price | money_without_trailing_zeros }}</span>
+    <span class="tt-pk__onder">
+      <span class="tt-pk__prijs">{%- if p.price_varies -%}Vanaf {% endif -%}{{ p.price | money_without_trailing_zeros }}{%- if p.compare_at_price > p.price -%} <s>{{ p.compare_at_price | money_without_trailing_zeros }}</s>{%- endif -%}</span>
+      {%- if hint != blank -%}<span class="tt-pk__hint">{{ hint }}</span>{%- endif -%}
+    </span>
   </span>
 </a>

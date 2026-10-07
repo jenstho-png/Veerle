@@ -189,119 +189,211 @@ schrijf('tt-usp', """
         {"type": "usp", "settings": {"icoon": "golf", "tekst": "Sterke, waterbestendige stof"}},
         {"type": "usp", "settings": {"icoon": "tas", "tekst": "Makkelijk mee in het vliegtuig"}}]}]})
 
-# ---------- KOPEN: galerij + koopblok ----------
+# ---------- KOPEN: galerij + koopblok (homepage en productpagina, voor elk producttype) ----------
 s1, fb1 = beeld('', 'Productfoto 1 (zolang het product geen foto\'s heeft)', 'tt-product-1', 'tide-tode-draagtas-1.jpg', 'De Tide-Tode draagtas met board')
 s2, fb2 = beeld('b2_', 'Productfoto 2', 'tt-product-2', 'tide-tode-draagtas-2.jpg', 'De tegelstof van de draagtas van dichtbij')
+TOON_BLOK = {"type": "select", "id": "toon", "label": "Tonen bij", "options": TOON_OPTIES, "default": "alle"}
+# Liquid: zie = of dit blok bij de productgroep hoort
+BLOK_ZIE = """{%- assign b_toon = block.settings.toon | default: 'alle' -%}{%- assign zie = false -%}{%- if b_toon == 'alle' or b_toon == groep -%}{%- assign zie = true -%}{%- elsif b_toon == 'anders' and groep != 'draagtas' -%}{%- assign zie = true -%}{%- endif -%}"""
+DIA = """<figure class="tt-koop__foto tt-onthul" data-tt-dia{% if m %} data-media-id="{{ m.id }}"{% endif %}>
+            <button type="button" class="tt-koop__zoom" data-tt-zoom aria-label="Foto {{ forloop.index }} groot bekijken">"""
 schrijf('tt-koop', PRIJS + """
 {%- liquid
   assign pdp = false
   if template.name == 'product' and product != blank and section.settings.product == blank
     assign pdp = true
   endif
+  assign groep = 'draagtas'
+  if p != blank
+    capture groep
+      render 'tt-groep', type: p.type
+    endcapture
+    assign groep = groep | strip
+  endif
+  assign media = p.media | where: 'media_type', 'image'
+  assign max = 4
+  if pdp
+    assign max = 12
+  endif
+  assign aantal = media.size | default: 0
+  if aantal > max
+    assign aantal = max
+  endif
+  assign tekening = false
+  if aantal == 0 and groep == 'draagtas'
+    assign tekening = true
+    assign aantal = 2
+    if section.settings.extra_beelden
+      assign aantal = 7
+    endif
+  endif
+  assign leeg = false
+  if aantal == 0
+    assign leeg = true
+    assign aantal = 1
+  endif
+  assign maat_optie = false
+  for o in p.options_with_values
+    assign on = o.name | downcase
+    if on == 'maat' or on == 'size'
+      assign maat_optie = true
+    endif
+  endfor
 -%}
-<section class="tt tt-koop tt-bg--{{ section.settings.bg }}" id="tt-koop-{{ section.id }}" data-tt-koop>
+<section class="tt tt-koop tt-bg--{{ section.settings.bg }} tt-koop--{{ groep }}" id="tt-koop-{{ section.id }}" data-tt-koop>
   <div class="tt-wrap tt-koop__grid">
-    <div class="tt-koop__galerij-wrap">
-    <div class="tt-koop__galerij" data-tt-galerij>
-      {%- assign media = p.media | where: 'media_type', 'image' -%}
-      {%- assign max = 4 -%}{%- if pdp -%}{%- assign max = 12 -%}{%- endif -%}
-      {%- if media.size > 0 -%}
-        {%- for m in media limit: max -%}
-          <div class="tt-koop__foto tt-onthul"{% if forloop.first %}{% endif %}>{%- if forloop.first -%}{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}{%- endif -%}{{ m.preview_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 55vw, 100vw', widths: '600, 900, 1200, 1800', alt: m.alt | default: p.title, class: 'tt-beeld__img' }}</div>
-        {%- endfor -%}
-      {%- else -%}
-        <div class="tt-koop__foto tt-onthul">{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}""" + B('', fb1, ", sizes: '(min-width: 990px) 55vw, 100vw'") + """</div>
-        <div class="tt-koop__foto tt-onthul">""" + B('b2_', fb2, ", sizes: '(min-width: 990px) 55vw, 100vw'") + """</div>
-        {%- if section.settings.extra_beelden -%}
-          {%- for n in (3..7) -%}
-            {%- assign naam = 'tt-product-' | append: n -%}
-            {%- case n -%}
-              {%- when 3 -%}{%- assign alt_n = 'Het tegelvak van de draagtas om het midden van het board' -%}
-              {%- when 4 -%}{%- assign alt_n = 'De dusty blue schouderband van de draagtas' -%}
-              {%- when 5 -%}{%- assign alt_n = 'Tekening van de draagtas met genummerde onderdelen' -%}
-              {%- when 6 -%}{%- assign alt_n = 'De draagtas als sticker op een zwart-witfoto van de zee' -%}
-              {%- else -%}{%- assign alt_n = 'De kleuren van de tegelstof: terracotta, dusty blue, roest, crème en navy' -%}
-            {%- endcase -%}
-            <div class="tt-koop__foto tt-onthul">{%- render 'tt-beeld', fallback: naam, alt: alt_n, sizes: '(min-width: 990px) 55vw, 100vw' -%}</div>
+    <div class="tt-koop__media">
+      <div class="tt-koop__galerij tt-koop__galerij--{{ aantal | at_most: 4 }}" data-tt-galerij aria-label="Foto's" tabindex="-1">
+        {%- if tekening -%}
+          {%- for n in (1..aantal) -%}
+            {%- assign m = nil -%}
+            """ + DIA + """
+              {%- case n -%}
+                {%- when 1 -%}""" + B('', fb1, ", sizes: '(min-width: 990px) 55vw, 88vw', loading: 'eager'") + """
+                {%- when 2 -%}""" + B('b2_', fb2, ", sizes: '(min-width: 990px) 28vw, 88vw'") + """
+                {%- else -%}
+                  {%- assign naam = 'tt-product-' | append: n -%}
+                  {%- case n -%}
+                    {%- when 3 -%}{%- assign alt_n = 'Het tegelvak van de draagtas om het midden van het board' -%}
+                    {%- when 4 -%}{%- assign alt_n = 'De dusty blue schouderband van de draagtas' -%}
+                    {%- when 5 -%}{%- assign alt_n = 'Tekening van de draagtas met genummerde onderdelen' -%}
+                    {%- when 6 -%}{%- assign alt_n = 'De draagtas als sticker op een zwart-witfoto van de zee' -%}
+                    {%- else -%}{%- assign alt_n = 'De kleuren van de tegelstof: terracotta, dusty blue, roest, crème en navy' -%}
+                  {%- endcase -%}
+                  {%- render 'tt-beeld', fallback: naam, alt: alt_n, sizes: '(min-width: 990px) 28vw, 88vw' -%}
+              {%- endcase -%}
+            </button>
+          </figure>
+          {%- endfor -%}
+        {%- elsif leeg -%}
+          <figure class="tt-koop__foto tt-koop__foto--leeg" data-tt-dia>
+            <span class="tt-beeld__leeg" role="img" aria-label="{{ p.title | default: shop.name | escape }}">{%- render 'tt-logo', variant: 'maan-simpel' -%}</span>
+            <figcaption>Foto volgt</figcaption>
+          </figure>
+        {%- else -%}
+          {%- for m in media limit: max -%}
+            {%- liquid
+              assign alt_m = m.alt | default: p.title | escape
+              assign laad = 'lazy'
+              if forloop.first
+                assign laad = 'eager'
+              endif
+              assign maten = '(min-width: 990px) 28vw, 88vw'
+              if forloop.first
+                assign maten = '(min-width: 990px) 55vw, 88vw'
+              endif
+              assign groot = m.preview_image | image_url: width: 2000
+            -%}
+            """ + DIA + """
+              {%- if forloop.first and pdp -%}
+                {{ m.preview_image | image_url: width: 1800 | image_tag: loading: laad, fetchpriority: 'high', sizes: maten, widths: '600, 900, 1200, 1800', alt: alt_m, class: 'tt-beeld__img tt-koop__eerste', data-groot: groot }}
+              {%- else -%}
+                {{ m.preview_image | image_url: width: 1800 | image_tag: loading: laad, sizes: maten, widths: '600, 900, 1200, 1800', alt: alt_m, class: 'tt-beeld__img', data-groot: groot }}
+              {%- endif -%}
+            </button>
+          </figure>
           {%- endfor -%}
         {%- endif -%}
+      </div>
+      {%- if section.settings.stickers and groep == 'draagtas' -%}<div class="tt-stickers tt-stickers--koop" aria-hidden="true">{% render 'tt-stk', naam: 'draagtas' %}</div>{%- endif -%}
+      {%- if aantal > 1 -%}
+        <div class="tt-koop__voortgang" aria-hidden="true"><span data-tt-voortgang></span></div>
+        <p class="tt-koop__teller" aria-hidden="true"><span data-tt-teller>1</span> / {{ aantal }}</p>
+        {%- unless tekening -%}
+          <ol class="tt-koop__duimen" aria-label="Kies een foto">
+            {%- for m in media limit: max -%}
+              <li><button type="button" data-tt-duim aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Foto {{ forloop.index }}">{{ m.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '', sizes: '80px', widths: '80, 160' }}</button></li>
+            {%- endfor -%}
+          </ol>
+        {%- endunless -%}
       {%- endif -%}
-    </div>
-    {%- liquid
-      assign aantal = media.size
-      if aantal > max
-        assign aantal = max
-      endif
-      if aantal == 0
-        assign aantal = 2
-        if section.settings.extra_beelden
-          assign aantal = 7
-        endif
-      endif
-    -%}
-    {%- if section.settings.stickers -%}<div class="tt-stickers tt-stickers--koop" aria-hidden="true">{% render 'tt-stk', naam: 'draagtas' %}</div>{%- endif -%}
-    <p class="tt-koop__teller" aria-hidden="true"><span data-tt-teller>1</span> / {{ aantal }}</p>
     </div>
     <div class="tt-koop__info">
       <div class="tt-koop__plak">
+        {%- if p.type != blank -%}<p class="tt-koop__label tt-in">{{ p.type }}</p>{%- elsif section.settings.label != blank -%}<p class="tt-koop__label tt-in">{{ section.settings.label }}</p>{%- endif -%}
         {%- if pdp -%}
-          <h1 class="tt-kop tt-kop--m">{{ p.title | escape }}</h1>
+          {%- assign titel_kop = p.title | escape -%}
+          {%- render 'tt-kop', text: titel_kop, tag: 'h1', class: 'tt-kop--m' -%}
         {%- else -%}
           {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
         {%- endif -%}
         <p class="tt-koop__prijs tt-in">
-          {%- if p != blank -%}
-            <span>{{ v.price | money_without_trailing_zeros }}</span>
-            {%- if v.compare_at_price > v.price -%}<s>{{ v.compare_at_price | money_without_trailing_zeros }}</s>{%- endif -%}
+          {%- if p != blank and v != blank -%}
+            <span data-tt-prijs-nu>{{ v.price | money_without_trailing_zeros }}</span>
+            <s data-tt-prijs-was{% unless v.compare_at_price > v.price %} hidden{% endunless %}>{{ v.compare_at_price | money_without_trailing_zeros }}</s>
+            <small>Inclusief btw</small>
           {%- else -%}<span>{{ section.settings.prijs_tekst }}</span>{%- endif -%}
         </p>
         {%- if pdp and p.description != blank -%}
-          <div class="tt-koop__pitch tt-koop__beschrijving tt-in">{{ p.description }}</div>
+          {%- assign pitch = p.description | split: '</p>' | first | strip_html | strip -%}
+          {%- if pitch != blank -%}<p class="tt-koop__pitch tt-in">{{ pitch }}</p>{%- endif -%}
         {%- elsif section.settings.text != blank -%}
           <p class="tt-koop__pitch tt-in">{{ section.settings.text }}</p>
         {%- endif -%}
         {%- for block in section.blocks -%}{%- if block.type == '@app' -%}<div class="tt-koop__app">{% render block %}</div>{%- endif -%}{%- endfor -%}
-        <ul class="tt-koop__punten tt-in">
-          {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span class="tt-koop__vinkje" aria-hidden="true"></span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
-        </ul>
-        {%- if section.settings.maat_link != blank and section.settings.maat_label != blank -%}<a class="tt-link tt-koop__maat tt-in" href="{{ section.settings.maat_link }}">{{ section.settings.maat_label }}</a>{%- endif -%}
-        {%- if p != blank and v.available and section.settings.voorraad != blank -%}<p class="tt-koop__voorraad tt-in"><span class="tt-koop__stip" aria-hidden="true"></span>{{ section.settings.voorraad }}</p>{%- endif -%}
+        {%- capture punten -%}
+          {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}""" + BLOK_ZIE + """{%- if zie -%}<li {{ block.shopify_attributes }}><span class="tt-koop__vinkje" aria-hidden="true"></span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endif -%}{%- endfor -%}
+        {%- endcapture -%}
+        {%- if punten != blank -%}<ul class="tt-koop__punten tt-in">{{ punten }}</ul>{%- endif -%}
         <div class="tt-koop__form tt-in">
-          {%- if p != blank -%}
-            {%- form 'product', p, class: 'tt-koop__formulier', data-tt-form: '' -%}
+          {%- if p != blank and v != blank -%}
+            {%- form 'product', p, class: 'tt-koop__formulier', data-tt-form: '', novalidate: 'novalidate' -%}
               {%- unless p.has_only_default_variant -%}
                 {%- for option in p.options_with_values -%}
-                  <fieldset class="tt-koop__optie">
-                    <legend>{{ option.name }}</legend>
-                    {%- for value in option.values -%}
-                      <label><input type="radio" name="tt-optie-{{ forloop.parentloop.index }}" value="{{ value | escape }}"{% if option.selected_value == value %} checked{% endif %}><span>{{ value }}</span></label>
-                    {%- endfor -%}
+                  {%- assign on = option.name | downcase -%}
+                  <fieldset class="tt-koop__optie{% if on == 'maat' or on == 'size' %} tt-koop__optie--maat{% endif %}">
+                    <legend><span>{{ option.name }}</span> <span class="tt-koop__gekozen" data-tt-gekozen>{{ option.selected_value }}</span></legend>
+                    {%- if on == 'maat' or on == 'size' -%}
+                      {%- if section.settings.maatwijzer != blank -%}<a class="tt-koop__maatlink" href="{{ section.settings.maatwijzer }}">{{ section.settings.maatwijzer_label }}</a>{%- endif -%}
+                    {%- endif -%}
+                    <div class="tt-koop__pillen">
+                      {%- for value in option.values -%}
+                        <label><input type="radio" name="tt-optie-{{ section.id }}-{{ forloop.parentloop.index }}" value="{{ value | escape }}"{% if option.selected_value == value %} checked{% endif %}><span>{{ value }}</span></label>
+                      {%- endfor -%}
+                    </div>
                   </fieldset>
                 {%- endfor -%}
                 <script type="application/json" data-tt-varianten>{{ p.variants | json }}</script>
               {%- endunless -%}
               <input type="hidden" name="id" value="{{ v.id }}" data-tt-variant>
-              <button type="submit" class="tt-knop tt-knop--vol"{% unless v.available %} disabled{% endunless %} data-tt-koopknop>
-                <span data-tt-knoptekst>{% if v.available %}In winkelwagen{% else %}Uitverkocht{% endif %}</span>
-              </button>
+              <div class="tt-koop__rij">
+                {%- if section.settings.aantal -%}
+                  <div class="tt-koop__aantal">
+                    <button type="button" data-tt-aantal="-1" aria-label="Eén minder">−</button>
+                    <label class="visually-hidden" for="tt-aantal-{{ section.id }}">Aantal</label>
+                    <input id="tt-aantal-{{ section.id }}" type="number" name="quantity" value="1" min="1" inputmode="numeric">
+                    <button type="button" data-tt-aantal="1" aria-label="Eén meer">+</button>
+                  </div>
+                {%- endif -%}
+                <button type="submit" class="tt-knop tt-knop--vol tt-koop__knop"{% unless v.available %} disabled{% endunless %} data-tt-koopknop>
+                  <span class="tt-koop__knoptekst" data-tt-knoptekst>{% if v.available %}In winkelwagen{% else %}Uitverkocht{% endif %}</span>
+                  <span class="tt-koop__laden" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <svg class="tt-koop__vink" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+                </button>
+              </div>
+              <p class="tt-koop__fout" role="alert" data-tt-fout hidden></p>
               {%- if section.settings.snel_betalen -%}<div class="tt-koop__snel">{{ form | payment_button }}</div>{%- endif -%}
             {%- endform -%}
           {%- else -%}
-            <a class="tt-knop tt-knop--vol" href="{{ routes.all_products_collection_url }}"><span>Bekijk de tas</span></a>
+            <a class="tt-knop tt-knop--vol" href="{{ routes.all_products_collection_url }}"><span>Bekijk de shop</span></a>
           {%- endif -%}
         </div>
+        {%- if p != blank and v.available and section.settings.voorraad != blank -%}<p class="tt-koop__voorraad tt-in"><span class="tt-koop__stip" aria-hidden="true"></span>{{ section.settings.voorraad }}</p>{%- endif -%}
         <ul class="tt-koop__vertrouwen tt-in">
-          {%- if section.settings.v1 != blank -%}<li>{% render 'tt-icoon', icoon: 'voeten' %}{{ section.settings.v1 }}</li>{%- endif -%}
-          {%- if section.settings.v2 != blank -%}<li>{% render 'tt-icoon', icoon: 'tij' %}{{ section.settings.v2 }}</li>{%- endif -%}
-          {%- if section.settings.v3 != blank -%}<li>{% render 'tt-icoon', icoon: 'schelp' %}{{ section.settings.v3 }}</li>{%- endif -%}
+          {%- if section.settings.v1 != blank -%}<li>{% render 'tt-icoon', icoon: 'voeten' %}<span>{{ section.settings.v1 }}</span></li>{%- endif -%}
+          {%- if section.settings.v2 != blank -%}<li>{% render 'tt-icoon', icoon: 'tij' %}<span>{{ section.settings.v2 }}</span></li>{%- endif -%}
+          {%- if section.settings.v3 != blank -%}<li>{% render 'tt-icoon', icoon: 'schelp' %}<span>{{ section.settings.v3 }}</span></li>{%- endif -%}
         </ul>
         {%- if section.settings.betaal_iconen and shop.enabled_payment_types.size > 0 -%}
           <ul class="tt-koop__betaal tt-in" aria-label="Betaalmethoden">{%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag }}</li>{%- endfor -%}</ul>
         {%- endif -%}
         <div class="tt-koop__details tt-in">
-          {%- for block in section.blocks -%}{%- if block.type == 'detail' -%}
+          {%- if pdp and p.description != blank -%}
+            <details open><summary>{{ section.settings.beschrijving_titel }}<i aria-hidden="true"></i></summary><div class="tt-koop__beschrijving">{{ p.description }}</div></details>
+          {%- endif -%}
+          {%- for block in section.blocks -%}{%- if block.type == 'detail' -%}""" + BLOK_ZIE + """{%- if zie -%}
             <details {{ block.shopify_attributes }}><summary>{{ block.settings.titel }}<i aria-hidden="true"></i></summary><div>{{ block.settings.tekst }}</div></details>
-          {%- endif -%}{%- endfor -%}
+          {%- endif -%}{%- endif -%}{%- endfor -%}
         </div>
       </div>
     </div>
@@ -334,45 +426,49 @@ schrijf('tt-koop', PRIJS + """
       }
     </script>
   {%- endif -%}
-  {%- if p != blank -%}
+  {%- if p != blank and v != blank -%}
     <div class="tt-balk" data-tt-balk aria-hidden="true">
+      {%- if p.featured_media -%}<span class="tt-balk__beeld">{{ p.featured_media | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}</span>{%- endif -%}
       <span class="tt-balk__naam">{{ p.title }}<span>{{ v.price | money_without_trailing_zeros }}</span></span>
-      <button type="button" class="tt-knop" tabindex="-1" data-tt-balkknop>In winkelwagen</button>
+      <button type="button" class="tt-knop" tabindex="-1" data-tt-balkknop{% unless v.available %} disabled{% endunless %}>In winkelwagen</button>
     </div>
   {%- endif -%}
 </section>
 """, {
-    "name": "TT: kopen", "tag": "div", "max_blocks": 12,
+    "name": "TT: kopen", "tag": "div", "max_blocks": 16,
     "settings": [
         bg("creme"),
         {"type": "product", "id": "product", "label": "Product", "info": "Leeg = op de productpagina het product van die pagina, elders het product uit Thema-instellingen > Tide-Tode."},
+        {"type": "text", "id": "label", "label": "Klein label boven de kop", "default": "Draagtas"},
         kop("De Tide Tode draagtas"),
         {"type": "textarea", "id": "text", "label": "Korte pitch", "default": "Een draagtas voor je surfboard. Je schuift je board erin en hangt de tas over je schouder. Zo heb je je handen vrij en blijft de wax van je arm af."},
-        {"type": "text", "id": "prijs_tekst", "label": "Tekst als er nog geen product is", "default": "Binnenkort"},
-        {"type": "text", "id": "sticker", "label": "Sticker op de eerste foto", "default": ""},
+        {"type": "text", "id": "prijs_tekst", "label": "Tekst zonder product", "default": "Binnenkort"},
         {"type": "checkbox", "id": "stickers", "label": "Sticker bij de foto's", "default": True},
+        {"type": "checkbox", "id": "aantal", "label": "Aantal kiezen", "default": True},
         {"type": "checkbox", "id": "snel_betalen", "label": "Snelle betaalknoppen tonen (Shop Pay, Apple Pay, enz.)", "default": False},
         {"type": "text", "id": "voorraad", "label": "Voorraadregel (als hij op voorraad is)", "default": "Op voorraad, binnen 2 werkdagen verstuurd"},
         {"type": "checkbox", "id": "betaal_iconen", "label": "Betaalmethoden tonen onder de knop", "default": True},
-        {"type": "text", "id": "maat_label", "label": "Link naar de maatwijzer", "default": "Past mijn board? Bekijk de maatwijzer"},
-        {"type": "text", "id": "maat_link", "label": "Adres maatwijzer", "default": "/pages/maatwijzer"},
-        {"type": "checkbox", "id": "extra_beelden", "label": "Getekende productbeelden tonen zolang het product geen foto's heeft", "default": True},
+        {"type": "text", "id": "beschrijving_titel", "label": "Titel van de productomschrijving", "default": "Over dit product"},
+        {"type": "header", "content": "Maatwijzer bij kleding"},
+        {"type": "text", "id": "maatwijzer_label", "label": "Link bij de maten", "default": "Maatwijzer"},
+        {"type": "text", "id": "maatwijzer", "label": "Adres maatwijzer", "default": "/pages/maatwijzer"},
+        {"type": "checkbox", "id": "extra_beelden", "label": "Getekende productbeelden tonen zolang de draagtas geen foto's heeft", "default": True},
         {"type": "header", "content": "Vertrouwen onder de knop"},
         {"type": "text", "id": "v1", "label": "Regel 1", "default": "Verzending door heel Europa"},
         {"type": "text", "id": "v2", "label": "Regel 2", "default": "14 dagen bedenktijd"},
         {"type": "text", "id": "v3", "label": "Regel 3", "default": "Veilig betalen met iDEAL en kaart"},
     ] + s1 + s2,
     "blocks": [
-        {"type": "punt", "name": "Voordeel", "settings": [{"type": "text", "id": "tekst", "label": "Tekst", "default": "Handen vrij"}]},
+        {"type": "punt", "name": "Voordeel", "settings": [{"type": "text", "id": "tekst", "label": "Tekst", "default": "Handen vrij"}, TOON_BLOK]},
         {"type": "@app"},
-        {"type": "detail", "name": "Uitklapper", "settings": [{"type": "text", "id": "titel", "label": "Titel", "default": "Materiaal"}, {"type": "richtext", "id": "tekst", "label": "Tekst", "default": "<p>Tekst</p>"}]},
+        {"type": "detail", "name": "Uitklapper", "settings": [{"type": "text", "id": "titel", "label": "Titel", "default": "Materiaal"}, {"type": "richtext", "id": "tekst", "label": "Tekst", "default": "<p>Tekst</p>"}, TOON_BLOK]},
     ],
     "presets": [{"name": "TT: kopen", "blocks": [
-        {"type": "punt", "settings": {"tekst": "Past op softtops en vollere boards én op hardboards"}},
-        {"type": "punt", "settings": {"tekst": "Brede schouderband, je handen blijven vrij"}},
-        {"type": "punt", "settings": {"tekst": "Je natte board mag er gewoon in"}},
-        {"type": "detail", "settings": {"titel": "Wat past erin", "tekst": "<p>Eén maat voor softtops en hardboards. In de <a href=\"/pages/maatwijzer\">maatwijzer</a> zie je welke boards passen.</p>"}},
-        {"type": "detail", "settings": {"titel": "Materiaal", "tekst": "<p>Zware, waterbestendige stof en sterke stiksels.</p>"}},
+        {"type": "punt", "settings": {"tekst": "Past op softtops en vollere boards én op hardboards", "toon": "draagtas"}},
+        {"type": "punt", "settings": {"tekst": "Brede schouderband, je handen blijven vrij", "toon": "draagtas"}},
+        {"type": "punt", "settings": {"tekst": "Je natte board mag er gewoon in", "toon": "draagtas"}},
+        {"type": "detail", "settings": {"titel": "Wat past erin", "tekst": "<p>Eén maat voor softtops en hardboards. In de <a href=\"/pages/maatwijzer\">maatwijzer</a> zie je welke boards passen.</p>", "toon": "draagtas"}},
+        {"type": "detail", "settings": {"titel": "Materiaal", "tekst": "<p>Zware, waterbestendige stof en sterke stiksels.</p>", "toon": "draagtas"}},
         {"type": "detail", "settings": {"titel": "Verzending en retour", "tekst": "<p>We versturen door heel Europa. Je hebt 14 dagen bedenktijd.</p>"}}]}]})
 
 # ---------- PROBLEEM: tekst die volloopt, met losse foto's ----------
@@ -1034,6 +1130,7 @@ schrijf('tt-kaarten', """
           <div class="tt-kaarten__ill">{%- render 'tt-ill', naam: block.settings.ill -%}</div>
           <h3>{{ block.settings.titel }}</h3>
           <p>{{ block.settings.tekst }}</p>
+          {%- if block.settings.link_label != blank -%}<a class="tt-link tt-kaarten__link" href="{{ block.settings.link | default: routes.all_products_collection_url }}">{{ block.settings.link_label }}</a>{%- endif -%}
         </article>
       {%- endfor -%}
     </div>
@@ -1046,7 +1143,9 @@ schrijf('tt-kaarten', """
         {"type": "select", "id": "kleur", "label": "Kleur", "options": [{"value": v, "label": l} for v, l in [("baby", "Baby"), ("rose", "Rose"), ("zand", "Zand"), ("papier", "Papier")]], "default": "baby"},
         {"type": "select", "id": "ill", "label": "Tekening", "options": [{"value": v, "label": l} for v, l in [("busje", "Busje"), ("golf", "Golf"), ("zon", "Zon"), ("parasol", "Parasol"), ("draagtas", "De draagtas"), ("tas", "Board met banden")]], "default": "busje"},
         {"type": "text", "id": "titel", "label": "Titel", "default": "Titel"},
-        {"type": "textarea", "id": "tekst", "label": "Tekst", "default": ""}]}],
+        {"type": "textarea", "id": "tekst", "label": "Tekst", "default": ""},
+        {"type": "text", "id": "link_label", "label": "Link"},
+        {"type": "text", "id": "link", "label": "Link (adres)"}]}],
     "presets": [{"name": "TT: drie kaarten", "blocks": [
         {"type": "kaart", "settings": {"kleur": "baby", "ill": "busje", "titel": "Verzending", "tekst": "We versturen door heel Europa. Je krijgt een track and trace zodra hij onderweg is."}},
         {"type": "kaart", "settings": {"kleur": "rose", "ill": "golf", "titel": "14 dagen bedenktijd", "tekst": "Past hij toch niet bij je board? Stuur hem binnen 14 dagen terug, ongebruikt en met label."}},
