@@ -100,7 +100,7 @@ def ontwerp(ppc):
             i = MOTIEVEN[(r * 2 + c * 1 + (r // 2)) % len(MOTIEVEN)]
             veld[r * tp:(r + 1) * tp, c * tp:(c + 1) * tp] = _MOT[(i, tp)]
     # drie garens: navy, baby blue en crème, met een zachte rand (scherpte past bij de schaal)
-    k = 1.4 * max(1.0, ppc / 12)
+    k = 3.0 * max(1.0, ppc / 12)
     aN = np.clip(veld[..., 0] * k + 0.5, 0, 1)[..., None]
     aB = np.clip(veld[..., 1] * k + 0.5, 0, 1)[..., None]
     x0, y0 = int(round(u0 * ppc)), int(round(v0 * ppc))
@@ -287,8 +287,10 @@ def interp(punten, t):
 
 
 # ---------- foto 2: op het zand ----------
+UITSNEDE_2 = (300, 150, 1600, 1775)   # zonder de voeten rechtsonder; rustig zand rechts houdt het bestand klein
+
 def foto2():
-    f = ontruis(MK.laad(STOCK / 'handdoek2-zand-1.jpg'), 4, 12)
+    f = ontruis(MK.laad(STOCK / "handdoek2-zand-1.jpg"), 5, 14)
     h, w = f.shape[:2]
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
     s = 15.5  # px per cm: 90 cm is ca. 1400 px, de linkerzoom valt buiten beeld
@@ -313,8 +315,10 @@ def foto2():
     schoon = strepen_weg(f, 61)
     ontw, lm = ontwerp_met_label(s * 1.5)
     uit = breng_aan(f, masker, U, V, s * 1.5, ontw, schoon=schoon, verplaatsing=0.5, detail=0.6, waas=0.12)
-    uit = uit[0:1950, 0:1560]
-    uit = cv2.resize(uit, (1600, 2000), interpolation=cv2.INTER_CUBIC)
+    global LAATSTE
+    LAATSTE = uit
+    x0, y0, x1, y1 = UITSNEDE_2
+    uit = cv2.resize(uit[y0:y1, x0:x1], (1600, 2000), interpolation=cv2.INTER_AREA if x1 - x0 > 1600 else cv2.INTER_CUBIC)
     bewaar(uit, 'strandhanddoek-tegel-2')
 
 

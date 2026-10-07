@@ -118,7 +118,7 @@ def band_cilinder(img, C, n_dir, r, breedte, strook, e=0.15, tegels_per_hoogte=1
     laag[..., 3] *= binnen * zacht
     if masker is not None:
         laag[..., 3] *= masker
-    return druk_laag(img, laag, **kw)
+    return druk(img, laag, **kw)
 
 
 def band_zoom(img, zoom, hoogte, strook, omhoog=(0, -1), masker=None, **kw):
@@ -166,7 +166,7 @@ def band_zoom(img, zoom, hoogte, strook, omhoog=(0, -1), masker=None, **kw):
         vak[..., 3:4] = np.maximum(vak[..., 3:4], a_n)
     if masker is not None:
         laag[..., 3] *= masker
-    return druk_laag(img, laag, **kw)
+    return druk(img, laag, **kw)
 
 
 def masker_kleur(img, laag_hsv, hoog_hsv, zaad=None, sluit=9, rect=None):
@@ -185,6 +185,88 @@ def masker_kleur(img, laag_hsv, hoog_hsv, zaad=None, sluit=9, rect=None):
     vul = m.copy(); ff = np.zeros((m.shape[0] + 2, m.shape[1] + 2), np.uint8); cv2.floodFill(vul, ff, (0, 0), 1)
     m = m | (1 - vul)
     return cv2.GaussianBlur(m.astype(np.float32), (0, 0), 1.2)
+
+
+def grabcut(img, zeker, mogelijk, schaal=0.35, iter=6):
+    """Masker met GrabCut: zeker = zeker kledingstuk, mogelijk = mag erbij horen (de rest is achtergrond)."""
+    h, w = img.shape[:2]
+    sm = cv2.resize(cv2.cvtColor((np.clip(img, 0, 1) * 255).astype(np.uint8), cv2.COLOR_RGB2BGR), (int(w * schaal), int(h * schaal)), interpolation=cv2.INTER_AREA)
+    m = np.full(sm.shape[:2], cv2.GC_BGD, np.uint8)
+    rs = lambda x: cv2.resize(x.astype(np.uint8), (sm.shape[1], sm.shape[0]), interpolation=cv2.INTER_NEAREST) > 0
+    m[rs(mogelijk)] = cv2.GC_PR_FGD
+    m[rs(zeker)] = cv2.GC_FGD
+    bg = np.zeros((1, 65)); fg = np.zeros((1, 65))
+    cv2.grabCut(sm, m, None, bg, fg, iter, cv2.GC_INIT_WITH_MASK)
+    uit = ((m == 1) | (m == 3)).astype(np.float32)
+    uit = cv2.resize(uit, (w, h), interpolation=cv2.INTER_LINEAR)
+    uit = (uit > 0.5).astype(np.uint8)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(uit)
+    if n > 1:
+        uit = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
+    vul = uit.copy(); ff = np.zeros((h + 2, w + 2), np.uint8); cv2.floodFill(vul, ff, (0, 0), 1)
+    uit = uit | (1 - vul)
+    return cv2.GaussianBlur(uit.astype(np.float32), (0, 0), 1.5)
+
+
+def poly(shape, punten):
+    m = np.zeros(shape[:2], np.uint8)
+    cv2.fillPoly(m, [np.array(punten, np.int32)], 1)
+    return m > 0
+
+
+def kleur_lab(img, m, doel_hex, ref_L=None, chroma=1.0, spreiding=0.6):
+    """Omkleuren in Lab: de helderheid schaalt zo dat de mediaan van de stof de doelkleur krijgt, en de kleurtint (a, b)
+    schuift naar die van de doelkleur. Licht, schaduw en de natuurlijke ontkleuring in zonlicht blijven zo staan."""
+    u8 = (np.clip(img, 0, 1) * 255).astype(np.uint8)
+    lab = cv2.cvtColor(img.astype(np.float32), cv2.COLOR_RGB2Lab)
+    doel = cv2.cvtColor(hexrgb(doel_hex)[None, None].astype(np.float32), cv2.COLOR_RGB2Lab)[0, 0]
+    sel = m > 0.5
+    Lm = np.median(lab[..., 0][sel]) if ref_L is None else ref_L
+    am, bm = np.median(lab[..., 1][sel]), np.median(lab[..., 2][sel])
+    nieuw = lab.copy()
+    nieuw[..., 0] = lab[..., 0] * (doel[0] / Lm)
+    # hoe lichter (zon), hoe minder kleur: houd de verhouding van de foto aan
+    nieuw[..., 1] = doel[1] * chroma + (lab[..., 1] - am) * spreiding
+    nieuw[..., 2] = doel[2] * chroma + (lab[..., 2] - bm) * spreiding
+    rgb = np.clip(cv2.cvtColor(nieuw, cv2.COLOR_Lab2RGB), 0, 1)
+    mm = m[..., None]
+    return img * (1 - mm) + rgb * mm
+
+
+def druk(img, laag, ref=None, verplaatsing=6.0, schaduw=1.0, structuur=0.5, dekking=0.96, blur=0.0, masker=None):
+    """Als mockup.zet_print, maar voor een volledige laag en met een vaste lichtreferentie: ref = helderheid van de stof
+    in vol licht. Een print in de schaduw wordt dan net zo donker als de stof eromheen. blur = scherptediepte van de foto."""
+    h, w = img.shape[:2]
+    if blur > 0:
+        laag = cv2.GaussianBlur(laag, (0, 0), blur)
+    L = MK.helderheid(img)
+    Lz = cv2.GaussianBlur(L, (0, 0), 6)
+    gx = cv2.Sobel(Lz, cv2.CV_32F, 1, 0, ksize=5)
+    gy = cv2.Sobel(Lz, cv2.CV_32F, 0, 1, ksize=5)
+    norm = max(np.abs(gx).max(), np.abs(gy).max(), 1e-6)
+    mx, my = np.meshgrid(np.arange(w, dtype=np.float32), np.arange(h, dtype=np.float32))
+    laag = cv2.remap(laag, mx + gx / norm * verplaatsing, my + gy / norm * verplaatsing, cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
+    gebied = laag[..., 3] > 0.05
+    if ref is None:
+        ref = Lz[gebied].mean() if gebied.any() else Lz.mean()
+    Ls = cv2.GaussianBlur(L, (0, 0), 2)
+    factor = np.clip(1 + (Ls / max(ref, 1e-3) - 1) * schaduw, 0.15, 1.4)[..., None]
+    kleur = laag[..., :3] * factor
+    fijn = (L - cv2.GaussianBlur(L, (0, 0), 1.5))[..., None]
+    kleur = np.clip(kleur + fijn * structuur, 0, 1)
+    a = laag[..., 3:4] * dekking
+    if masker is not None:
+        a = a * masker[..., None]
+    return img * (1 - a) + kleur * a
+
+
+def plaats(shape, a, cx, cy, breedte, draai=0.0):
+    """Art (RGBA) als volledige laag op (cx, cy) met breedte en draaiing."""
+    h, w = shape[:2]
+    ah, aw = a.shape[:2]
+    M = cv2.getRotationMatrix2D((aw / 2, ah / 2), draai, breedte / aw)
+    M[0, 2] += cx - aw / 2; M[1, 2] += cy - ah / 2
+    return cv2.warpAffine(a, M, (w, h), flags=cv2.INTER_AREA, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
 
 
 def kleur_om(img, m, doel_hex, ref=None, gamma=1.0):
@@ -209,12 +291,20 @@ def uv_shirt():
     s = foto('uvshirt-model-1.jpg')
     s = E.poets(s, 1742, 1785, 104, 132)                  # merklogo op de borst
     s = E.poets(s, 754, 3196, 86, 62)                     # tekst bij de zoom
-    m = masker_kleur(s, (95, 40, 20), (125, 255, 200), zaad=(1300, 2300))
+    kl = masker_kleur(s, (95, 40, 20), (125, 255, 200), zaad=(1300, 2300)) > 0.5
+    borstvlak = poly(s.shape, [(1200, 1390), (1300, 1430), (1400, 1500), (1500, 1535), (1580, 1490), (1590, 1400), (1680, 1425), (1780, 1465), (1815, 1505),
+                               (1825, 1560), (1828, 1700), (1815, 1850), (1795, 2000), (1700, 2100), (1500, 2150), (1300, 2100), (1200, 1950), (1180, 1600)])
+    samen = (kl | borstvlak).astype(np.uint8)
+    zeker = cv2.erode(kl.astype(np.uint8), np.ones((15, 15), np.uint8)) | cv2.erode(borstvlak.astype(np.uint8), np.ones((41, 41), np.uint8))
+    m = grabcut(s, zeker, cv2.dilate(samen, np.ones((61, 61), np.uint8)))
+    m = np.maximum(m, cv2.GaussianBlur(cv2.erode(borstvlak.astype(np.uint8), np.ones((9, 9), np.uint8)).astype(np.float32), (0, 0), 2))
     if PROEF:
         cv2.imwrite(str(UIT / 'proef-masker-uv1.jpg'), (m * 255).astype(np.uint8)[::4, ::4])
-    s = kleur_om(s, m, '#26385A', gamma=0.95)
-    s = MK.zet_print(s, knijp(borst, 0.82, 1.0), 1712, 1800, 150, draai=4, verplaatsing=5, masker=m, schaduw_sterkte=0.8)
-    s = band_cilinder(s, (1880, 3008), (0.995, 0.097), 104, 112, strook, e=0.12, masker=m, verplaatsing=4, schaduw_sterkte=0.85, structuur=0.4)
+    L = MK.helderheid(s)
+    s = kleur_lab(s, m, NAVY, chroma=0.8)
+    licht = np.percentile(MK.helderheid(s)[m > 0.5], 92)
+    s = druk(s, plaats(s.shape, knijp(borst, 0.8, 1.0), 1665, 1770, 150, draai=4), ref=licht, verplaatsing=5, schaduw=0.9, masker=m, blur=0.6)
+    s = band_cilinder(s, (1880, 2990), (0.995, 0.097), 108, 150, strook, e=0.12, masker=m, ref=licht * 0.55, verplaatsing=4, schaduw=0.8, structuur=0.4, blur=1.6)
     bewaar(s, 'uv-shirt-lange-mouw-1', uitsnede=(240, 650, 2400, 3350))
 
 

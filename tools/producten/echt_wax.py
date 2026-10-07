@@ -299,7 +299,9 @@ def blok(soort):
         zone = cv2.GaussianBlur(stuk.astype(np.float32), (0, 0), 4)
         Lc = Lc * (1 - zone) + np.maximum(Lc, fit - 0.015) * zone
     ref = np.percentile(Lc[eind > 0.5], 60)
-    f = np.clip((Lc / ref) ** 0.8, 0.55, 1.1)[..., None]
+    korrel = cv2.GaussianBlur(np.random.default_rng(13).normal(0, 1, Lc.shape).astype(np.float32), (0, 0), 1.6)
+    korrel = korrel / korrel.std() * 0.012
+    f = np.clip((Lc / ref) ** 0.8 + korrel, 0.55, 1.1)[..., None]
     nieuw = np.clip(hexrgb(d['kleur'])[None, None] * cast[None, None] * f, 0, 1)
     img = img * (1 - eind[..., None]) + nieuw * eind[..., None]
     # 3. schaduwrandje van de wikkel op de wax
@@ -309,19 +311,20 @@ def blok(soort):
     # 4. de wikkel: papier is vlak, dus een glad lichtverloop over het voorvlak, plus de randjes van het blok
     kern = cv2.erode(band, np.ones((31, 31), np.uint8))
     Lp = vlakfit(Lc, kern > 0)
-    randlicht = np.clip(Lc - cv2.GaussianBlur(Lc, (0, 0), 6), -0.08, 0.08)
-    Lp = Lp + randlicht * (1 - kern)
+    # papier: fijne vezel en wat vlekkerigheid, net als echt ongestreken papier
+    rng = np.random.default_rng(11)
+    vezel = cv2.GaussianBlur(rng.normal(0, 1, Lp.shape).astype(np.float32), (0, 0), 0.9) * 0.006
+    vlek = cv2.GaussianBlur(rng.normal(0, 1, Lp.shape).astype(np.float32), (0, 0), 18) * 0.35
+    Lp = Lp * (1 + vezel + vlek * 0.02 / max(vlek.std(), 1e-6) * 0.5)
     wit = np.percentile(Lp[band > 0], 90)
     img = druk(img, art(f'band-voor-{soort}'), BLOK_BAND, wit=wit, blur=1.0, structuur=0.0, licht=Lp, korrel=0.008, cast=cast, rand=1.0)
-    # 5. blad op de voorgrond blijft ervoor (alleen het blad zelf: donker en doorlopend tot onder het blok)
-    yy, xx = np.mgrid[0:h, 0:w]
-    donker = ((L(orig) < 0.45) & (yy > 1650) & (xx > 1640) & (xx < 2010)).astype(np.uint8)
-    n, lab, st, _ = cv2.connectedComponentsWithStats(donker)
-    blad = np.zeros_like(donker)
-    for i in range(1, n):
-        if st[i, cv2.CC_STAT_TOP] + st[i, cv2.CC_STAT_HEIGHT] > 1745 and st[i, cv2.CC_STAT_AREA] > 2000:
-            blad[lab == i] = 1
-    blad = cv2.GaussianBlur(cv2.dilate(blad, np.ones((3, 3), np.uint8)).astype(np.float32), (0, 0), 1.5)[..., None]
+    # 5. blad op de voorgrond blijft ervoor: zachte matte op grijsgroen en donker, alleen rond de twee blaadjes
+    gebied = np.zeros((h, w), np.float32)
+    gebied[1655:1755, 1875:2015] = 1
+    gebied[1700:1815, 1630:2015] = 1
+    rb = orig[..., 0] - orig[..., 2]
+    blad = np.minimum(np.clip((0.21 - rb) / 0.1, 0, 1), np.clip((0.6 - L(orig)) / 0.2, 0, 1)) * gebied
+    blad = cv2.GaussianBlur(blad, (0, 0), 1.0)[..., None]
     img = img * (1 - blad) + orig * blad
     return img
 

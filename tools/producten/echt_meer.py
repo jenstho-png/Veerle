@@ -86,12 +86,25 @@ def kleur_rand(img, hard, doel_hex, gamma=1.0, ref=None, rand=6):
     doel = hexrgb(doel_hex)
     if ref is None:
         ref = float(np.median(L[binnen > 0]))
-    # in de band de stofkleur van vlak ernaast gebruiken, binnen de echte helderheid
+    # in de band: pixel = stof * a + achtergrond * (1 - a); alleen het stofdeel vervangen, de achtergrond blijft echt
     Lk = np.where(band > 0, Lst, L)
     nieuw = np.clip(doel[None, None] * (np.clip(Lk / ref, 0, 1.8) ** gamma)[..., None], 0, 1)
-    bg = np.where(band[..., None] > 0, bg, img)
-    uit = nieuw * a[..., None] + bg * (1 - a[..., None])
+    stof = norm_blur(img, binnen, s)
+    rand_uit = np.clip(img + (nieuw - stof) * a[..., None], 0, 1)
+    uit = np.where(band[..., None] > 0, rand_uit, nieuw * a[..., None] + img * (1 - a[..., None]))
     return np.where((band[..., None] > 0) | (hard[..., None] > 0), uit, img), a
+
+
+def vlekken_weg(img, m, k=25, rand=12):
+    """Kleine donkere vlekjes (vuil, krasjes) op de stof weghalen; plooien (groot) blijven."""
+    L = MK.helderheid(img)
+    dicht = cv2.morphologyEx(L, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k)))
+    dicht = cv2.GaussianBlur(dicht, (0, 0), 2)
+    f = np.clip(dicht / np.maximum(L, 1e-3), 1, 1.6)
+    f = np.where(f > 1.025, f, 1.0)
+    binnen = cv2.erode((m > 0.5).astype(np.uint8), np.ones((2 * rand + 1, 2 * rand + 1), np.uint8)).astype(np.float32)
+    f = 1 + (cv2.GaussianBlur(f.astype(np.float32), (0, 0), 1.5) - 1) * zacht(binnen, 4)
+    return np.clip(img * f[..., None], 0, 1)
 
 
 def rest_tint(img, m, doel_hex, ring=10, hue=(60, 115), smin=18, sterkte=1.0):
@@ -145,10 +158,11 @@ def grabcut(img, rect, iter=6, schaal=0.4, voor=None, achter=None):
 
 
 def grabcut_poly(img, poly, band=30, iter=5, schaal=0.5):
-    """Met de hand getekende omtrek, GrabCut beslist alleen in een smalle band rond de lijn."""
+    """Met de hand getekende omtrek (of lijst van omtrekken), GrabCut beslist alleen in een smalle band rond de lijn."""
     h, w = img.shape[:2]
     p = np.zeros((h, w), np.uint8)
-    cv2.fillPoly(p, [np.array(poly, np.int32)], 1)
+    polys = poly if isinstance(poly[0][0], (list, tuple)) else [poly]
+    cv2.fillPoly(p, [np.array(q, np.int32) for q in polys], 1)
     k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * band + 1, 2 * band + 1))
     zeker = cv2.erode(p, k); mogelijk = cv2.dilate(p, k)
     m = np.full((h, w), cv2.GC_BGD, np.uint8)
@@ -209,6 +223,34 @@ def bucket():
     b = b * (1 - zoom[..., None]) + kleur(bron, np.ones_like(L), '#F2E6CD', gamma=0.85, ref=ref) * zoom[..., None]
     b = borduur_op(b, L, ref, E.art('icoon-navy.png', NAVY), 1230, 885, 62, draai=-2)
     E.bewaar(b, 'bucket-hat-tegel-2', vul=1.0, uitsnede=(340, 250, 2260, 2650))
+
+
+# ---------- canvas tas ----------
+def tas():
+    """Vastgehouden voor de benen (jeans, betonnen muur): witte tas wordt naturel canvas met de busjesprint.
+    Strak uitgesneden boven de sneakers (die hebben een merkteken)."""
+    t = foto('tote-gedragen-1.jpg')
+    s = t.shape[1] / 2400                                   # coördinaten hieronder in de 2400 px-versie
+    P = lambda pts: [(int(x * s), int(y * s)) for x, y in pts]
+    romp = P([(932, 633), (1000, 628), (1200, 630), (1400, 640), (1480, 647), (1484, 1000), (1481, 1248), (1200, 1245),
+              (917, 1236), (925, 900)])
+    links = P([(1066, 322), (1098, 322), (1106, 632), (1060, 632)])
+    rechts = P([(1300, 322), (1338, 322), (1350, 644), (1304, 644)])
+    m = grabcut_poly(t, [romp, links, rechts], band=int(14 * s))
+    m = vul_gaten(m & (MK.helderheid(t) > 0.5))                 # de tas is overal licht; donkere randjes (knie) eruit
+    m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    t = vlekken_weg(t, m, k=int(22 * s))
+    L = MK.helderheid(t)
+    ref = float(np.percentile(L[m > 0], 70))
+    t, _ = kleur_rand(t, m, '#E6DCC8', gamma=1.15, ref=ref, rand=int(4 * s))
+    # canvas: grovere weefstructuur dan de gladde katoen van de stockfoto
+    rng = np.random.default_rng(7)
+    korrel = cv2.GaussianBlur(rng.normal(0, 1, t.shape[:2]).astype(np.float32), (0, 0), 1.1)
+    t = np.clip(t + (korrel * 0.018 * zacht(m, 2))[..., None], 0, 1)
+    rm = zacht(m, 1.2)
+    t = MK.zet_print(t, E.art('hoodie-busje-rugprint-los.png'), int(1203 * s), int(905 * s), int(345 * s), verplaatsing=6,
+                     schaduw_sterkte=0.85, structuur=0.6, masker=rm)
+    E.bewaar(t, 'canvas-tas-2', vul=1.0, uitsnede=tuple(int(v * s) for v in (712, 34, 1696, 1264)))
 
 
 def borduur_op(img, L_bron, ref, a, cx, cy, breedte, draai=0, sterkte=0.8):
