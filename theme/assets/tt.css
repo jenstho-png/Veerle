@@ -2210,3 +2210,8 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
 .tt-pk__img--2 { clip-path: none !important; opacity: 0 !important; transition: none !important; }
 .tt-pk:hover .tt-pk__img--2, .tt-pk:focus-visible .tt-pk__img--2 { opacity: 1 !important; }
 .tt-pk:hover .tt-pk__img, .tt-pk .tt-pk__img { scale: 1 !important; transform: none !important; }
+
+/* home: de hero vult precies het scherm; de sectie erna schuift er niet overheen, zodat er onderaan geen strook uitsteekt */
+.template-index .tt-hero { min-height: 0 !important; height: 100svh !important; max-height: none !important; }
+.template-index main .shopify-section:has(> .tt-hero) + .shopify-section > section.tt,
+.template-index main .shopify-section:has(> .tt-hero) + .shopify-section > .surf { margin-top: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
