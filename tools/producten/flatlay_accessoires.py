@@ -170,21 +170,41 @@ def sticker_op_vlak(img, st, quad, licht=None, glans=0.06):
     return img * (1 - a) + np.clip(kleur, 0, 1) * a
 
 
-def pet_navy():
+def naad_weg(img, x0, x1, y0, y1, zacht=10):
+    """Verticale naad lokaal wegretoucheren (alleen horizontaal uitsmeren, de verticale lichtval blijft)."""
+    uit = img.copy()
+    stuk = img[y0:y1, x0 - 40:x1 + 40]
+    glad = cv2.GaussianBlur(stuk, (0, 0), sigmaX=14, sigmaY=0.01)
+    fijn = stuk - cv2.GaussianBlur(stuk, (0, 0), 1.2)
+    m = np.zeros(stuk.shape[:2], np.float32); m[:, 40:-40] = 1
+    m = cv2.GaussianBlur(m, (0, 0), zacht)[..., None]
+    uit[y0:y1, x0 - 40:x1 + 40] = stuk * (1 - m) + (glad + fijn * 0.4) * m
+    return uit
+
+
+def pet_navy_rgba(met_sticker=True):
     """Navy snapback recht van voren: crème geborduurd board-icoon, onze klepsticker op de klep."""
     img, m = pet_basis()
+    w = img.shape[1]
+    nx = w - 1 - 1200                                   # middennaad na spiegelen
+    # onder het borduursel loopt geen naad meer zichtbaar door (het icoon ligt eroverheen)
+    img = naad_weg(img, nx - 30, nx + 30, 1020, 1470)
     L0 = MK.helderheid(img)
     ref = float(np.percentile(L0[m > 0.5], 85))
-    licht = cv2.GaussianBlur(L0, (0, 0), 9) / ref        # lichtval op de pet, zonder naden
+    licht = cv2.GaussianBlur(L0, (0, 0), 30) / ref        # grove lichtval op de pet, zonder naden
     p = stof_kleur(img, m, NAVY)
-    # middennaad loopt op x = w-1-1200 na spiegelen; voorpaneel ca. y 900-1610
-    cx = img.shape[1] - 1 - 1200 + 2
+    cx = nx + 2
     p = borduur(p, art(REF / 'icoon-navy.png', CREME), cx, 1240, 128, hoek=8, schaduw_bron=licht ** 0.6)
-    # klepsticker: recht op de klep, rechts van het midden (gezien vanaf de camera), sterk verkort door de kijkhoek
-    st = MK.laad_art(ART / 'petsticker.png')
-    x0, x1, y0, y1 = cx + 210, cx + 520, 1640, 1688
-    quad = [(x0 + 6, y0), (x1 - 2, y0), (x1 + 4, y1), (x0, y1)]
-    p = sticker_op_vlak(p, st, quad, licht=licht ** 0.5)
+    if met_sticker:
+        st = MK.laad_art(ART / 'petsticker.png')
+        x0, x1, y0, y1 = cx + 170, cx + 560, 1636, 1694
+        quad = [(x0 + 7, y0), (x1 - 3, y0), (x1 + 4, y1), (x0, y1)]
+        p = sticker_op_vlak(p, st, quad, licht=licht ** 0.5)
+    return p, m
+
+
+def pet_navy():
+    p, m = pet_navy_rgba()
     return ST.vrijstaand(p, m)
 
 

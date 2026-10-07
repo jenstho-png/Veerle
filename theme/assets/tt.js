@@ -26,6 +26,10 @@
   const zichtbaar = (el) => el.classList.add('is-in');
   /* een foto pas onthullen als hij geladen is (max. 1,2 s wachten), anders schuift er een leeg vlak open */
   const onthul = (el) => {
+    /* galerij: alle foto's van de baan tegelijk, anders schuift er tijdens het swipen een doek open */
+    if (el.hasAttribute('data-tt-dia') && el.parentElement) {
+      el.parentElement.querySelectorAll('[data-tt-dia]').forEach((d) => { if (d !== el) { if (io) io.unobserve(d); zichtbaar(d); } });
+    }
     const img = el.classList.contains('tt-onthul') && el.querySelector('img');
     if (!img || img.complete) return zichtbaar(el);
     let klaar = false;
@@ -70,7 +74,10 @@
     if (Math.abs(doelY - zachtY) < 0.2) zachtY = doelY;
     for (const it of items) {
       const top = it.top - y; /* positie op het scherm (zonder de eigen verschuiving) */
-      if (top > vh + 200 || top + it.h < -200) { continue; }
+      const binnen = !(top > vh + 200 || top + it.h < -200);
+      /* alleen een eigen laag (will-change) zolang het item in de buurt van het scherm is */
+      if (binnen !== it.aan) { it.aan = binnen; it.el.style.willChange = binnen ? (it.soort === 'schuif' ? 'transform' : 'translate') : ''; }
+      if (!binnen) continue;
       switch (it.soort) {
         case 'hero': {
           const p = klem((zachtY - it.top) / Math.max(1, it.h), 0, 1);
@@ -412,9 +419,11 @@
     const kaart = e.target.closest && e.target.closest('a.tt-pk');
     if (!kaart || stil) return;
     const img = kaart.querySelector('.tt-pk__img');
-    if (img) img.style.viewTransitionName = 'tt-productfoto';
+    if (!img) return;
+    document.querySelectorAll('.tt-koop__eerste').forEach((i) => { i.style.viewTransitionName = 'none'; });
+    img.style.viewTransitionName = 'tt-productfoto';
   });
-  addEventListener('pageshow', () => document.querySelectorAll('.tt-pk__img').forEach((i) => { i.style.viewTransitionName = ''; }));
+  addEventListener('pageshow', () => document.querySelectorAll('.tt-pk__img, .tt-koop__eerste').forEach((i) => { i.style.viewTransitionName = ''; }));
 
   function start(scope = document) {
     /* collectie sorteren */

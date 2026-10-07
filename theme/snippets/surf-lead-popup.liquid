@@ -5,7 +5,7 @@
   De kortingscode zelf maak je aan in Shopify > Kortingen; vul hem in bij Thema-instellingen > Surf: lead-popup.
 {%- endcomment -%}
 {%- if settings.surf_popup_enable and template.name != 'cart' and template.name != 'password' -%}
-  <div class="surf-popup tt-pop" id="SurfPopup" role="dialog" aria-modal="true" aria-labelledby="SurfPopupTitle" data-delay="{{ settings.surf_popup_delay }}" hidden>
+  <div class="surf-popup tt-pop" id="SurfPopup" role="dialog" aria-modal="false" aria-label="{{ settings.surf_popup_heading | remove: '*' | replace: '|', ' ' | escape }}" data-delay="{{ settings.surf_popup_delay }}" hidden>
     <div class="tt-pop__kaart">
       <div class="tt-pop__beeld">
         {%- render 'tt-beeld', image: settings.surf_popup_image, fallback: 'tt-foto-mood-7', alt: '', sizes: '(min-width: 750px) 380px, 100vw' -%}
