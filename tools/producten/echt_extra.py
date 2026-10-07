@@ -475,6 +475,29 @@ def poncho():
                   verplaatsing=16, schaduw=1.15, structuur=0.9, blur=1.0)
     bewaar(p, 'surfponcho-tegel-1', uitsnede=k((470, 1860, 1470, 3110)))
 
+    # 2. achterkant, op het strand (Pexels 36527879): olijfgroene poncho wordt zeeblauw, groot logo op de rug, tegelband langs de zoom.
+    #    Gemeten op 2400 px breed; we werken op 4800 px in een uitsnede rond de man (x 450-1250, y 1620-2620).
+    X0, Y0 = 450, 1620
+    def k(v):
+        if isinstance(v, list):
+            return [k(x) for x in v]
+        if len(v) == 2:
+            return (int(round((v[0] - X0) * 2)), int(round((v[1] - Y0) * 2)))
+        return k(v[:2]) + k(v[2:])
+    groot = foto('poncho-rug-1.jpg')
+    p = groot[Y0 * 2:2620 * 2, X0 * 2:1250 * 2].copy(); del groot
+    p = E.poets(p, *k((765, 1870)), 104, 128)           # klein merkje op de schouder
+    m = masker_kleur(p, (18, 45, 35), (40, 255, 255), zaad=k((850, 2100)), sluit=21, rect=k((560, 1720, 1120, 2360)))
+    if PROEF:
+        cv2.imwrite(str(UIT / 'proef-masker-poncho2.jpg'), (m * 255).astype(np.uint8)[::4, ::4])
+    p = kleur_lab(p, m, ZEEBLAUW, chroma=0.9, spreiding=0.5)
+    licht = np.percentile(MK.helderheid(p)[m > 0.5], 85)
+    p = druk(p, plaats(p.shape, rug, *k((848, 2080)), 400, draai=-1.5), ref=licht, verplaatsing=12, schaduw=1.0, structuur=1.0,
+             dekking=0.93, masker=m, blur=1.2)
+    p = band_zoom(p, k([(672, 2276), (760, 2318), (850, 2336), (940, 2327), (988, 2300)]), 124, strook2, masker=m, ref=licht,
+                  verplaatsing=16, schaduw=1.15, structuur=0.9, blur=1.4)
+    bewaar(p, 'surfponcho-tegel-2')
+
 
 if __name__ == '__main__':
     stappen = [a for a in sys.argv[1:] if not a.startswith('--')] or ['uv_shirt', 'poncho', 'waxkam']

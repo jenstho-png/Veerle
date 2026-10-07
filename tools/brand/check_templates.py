@@ -8,6 +8,11 @@ for f in (T / 'sections').glob('*.liquid'):
     if '{% schema %}' in s:
         schemas[f.stem] = json.loads(s.split('{% schema %}')[1].split('{% endschema %}')[0])
 fouten = []
+for naam, sch in schemas.items():
+    # Shopify: namen van secties, blokken en presets maximaal 25 tekens
+    for n in [sch.get('name')] + [b.get('name') for b in sch.get('blocks', [])] + [p.get('name') for p in sch.get('presets', [])]:
+        if isinstance(n, str) and not n.startswith('t:') and len(n) > 25:
+            fouten.append(f'{naam}: naam langer dan 25 tekens: {n}')
 
 
 def check_settings(waar, defs, waarden):
@@ -38,6 +43,8 @@ for f in sorted(list((T / 'templates').glob('*.json')) + list((T / 'sections').g
     d = json.loads(t[m.end():] if m else t)
     for k, sec in d.get('sections', {}).items():
         sch = schemas.get(sec['type'])
+        if sch is None and (T / 'sections' / f"{sec['type']}.liquid").exists():
+            continue   # sectie zonder schema (zoals main-404)
         if sch is None:
             fouten.append(f'{f.name}/{k}: sectie {sec["type"]} bestaat niet'); continue
         if f.parent.name == 'templates' and 'templates' in sch and f.stem.split('.')[0] not in sch['templates']:
