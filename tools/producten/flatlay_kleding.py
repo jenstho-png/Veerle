@@ -340,7 +340,7 @@ def macro(img, a, kader, prints, licht_hoek=True, wale_mm=0.85, kader_cm=None, m
     groot = cv2.GaussianBlur(groot, (0, 0), f * 0.35)                 # vergroting is zacht; geen blokjes
     for art, cx, cy, br, kw in prints:
         groot = MK.zet_print(groot, inkt(art, br * f, 0.03), (cx - x0) * f, (cy - y0) * f, br * f,
-                             verplaatsing=kw.get('verplaatsing', 6) * f * 0.5, schaduw_sterkte=0.9,
+                             verplaatsing=kw.get('verplaatsing', 6) * f * 0.2, schaduw_sterkte=0.9,
                              structuur=0.0, dekking=kw.get('dekking', 0.95), masker=ga)
     # breisteekjes over stof en inkt samen: de inkt zit in de stof
     px_mm = f * maat / 10
