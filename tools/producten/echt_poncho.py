@@ -60,7 +60,7 @@ ZOOMSTROOK = 1.1                      # effen blauwe zoom tot de tegelrand
 TEGEL = 4.0                           # tegelrand: tegels van 4 cm
 BAND = (YH + ZOOMSTROOK, YH + ZOOMSTROOK + TEGEL)
 STAP_ZOOM = 0.75                      # zoveel dikker is het deel met de omgeslagen zoom
-KAP_DIK = 1.15
+KAP_DIK = 1.6
 LABEL_CM = (4.4, 2.1)
 LABEL_Y = 2.55                        # bovenkant van het label (cm onder de bovenkant van het pakket)
 
@@ -246,7 +246,7 @@ def label_textuur(ppc):
 
 
 # ---------- het pakket ----------
-def poncho_lagen(X, Y, ppc, kap='op', zaad=1, lusjes=0.55, vlekken=0.3):
+def poncho_lagen(X, Y, ppc, kap='op', zaad=1, lusjes=0.6, vlekken=0.18):
     """Alle lagen van de opgevouwen poncho in cm-coördinaten X, Y (bovenkant pakket y = 0, links x = 0).
     Geeft een lijst van lagen (onder naar boven): dict(alpha, z, rgb, tex)."""
     h, w = X.shape
@@ -257,7 +257,7 @@ def poncho_lagen(X, Y, ppc, kap='op', zaad=1, lusjes=0.55, vlekken=0.3):
     yT = 0.0 + 0.12 * ruis1d(X, 6, zaad + 3)
     yB = LANG + 0.18 * ruis1d(X, 5, zaad + 4)
     el, er, et, eb = X - xL, xR - X, Y - yT, yB - Y
-    rc = 2.6
+    rc = 1.7
     e = afgeronde_afstand(el, er, et, eb, rc)
     tex_kader = lambda z: contrast(badstof(h, w, ppc, zaad * 10 + z), ppc, lusjes, vlekken)    # noqa: E731
 
@@ -279,7 +279,14 @@ def poncho_lagen(X, Y, ppc, kap='op', zaad=1, lusjes=0.55, vlekken=0.3):
 
     # 2. het pakket zelf, met de omgeslagen zoom en de tegelrand bovenaan
     z = rolprofiel(e, R, DIK)
-    bol = 0.22 * ruis2d(h, w, 5.0 * ppc, zaad + 21) + 0.10 * ruis2d(h, w, 1.6 * ppc, zaad + 22)
+    bol = 0.22 * ruis2d(h, w, 5.0 * ppc, zaad + 21) + 0.08 * ruis2d(h, w, 1.6 * ppc, zaad + 22)
+    # het pakket is iets bol, en de randen van de lagen eronder tekenen zich zacht af in de bovenste laag:
+    # de naar achteren geslagen zijpanden (x = 11 en 27 cm) en het opgeslagen onderpand (y = 31 cm)
+    koepel = 0.35 * np.clip(1 - ((X - BREED / 2) / (BREED / 2)) ** 2, 0, 1) * np.clip(1 - ((Y - LANG / 2) / (LANG / 2)) ** 2, 0, 1)
+    sig = lambda t: 1 / (1 + np.exp(-t))       # noqa: E731
+    tree = (0.20 * sig((X - 11.0 - 0.4 * ruis1d(Y, 6, zaad + 23)) / 0.45) - 0.20 * sig((X - 27.0 - 0.4 * ruis1d(Y, 6, zaad + 24)) / 0.45)
+            + 0.16 * sig((31.0 + 0.5 * ruis1d(X, 6, zaad + 25) - Y) / 0.5))
+    bol = bol + koepel + tree
     z = z + bol * np.clip(e / R, 0, 1)
     U = X + rol_uv(el, R) - rol_uv(er, R)
     V = Y + rol_uv(et, R) - rol_uv(eb, R)
@@ -304,8 +311,8 @@ def poncho_lagen(X, Y, ppc, kap='op', zaad=1, lusjes=0.55, vlekken=0.3):
     if kap == 'op':
         xc = BREED / 2 + 0.05 * ruis1d(Y, 8, zaad + 41)
         # halve breedte: 10 cm in de nek, 11 cm op de breedste plek, ronde punt op 20 cm
-        yk = np.array([-6, 0, 4, 9, 12, 15, 17, 18.5, 19.6, 20.2], np.float32)
-        hk = np.array([9.2, 9.2, 9.7, 10.1, 9.9, 8.8, 7.3, 5.6, 3.5, 0.0], np.float32)
+        yk = np.array([-6, 0, 4, 9, 13, 16, 18, 19.5, 20.6, 21.2], np.float32)
+        hk = np.array([9.0, 9.0, 9.8, 10.4, 10.3, 9.4, 8.1, 6.2, 3.8, 0.0], np.float32)
         hw = np.interp(Y, yk, hk, right=0.0) + 0.12 * ruis1d(Y, 3, zaad + 42)
         S = 4
         mask_ss = np.zeros((h * S, w * S), np.uint8)
@@ -320,12 +327,13 @@ def poncho_lagen(X, Y, ppc, kap='op', zaad=1, lusjes=0.55, vlekken=0.3):
         # getekende afstand tot de rand (positief binnen, negatief buiten)
         dist = cv2.distanceTransform(mask_ss, cv2.DIST_L2, 5) - cv2.distanceTransform(1 - mask_ss, cv2.DIST_L2, 5)
         dist = cv2.resize(dist, (w, h), interpolation=cv2.INTER_AREA) / (ppc * S)
-        golf = 0.10 * ruis2d(h, w, 2.5 * ppc, zaad + 43)
+        golf = 0.22 * ruis2d(h, w, 2.0 * ppc, zaad + 43)
         e_k = dist + golf - 0.02
         onder = cv2.GaussianBlur(np.minimum(rolprofiel(e, R, DIK) + bol, DIK + 0.3), (0, 0), 0.9 * ppc)
-        rk = KAP_DIK * 0.5
-        zk = onder + rolprofiel(e_k, rk, KAP_DIK) - (KAP_DIK - rk) * 0
-        zk = np.where(e_k > 0, zk, onder + KAP_DIK - rk)
+        # er zit lucht in de capuchon: de rand loopt over ruim een centimeter zacht af naar de stof eronder
+        rk = 1.3
+        zk = onder + 0.25 + rolprofiel(e_k, rk, KAP_DIK - 0.25, 1.9)
+        zk = zk + 0.25 * ruis2d(h, w, 3.0 * ppc, zaad + 44) * np.clip(e_k / rk, 0, 1)
         # middennaad (ondiepe groef) met twee stiksels; lichte plooitjes vanuit de nek
         dx = X - xc
         zk = zk - 0.14 * np.exp(-(dx / 0.2) ** 2) * (Y > 0.5)
@@ -437,18 +445,26 @@ def raster(ppc, cx_cm, cy_cm, b=ST.B, h=ST.H):
     return np.meshgrid(xs, ys)
 
 
-def bewaar(img, naam):
-    pad = ST.bewaar(ST.afwerking(img), DOEL / f'{naam}.jpg')
-    kb = pad.stat().st_size / 1000
-    if kb >= 190:
-        # te zwaar (zandkorrel en lusjes kosten veel bytes): minder korrel in de afwerking
-        for korrel in (0.008, 0.005, 0.003):
-            pad = ST.bewaar(ST.afwerking(img, korrel=korrel), pad)
-            kb = pad.stat().st_size / 1000
-            if kb < 190:
-                break
-    print('foto', naam, f'{kb:.0f} kB')
-    return pad
+def bewaar(img, naam, max_kb=190):
+    """ST.afwerking en ST.bewaar zoals overal. Te zwaar (zandkorrel en lusjes kosten veel bytes)? Dan eerst minder
+    korrel, dan lagere jpg-kwaliteit, en pas als laatste een heel klein beetje zachter."""
+    import io
+    pad = ST.bewaar(ST.afwerking(img), DOEL / f'{naam}.jpg', max_kb)
+    if pad.stat().st_size < max_kb * 1000:
+        print('foto', naam, pad.stat().st_size // 1000, 'kB'); return pad
+    for korrel, zacht in [(0.008, 0), (0.005, 0), (0.004, 0.3), (0.003, 0.45)]:
+        bron = ST.afwerking(img, korrel=korrel)
+        if zacht:
+            bron = cv2.GaussianBlur(bron, (0, 0), zacht)
+        im = Image.fromarray((np.clip(bron, 0, 1) * 255 + 0.5).astype(np.uint8))
+        for q in range(82, 57, -3):
+            buf = io.BytesIO()
+            im.save(buf, 'JPEG', quality=q, optimize=True, progressive=True)
+            if buf.tell() < max_kb * 1000:
+                pad.write_bytes(buf.getvalue())
+                print('foto', naam, buf.tell() // 1000, 'kB', f'korrel {korrel} q{q} zacht {zacht}')
+                return pad
+    raise SystemExit('te groot: ' + naam)
 
 
 # ---------- de drie foto's ----------

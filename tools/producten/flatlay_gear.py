@@ -546,7 +546,7 @@ KARABIJN = {
 }
 
 
-def d_ring_door(img, onder_masker, S, richting, breedte, hoogte, draad, kleur_d, kleur_l):
+def d_ring_door(img, onder_masker, S, richting, breedte, hoogte, draad, kleur_d, kleur_l, boven=1.0):
     """Metalen D-ring (zoals echt.d_ring), maar met een hogere boog: rechte kant bij S dwars op de band, de boog
     (halve ellips, 'hoogte' px vanaf de rechte kant) loopt richting de haak, onder de staaf door en de opening in.
     Waar de haak ligt (onder_masker) is de ring onzichtbaar. Middellijn exact getekend: overal dezelfde draaddikte."""
@@ -575,8 +575,17 @@ def d_ring_door(img, onder_masker, S, richting, breedte, hoogte, draad, kleur_d,
     hel = np.clip(0.25 + 0.55 * nz + 0.35 * lic, 0, 1) ** 1.2
     kl = np.array(kleur_d)[None, None] + (np.array(kleur_l) - np.array(kleur_d))[None, None] * hel[..., None]
     kl = kl + 0.35 * np.clip(nz - 0.8, 0, 1)[..., None] * (lic > 0)[..., None]
-    zicht = a * (1 - onder_masker)
-    return img * (1 - zicht[..., None]) + np.clip(kl, 0, 1) * zicht[..., None], zicht
+    # als twee schakels: aan de ene kant (n-zijde) ligt de ring OVER de staaf, aan de andere kant loopt hij eronder
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    zij = (xx - S[0]) * n[0] + (yy - S[1]) * n[1]
+    op = np.clip(zij / 6 + 0.5, 0, 1) * boven
+    zicht = a * (1 - onder_masker * (1 - op))
+    # slagschaduw van de ring op de staaf waar hij erover ligt (licht linksboven)
+    over = a * op * onder_masker
+    sch = cv2.warpAffine(over, np.float32([[1, 0, 7], [0, 1, 9]]), (w, h))
+    sch = cv2.GaussianBlur(sch, (0, 0), 4) * onder_masker * (1 - a)
+    img = img * (1 - 0.55 * sch[..., None])
+    return img * (1 - zicht[..., None]) + np.clip(kl, 0, 1) * zicht[..., None], zicht, a * (1 - op)
 
 
 def karabijn_rgba(naam):
@@ -639,10 +648,10 @@ def karabijn_rgba(naam):
     lagen = []
     for grond in (0.0, 1.0):
         doek = zc * za[..., None] + grond * (1 - za[..., None])
-        doek, ring = d_ring_door(doek, hm, Sd, r, D_RING, ring_hoogte, 26, donker, licht)
+        doek, ring, ring_onder = d_ring_door(doek, hm, Sd, r, D_RING, ring_hoogte, 26, donker, licht)
         # contactschaduw: waar de staaf over de ring ligt wordt de ring vlak naast de staaf donker (aan beide kanten)
         afst = cv2.distanceTransform((hm < 0.5).astype(np.uint8), cv2.DIST_L2, 5)
-        ao = ring * np.exp(-afst / 6.0) * 0.6
+        ao = ring * ring_onder * np.exp(-afst / 6.0) * 0.6
         doek = doek * (1 - ao[..., None])
         doek = E.bandlabel(doek, tuple(Sd), tuple(r), 1450, 280, band, garen, tekst, buig=0.0, R=13)
         lagen.append(doek)
