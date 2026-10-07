@@ -815,3 +815,5 @@ body { font-family: var(--tt-tekst); }
 .tt-hero__hand { white-space: nowrap; }
 @media (max-width: 749px) { .tt-hero__hand { font-size: 17px; margin-left: 4% !important; } }
 .tt-koop h1.tt-kop, .tt-koop .tt-kop { hyphens: none; }
+.tt-hero__icoon { width: clamp(56px, 6vw, 92px); color: var(--tt-creme); margin-bottom: 18px; }
+.tt-hero__icoon svg { display: block; width: 100%; height: auto; }

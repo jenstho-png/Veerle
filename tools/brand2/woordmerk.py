@@ -76,7 +76,14 @@ def rechte_t(g):
     sx0, _, sx1, _ = plak.bounds; mid = (sx0 + sx1) / 2; sw = sx1 - sx0
     dwars = g.intersection(Polygon([(minx - 5, maxy - h * 0.3), (maxx + 5, maxy - h * 0.3), (maxx + 5, maxy + 5), (minx - 5, maxy + 5)]))
     stam = Polygon([(mid - sw * 0.72, miny), (mid + sw * 0.72, miny), (mid + sw * 0.5, miny + h * 0.16), (mid + sw * 0.5, maxy - h * 0.2), (mid - sw * 0.5, maxy - h * 0.2), (mid - sw * 0.5, miny + h * 0.16)])
-    return dwars.union(stam).buffer(18, join_style=1).buffer(-18, join_style=1)
+    t = dwars.union(stam).buffer(18, join_style=1).buffer(-18, join_style=1)
+    # subtiel detail: de bovenkant van de dwarsbalk golft heel licht (anderhalve golf, ~3% van de letterhoogte)
+    minx, miny, maxx, maxy = t.bounds
+    diepte = (maxy - miny) * 0.032; n = 120
+    lijn = [(minx - 30 + (maxx - minx + 60) * i / n, 0) for i in range(n + 1)]
+    lijn = [(x, maxy - diepte * (0.5 - 0.5 * math.cos(2 * math.pi * 1.5 * (x - minx) / (maxx - minx) + math.pi))) for x, _ in lijn]
+    knip = Polygon(lijn + [(maxx + 30, maxy + 60), (minx - 30, maxy + 60)])
+    return t.difference(knip).buffer(6, join_style=1).buffer(-6, join_style=1)
 
 
 def regel(font, tekst, spatie, r, board_i=False):
@@ -169,5 +176,11 @@ if __name__ == '__main__' and len(sys.argv) > 1 and sys.argv[1] == 'alles':
     st, vb = maak('Kavoon-Regular.ttf')
     li, vbl = liggend()
     bm, vbb = beeldmerk()
+    import re as _re
+    ic = json.load(open(HIER.parent / 'brand3' / 'sporen.json'))['icoon']['d']
+    def _schuif(m):
+        n = _re.findall(r'-?\d+\.?\d*', m.group(2))
+        return m.group(1) + ' '.join(f'{float(n[i]) - 4:.2f} {float(n[i + 1]) - 5:.2f}' for i in range(0, len(n), 2))
+    bm = _re.sub(r'([MLC])([^MLCZ]*)', _schuif, ic); vbb = (318, 296)
     json.dump({'gestapeld': {'d': st, 'w': vb[0], 'h': vb[1]}, 'liggend': {'d': li, 'w': vbl[0], 'h': vbl[1]}, 'board': {'d': bm, 'w': vbb[0], 'h': vbb[1]}}, open(HIER / 'logo2.json', 'w'))
     print('logo2.json', vb, vbl, vbb)

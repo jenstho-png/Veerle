@@ -27,6 +27,11 @@ def logo(soort, kleur, cls='', stijl=''):
     return f'<svg class="{cls}" style="{stijl}" viewBox="0 0 {l["w"]} {l["h"]}" role="img" aria-label="Tide Tode"><path fill="{kleur}" d="{l["d"]}"/></svg>'
 
 
+def icoon(kleur, cls='', stijl=''):
+    b = LOGO['board']
+    return f'<svg class="{cls}" style="{stijl}" viewBox="0 0 {b["w"]} {b["h"]}" aria-hidden="true"><path fill="{kleur}" d="{b["d"]}"/></svg>'
+
+
 def tekening(naam, kleur, cls=''):
     t = ILL[naam]
     paden = ''.join(f'<path d="{p}"/>' for p in t['d'])
@@ -181,7 +186,10 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
 .familie > div > svg { width: 62%; }
 .familie .label { position: absolute; left: 4cqw; bottom: 3.4cqw; }
 .familie .duo { display: flex; align-items: center; gap: 5cqw; width: 78%; }
-.familie .duo svg:first-child { width: 12%; } .familie .duo svg:last-child { width: 88%; }
+.familie .duo svg:first-child { width: 20%; } .familie .duo svg:last-child { width: 80%; }
+.metic { display: grid; justify-items: center; gap: 3cqw; width: 62%; }
+.metic svg:first-child { width: 30%; } .metic svg:last-child { width: 100%; }
+.cover .icoon { position: absolute; left: 6cqw; bottom: 51cqw; width: 11cqw; }
 
 /* 4 kleur en letter */
 .kleur { display: grid; grid-template-columns: repeat(5, 1fr); height: 52%; }
@@ -253,6 +261,7 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
     paginas.append(f'''<section class="pagina cover" aria-label="Cover">
   <img class="bg" src="{foto('cover')}" alt="Twee surfers lopen met hun board naar zee bij zonsondergang">
   <div class="boven label"><span>Brandbook</span><span>Tide Tode 2025</span></div>
+  {icoon(CREME, 'icoon')}
   {logo('gestapeld', CREME, 'woordmerk')}
   <p class="slogan hand">Handen vrij, op weg naar zee</p>
   <div class="tekst">Tide Tode maakt draagtassen voor surfboards. Bedacht op surftrips in Australië en Midden-Amerika, voor de wandeling door de duinen, de fiets naar het strand en de scooter naar een spot verderop.<div class="regel"><span>est.</span><span>2025</span></div></div>
@@ -261,8 +270,8 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
     paginas.append(f'<section class="pagina" aria-label="Logo constructie">{constructie()}</section>')
     # 3 familie
     paginas.append(f'''<section class="pagina" aria-label="Logofamilie"><div class="familie">
-  <div style="background:var(--papier)">{logo('gestapeld', NAVY)}<span class="label">Hoofdlogo</span></div>
-  <div style="background:var(--navy)">{logo('gestapeld', CREME)}<span class="label" style="color:var(--creme)">Op donker</span></div>
+  <div style="background:var(--papier)"><div class="metic">{icoon(NAVY)}{logo('gestapeld', NAVY)}</div><span class="label">Hoofdlogo</span></div>
+  <div style="background:var(--navy)"><div class="metic">{icoon(CREME)}{logo('gestapeld', CREME)}</div><span class="label" style="color:var(--creme)">Op donker</span></div>
   <div style="background:var(--baby)"><div class="duo"><svg viewBox="0 0 {LOGO['board']['w']} {LOGO['board']['h']}"><path fill="{NAVY}" d="{LOGO['board']['d']}"/></svg>{logo('liggend', NAVY)}</div><span class="label">Liggend met beeldmerk</span></div>
   <div style="background:var(--rose)">{zegel(achter=ROSE, rand=ROSE).replace('class="badge"', 'style="width:62%"')}<span class="label">Zegel</span></div>
 </div></section>''')
