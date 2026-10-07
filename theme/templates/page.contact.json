@@ -7,7 +7,7 @@
     "faq": {
       "type": "surf-faq",
       "settings": {
-        "heading_tag": "h1",
+        "heading_tag": "h2",
         "heading": "Veelgestelde vragen",
         "eyebrow": "",
         "btn_link": "shopify://pages/veelgestelde-vragen"

@@ -1151,7 +1151,7 @@ schrijf('tt-kaarten', """
         {"type": "kaart", "settings": {"kleur": "rose", "ill": "golf", "titel": "14 dagen bedenktijd", "tekst": "Past hij toch niet bij je board? Stuur hem binnen 14 dagen terug, ongebruikt en met label."}},
         {"type": "kaart", "settings": {"kleur": "zand", "ill": "zon", "titel": "Garantie", "tekst": "Gaat er iets stuk door een fout in de stof of de stiksels? Dan repareren of vervangen we hem."}}]}]})
 
-# ---------- CONTACT: formulier en gegevens ----------
+# ---------- CONTACT: formulier, zo bereik je ons, en de gegevens ----------
 GEGEVENS = """
       <dl class="tt-gegevens">
         {%- if settings.tt_email != blank -%}<div><dt>E-mail</dt><dd><a href="mailto:{{ settings.tt_email }}">{{ settings.tt_email }}</a></dd></div>{%- endif -%}
@@ -1163,65 +1163,120 @@ GEGEVENS = """
 
 schrijf('tt-contact', """
 {%- assign form_id = 'tt-contact-' | append: section.id -%}
-<section class="tt tt-contact tt-bg--{{ section.settings.bg }}" id="contact">
-  <div class="tt-wrap tt-contact__grid">
-    <div class="tt-contact__links">
+<section class="tt tt-contact tt-bg--{{ section.settings.bg }}{% unless section.settings.gegevens %} tt-contact--smal{% endunless %}" id="contact">
+  <div class="tt-wrap">
+    <header class="tt-contact__kop">
+      {%- if section.settings.label != blank -%}<p class="tt-col__label tt-in">{{ section.settings.label }}</p>{%- endif -%}
       {%- if section.settings.h1 -%}
-        <h1 class="tt-kop tt-kop--l">{{ section.settings.heading | default: page.title }}</h1>
+        {%- assign titel = section.settings.heading | default: page.title -%}
+        {%- render 'tt-kop', text: titel, tag: 'h1', class: 'tt-kop--l' -%}
       {%- else -%}
         {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
       {%- endif -%}
-      {%- if section.settings.text != blank -%}<p class="tt-contact__intro">{{ section.settings.text }}</p>{%- endif -%}
-      {%- form 'contact', id: form_id, class: 'tt-form' -%}
-        {%- if form.posted_successfully? -%}
-          <p class="tt-form__ok" role="status" tabindex="-1" autofocus>{{ section.settings.ok }}</p>
-        {%- elsif form.errors -%}
-          <div class="tt-form__fout" role="alert">{{ form.errors | default_errors }}</div>
-        {%- endif -%}
-        <input type="hidden" name="contact[Pagina]" value="{{ section.settings.bron | default: page.title | escape }}">
-        <div class="tt-form__rij">
-          <label class="tt-veld"><span>Naam</span><input type="text" name="contact[Naam]" autocomplete="name" value="{{ form.name }}" required></label>
-          <label class="tt-veld"><span>E-mail</span><input type="email" name="contact[email]" autocomplete="email" spellcheck="false" autocapitalize="off" value="{{ form.email }}" required></label>
+      {%- if section.settings.text != blank -%}<p class="tt-contact__intro tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    </header>
+    <div class="tt-contact__grid">
+      <div class="tt-contact__formkaart tt-in">
+        {%- form 'contact', id: form_id, class: 'tt-form' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="tt-form__ok" role="status" tabindex="-1" autofocus>
+              <span class="tt-form__okicoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+              <div>
+                <p class="tt-form__oktitel">{{ section.settings.ok_titel }}</p>
+                <p>{{ section.settings.ok }}</p>
+              </div>
+            </div>
+          {%- else -%}
+            {%- if form.errors -%}
+              <div class="tt-form__fout" role="alert">
+                <p class="tt-form__fouttitel">Dat ging niet goed</p>
+                {{ form.errors | default_errors }}
+              </div>
+            {%- endif -%}
+            <p class="tt-form__titel">{{ section.settings.form_titel }}</p>
+            <input type="hidden" name="contact[Pagina]" value="{{ section.settings.bron | default: page.title | escape }}">
+            <div class="tt-form__rij">
+              <label class="tt-veld"><span>Naam</span><input type="text" name="contact[Naam]" autocomplete="name" value="{{ form.name }}" placeholder="Je naam" required></label>
+              <label class="tt-veld"><span>E-mail</span><input type="email" name="contact[email]" autocomplete="email" spellcheck="false" autocapitalize="off" value="{{ form.email }}" placeholder="jij@voorbeeld.nl" required{% if form.errors contains 'email' %} aria-invalid="true"{% endif %}></label>
+            </div>
+            {%- if section.settings.extra -%}
+            <div class="tt-form__rij">
+              <label class="tt-veld"><span>Telefoon <em>niet verplicht</em></span><input type="tel" name="contact[Telefoon]" autocomplete="tel" value="{{ form.phone }}"></label>
+              <label class="tt-veld"><span>Bestelnummer <em>niet verplicht</em></span><input type="text" name="contact[Bestelnummer]" placeholder="#1001"></label>
+            </div>
+            {%- endif -%}
+            <label class="tt-veld"><span>{{ section.settings.bericht_label }}</span><textarea name="contact[Bericht]" rows="6" placeholder="{{ section.settings.bericht_hint | escape }}" required>{{ form.body }}</textarea></label>
+            <div class="tt-form__onder">
+              <button type="submit" class="tt-knop"><span>{{ section.settings.knop }}</span><span aria-hidden="true">→</span></button>
+              {%- if settings.tt_reactietijd != blank -%}<p class="tt-form__tijd">{{ settings.tt_reactietijd }}</p>{%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+      {%- if section.settings.gegevens -%}
+      <aside class="tt-contact__zij">
+        <ul class="tt-contact__wegen">
+          {%- if settings.tt_email != blank -%}
+            <li class="tt-in"><a class="tt-contact__weg" href="mailto:{{ settings.tt_email }}">
+              <span class="tt-contact__wegicoon tt-contact__wegicoon--baby">{% render 'tt-icoon', icoon: 'meeuw' %}</span>
+              <span><span class="tt-contact__weglabel">Mail ons</span><span class="tt-contact__wegwaarde">{{ settings.tt_email }}</span></span>
+            </a></li>
+          {%- endif -%}
+          {%- if settings.tt_telefoon != blank -%}
+            <li class="tt-in"><a class="tt-contact__weg" href="tel:{{ settings.tt_telefoon | remove: ' ' }}">
+              <span class="tt-contact__wegicoon tt-contact__wegicoon--rose">{% render 'tt-icoon', icoon: 'schelp' %}</span>
+              <span><span class="tt-contact__weglabel">Bel of app</span><span class="tt-contact__wegwaarde">{{ settings.tt_telefoon }}</span></span>
+            </a></li>
+          {%- endif -%}
+          {%- if settings.social_instagram_link != blank -%}
+            <li class="tt-in"><a class="tt-contact__weg" href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener">
+              <span class="tt-contact__wegicoon tt-contact__wegicoon--zand">{% render 'tt-icoon', icoon: 'zon' %}</span>
+              <span><span class="tt-contact__weglabel">Stuur een DM</span><span class="tt-contact__wegwaarde">Instagram</span></span>
+            </a></li>
+          {%- endif -%}
+        </ul>
+        <div class="tt-contact__kaart tt-in">
+          <div class="tt-contact__kaartkop">
+            <p class="tt-contact__kaarttitel">{{ section.settings.kaart_titel }}</p>
+            {%- if settings.tt_reactietijd != blank -%}<p class="tt-contact__tijd">{{ settings.tt_reactietijd }}</p>{%- endif -%}
+          </div>""" + GEGEVENS + """
+          <ul class="tt-contact__social">
+            {%- if settings.social_tiktok_link != blank -%}<li><a href="{{ settings.social_tiktok_link }}" target="_blank" rel="noopener">TikTok</a></li>{%- endif -%}
+            {%- if settings.social_pinterest_link != blank -%}<li><a href="{{ settings.social_pinterest_link }}" target="_blank" rel="noopener">Pinterest</a></li>{%- endif -%}
+            {%- if settings.social_facebook_link != blank -%}<li><a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener">Facebook</a></li>{%- endif -%}
+          </ul>
         </div>
-        {%- if section.settings.extra -%}
-        <div class="tt-form__rij">
-          <label class="tt-veld"><span>Telefoon <em>(niet verplicht)</em></span><input type="tel" name="contact[Telefoon]" autocomplete="tel" value="{{ form.phone }}"></label>
-          <label class="tt-veld"><span>Bestelnummer <em>(niet verplicht)</em></span><input type="text" name="contact[Bestelnummer]"></label>
-        </div>
+        {%- if section.settings.ill != 'geen' -%}
+          <figure class="tt-contact__ill tt-in tt-teken" aria-hidden="true">
+            {%- render 'tt-ill', naam: section.settings.ill -%}
+            {%- if section.settings.hand != blank -%}<figcaption>{{ section.settings.hand }}</figcaption>{%- endif -%}
+          </figure>
         {%- endif -%}
-        <label class="tt-veld"><span>{{ section.settings.bericht_label }}</span><textarea name="contact[Bericht]" rows="6" required>{{ form.body }}</textarea></label>
-        <button type="submit" class="tt-knop tt-knop--vol"><span>{{ section.settings.knop }}</span></button>
-      {%- endform -%}
+      </aside>
+      {%- endif -%}
     </div>
-    {%- if section.settings.gegevens -%}
-    <aside class="tt-contact__kaart" data-tt-kantel>
-      <div class="tt-contact__icoon">{%- render 'tt-logo', variant: 'maan' -%}</div>
-      <p class="tt-contact__kaarttitel">{{ section.settings.kaart_titel }}</p>""" + GEGEVENS + """
-      {%- if settings.tt_reactietijd != blank -%}<p class="tt-contact__tijd">{{ settings.tt_reactietijd }}</p>{%- endif -%}
-      <ul class="tt-contact__social">
-        {%- if settings.social_instagram_link != blank -%}<li><a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener">Instagram</a></li>{%- endif -%}
-        {%- if settings.social_tiktok_link != blank -%}<li><a href="{{ settings.social_tiktok_link }}" target="_blank" rel="noopener">TikTok</a></li>{%- endif -%}
-        {%- if settings.social_pinterest_link != blank -%}<li><a href="{{ settings.social_pinterest_link }}" target="_blank" rel="noopener">Pinterest</a></li>{%- endif -%}
-        {%- if settings.social_facebook_link != blank -%}<li><a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener">Facebook</a></li>{%- endif -%}
-      </ul>
-    </aside>
-    {%- endif -%}
   </div>
 </section>
 """, {
     "name": "TT: contact", "tag": "div",
     "settings": [
         bg("creme"),
+        {"type": "text", "id": "label", "label": "Klein label boven de kop", "default": "Contact"},
         {"type": "checkbox", "id": "h1", "label": "Kop is de paginatitel (h1)", "default": True},
-        {"type": "text", "id": "heading", "label": "Kop", "default": "Contact"},
-        {"type": "textarea", "id": "text", "label": "Intro", "default": "Vraag over je bestelling, je board of de tas? Stuur ons een bericht."},
+        {"type": "text", "id": "heading", "label": "Kop", "default": "Vraag het ons gewoon"},
+        {"type": "textarea", "id": "text", "label": "Intro", "default": "Vraag over je bestelling, je board of de tas? Stuur ons een bericht. Je krijgt antwoord van ons zelf."},
+        {"type": "text", "id": "form_titel", "label": "Titel boven het formulier", "default": "Stuur een bericht"},
         {"type": "text", "id": "bericht_label", "label": "Label berichtveld", "default": "Bericht"},
+        {"type": "text", "id": "bericht_hint", "label": "Voorbeeldtekst in het berichtveld", "default": "Waar kunnen we je mee helpen?"},
         {"type": "checkbox", "id": "extra", "label": "Telefoon en bestelnummer vragen", "default": True},
         {"type": "text", "id": "knop", "label": "Knop", "default": "Verstuur"},
-        {"type": "text", "id": "ok", "label": "Bevestiging", "default": "Bedankt, je bericht is verstuurd. We reageren binnen één werkdag."},
+        {"type": "text", "id": "ok_titel", "label": "Titel bevestiging", "default": "Bericht verstuurd"},
+        {"type": "text", "id": "ok", "label": "Bevestiging", "default": "Bedankt, we reageren binnen één werkdag."},
         {"type": "text", "id": "bron", "label": "Bron in de e-mail (leeg = paginatitel)"},
-        {"type": "checkbox", "id": "gegevens", "label": "Bedrijfsgegevens tonen", "default": True},
+        {"type": "checkbox", "id": "gegevens", "label": "Contactwegen en gegevens tonen", "default": True},
         {"type": "text", "id": "kaart_titel", "label": "Titel gegevenskaart", "default": "Gegevens"},
+        {"type": "select", "id": "ill", "label": "Tekening", "options": [{"value": v, "label": l} for v, l in [("geen", "Geen"), ("parasol", "Parasol"), ("busje", "Busje"), ("golf", "Golf"), ("zon", "Zon"), ("draagtas", "De draagtas")]], "default": "busje"},
+        {"type": "text", "id": "hand", "label": "Handgeschreven regel bij de tekening", "default": "Tot snel"},
     ],
     "presets": [{"name": "TT: contact"}]})
 
@@ -1314,41 +1369,125 @@ schrijf('tt-maattabel', """
         {"type": "rij", "settings": {"cellen": "S|51 cm|71 cm"}}, {"type": "rij", "settings": {"cellen": "M|54 cm|74 cm"}},
         {"type": "rij", "settings": {"cellen": "L|57 cm|76 cm"}}, {"type": "rij", "settings": {"cellen": "XL|60 cm|78 cm"}}]}]})
 
-# ---------- COLLECTIE: kop, collectieknoppen, sorteren en productkaarten ----------
+# ---------- COLLECTIE: redactionele kop, collectieknoppen, filter, sorteren en productkaarten ----------
 schrijf('tt-collectie', """
-{%- assign sorteer = collection.sort_by | default: collection.default_sort_by -%}
+{%- liquid
+  assign sorteer = collection.sort_by | default: collection.default_sort_by
+  assign kop_blok = nil
+  for block in section.blocks
+    if block.settings.handle == collection.handle
+      assign kop_blok = block
+    endif
+  endfor
+  assign intro = collection.description
+  if intro == blank and kop_blok != nil
+    assign intro = kop_blok.settings.intro
+  endif
+  assign actief = 0
+  for filter in collection.filters
+    assign actief = actief | plus: filter.active_values.size
+  endfor
+  assign ill = 'golf'
+  if kop_blok != nil and kop_blok.settings.ill != blank
+    assign ill = kop_blok.settings.ill
+  endif
+-%}
 <section class="tt tt-col tt-bg--{{ section.settings.bg }}">
-  <div class="tt-wrap">
-    <header class="tt-col__kop">
-      <h1 class="tt-kop tt-kop--l">{{ collection.title }}</h1>
-      {%- if collection.description != blank -%}<div class="tt-col__intro">{{ collection.description }}</div>{%- endif -%}
-    </header>
-    {%- if section.blocks.size > 0 -%}
-    <nav class="tt-col__nav" aria-label="Collecties">
-      {%- for block in section.blocks -%}
-        {%- assign doel = routes.collections_url | append: '/' | append: block.settings.handle -%}
-        <a href="{{ doel }}" {{ block.shopify_attributes }}{% if collection.handle == block.settings.handle %} aria-current="page"{% endif %}>{{ block.settings.label }}</a>
-      {%- endfor -%}
-    </nav>
-    {%- endif -%}
-    <div class="tt-col__balk">
-      <p>{{ collection.products_count }} {% if collection.products_count == 1 %}product{% else %}producten{% endif %}</p>
-      {%- if collection.sort_options.size > 0 -%}
-      <label class="tt-col__sort"><span>Sorteer</span>
-        <select data-tt-sorteer>
-          {%- for o in collection.sort_options -%}<option value="{{ o.value }}"{% if o.value == sorteer %} selected{% endif %}>{{ o.name }}</option>{%- endfor -%}
-        </select>
-      </label>
-      {%- endif -%}
+  <header class="tt-wrap tt-col__held{% if section.settings.beeld %} tt-col__held--beeld{% endif %}">
+    <div class="tt-col__tekst">
+      <p class="tt-col__label tt-in">{{ section.settings.label }}</p>
+      {%- assign titel = collection.title | escape -%}
+      {%- render 'tt-kop', text: titel, tag: 'h1', class: 'tt-kop--l' -%}
+      {%- if intro != blank -%}<div class="tt-col__intro tt-in">{{ intro }}</div>{%- endif -%}
     </div>
+    {%- if section.settings.beeld -%}
+      <div class="tt-col__beeld tt-onthul">
+        {%- if collection.image -%}
+          {{ collection.image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 990px) 42vw, 100vw', widths: '600, 900, 1200, 1600', alt: collection.title, class: 'tt-beeld__img' }}
+        {%- elsif kop_blok != nil and kop_blok.settings.fallback != blank -%}
+          {%- render 'tt-beeld', fallback: kop_blok.settings.fallback, alt: collection.title, sizes: '(min-width: 990px) 42vw, 100vw', loading: 'eager' -%}
+        {%- else -%}
+          {%- render 'tt-beeld', fallback: section.settings.fallback, alt: collection.title, sizes: '(min-width: 990px) 42vw, 100vw', loading: 'eager' -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </header>
+  <div class="tt-wrap">
+    <div class="tt-col__balk">
+      {%- if section.blocks.size > 0 -%}
+        <nav class="tt-col__nav" aria-label="Collecties">
+          {%- for block in section.blocks -%}
+            {%- assign doel = routes.collections_url | append: '/' | append: block.settings.handle -%}
+            <a href="{{ doel }}" {{ block.shopify_attributes }}{% if collection.handle == block.settings.handle %} aria-current="page"{% endif %}>{{ block.settings.label }}</a>
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
+      <div class="tt-col__acties">
+        <p class="tt-col__aantal">{{ collection.products_count }} {% if collection.products_count == 1 %}product{% else %}producten{% endif %}</p>
+        {%- if section.settings.filters and collection.filters.size > 0 -%}
+          <details class="tt-col__filter">
+            <summary>Filter{% if actief > 0 %} <span>{{ actief }}</span>{% endif %}</summary>
+            <div class="tt-col__paneel">
+              {%- for filter in collection.filters -%}
+                {%- if filter.type == 'list' or filter.type == 'boolean' -%}
+                  <div class="tt-col__groep">
+                    <p class="tt-col__groepnaam">{{ filter.label }}</p>
+                    <div class="tt-col__keuzes">
+                      {%- for value in filter.values -%}
+                        {%- if value.count > 0 or value.active -%}
+                          <a class="tt-col__keuze{% if value.active %} is-aan{% endif %}" href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}"{% if value.active %} aria-current="true"{% endif %}>{{ value.label }}<span>{{ value.count }}</span></a>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </details>
+        {%- endif -%}
+        {%- if collection.sort_options.size > 0 -%}
+          <label class="tt-col__sort"><span class="visually-hidden">Sorteer</span>
+            <select data-tt-sorteer aria-label="Sorteer">
+              {%- for o in collection.sort_options -%}<option value="{{ o.value }}"{% if o.value == sorteer %} selected{% endif %}>{{ o.name }}</option>{%- endfor -%}
+            </select>
+          </label>
+        {%- endif -%}
+      </div>
+    </div>
+    {%- if actief > 0 -%}
+      <div class="tt-col__actief">
+        {%- for filter in collection.filters -%}{%- for value in filter.active_values -%}
+          <a class="tt-col__chip" href="{{ value.url_to_remove }}">{{ value.label }}<span aria-hidden="true">×</span><span class="visually-hidden">Filter weghalen</span></a>
+        {%- endfor -%}{%- endfor -%}
+        <a class="tt-col__wis" href="{{ collection.url }}?sort_by={{ sorteer }}">Alles wissen</a>
+      </div>
+    {%- endif -%}
     {%- paginate collection.products by section.settings.per_pagina -%}
       <ul class="tt-col__grid">
         {%- for product in collection.products -%}
-          <li class="tt-in" style="--d: {{ forloop.index0 | modulo: 4 | times: 0.08 }}s">
+          <li class="tt-in">
             {%- if forloop.index < 5 -%}{%- render 'tt-productkaart', p: product, laden: 'eager' -%}{%- else -%}{%- render 'tt-productkaart', p: product -%}{%- endif -%}
           </li>
         {%- else -%}
-          <li class="tt-col__leeg">Er staan nog geen producten in deze collectie. <a href="{{ routes.all_products_collection_url }}">Bekijk alles</a></li>
+          <li class="tt-col__leeg">
+            <div class="tt-col__leegkaart tt-in tt-teken">
+              <div class="tt-col__leegbeeld">{%- render 'tt-ill', naam: ill -%}</div>
+              <div class="tt-col__leegtekst">
+                {%- if actief > 0 -%}
+                  <h2 class="tt-kop tt-kop--m">Niets gevonden</h2>
+                  <p>Met deze filters staat er niets in de shop. Haal een filter weg of bekijk alles.</p>
+                  <div class="tt-knoppen"><a class="tt-knop" href="{{ collection.url }}">Filters wissen<span aria-hidden="true">→</span></a></div>
+                {%- else -%}
+                  <h2 class="tt-kop tt-kop--m">{{ section.settings.leeg_kop }}</h2>
+                  <p>{{ section.settings.leeg_tekst }}</p>
+                  <div class="tt-knoppen">
+                    <a class="tt-knop" href="{{ routes.collections_url }}">Alle collecties<span aria-hidden="true">→</span></a>
+                    <a class="tt-link" href="{{ routes.root_url }}">Naar de homepage</a>
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          </li>
         {%- endfor -%}
       </ul>
       {%- if paginate.pages > 1 -%}<nav class="tt-col__paginas" aria-label="Pagina's">{{ paginate | default_pagination: next: 'Volgende', previous: 'Vorige' }}</nav>{%- endif -%}
@@ -1357,34 +1496,55 @@ schrijf('tt-collectie', """
 </section>
 """, {
     "name": "TT: collectie", "tag": "div", "max_blocks": 8,
-    "settings": [bg("creme"), {"type": "range", "id": "per_pagina", "label": "Producten per pagina", "min": 8, "max": 48, "step": 4, "default": 24}],
+    "settings": [
+        bg("creme"),
+        {"type": "text", "id": "label", "label": "Klein label boven de titel", "default": "Collectie"},
+        {"type": "checkbox", "id": "beeld", "label": "Sfeerfoto naast de titel", "default": True, "info": "De foto van de collectie, of anders de sfeerfoto van de collectieknop hieronder."},
+        {"type": "text", "id": "fallback", "label": "Sfeerfoto als niets anders past (asset)", "default": "tt-foto-mood-2"},
+        {"type": "checkbox", "id": "filters", "label": "Filters tonen", "default": True, "info": "Zet filters aan in de app Search & Discovery."},
+        {"type": "range", "id": "per_pagina", "label": "Producten per pagina", "min": 8, "max": 48, "step": 4, "default": 24},
+        {"type": "header", "content": "Lege collectie"},
+        {"type": "text", "id": "leeg_kop", "label": "Kop", "default": "Binnenkort in de shop"},
+        {"type": "textarea", "id": "leeg_tekst", "label": "Tekst", "default": "We maken de laatste foto's. Kijk zo nog even rond, of kom over een paar dagen terug."},
+    ],
     "blocks": [{"type": "link", "name": "Collectieknop", "settings": [
         {"type": "text", "id": "label", "label": "Tekst", "default": "Alles"},
-        {"type": "text", "id": "handle", "label": "Handle van de collectie", "default": "all"}]}],
+        {"type": "text", "id": "handle", "label": "Handle van de collectie", "default": "all"},
+        {"type": "textarea", "id": "intro", "label": "Intro (als de collectie zelf geen tekst heeft)"},
+        {"type": "text", "id": "fallback", "label": "Sfeerfoto (asset, zonder .jpg)", "info": "Wordt gebruikt zolang de collectie geen eigen foto heeft."},
+        {"type": "select", "id": "ill", "label": "Tekening bij een lege collectie", "options": [{"value": v, "label": l} for v, l in [("draagtas", "De draagtas"), ("golf", "Golf"), ("busje", "Busje"), ("zon", "Zon"), ("parasol", "Parasol")]], "default": "golf"}]}],
     "presets": [{"name": "TT: collectie", "blocks": [
-        {"type": "link", "settings": {"label": "Alles", "handle": "all"}},
-        {"type": "link", "settings": {"label": "Draagtassen", "handle": "draagtassen"}},
-        {"type": "link", "settings": {"label": "Surfgear", "handle": "surfgear"}},
-        {"type": "link", "settings": {"label": "Kleding en accessoires", "handle": "kleding-en-accessoires"}}]}]})
+        {"type": "link", "settings": {"label": "Alles", "handle": "all", "fallback": "tt-foto-mood-2", "ill": "zon", "intro": "Draagtassen, kleding en de kleine dingen die je elke sessie meeneemt."}},
+        {"type": "link", "settings": {"label": "Draagtassen", "handle": "draagtassen", "fallback": "tt-foto-lifestyle-busje", "ill": "draagtas", "intro": "Negen draagtassen voor je surfboard. Board erin, tas over je schouder en je handen zijn vrij."}},
+        {"type": "link", "settings": {"label": "Surfgear", "handle": "surfgear", "fallback": "tt-meer-4", "ill": "golf", "intro": "Wax voor elk water, een waxkam, karabijnhaken en stickers voor je board."}},
+        {"type": "link", "settings": {"label": "Kleding en accessoires", "handle": "kleding-en-accessoires", "fallback": "tt-meer-1", "ill": "busje", "intro": "Zware shirts met een verhaal op de rug, een hoodie voor na het surfen en alles voor op het strand."}}]}]})
 
 # ---------- ALLE COLLECTIES ----------
 schrijf('tt-collecties', """
 <section class="tt tt-cols tt-bg--{{ section.settings.bg }}">
   <div class="tt-wrap">
-    <h1 class="tt-kop tt-kop--l">{{ section.settings.heading }}</h1>
+    <header class="tt-cols__kop">
+      {%- if section.settings.label != blank -%}<p class="tt-col__label tt-in">{{ section.settings.label }}</p>{%- endif -%}
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h1', class: 'tt-kop--l' -%}
+      {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    </header>
     <ul class="tt-cols__grid">
       {%- for block in section.blocks -%}
         {%- assign c = collections[block.settings.handle] -%}
         {%- assign doel = routes.collections_url | append: '/' | append: block.settings.handle -%}
-        <li class="tt-in" style="--d: {{ forloop.index0 | times: 0.1 }}s" {{ block.shopify_attributes }}>
-          <a class="tt-cols__tegel tt-cols__tegel--{{ block.settings.kleur }}" href="{{ doel }}" data-tt-kantel>
+        <li class="tt-in" {{ block.shopify_attributes }}>
+          <a class="tt-cols__tegel tt-cols__tegel--{{ block.settings.kleur }}" href="{{ doel }}">
             <span class="tt-cols__beeld">
-              {%- if c.featured_image -%}{{ c.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', alt: '' }}
-              {%- elsif c.products.first.featured_media -%}{{ c.products.first.featured_media | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', alt: '' }}
-              {%- else -%}{%- render 'tt-ill', naam: block.settings.ill -%}{%- endif -%}
+              {%- if c.featured_image -%}{{ c.featured_image | image_url: width: 1000 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', widths: '500, 750, 1000', alt: '' }}
+              {%- elsif block.settings.fallback != blank -%}{%- render 'tt-beeld', fallback: block.settings.fallback, alt: '', sizes: '(min-width: 750px) 33vw, 100vw' -%}
+              {%- elsif c.products.first.featured_media -%}{{ c.products.first.featured_media | image_url: width: 1000 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', widths: '500, 750, 1000', alt: '' }}
+              {%- else -%}<span class="tt-cols__ill">{%- render 'tt-ill', naam: block.settings.ill -%}</span>{%- endif -%}
             </span>
-            <span class="tt-cols__naam">{{ block.settings.label }}</span>
-            {%- if c.products_count > 0 -%}<span class="tt-cols__aantal">{{ c.products_count }} producten</span>{%- endif -%}
+            <span class="tt-cols__onder">
+              <span class="tt-cols__naam">{{ block.settings.label }}</span>
+              <span class="tt-cols__aantal">{%- if c.products_count > 0 -%}{{ c.products_count }} producten{%- else -%}Binnenkort{%- endif -%}</span>
+              <span class="tt-cols__pijl" aria-hidden="true">→</span>
+            </span>
           </a>
         </li>
       {%- endfor -%}
@@ -1393,16 +1553,69 @@ schrijf('tt-collecties', """
 </section>
 """, {
     "name": "TT: alle collecties", "tag": "div", "max_blocks": 6,
-    "settings": [bg("creme"), {"type": "text", "id": "heading", "label": "Kop", "default": "Shop"}],
+    "settings": [bg("creme"), {"type": "text", "id": "label", "label": "Klein label", "default": "Shop"}, {"type": "text", "id": "heading", "label": "Kop", "default": "Alles van Tide Tode"},
+                 {"type": "textarea", "id": "text", "label": "Tekst", "default": "Kies een collectie. Alles is ontworpen door twee surfers, voor onderweg naar zee."}],
     "blocks": [{"type": "collectie", "name": "Collectie", "settings": [
         {"type": "text", "id": "label", "label": "Naam", "default": "Collectie"},
         {"type": "text", "id": "handle", "label": "Handle", "default": "all"},
         {"type": "select", "id": "kleur", "label": "Kleur", "options": [{"value": v, "label": l} for v, l in [("baby", "Baby"), ("rose", "Rose"), ("zand", "Zand")]], "default": "baby"},
+        {"type": "text", "id": "fallback", "label": "Sfeerfoto (asset, zonder .jpg)", "info": "Zolang de collectie geen eigen foto heeft."},
         {"type": "select", "id": "ill", "label": "Tekening (als er nog geen foto is)", "options": [{"value": v, "label": l} for v, l in [("draagtas", "De draagtas"), ("golf", "Golf"), ("busje", "Busje"), ("zon", "Zon"), ("parasol", "Parasol")]], "default": "draagtas"}]}],
     "presets": [{"name": "TT: alle collecties", "blocks": [
-        {"type": "collectie", "settings": {"label": "Draagtassen", "handle": "draagtassen", "kleur": "baby", "ill": "draagtas"}},
-        {"type": "collectie", "settings": {"label": "Surfgear", "handle": "surfgear", "kleur": "rose", "ill": "golf"}},
-        {"type": "collectie", "settings": {"label": "Kleding en accessoires", "handle": "kleding-en-accessoires", "kleur": "zand", "ill": "busje"}}]}]})
+        {"type": "collectie", "settings": {"label": "Draagtassen", "handle": "draagtassen", "kleur": "baby", "ill": "draagtas", "fallback": "tt-foto-lifestyle-busje"}},
+        {"type": "collectie", "settings": {"label": "Surfgear", "handle": "surfgear", "kleur": "rose", "ill": "golf", "fallback": "tt-meer-4"}},
+        {"type": "collectie", "settings": {"label": "Kleding en accessoires", "handle": "kleding-en-accessoires", "kleur": "zand", "ill": "busje", "fallback": "tt-meer-1"}}]}]})
+
+# ---------- AANRADERS: misschien ook iets voor jou (Shopify-aanbevelingen) ----------
+schrijf('tt-aanraders', """
+{%- liquid
+  assign n = section.settings.aantal
+  assign bron = section.settings.collectie
+  if bron == blank
+    assign bron = collections.all
+  endif
+  assign url = ''
+  if product != blank
+    assign url = routes.product_recommendations_url | append: '?section_id=' | append: section.id | append: '&product_id=' | append: product.id | append: '&limit=' | append: n | append: '&intent=related'
+  endif
+  assign heeft = false
+  if recommendations.performed? and recommendations.products_count > 0
+    assign heeft = true
+  endif
+-%}
+{%- capture kaarten -%}
+  {%- if heeft -%}
+    {%- for r in recommendations.products -%}<li class="tt-in">{%- render 'tt-productkaart', p: r -%}</li>{%- endfor -%}
+  {%- else -%}
+    {%- assign telt = 0 -%}
+    {%- for r in bron.products -%}
+      {%- if telt < n and r.handle != product.handle -%}
+        {%- assign telt = telt | plus: 1 -%}
+        <li class="tt-in">{%- render 'tt-productkaart', p: r -%}</li>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+<section class="tt tt-aanraders tt-bg--{{ section.settings.bg }}" data-tt-aanraders{% if url != blank and heeft == false %} data-url="{{ url }}"{% endif %}{% if kaarten == blank %} hidden{% endif %}>
+  <div class="tt-wrap">
+    <div class="tt-aanraders__kop">
+      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
+      {%- if section.settings.link_label != blank -%}<a class="tt-link tt-in" href="{{ section.settings.link | default: routes.all_products_collection_url }}">{{ section.settings.link_label }}</a>{%- endif -%}
+    </div>
+    <ul class="tt-aanraders__rij" data-tt-aanraders-lijst>{{ kaarten }}</ul>
+  </div>
+</section>
+""", {
+    "name": "TT: aanraders", "tag": "div",
+    "settings": [
+        bg("papier"),
+        kop("Misschien ook|iets voor jou"),
+        {"type": "range", "id": "aantal", "label": "Aantal producten", "min": 2, "max": 8, "step": 1, "default": 4},
+        {"type": "collection", "id": "collectie", "label": "Collectie als er nog geen aanbevelingen zijn", "info": "Leeg = alle producten."},
+        {"type": "text", "id": "link_label", "label": "Link", "default": "Bekijk alles"},
+        {"type": "text", "id": "link", "label": "Link (adres)", "default": "/collections/all"},
+    ],
+    "presets": [{"name": "TT: aanraders"}]})
 
 # ---------- DUURZAAMHEID: wat we nu al doen, in een paar punten ----------
 # Alleen keuzes die echt zo zijn. Geen keurmerken, percentages of CO2-cijfers.

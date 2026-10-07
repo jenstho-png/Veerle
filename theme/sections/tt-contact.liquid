@@ -1,38 +1,81 @@
 {%- assign form_id = 'tt-contact-' | append: section.id -%}
-<section class="tt tt-contact tt-bg--{{ section.settings.bg }}" id="contact">
-  <div class="tt-wrap tt-contact__grid">
-    <div class="tt-contact__links">
+<section class="tt tt-contact tt-bg--{{ section.settings.bg }}{% unless section.settings.gegevens %} tt-contact--smal{% endunless %}" id="contact">
+  <div class="tt-wrap">
+    <header class="tt-contact__kop">
+      {%- if section.settings.label != blank -%}<p class="tt-col__label tt-in">{{ section.settings.label }}</p>{%- endif -%}
       {%- if section.settings.h1 -%}
-        <h1 class="tt-kop tt-kop--l">{{ section.settings.heading | default: page.title }}</h1>
+        {%- assign titel = section.settings.heading | default: page.title -%}
+        {%- render 'tt-kop', text: titel, tag: 'h1', class: 'tt-kop--l' -%}
       {%- else -%}
         {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
       {%- endif -%}
-      {%- if section.settings.text != blank -%}<p class="tt-contact__intro">{{ section.settings.text }}</p>{%- endif -%}
-      {%- form 'contact', id: form_id, class: 'tt-form' -%}
-        {%- if form.posted_successfully? -%}
-          <p class="tt-form__ok" role="status" tabindex="-1" autofocus>{{ section.settings.ok }}</p>
-        {%- elsif form.errors -%}
-          <div class="tt-form__fout" role="alert">{{ form.errors | default_errors }}</div>
-        {%- endif -%}
-        <input type="hidden" name="contact[Pagina]" value="{{ section.settings.bron | default: page.title | escape }}">
-        <div class="tt-form__rij">
-          <label class="tt-veld"><span>Naam</span><input type="text" name="contact[Naam]" autocomplete="name" value="{{ form.name }}" required></label>
-          <label class="tt-veld"><span>E-mail</span><input type="email" name="contact[email]" autocomplete="email" spellcheck="false" autocapitalize="off" value="{{ form.email }}" required></label>
-        </div>
-        {%- if section.settings.extra -%}
-        <div class="tt-form__rij">
-          <label class="tt-veld"><span>Telefoon <em>(niet verplicht)</em></span><input type="tel" name="contact[Telefoon]" autocomplete="tel" value="{{ form.phone }}"></label>
-          <label class="tt-veld"><span>Bestelnummer <em>(niet verplicht)</em></span><input type="text" name="contact[Bestelnummer]"></label>
-        </div>
-        {%- endif -%}
-        <label class="tt-veld"><span>{{ section.settings.bericht_label }}</span><textarea name="contact[Bericht]" rows="6" required>{{ form.body }}</textarea></label>
-        <button type="submit" class="tt-knop tt-knop--vol"><span>{{ section.settings.knop }}</span></button>
-      {%- endform -%}
-    </div>
-    {%- if section.settings.gegevens -%}
-    <aside class="tt-contact__kaart" data-tt-kantel>
-      <div class="tt-contact__icoon">{%- render 'tt-logo', variant: 'maan' -%}</div>
-      <p class="tt-contact__kaarttitel">{{ section.settings.kaart_titel }}</p>
+      {%- if section.settings.text != blank -%}<p class="tt-contact__intro tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    </header>
+    <div class="tt-contact__grid">
+      <div class="tt-contact__formkaart tt-in">
+        {%- form 'contact', id: form_id, class: 'tt-form' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="tt-form__ok" role="status" tabindex="-1" autofocus>
+              <span class="tt-form__okicoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+              <div>
+                <p class="tt-form__oktitel">{{ section.settings.ok_titel }}</p>
+                <p>{{ section.settings.ok }}</p>
+              </div>
+            </div>
+          {%- else -%}
+            {%- if form.errors -%}
+              <div class="tt-form__fout" role="alert">
+                <p class="tt-form__fouttitel">Dat ging niet goed</p>
+                {{ form.errors | default_errors }}
+              </div>
+            {%- endif -%}
+            <p class="tt-form__titel">{{ section.settings.form_titel }}</p>
+            <input type="hidden" name="contact[Pagina]" value="{{ section.settings.bron | default: page.title | escape }}">
+            <div class="tt-form__rij">
+              <label class="tt-veld"><span>Naam</span><input type="text" name="contact[Naam]" autocomplete="name" value="{{ form.name }}" placeholder="Je naam" required></label>
+              <label class="tt-veld"><span>E-mail</span><input type="email" name="contact[email]" autocomplete="email" spellcheck="false" autocapitalize="off" value="{{ form.email }}" placeholder="jij@voorbeeld.nl" required{% if form.errors contains 'email' %} aria-invalid="true"{% endif %}></label>
+            </div>
+            {%- if section.settings.extra -%}
+            <div class="tt-form__rij">
+              <label class="tt-veld"><span>Telefoon <em>niet verplicht</em></span><input type="tel" name="contact[Telefoon]" autocomplete="tel" value="{{ form.phone }}"></label>
+              <label class="tt-veld"><span>Bestelnummer <em>niet verplicht</em></span><input type="text" name="contact[Bestelnummer]" placeholder="#1001"></label>
+            </div>
+            {%- endif -%}
+            <label class="tt-veld"><span>{{ section.settings.bericht_label }}</span><textarea name="contact[Bericht]" rows="6" placeholder="{{ section.settings.bericht_hint | escape }}" required>{{ form.body }}</textarea></label>
+            <div class="tt-form__onder">
+              <button type="submit" class="tt-knop"><span>{{ section.settings.knop }}</span><span aria-hidden="true">→</span></button>
+              {%- if settings.tt_reactietijd != blank -%}<p class="tt-form__tijd">{{ settings.tt_reactietijd }}</p>{%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+      {%- if section.settings.gegevens -%}
+      <aside class="tt-contact__zij">
+        <ul class="tt-contact__wegen">
+          {%- if settings.tt_email != blank -%}
+            <li class="tt-in"><a class="tt-contact__weg" href="mailto:{{ settings.tt_email }}">
+              <span class="tt-contact__wegicoon tt-contact__wegicoon--baby">{% render 'tt-icoon', icoon: 'meeuw' %}</span>
+              <span><span class="tt-contact__weglabel">Mail ons</span><span class="tt-contact__wegwaarde">{{ settings.tt_email }}</span></span>
+            </a></li>
+          {%- endif -%}
+          {%- if settings.tt_telefoon != blank -%}
+            <li class="tt-in"><a class="tt-contact__weg" href="tel:{{ settings.tt_telefoon | remove: ' ' }}">
+              <span class="tt-contact__wegicoon tt-contact__wegicoon--rose">{% render 'tt-icoon', icoon: 'schelp' %}</span>
+              <span><span class="tt-contact__weglabel">Bel of app</span><span class="tt-contact__wegwaarde">{{ settings.tt_telefoon }}</span></span>
+            </a></li>
+          {%- endif -%}
+          {%- if settings.social_instagram_link != blank -%}
+            <li class="tt-in"><a class="tt-contact__weg" href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener">
+              <span class="tt-contact__wegicoon tt-contact__wegicoon--zand">{% render 'tt-icoon', icoon: 'zon' %}</span>
+              <span><span class="tt-contact__weglabel">Stuur een DM</span><span class="tt-contact__wegwaarde">Instagram</span></span>
+            </a></li>
+          {%- endif -%}
+        </ul>
+        <div class="tt-contact__kaart tt-in">
+          <div class="tt-contact__kaartkop">
+            <p class="tt-contact__kaarttitel">{{ section.settings.kaart_titel }}</p>
+            {%- if settings.tt_reactietijd != blank -%}<p class="tt-contact__tijd">{{ settings.tt_reactietijd }}</p>{%- endif -%}
+          </div>
       <dl class="tt-gegevens">
         {%- if settings.tt_email != blank -%}<div><dt>E-mail</dt><dd><a href="mailto:{{ settings.tt_email }}">{{ settings.tt_email }}</a></dd></div>{%- endif -%}
         {%- if settings.tt_telefoon != blank -%}<div><dt>Telefoon</dt><dd><a href="tel:{{ settings.tt_telefoon | remove: ' ' }}">{{ settings.tt_telefoon }}</a></dd></div>{%- endif -%}
@@ -40,15 +83,21 @@
         {%- if settings.tt_kvk != blank -%}<div><dt>KvK</dt><dd>{{ settings.tt_kvk }}</dd></div>{%- endif -%}
         {%- if settings.tt_btw != blank -%}<div><dt>Btw</dt><dd>{{ settings.tt_btw }}</dd></div>{%- endif -%}
       </dl>
-      {%- if settings.tt_reactietijd != blank -%}<p class="tt-contact__tijd">{{ settings.tt_reactietijd }}</p>{%- endif -%}
-      <ul class="tt-contact__social">
-        {%- if settings.social_instagram_link != blank -%}<li><a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener">Instagram</a></li>{%- endif -%}
-        {%- if settings.social_tiktok_link != blank -%}<li><a href="{{ settings.social_tiktok_link }}" target="_blank" rel="noopener">TikTok</a></li>{%- endif -%}
-        {%- if settings.social_pinterest_link != blank -%}<li><a href="{{ settings.social_pinterest_link }}" target="_blank" rel="noopener">Pinterest</a></li>{%- endif -%}
-        {%- if settings.social_facebook_link != blank -%}<li><a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener">Facebook</a></li>{%- endif -%}
-      </ul>
-    </aside>
-    {%- endif -%}
+          <ul class="tt-contact__social">
+            {%- if settings.social_tiktok_link != blank -%}<li><a href="{{ settings.social_tiktok_link }}" target="_blank" rel="noopener">TikTok</a></li>{%- endif -%}
+            {%- if settings.social_pinterest_link != blank -%}<li><a href="{{ settings.social_pinterest_link }}" target="_blank" rel="noopener">Pinterest</a></li>{%- endif -%}
+            {%- if settings.social_facebook_link != blank -%}<li><a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener">Facebook</a></li>{%- endif -%}
+          </ul>
+        </div>
+        {%- if section.settings.ill != 'geen' -%}
+          <figure class="tt-contact__ill tt-in tt-teken" aria-hidden="true">
+            {%- render 'tt-ill', naam: section.settings.ill -%}
+            {%- if section.settings.hand != blank -%}<figcaption>{{ section.settings.hand }}</figcaption>{%- endif -%}
+          </figure>
+        {%- endif -%}
+      </aside>
+      {%- endif -%}
+    </div>
   </div>
 </section>
 
@@ -94,6 +143,12 @@
       "default": "creme"
     },
     {
+      "type": "text",
+      "id": "label",
+      "label": "Klein label boven de kop",
+      "default": "Contact"
+    },
+    {
       "type": "checkbox",
       "id": "h1",
       "label": "Kop is de paginatitel (h1)",
@@ -103,19 +158,31 @@
       "type": "text",
       "id": "heading",
       "label": "Kop",
-      "default": "Contact"
+      "default": "Vraag het ons gewoon"
     },
     {
       "type": "textarea",
       "id": "text",
       "label": "Intro",
-      "default": "Vraag over je bestelling, je board of de tas? Stuur ons een bericht."
+      "default": "Vraag over je bestelling, je board of de tas? Stuur ons een bericht. Je krijgt antwoord van ons zelf."
+    },
+    {
+      "type": "text",
+      "id": "form_titel",
+      "label": "Titel boven het formulier",
+      "default": "Stuur een bericht"
     },
     {
       "type": "text",
       "id": "bericht_label",
       "label": "Label berichtveld",
       "default": "Bericht"
+    },
+    {
+      "type": "text",
+      "id": "bericht_hint",
+      "label": "Voorbeeldtekst in het berichtveld",
+      "default": "Waar kunnen we je mee helpen?"
     },
     {
       "type": "checkbox",
@@ -131,9 +198,15 @@
     },
     {
       "type": "text",
+      "id": "ok_titel",
+      "label": "Titel bevestiging",
+      "default": "Bericht verstuurd"
+    },
+    {
+      "type": "text",
       "id": "ok",
       "label": "Bevestiging",
-      "default": "Bedankt, je bericht is verstuurd. We reageren binnen één werkdag."
+      "default": "Bedankt, we reageren binnen één werkdag."
     },
     {
       "type": "text",
@@ -143,7 +216,7 @@
     {
       "type": "checkbox",
       "id": "gegevens",
-      "label": "Bedrijfsgegevens tonen",
+      "label": "Contactwegen en gegevens tonen",
       "default": true
     },
     {
@@ -151,6 +224,44 @@
       "id": "kaart_titel",
       "label": "Titel gegevenskaart",
       "default": "Gegevens"
+    },
+    {
+      "type": "select",
+      "id": "ill",
+      "label": "Tekening",
+      "options": [
+        {
+          "value": "geen",
+          "label": "Geen"
+        },
+        {
+          "value": "parasol",
+          "label": "Parasol"
+        },
+        {
+          "value": "busje",
+          "label": "Busje"
+        },
+        {
+          "value": "golf",
+          "label": "Golf"
+        },
+        {
+          "value": "zon",
+          "label": "Zon"
+        },
+        {
+          "value": "draagtas",
+          "label": "De draagtas"
+        }
+      ],
+      "default": "busje"
+    },
+    {
+      "type": "text",
+      "id": "hand",
+      "label": "Handgeschreven regel bij de tekening",
+      "default": "Tot snel"
     }
   ],
   "presets": [

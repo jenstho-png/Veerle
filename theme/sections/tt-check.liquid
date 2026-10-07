@@ -1,3 +1,15 @@
+{%- assign tt_zie = true -%}
+{%- if template.name == 'product' and product != blank -%}
+  {%- capture tt_groep -%}{%- render 'tt-groep', type: product.type -%}{%- endcapture -%}
+  {%- assign tt_groep = tt_groep | strip -%}
+  {%- assign tt_toon = section.settings.toon | default: 'alle' -%}
+  {%- if tt_toon == 'anders' -%}
+    {%- if tt_groep == 'draagtas' -%}{%- assign tt_zie = false -%}{%- endif -%}
+  {%- elsif tt_toon != 'alle' and tt_toon != tt_groep -%}
+    {%- assign tt_zie = false -%}
+  {%- endif -%}
+{%- endif -%}
+{%- if tt_zie -%}
 {%- liquid
   assign p = section.settings.product
   if p == blank and template.name == 'product' and product != blank
@@ -42,6 +54,7 @@
     </div>
   </div>
 </section>
+{%- endif -%}
 {%- endif -%}
 
 {% schema %}
@@ -149,6 +162,39 @@
       "id": "btn_label",
       "label": "Knop",
       "default": "Bekijk de draagtas"
+    },
+    {
+      "type": "select",
+      "id": "toon",
+      "label": "Tonen op de productpagina bij",
+      "options": [
+        {
+          "value": "alle",
+          "label": "Altijd"
+        },
+        {
+          "value": "draagtas",
+          "label": "Alleen draagtassen"
+        },
+        {
+          "value": "kleding",
+          "label": "Alleen kleding"
+        },
+        {
+          "value": "accessoires",
+          "label": "Alleen accessoires"
+        },
+        {
+          "value": "surfgear",
+          "label": "Alleen surfgear"
+        },
+        {
+          "value": "anders",
+          "label": "Alles behalve draagtassen"
+        }
+      ],
+      "default": "alle",
+      "info": "Alleen op productpagina's. Elders staat de sectie er altijd."
     }
   ],
   "presets": [

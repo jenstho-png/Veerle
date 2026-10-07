@@ -1,3 +1,15 @@
+{%- assign tt_zie = true -%}
+{%- if template.name == 'product' and product != blank -%}
+  {%- capture tt_groep -%}{%- render 'tt-groep', type: product.type -%}{%- endcapture -%}
+  {%- assign tt_groep = tt_groep | strip -%}
+  {%- assign tt_toon = section.settings.toon | default: 'alle' -%}
+  {%- if tt_toon == 'anders' -%}
+    {%- if tt_groep == 'draagtas' -%}{%- assign tt_zie = false -%}{%- endif -%}
+  {%- elsif tt_toon != 'alle' and tt_toon != tt_groep -%}
+    {%- assign tt_zie = false -%}
+  {%- endif -%}
+{%- endif -%}
+{%- if tt_zie -%}
 {%- capture spots -%}[{%- for block in section.blocks -%}{"naam":{{ block.settings.naam | json }},"lat":{{ block.settings.lat | plus: 0 }},"lon":{{ block.settings.lon | plus: 0 }}}{% unless forloop.last %},{% endunless %}{%- endfor -%}]{%- endcapture -%}
 <section class="tt tt-surfcheck tt-bg--{{ section.settings.bg }}" data-tt-surfcheck data-sleutel="{{ settings.tt_meteo_key | escape }}" id="surfcheck">
   <script type="application/json" data-tt-spots>{{ spots }}</script>
@@ -33,6 +45,7 @@
     </div>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {
@@ -100,6 +113,39 @@
       "id": "btn_link",
       "label": "Link (adres)",
       "default": "/collections/surfgear"
+    },
+    {
+      "type": "select",
+      "id": "toon",
+      "label": "Tonen op de productpagina bij",
+      "options": [
+        {
+          "value": "alle",
+          "label": "Altijd"
+        },
+        {
+          "value": "draagtas",
+          "label": "Alleen draagtassen"
+        },
+        {
+          "value": "kleding",
+          "label": "Alleen kleding"
+        },
+        {
+          "value": "accessoires",
+          "label": "Alleen accessoires"
+        },
+        {
+          "value": "surfgear",
+          "label": "Alleen surfgear"
+        },
+        {
+          "value": "anders",
+          "label": "Alles behalve draagtassen"
+        }
+      ],
+      "default": "alle",
+      "info": "Alleen op productpagina's. Elders staat de sectie er altijd."
     }
   ],
   "blocks": [

@@ -1,36 +1,120 @@
-{%- assign sorteer = collection.sort_by | default: collection.default_sort_by -%}
+{%- liquid
+  assign sorteer = collection.sort_by | default: collection.default_sort_by
+  assign kop_blok = nil
+  for block in section.blocks
+    if block.settings.handle == collection.handle
+      assign kop_blok = block
+    endif
+  endfor
+  assign intro = collection.description
+  if intro == blank and kop_blok != nil
+    assign intro = kop_blok.settings.intro
+  endif
+  assign actief = 0
+  for filter in collection.filters
+    assign actief = actief | plus: filter.active_values.size
+  endfor
+  assign ill = 'golf'
+  if kop_blok != nil and kop_blok.settings.ill != blank
+    assign ill = kop_blok.settings.ill
+  endif
+-%}
 <section class="tt tt-col tt-bg--{{ section.settings.bg }}">
-  <div class="tt-wrap">
-    <header class="tt-col__kop">
-      <h1 class="tt-kop tt-kop--l">{{ collection.title }}</h1>
-      {%- if collection.description != blank -%}<div class="tt-col__intro">{{ collection.description }}</div>{%- endif -%}
-    </header>
-    {%- if section.blocks.size > 0 -%}
-    <nav class="tt-col__nav" aria-label="Collecties">
-      {%- for block in section.blocks -%}
-        {%- assign doel = routes.collections_url | append: '/' | append: block.settings.handle -%}
-        <a href="{{ doel }}" {{ block.shopify_attributes }}{% if collection.handle == block.settings.handle %} aria-current="page"{% endif %}>{{ block.settings.label }}</a>
-      {%- endfor -%}
-    </nav>
-    {%- endif -%}
-    <div class="tt-col__balk">
-      <p>{{ collection.products_count }} {% if collection.products_count == 1 %}product{% else %}producten{% endif %}</p>
-      {%- if collection.sort_options.size > 0 -%}
-      <label class="tt-col__sort"><span>Sorteer</span>
-        <select data-tt-sorteer>
-          {%- for o in collection.sort_options -%}<option value="{{ o.value }}"{% if o.value == sorteer %} selected{% endif %}>{{ o.name }}</option>{%- endfor -%}
-        </select>
-      </label>
-      {%- endif -%}
+  <header class="tt-wrap tt-col__held{% if section.settings.beeld %} tt-col__held--beeld{% endif %}">
+    <div class="tt-col__tekst">
+      <p class="tt-col__label tt-in">{{ section.settings.label }}</p>
+      {%- assign titel = collection.title | escape -%}
+      {%- render 'tt-kop', text: titel, tag: 'h1', class: 'tt-kop--l' -%}
+      {%- if intro != blank -%}<div class="tt-col__intro tt-in">{{ intro }}</div>{%- endif -%}
     </div>
+    {%- if section.settings.beeld -%}
+      <div class="tt-col__beeld tt-onthul">
+        {%- if collection.image -%}
+          {{ collection.image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 990px) 42vw, 100vw', widths: '600, 900, 1200, 1600', alt: collection.title, class: 'tt-beeld__img' }}
+        {%- elsif kop_blok != nil and kop_blok.settings.fallback != blank -%}
+          {%- render 'tt-beeld', fallback: kop_blok.settings.fallback, alt: collection.title, sizes: '(min-width: 990px) 42vw, 100vw', loading: 'eager' -%}
+        {%- else -%}
+          {%- render 'tt-beeld', fallback: section.settings.fallback, alt: collection.title, sizes: '(min-width: 990px) 42vw, 100vw', loading: 'eager' -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </header>
+  <div class="tt-wrap">
+    <div class="tt-col__balk">
+      {%- if section.blocks.size > 0 -%}
+        <nav class="tt-col__nav" aria-label="Collecties">
+          {%- for block in section.blocks -%}
+            {%- assign doel = routes.collections_url | append: '/' | append: block.settings.handle -%}
+            <a href="{{ doel }}" {{ block.shopify_attributes }}{% if collection.handle == block.settings.handle %} aria-current="page"{% endif %}>{{ block.settings.label }}</a>
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
+      <div class="tt-col__acties">
+        <p class="tt-col__aantal">{{ collection.products_count }} {% if collection.products_count == 1 %}product{% else %}producten{% endif %}</p>
+        {%- if section.settings.filters and collection.filters.size > 0 -%}
+          <details class="tt-col__filter">
+            <summary>Filter{% if actief > 0 %} <span>{{ actief }}</span>{% endif %}</summary>
+            <div class="tt-col__paneel">
+              {%- for filter in collection.filters -%}
+                {%- if filter.type == 'list' or filter.type == 'boolean' -%}
+                  <div class="tt-col__groep">
+                    <p class="tt-col__groepnaam">{{ filter.label }}</p>
+                    <div class="tt-col__keuzes">
+                      {%- for value in filter.values -%}
+                        {%- if value.count > 0 or value.active -%}
+                          <a class="tt-col__keuze{% if value.active %} is-aan{% endif %}" href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}"{% if value.active %} aria-current="true"{% endif %}>{{ value.label }}<span>{{ value.count }}</span></a>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </details>
+        {%- endif -%}
+        {%- if collection.sort_options.size > 0 -%}
+          <label class="tt-col__sort"><span class="visually-hidden">Sorteer</span>
+            <select data-tt-sorteer aria-label="Sorteer">
+              {%- for o in collection.sort_options -%}<option value="{{ o.value }}"{% if o.value == sorteer %} selected{% endif %}>{{ o.name }}</option>{%- endfor -%}
+            </select>
+          </label>
+        {%- endif -%}
+      </div>
+    </div>
+    {%- if actief > 0 -%}
+      <div class="tt-col__actief">
+        {%- for filter in collection.filters -%}{%- for value in filter.active_values -%}
+          <a class="tt-col__chip" href="{{ value.url_to_remove }}">{{ value.label }}<span aria-hidden="true">×</span><span class="visually-hidden">Filter weghalen</span></a>
+        {%- endfor -%}{%- endfor -%}
+        <a class="tt-col__wis" href="{{ collection.url }}?sort_by={{ sorteer }}">Alles wissen</a>
+      </div>
+    {%- endif -%}
     {%- paginate collection.products by section.settings.per_pagina -%}
       <ul class="tt-col__grid">
         {%- for product in collection.products -%}
-          <li class="tt-in" style="--d: {{ forloop.index0 | modulo: 4 | times: 0.08 }}s">
+          <li class="tt-in">
             {%- if forloop.index < 5 -%}{%- render 'tt-productkaart', p: product, laden: 'eager' -%}{%- else -%}{%- render 'tt-productkaart', p: product -%}{%- endif -%}
           </li>
         {%- else -%}
-          <li class="tt-col__leeg">Er staan nog geen producten in deze collectie. <a href="{{ routes.all_products_collection_url }}">Bekijk alles</a></li>
+          <li class="tt-col__leeg">
+            <div class="tt-col__leegkaart tt-in tt-teken">
+              <div class="tt-col__leegbeeld">{%- render 'tt-ill', naam: ill -%}</div>
+              <div class="tt-col__leegtekst">
+                {%- if actief > 0 -%}
+                  <h2 class="tt-kop tt-kop--m">Niets gevonden</h2>
+                  <p>Met deze filters staat er niets in de shop. Haal een filter weg of bekijk alles.</p>
+                  <div class="tt-knoppen"><a class="tt-knop" href="{{ collection.url }}">Filters wissen<span aria-hidden="true">→</span></a></div>
+                {%- else -%}
+                  <h2 class="tt-kop tt-kop--m">{{ section.settings.leeg_kop }}</h2>
+                  <p>{{ section.settings.leeg_tekst }}</p>
+                  <div class="tt-knoppen">
+                    <a class="tt-knop" href="{{ routes.collections_url }}">Alle collecties<span aria-hidden="true">→</span></a>
+                    <a class="tt-link" href="{{ routes.root_url }}">Naar de homepage</a>
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          </li>
         {%- endfor -%}
       </ul>
       {%- if paginate.pages > 1 -%}<nav class="tt-col__paginas" aria-label="Pagina's">{{ paginate | default_pagination: next: 'Volgende', previous: 'Vorige' }}</nav>{%- endif -%}
@@ -81,6 +165,32 @@
       "default": "creme"
     },
     {
+      "type": "text",
+      "id": "label",
+      "label": "Klein label boven de titel",
+      "default": "Collectie"
+    },
+    {
+      "type": "checkbox",
+      "id": "beeld",
+      "label": "Sfeerfoto naast de titel",
+      "default": true,
+      "info": "De foto van de collectie, of anders de sfeerfoto van de collectieknop hieronder."
+    },
+    {
+      "type": "text",
+      "id": "fallback",
+      "label": "Sfeerfoto als niets anders past (asset)",
+      "default": "tt-foto-mood-2"
+    },
+    {
+      "type": "checkbox",
+      "id": "filters",
+      "label": "Filters tonen",
+      "default": true,
+      "info": "Zet filters aan in de app Search & Discovery."
+    },
+    {
       "type": "range",
       "id": "per_pagina",
       "label": "Producten per pagina",
@@ -88,6 +198,22 @@
       "max": 48,
       "step": 4,
       "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Lege collectie"
+    },
+    {
+      "type": "text",
+      "id": "leeg_kop",
+      "label": "Kop",
+      "default": "Binnenkort in de shop"
+    },
+    {
+      "type": "textarea",
+      "id": "leeg_tekst",
+      "label": "Tekst",
+      "default": "We maken de laatste foto's. Kijk zo nog even rond, of kom over een paar dagen terug."
     }
   ],
   "blocks": [
@@ -106,6 +232,45 @@
           "id": "handle",
           "label": "Handle van de collectie",
           "default": "all"
+        },
+        {
+          "type": "textarea",
+          "id": "intro",
+          "label": "Intro (als de collectie zelf geen tekst heeft)"
+        },
+        {
+          "type": "text",
+          "id": "fallback",
+          "label": "Sfeerfoto (asset, zonder .jpg)",
+          "info": "Wordt gebruikt zolang de collectie geen eigen foto heeft."
+        },
+        {
+          "type": "select",
+          "id": "ill",
+          "label": "Tekening bij een lege collectie",
+          "options": [
+            {
+              "value": "draagtas",
+              "label": "De draagtas"
+            },
+            {
+              "value": "golf",
+              "label": "Golf"
+            },
+            {
+              "value": "busje",
+              "label": "Busje"
+            },
+            {
+              "value": "zon",
+              "label": "Zon"
+            },
+            {
+              "value": "parasol",
+              "label": "Parasol"
+            }
+          ],
+          "default": "golf"
         }
       ]
     }
@@ -118,28 +283,40 @@
           "type": "link",
           "settings": {
             "label": "Alles",
-            "handle": "all"
+            "handle": "all",
+            "fallback": "tt-foto-mood-2",
+            "ill": "zon",
+            "intro": "Draagtassen, kleding en de kleine dingen die je elke sessie meeneemt."
           }
         },
         {
           "type": "link",
           "settings": {
             "label": "Draagtassen",
-            "handle": "draagtassen"
+            "handle": "draagtassen",
+            "fallback": "tt-foto-lifestyle-busje",
+            "ill": "draagtas",
+            "intro": "Negen draagtassen voor je surfboard. Board erin, tas over je schouder en je handen zijn vrij."
           }
         },
         {
           "type": "link",
           "settings": {
             "label": "Surfgear",
-            "handle": "surfgear"
+            "handle": "surfgear",
+            "fallback": "tt-meer-4",
+            "ill": "golf",
+            "intro": "Wax voor elk water, een waxkam, karabijnhaken en stickers voor je board."
           }
         },
         {
           "type": "link",
           "settings": {
             "label": "Kleding en accessoires",
-            "handle": "kleding-en-accessoires"
+            "handle": "kleding-en-accessoires",
+            "fallback": "tt-meer-1",
+            "ill": "busje",
+            "intro": "Zware shirts met een verhaal op de rug, een hoodie voor na het surfen en alles voor op het strand."
           }
         }
       ]

@@ -1,3 +1,15 @@
+{%- assign tt_zie = true -%}
+{%- if template.name == 'product' and product != blank -%}
+  {%- capture tt_groep -%}{%- render 'tt-groep', type: product.type -%}{%- endcapture -%}
+  {%- assign tt_groep = tt_groep | strip -%}
+  {%- assign tt_toon = section.settings.toon | default: 'alle' -%}
+  {%- if tt_toon == 'anders' -%}
+    {%- if tt_groep == 'draagtas' -%}{%- assign tt_zie = false -%}{%- endif -%}
+  {%- elsif tt_toon != 'alle' and tt_toon != tt_groep -%}
+    {%- assign tt_zie = false -%}
+  {%- endif -%}
+{%- endif -%}
+{%- if tt_zie -%}
 <section class="tt tt-kaarten tt-bg--{{ section.settings.bg }}">
   <div class="tt-wrap">
     {%- if section.settings.heading != blank -%}<div class="tt-kaarten__kop">{%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}</div>{%- endif -%}
@@ -7,11 +19,13 @@
           <div class="tt-kaarten__ill">{%- render 'tt-ill', naam: block.settings.ill -%}</div>
           <h3>{{ block.settings.titel }}</h3>
           <p>{{ block.settings.tekst }}</p>
+          {%- if block.settings.link_label != blank -%}<a class="tt-link tt-kaarten__link" href="{{ block.settings.link | default: routes.all_products_collection_url }}">{{ block.settings.link_label }}</a>{%- endif -%}
         </article>
       {%- endfor -%}
     </div>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {
@@ -61,6 +75,39 @@
       "label": "Kop",
       "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
       "default": "Service"
+    },
+    {
+      "type": "select",
+      "id": "toon",
+      "label": "Tonen op de productpagina bij",
+      "options": [
+        {
+          "value": "alle",
+          "label": "Altijd"
+        },
+        {
+          "value": "draagtas",
+          "label": "Alleen draagtassen"
+        },
+        {
+          "value": "kleding",
+          "label": "Alleen kleding"
+        },
+        {
+          "value": "accessoires",
+          "label": "Alleen accessoires"
+        },
+        {
+          "value": "surfgear",
+          "label": "Alleen surfgear"
+        },
+        {
+          "value": "anders",
+          "label": "Alles behalve draagtassen"
+        }
+      ],
+      "default": "alle",
+      "info": "Alleen op productpagina's. Elders staat de sectie er altijd."
     }
   ],
   "blocks": [
@@ -134,6 +181,16 @@
           "type": "textarea",
           "id": "tekst",
           "label": "Tekst"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": "Link (adres)"
         }
       ]
     }
