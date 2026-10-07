@@ -133,12 +133,22 @@ def band_textuur():
 
 
 def band_pad(hoeken):
-    """Eén doorlopende band: van de onderrail over het vak omhoog, een ronde lus, en weer naar de onderrail."""
-    lo, ro = hoeken[3], hoeken[2]
-    voet_l = np.array([lo[0] + 150, BY + WB * 0.62])
-    voet_r = np.array([ro[0] - 150, BY + WB * 0.62])
-    R = BAND * 1.9                                   # binnenbocht ruim groter dan de bandbreedte
-    c = np.array([(voet_l[0] + voet_r[0]) / 2, BY - WB / 2 - 330 + R])
+    """Eén doorlopende band, maten in tegels gemeten op de fabrieksfoto:
+    strengen op +-3,15 tegel bij de onderrand en +-2 tegel bij de bovenrand van het vak,
+    lus 3,35 tegelhoogtes boven het vak."""
+    tw, th = 98 * TEGEL, 115 * TEGEL
+    xm = (hoeken[0, 0] + hoeken[1, 0]) / 2
+    top_y, bot_y = hoeken[0, 1], hoeken[2, 1]
+    voet_y = BY + WB * 0.62
+
+    def langs(dx_onder, dx_boven, y):
+        t = (y - bot_y) / (top_y - bot_y)
+        return xm + dx_onder + (dx_boven - dx_onder) * t
+    voet_l = np.array([langs(-3.15 * tw, -1.99 * tw, voet_y), voet_y])
+    voet_r = np.array([langs(3.15 * tw, 1.99 * tw, voet_y), voet_y])
+    top_lus = top_y - 3.35 * th
+    R = 0.95 * tw
+    c = np.array([xm, top_lus + R])
 
     def raakpunten(v):
         d = v - c; L = np.linalg.norm(d)
@@ -383,10 +393,10 @@ if __name__ == '__main__':
         beeld = maak(None if h == 'draagtas-tegel' else variant_stof(h), band=hexkleur(TASSEN[h]))
         xm = BX0 + LB * 0.5
         # stringer altijd in het midden van het beeld
-        bewaar(uitsnede(beeld, xm, BY, 1480, 1850), DOEL / f'{h}-1.jpg')
+        bewaar(uitsnede(beeld, xm, BY, 1720, 2150), DOEL / f'{h}-1.jpg')
         bewaar(portret(beeld), DOEL / f'{h}-2.jpg')
         # detail: label en het hele handvat
-        bewaar(uitsnede(beeld, xm, BY - WB / 2 - 120, 1000, 1250), DOEL / f'{h}-3.jpg')
+        bewaar(uitsnede(beeld, xm, 790, 1080, 1350), DOEL / f'{h}-3.jpg')
         if h == 'draagtas-tegel':
             for n in (1, 2, 3):
                 src = DOEL / f'{h}-{n}.jpg'

@@ -46,9 +46,10 @@ def huid(lengte, breedte, kort=0.6, band_kleur=(0.40, 0.50, 0.62), bandbreedte=N
     rgba[..., 3] = m
     # twee bandstrengen van rail tot rail (de band loopt rondom de tas)
     bb = bandbreedte or H * 47 / 98 / 5.5 * 1.0 * (98 / 98)
+    tegel_x = H / 5.5
     for kant in (-1, 1):
-        x0 = xm + kant * (l2 - W * 0.12)
-        x1 = xm + kant * (k2 - W * 0.06)
+        x0 = xm + kant * 3.15 * tegel_x      # op de foto gemeten: +-3,15 tegel bij de lange rand
+        x1 = xm + kant * 1.99 * tegel_x      # en +-2 tegels bij de korte rand
         p0, p1 = np.array([x0, -10.0]), np.array([x1, H + 10.0])
         u = (p1 - p0) / np.linalg.norm(p1 - p0); n = np.array([-u[1], u[0]])
         yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
@@ -148,7 +149,7 @@ def band_laag(shape, pad, breedte, kleur, draai=False):
     if draai:
         # een hangende band draait: soms zie je hem plat, soms bijna op zijn kant
         tot = lengte[-1]
-        c = np.abs(np.cos(ln / tot * np.pi * 1.6 + 0.4))
+        c = np.clip(np.abs(np.cos((ln / tot - 0.5) * np.pi * 1.1)) * 1.15, 0, 1)    # plat waar hij op het vak ligt, gedraaid in de bocht
         hw = breedte / 2 * (0.35 + 0.65 * c)
     else:
         c = np.ones_like(dw); hw = breedte / 2
@@ -166,22 +167,33 @@ def band_laag(shape, pad, breedte, kleur, draai=False):
     return rgb, al
 
 
-def hangende_lus(foto, M, W, H, kort, uit_richting, boardbreedte, kleur, breedte):
-    """Lus die aan de zijkant uit de tas komt en door de zwaartekracht naar beneden hangt."""
-    xm, k2 = W / 2, W * kort / 2
-    tex = np.float32([[[xm - (k2 - W * 0.06), H]], [[xm + (k2 - W * 0.06), H]]])
-    p1, p2 = cv2.perspectiveTransform(tex, M)[:, 0]
-    uit = np.asarray(uit_richting, np.float32); uit /= np.linalg.norm(uit)
+def hangende_lus(foto, M, W, H, boardbreedte, kleur, breedte):
+    """De lus loopt door vanuit de twee strengen op het vak, over de rail, en hangt dan met de zwaartekracht naar beneden.
+    Lengte uit de fabrieksfoto: ~10 tegels band buiten het board."""
+    xm = W / 2; tg = H / 5.5
+    def foto_pt(x, y):
+        return cv2.perspectiveTransform(np.float32([[[x, y]]]), M)[0, 0]
+    strengen = []
+    for kant in (-1, 1):
+        x0, x1 = xm + kant * 3.15 * tg, xm + kant * 1.99 * tg
+        binnen = foto_pt(x0 + (x1 - x0) * 0.8, H * 0.8)     # op de streng, nog op het vak
+        rail = foto_pt(x1, H)                               # waar de streng het board verlaat
+        richting = rail - binnen; richting /= np.linalg.norm(richting)
+        strengen.append((binnen, rail, richting))
+    strengen.sort(key=lambda t: t[1][1])                    # boven eerst
+    (b1, e1, d1), (b2, e2, d2) = strengen
+    tegel = boardbreedte / 5.5
     neer = np.array([0, 1], np.float32)
-    onder = p1 if p1[1] > p2[1] else p2
-    boven = p2 if p1[1] > p2[1] else p1
-    L = boardbreedte * 0.8
-    midden = onder + neer * L + uit * boardbreedte * 0.16
-    a1 = boven + uit * boardbreedte * 0.1 + neer * (onder[1] - boven[1] + L * 0.55)
-    a2 = onder + uit * boardbreedte * 0.02 + neer * L * 0.45
-    p1, p2 = boven, onder
-    b1 = midden - (p2 - p1) / np.linalg.norm(p2 - p1) * boardbreedte * 0.12 * np.sign((p2 - p1)[1] + 1e-6) + neer * -L * 0.05
-    pad = catmull([p1, a1, midden, a2, p2], n=80)
+    uit = (d1 + d2) / 2; uit[1] = 0; uit /= (np.linalg.norm(uit) + 1e-6)
+    diepte = 3.0 * tegel                                    # onderkant lus onder het onderste aanhechtpunt
+    onder = e2 + neer * diepte + uit * tegel * 0.55
+    pad = catmull([b1, e1,
+                   e1 + d1 * tegel * 0.45 + neer * tegel * 0.25,
+                   e1 + uit * tegel * 0.95 + neer * (e2[1] - e1[1] + diepte * 0.45),
+                   onder,
+                   e2 + uit * tegel * 0.35 + neer * diepte * 0.5,
+                   e2 + d2 * tegel * 0.3 + neer * tegel * 0.15,
+                   e2, b2], n=70)
     return band_laag(foto.shape[:2], pad, breedte, kleur, draai=True)
 
 
@@ -195,44 +207,48 @@ def bewaar(img, pad, kwaliteit=86):
 
 def busje():
     foto = laad('tt-foto-mood-6.jpg')
-    # boardas: van staart (150,1270) naar neus (420,330)
-    u = np.array([420 - 150, 330 - 1270], np.float32); u /= np.linalg.norm(u)
-    n = np.array([-u[1], u[0]])            # dwars, naar links
-    c = np.array([318, 690], np.float32)   # midden van het vak op het board
-    half_l, half_b = 175, 132              # halve lengte langs het board, halve breedte (rail tot rail)
-    # huid: x langs het board (lange zijde links = rail links), y dwars van linkerrail naar rechterrail
+    neus, staart = np.array([420, 330], np.float32), np.array([150, 1270], np.float32)
+    u = neus - staart; u /= np.linalg.norm(u)
+    n = np.array([-u[1], u[0]])
+    c = (neus + staart) / 2                 # balanspunt: midden van het board
+    half_b = 128
+    half_l = 4.48 * (2 * half_b) / 5.5      # lange rand 9 tegels, board ~5,5 tegels breed
     quad = [c - u * half_l + n * half_b, c + u * half_l + n * half_b, c + u * half_l - n * half_b, c - u * half_l - n * half_b]
-    # board: alles lichte binnen de omtrek (met de rails), rest niet beplakken
-    L = foto @ np.array([.299, .587, .114], np.float32)
-    bm = np.zeros(L.shape, np.uint8)
+    bm = np.zeros(foto.shape[:2], np.uint8)
     rand = np.array([[455, 330], [470, 420], [455, 600], [415, 830], [360, 980], [300, 1100], [240, 1270], [80, 1270], [95, 1050], [150, 840], [215, 620], [290, 440], [380, 340]], np.int32)
     cv2.fillPoly(bm, [rand], 1)
     bm = cv2.GaussianBlur(bm.astype(np.float32), (0, 0), 1.5)
-    rgba = huid(half_l * 2, half_b * 2, band_kleur=(0.40, 0.49, 0.6))
+    rgba = huid(half_l * 2, half_b * 2, kort=0.54, band_kleur=(0.40, 0.49, 0.6))
     H, W = rgba.shape[:2]
     M = cv2.getPerspectiveTransform(np.float32([[0, 0], [W, 0], [W, H], [0, H]]), np.float32(quad))
-    lus = hangende_lus(foto, M, W, H, 0.6, -n, half_b * 2, (0.40, 0.49, 0.6), half_b * 2 / 5.5 * 47 / 98)
+    lus = hangende_lus(foto, M, W, H, half_b * 2, (0.40, 0.49, 0.6), half_b * 2 / 5.5 * 47 / 98)
     return plak(foto, rgba, quad, bm, verzadiging=0.78, lus=lus)
-
-
 
 
 def knuffel():
     foto = laad('tt-foto-stap-1.jpg')
     u = np.array([0.0, -1.0], np.float32); n = np.array([1.0, 0.0], np.float32)
-    c = np.array([492, 905], np.float32)
-    half_l, half_b = 168, 164
+    neus_y, staart_y = 141, 1382
+    c = np.array([492, (neus_y + staart_y) / 2], np.float32)   # balanspunt
+    half_b = 160
+    half_l = 4.48 * (2 * half_b) / 5.5
     quad = [c - u * half_l + n * half_b, c + u * half_l + n * half_b, c + u * half_l - n * half_b, c - u * half_l - n * half_b]
     bm = np.zeros(foto.shape[:2], np.uint8)
-    rand = np.array([[350, 735], [634, 735], [650, 900], [651, 1050], [646, 1110], [336, 1110], [331, 1050], [330, 900]], np.int32)
+    rand = np.array([[348, 420], [636, 420], [650, 600], [652, 900], [646, 1110], [336, 1110], [330, 900], [334, 600]], np.int32)
     cv2.fillPoly(bm, [rand], 1)
-    bm = cv2.GaussianBlur(bm.astype(np.float32), (0, 0), 1.5)
-    rgba = huid(half_l * 2, half_b * 2, band_kleur=(0.40, 0.49, 0.6), zaad=9)
+    # armen en handen blijven voor de tas: huid en shirt zijn veel verzadigder of donkerder dan het board
+    hsv = cv2.cvtColor((foto * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
+    arm = ((hsv[..., 1] > 140) | (hsv[..., 2] < 35)).astype(np.uint8)
+    arm = cv2.morphologyEx(arm, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+    arm = cv2.morphologyEx(arm, cv2.MORPH_CLOSE, np.ones((9, 9), np.uint8))
+    arm = cv2.dilate(arm, np.ones((3, 3), np.uint8))
+    bm = bm * (1 - arm)
+    bm = cv2.GaussianBlur(bm.astype(np.float32), (0, 0), 1.2)
+    rgba = huid(half_l * 2, half_b * 2, kort=0.54, band_kleur=(0.40, 0.49, 0.6), zaad=9)
     H, W = rgba.shape[:2]
     M = cv2.getPerspectiveTransform(np.float32([[0, 0], [W, 0], [W, H], [0, H]]), np.float32(quad))
-    lus = hangende_lus(foto, M, W, H, 0.6, -n, half_b * 2, (0.40, 0.49, 0.6), half_b * 2 / 5.5 * 47 / 98)
+    lus = hangende_lus(foto, M, W, H, half_b * 2, (0.40, 0.49, 0.6), half_b * 2 / 5.5 * 47 / 98)
     return plak(foto, rgba, quad, bm, licht=0.93, verzadiging=0.62, lus=lus)
-
 
 if __name__ == '__main__':
     DOEL = ROOT / 'docs' / 'producten' / 'fabriek'
