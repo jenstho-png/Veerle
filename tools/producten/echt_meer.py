@@ -253,6 +253,23 @@ def tas():
     E.bewaar(t, 'canvas-tas-2', vul=1.0, uitsnede=tuple(int(v * s) for v in (712, 34, 1696, 1264)))
 
 
+# ---------- hoodie ----------
+def hoodie():
+    """Achterkant, gedragen (handen aan de capuchon, buiten bij een amfitheater): witte hoodie wordt baby blue
+    met de busjesprint groot op de rug."""
+    h = foto('hoodie-wit-rug-2.jpg')
+    x0, y0, x1, y1 = 950, 150, 2700, 2000
+    deel = h[y0:y1, x0:x1]
+    m = np.zeros(h.shape[:2], np.uint8)
+    m[y0:y1, x0:x1] = (E.shirt_masker(deel) > 0.5)
+    L = MK.helderheid(h)
+    ref = float(np.percentile(L[m > 0], 93))
+    h, _ = kleur_rand(h, m, BABYBLAUW, gamma=1.1, ref=ref, rand=4)
+    h = MK.zet_print(h, E.art('hoodie-busje-rugprint-los.png'), 1835, 1010, 500, draai=-1.5, verplaatsing=9,
+                     schaduw_sterkte=0.95, structuur=0.55, masker=zacht(m, 1.2))
+    E.bewaar(h, 'hoodie-busje-2', vul=1.0, uitsnede=(965, 70, 2685, 2220))
+
+
 def borduur_op(img, L_bron, ref, a, cx, cy, breedte, draai=0, sterkte=0.8):
     """E.borduur, en daarna het licht van de stof (uit de bronfoto) ook over het borduursel."""
     uit = E.borduur(img, a, cx, cy, breedte, draai)

@@ -254,7 +254,7 @@ def stapel(soort):
 # ---------- -2: één blok rechtop, warm licht ----------
 # gemeten op wax2-blok-1.jpg (3000 x 2000)
 BLOK_SILHOUET = [(1318, 906), (1332, 896), (2386, 890), (2400, 902), (2398, 1722), (2388, 1732), (1342, 1730), (1331, 1718)]
-BLOK_BAND = [(1455, 897), (2327, 891), (2327, 1731), (1455, 1730)]
+BLOK_BAND = [(1455, 899), (2327, 893), (2327, 1730), (1455, 1729)]
 
 
 def vlakfit(Lb, m, graad=2):
@@ -318,6 +318,10 @@ def blok(soort):
     Lp = Lp * (1 + vezel + vlek * 0.02 / max(vlek.std(), 1e-6) * 0.5)
     wit = np.percentile(Lp[band > 0], 90)
     img = druk(img, art(f'band-voor-{soort}'), BLOK_BAND, wit=wit, blur=1.0, structuur=0.0, licht=Lp, korrel=0.008, cast=cast, rand=1.0)
+    # contactschaduw onderaan: waar blok en wikkel op tafel staan wordt het donkerder
+    yy = np.arange(h, dtype=np.float32)[:, None]
+    onder = np.clip((yy - 1712) / 18, 0, 1) ** 1.6 * (yy < 1733) * (band > 0)
+    img = img * (1 - 0.28 * cv2.GaussianBlur(onder.astype(np.float32), (0, 0), 1.2)[..., None])
     # 5. blad op de voorgrond blijft ervoor: zachte matte op grijsgroen en donker, alleen rond de twee blaadjes
     gebied = np.zeros((h, w), np.float32)
     gebied[1655:1755, 1875:2015] = 1

@@ -50,7 +50,7 @@ BREED, LANG = 90.0, 170.0          # cm
 TEGEL = 16.8                        # cm per tegel: 5 over de breedte, 8 over de lengte
 VELD = (3.0, 17.8, 87.0, 152.2)     # tegelveld u0, v0, u1, v1 in cm
 KADER_V = VELD[1] - 1.3             # dun navy kader rond het veld
-MOTIEVEN = [1, 6, 2, 0, 3]          # tegels uit de stof die als jacquard goed lezen
+MOTIEVEN = [1, 5, 2, 0, 3]          # tegels uit de stof die als jacquard goed lezen
 SPIEGEL = {2: False}                # de molen (tegel 2) is alleen draaisymmetrisch
 
 
@@ -209,8 +209,23 @@ def strepen_weg(img, dikte=31):
     return uit
 
 
+def weefsel(U, V, sterkte, garen=0.11):
+    """Geweven structuur in stofcoördinaten: elke schering- en inslagdraad (ca. 1 mm) is net iets lichter of donkerder,
+    met wat ongelijkmatigheid langs de draad (katoen is nooit egaal)."""
+    rng = np.random.default_rng(7)
+    sch = rng.normal(0, 1, 4096).astype(np.float32)
+    ins = rng.normal(0, 1, 4096).astype(np.float32)
+    iu = np.mod(np.floor(U / garen).astype(np.int64), 4096)
+    iv = np.mod(np.floor(V / garen).astype(np.int64), 4096)
+    slub = cv2.resize(rng.normal(0, 1, (256, 256)).astype(np.float32), (1024, 1024), interpolation=cv2.INTER_CUBIC)
+    su = np.mod((U * 6).astype(np.int64), 1024); sv = np.mod((V * 1.5).astype(np.int64), 1024)
+    langs = 0.6 + 0.4 * slub[np.mod((V * 0.7).astype(np.int64), 1024), np.mod(iu, 1024)]
+    t = (0.5 * sch[iu] + 0.35 * ins[iv]) * langs + 0.6 * slub[sv, su]
+    return 1 + sterkte * np.clip(t, -2.5, 2.5)
+
+
 def breng_aan(foto, masker, U, V, ppc, ontw, labelm=None, schoon=None, verplaatsing=0.35, detail=1.0, ref=None, gamma=1.0,
-              detail_sigma=1.3, schaduw_sigma=1.6, wrap=False, waas=0.0):
+              detail_sigma=1.3, schaduw_sigma=1.6, wrap=False, waas=0.0, weef=0.0, rust=None):
     """Ontwerp (bij ppc px/cm) via de coördinaatkaarten U, V (cm) op de foto zetten.
 
     schoon: de foto zonder de streepjes van de stockhanddoek (voor de schaduw); detail: sterkte van de stofstructuur."""
@@ -220,6 +235,10 @@ def breng_aan(foto, masker, U, V, ppc, ontw, labelm=None, schoon=None, verplaats
     gx = cv2.Sobel(Lz, cv2.CV_32F, 1, 0, ksize=5)
     gy = cv2.Sobel(Lz, cv2.CV_32F, 0, 1, ksize=5)
     nrm = max(np.percentile(np.abs(gx[masker > 0.5]), 99), np.percentile(np.abs(gy[masker > 0.5]), 99), 1e-6)
+    if rust is not None:
+        # geen verplaatsing rond voorwerpen op de stof en hun slagschaduw (dat zijn geen plooien)
+        w_ = 1 - np.clip(cv2.GaussianBlur(rust, (0, 0), 25) * 2.5, 0, 1)
+        gx, gy = gx * w_, gy * w_
     Ud = U + np.clip(gx / nrm, -1.5, 1.5) * verplaatsing
     Vd = V + np.clip(gy / nrm, -1.5, 1.5) * verplaatsing
     mx = (Ud * ppc - 0.5).astype(np.float32)
@@ -244,6 +263,8 @@ def breng_aan(foto, masker, U, V, ppc, ontw, labelm=None, schoon=None, verplaats
     if labelm is not None:
         lab = cv2.remap(labelm, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
         kleur = kleur * (1 - 0.0 * lab[..., None])
+    if weef:
+        kleur = kleur * weefsel(U, V, weef)[..., None]
     m = masker[..., None]
     return foto * (1 - m) + kleur * m
 
@@ -303,7 +324,9 @@ def foto2():
     binnen = ((xx < zelf) & (yy > zoom)).astype(np.float32)
     # bril eruit (ligt bovenop de handdoek)
     hsv = cv2.cvtColor((f * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
-    bril = ((hsv[..., 2] < 150) & (hsv[..., 1] > 90)).astype(np.uint8)
+    H_, S_, V_ = hsv[..., 0].astype(int), hsv[..., 1].astype(int), hsv[..., 2].astype(int)
+    # glazen en montuur (niet de schaduw van de bril: die hoort bij de schaduw op de handdoek)
+    bril = ((V_ < 112) | ((S_ > 140) & ((H_ < 12) | (H_ > 168)))).astype(np.uint8)
     bril[:, :850] = 0; bril[:950] = 0; bril[1260:] = 0
     bril = cv2.morphologyEx(bril, cv2.MORPH_CLOSE, np.ones((9, 9), np.uint8))
     n, lab, st, _ = cv2.connectedComponentsWithStats(bril)
@@ -314,7 +337,8 @@ def foto2():
     masker = cv2.GaussianBlur(binnen, (0, 0), 1.0) * (1 - cv2.GaussianBlur(bril, (0, 0), 1.0))
     schoon = strepen_weg(f, 61)
     ontw, lm = ontwerp_met_label(s * 1.5)
-    uit = breng_aan(f, masker, U, V, s * 1.5, ontw, schoon=schoon, verplaatsing=0.5, detail=0.6, waas=0.12)
+    uit = breng_aan(f, masker, U, V, s * 1.5, ontw, schoon=schoon, verplaatsing=0.5, detail=0.6, waas=0.12, weef=0.012,
+                    rust=cv2.dilate(bril, np.ones((61, 61), np.uint8)))
     global LAATSTE
     LAATSTE = uit
     x0, y0, x1, y1 = UITSNEDE_2

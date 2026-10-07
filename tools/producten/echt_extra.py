@@ -43,6 +43,7 @@ def bewaar(img, naam, uitsnede=None):
     staand = MK.naar_staand(img, vul=1.0)
     if PROEF:
         MK.bewaar(cv2.resize(staand, (640, 800), interpolation=cv2.INTER_AREA), UIT / f'proef-{naam}.jpg')
+        MK.bewaar(staand, UIT / f'groot-{naam}.jpg')
     else:
         MK.bewaar(staand, DOEL / f'{naam}.jpg')
     print('foto', naam)
@@ -284,7 +285,7 @@ def kleur_om(img, m, doel_hex, ref=None, gamma=1.0):
 
 # ---------- UV-shirt ----------
 def uv_shirt():
-    strook = tegelstrook()
+    strook2 = tegelstrook(2)
     borst = art('uv-shirt-lange-mouw-borst-los.png')
 
     # 1. voorkant, gedragen aan zee (Pexels 20849170)
@@ -304,8 +305,28 @@ def uv_shirt():
     s = kleur_lab(s, m, NAVY, chroma=0.8)
     licht = np.percentile(MK.helderheid(s)[m > 0.5], 92)
     s = druk(s, plaats(s.shape, knijp(borst, 0.8, 1.0), 1665, 1770, 150, draai=4), ref=licht, verplaatsing=5, schaduw=0.9, masker=m, blur=0.6)
-    s = band_cilinder(s, (1880, 2990), (0.995, 0.097), 108, 150, strook, e=0.12, masker=m, ref=licht * 0.55, verplaatsing=4, schaduw=0.8, structuur=0.4, blur=1.6)
+    s = band_cilinder(s, (1880, 2995), (0.995, 0.097), 108, 140, strook2, e=0.12, tegels_per_hoogte=2, masker=m, ref=licht * 0.8, verplaatsing=12, schaduw=1.15, structuur=0.7, blur=2.2)
     bewaar(s, 'uv-shirt-lange-mouw-1', uitsnede=(240, 650, 2400, 3350))
+
+    # 2. dichterbij, borstlogo en de tegelband om de mouw (zelfde fotosessie, Pexels 20849176)
+    s = foto('uvshirt-model-2.jpg')
+    s = E.poets(s, 1738, 1993, 92, 122)
+    kl = masker_kleur(s, (95, 40, 20), (125, 255, 200), zaad=(1300, 2700)) > 0.5
+    borstvlak = poly(s.shape, [(1180, 1640), (1300, 1660), (1400, 1690), (1480, 1705), (1575, 1690), (1590, 1600), (1660, 1600), (1760, 1720),
+                               (1780, 1820), (1780, 1990), (1758, 2180), (1728, 2390), (1698, 2540), (1500, 2600), (1250, 2600), (1080, 2250),
+                               (1100, 1950), (1180, 1720)])
+    samen = (kl | borstvlak).astype(np.uint8)
+    zeker = cv2.erode(kl.astype(np.uint8), np.ones((15, 15), np.uint8)) | cv2.erode(borstvlak.astype(np.uint8), np.ones((41, 41), np.uint8))
+    m = grabcut(s, zeker, cv2.dilate(samen, np.ones((61, 61), np.uint8)))
+    m = np.maximum(m, cv2.GaussianBlur(cv2.erode(borstvlak.astype(np.uint8), np.ones((9, 9), np.uint8)).astype(np.float32), (0, 0), 2))
+    if PROEF:
+        cv2.imwrite(str(UIT / 'proef-masker-uv2.jpg'), (m * 255).astype(np.uint8)[::4, ::4])
+    s = kleur_lab(s, m, NAVY, chroma=0.8)
+    licht = np.percentile(MK.helderheid(s)[m > 0.5], 92)
+    s = druk(s, plaats(s.shape, knijp(borst, 0.78, 1.0), 1655, 1985, 165, draai=3), ref=licht, verplaatsing=5, schaduw=0.9, masker=m, blur=0.6)
+    s = band_cilinder(s, (1835, 3362), (1.0, 0.035), 116, 145, strook2, e=0.12, tegels_per_hoogte=2, masker=m, ref=licht * 0.8,
+                      verplaatsing=12, schaduw=1.15, structuur=0.7, blur=2.0)
+    bewaar(s, 'uv-shirt-lange-mouw-2', uitsnede=(760, 1450, 2400, 3500))
 
 
 if __name__ == '__main__':
