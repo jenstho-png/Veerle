@@ -51,7 +51,8 @@
                 {%- for i in (1..6) -%}
                   {%- assign lk = 'l' | append: i | append: '_label' -%}
                   {%- assign uk = 'l' | append: i | append: '_link' -%}
-                  {%- if block.settings[lk] != blank -%}
+                  {%- capture dood -%}{%- render 'tt-link-dood', url: block.settings[uk] -%}{%- endcapture -%}
+                  {%- if block.settings[lk] != blank and dood == blank -%}
                     <li><a href="{{ block.settings[uk] | default: '#' }}">{{ block.settings[lk] }}</a></li>
                   {%- endif -%}
                 {%- endfor -%}
@@ -91,7 +92,8 @@
               {%- for i in (1..6) -%}
                 {%- assign lk = 'l' | append: i | append: '_label' -%}
                 {%- assign uk = 'l' | append: i | append: '_link' -%}
-                {%- if block.settings[lk] != blank -%}<li><a href="{{ block.settings[uk] | default: '#' }}">{{ block.settings[lk] }}</a></li>{%- endif -%}
+                {%- capture dood -%}{%- render 'tt-link-dood', url: block.settings[uk] -%}{%- endcapture -%}
+                {%- if block.settings[lk] != blank and dood == blank -%}<li><a href="{{ block.settings[uk] | default: '#' }}">{{ block.settings[lk] }}</a></li>{%- endif -%}
               {%- endfor -%}
             </ul>
           {%- endif -%}

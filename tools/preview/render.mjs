@@ -108,6 +108,8 @@ globals.page = { title: 'Contact', content: '' };
 await page('contact', 'page.contact.json', { request: { page_type: 'page', path: '/pages/contact' } });
 globals.page = { title: 'Herroepingsrecht', content: fs.readFileSync(path.resolve(T, '../docs/juridisch/herroepingsrecht.html'), 'utf8') };
 await page('herroepingsrecht', 'page.juridisch.json', { request: { page_type: 'page', path: '/pages/herroepingsrecht' } });
+globals.page = { title: 'Herroepingsrecht', handle: 'herroepingsrecht', content: '' };
+await page('herroepingsrecht-leeg', 'page.juridisch.json', { request: { page_type: 'page', path: '/pages/herroepingsrecht' } });
 globals.page = { title: 'Maatwijzer', content: '<p>Hier lees je welke boards in de draagtas passen en welke maat kleding je kiest.</p>' };
 await page('maatwijzer', 'page.maatwijzer.json', { request: { page_type: 'page', path: '/pages/maatwijzer' } });
 globals.page = { title: 'Duurzaamheid', content: '' };

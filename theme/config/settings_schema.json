@@ -1,7 +1,7 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "Tide Tode 35",
+    "theme_name": "Tide Tode 36",
     "theme_version": "16.0.0",
     "theme_author": "CREAJT",
     "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
@@ -69,6 +69,16 @@
         "id": "tt_reactietijd",
         "label": "Reactietijd",
         "default": "We reageren binnen één werkdag"
+      },
+      {
+        "type": "header",
+        "content": "Analyse"
+      },
+      {
+        "type": "text",
+        "id": "tt_clarity",
+        "label": "Microsoft Clarity project-ID",
+        "info": "Staat in Clarity onder Settings > Overview. Clarity laadt pas als de bezoeker analytische cookies accepteert."
       }
     ]
   },

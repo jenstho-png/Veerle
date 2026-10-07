@@ -1,0 +1,16 @@
+{%- comment -%}
+  Geeft 'ja' als een link naar een Shopify-beleid wijst dat nog niet is ingevuld (dan zou hij een 404 geven).
+  Gebruik: {%- capture dood -%}{% render 'tt-link-dood', url: link %}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign u = url | default: ''
+  if u contains '/policies/shipping-policy' and shop.shipping_policy == blank
+    echo 'ja'
+  elsif u contains '/policies/refund-policy' and shop.refund_policy == blank
+    echo 'ja'
+  elsif u contains '/policies/terms-of-service' and shop.terms_of_service == blank
+    echo 'ja'
+  elsif u contains '/policies/privacy-policy' and shop.privacy_policy == blank
+    echo 'ja'
+  endif
+-%}

@@ -2,6 +2,24 @@
   assign inhoud = page.content | replace: '[EMAIL]', settings.tt_email | replace: '[TELEFOON]', settings.tt_telefoon | replace: '[KVK]', settings.tt_kvk | replace: '[BTW]', settings.tt_btw | replace: '[BEDRIJF]', settings.tt_bedrijf
   assign adres = settings.tt_adres | newline_to_br
   assign inhoud = inhoud | replace: '[ADRES]', adres
+  comment
+    Is de pagina in Shopify nog leeg, dan tonen we de vaste tekst die bij de handle hoort.
+  endcomment
+  assign leeg = inhoud | strip_html | strip
+  assign vast = ''
+  if leeg == blank
+    if page.handle contains 'herroep'
+      assign vast = 'herroepingsrecht'
+    elsif page.handle contains 'voorwaarden'
+      assign vast = 'voorwaarden'
+    elsif page.handle contains 'verzend'
+      assign vast = 'verzending'
+    elsif page.handle contains 'retour'
+      assign vast = 'retour'
+    elsif page.handle contains 'privacy'
+      assign vast = 'privacy'
+    endif
+  endif
 -%}
 <section class="tt tt-tekst tt-bg--{{ section.settings.bg }}">
   <div class="tt-wrap tt-tekst__grid">
@@ -10,7 +28,7 @@
       <h1 class="tt-kop tt-kop--l">{{ page.title }}</h1>
       {%- if section.settings.datum != blank -%}<p class="tt-tekst__datum">Laatst bijgewerkt op {{ section.settings.datum }}</p>{%- endif -%}
     </header>
-    <div class="tt-tekst__inhoud rte">{{ inhoud }}</div>
+    <div class="tt-tekst__inhoud rte">{%- if vast != blank -%}{%- render 'tt-juridisch', naam: vast -%}{%- else -%}{{ inhoud }}{%- endif -%}</div>
     <aside class="tt-tekst__zij">
       <div class="tt-tekst__kaart">
         <p class="tt-tekst__kaarttitel">{{ settings.tt_bedrijf }}</p>
@@ -25,7 +43,7 @@
       {%- if section.blocks.size > 0 -%}
       <nav class="tt-tekst__links" aria-label="Meer informatie">
         <p class="tt-tekst__kaarttitel">Meer informatie</p>
-        <ul>{%- for block in section.blocks -%}<li {{ block.shopify_attributes }}><a href="{{ block.settings.link }}"{% if block.settings.link == request.path %} aria-current="page"{% endif %}>{{ block.settings.label }}</a></li>{%- endfor -%}</ul>
+        <ul>{%- for block in section.blocks -%}{%- capture dood -%}{%- render 'tt-link-dood', url: block.settings.link -%}{%- endcapture -%}{%- if dood != blank -%}{%- continue -%}{%- endif -%}<li {{ block.shopify_attributes }}><a href="{{ block.settings.link }}"{% if block.settings.link == request.path %} aria-current="page"{% endif %}>{{ block.settings.label }}</a></li>{%- endfor -%}</ul>
       </nav>
       {%- endif -%}
     </aside>
