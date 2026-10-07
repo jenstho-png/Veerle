@@ -6,49 +6,50 @@
         "heading_tag": "h1",
         "heading": "Veelgestelde vragen",
         "eyebrow": "",
-        "btn_link": "shopify://pages/contact"
+        "text": "Alles over de draagtas: welke boards passen, hoe je hem draagt en waar hij tegen kan.",
+        "knop": false
       },
       "blocks": {
         "qa-1": {
           "type": "qa",
           "settings": {
-            "question": "Welke surfboards passen in de tas?",
-            "answer": "<p>De draagtas heeft één universele maat. Die past om softtops en vollere boards en om de meeste hardboards, tot ongeveer 9'6\". In de <a href=\"/pages/maatwijzer\">maatwijzer</a> zie je welke boards passen.</p>"
+            "question": "Welke boards passen in de tas?",
+            "answer": "<p>De tas heeft één maat en past om softtops, funboards, fishes en de meeste hardboards tot ongeveer 9'6\". Twijfel je? In de <a href=\"/pages/maatwijzer\">maatwijzer</a> zie je per type board of hij past.</p>"
           }
         },
         "qa-2": {
           "type": "qa",
           "settings": {
-            "question": "Kan ik de tas meenemen in het vliegtuig?",
-            "answer": "<p>Ja. De tas past in je bagage. Huur je op je bestemming een board, dan neem je dat in je eigen tas mee naar de spot.</p>"
+            "question": "Hoe draag ik de tas?",
+            "answer": "<p>Schuif je board in het vak, trek de band aan en hang de lus over je schouder. Het board hangt naast je en je hebt allebei je handen vrij.</p>"
           }
         },
         "qa-3": {
           "type": "qa",
           "settings": {
-            "question": "Kan ik ermee fietsen of op de scooter?",
-            "answer": "<p>Daar is hij juist voor bedacht. Je board zit op je rug, dus je hebt allebei je handen vrij voor het stuur.</p>"
+            "question": "Mag mijn natte board erin?",
+            "answer": "<p>Ja. De stof kan tegen water, zand en zout. Spoel hem af en toe uit met zoet water en laat hem aan de lucht drogen.</p>"
           }
         },
         "qa-4": {
           "type": "qa",
           "settings": {
-            "question": "Wat is het verschil met een boardbag?",
-            "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Daar moet je je natte, zanderige board na elke sessie weer in proppen. Onze tas is gemaakt om je board te dragen: naar de spot en weer terug.</p>"
+            "question": "Kan ik ermee fietsen of op de scooter?",
+            "answer": "<p>Daar is hij voor bedacht. Het board hangt stil langs je lichaam, zodat je kunt sturen. Houd het board wel kort bij je in de wind.</p>"
           }
         },
         "qa-5": {
           "type": "qa",
           "settings": {
-            "question": "Kan ik spullen aan de tas hangen?",
-            "answer": "<p>Aan de tas zit één doorlopende band met een lus over je schouder. Wil je je sleutels, een fles of slippers meenemen, dan klik je die vast met een van onze <a href=\"/collections/surfgear\">karabijnhaken</a>. Die hebben een lus van dezelfde band als de tas.</p>"
+            "question": "Wat is het verschil met een boardbag?",
+            "answer": "<p>Een boardbag is een dichte hoes voor transport. De draagtas is om je board te dragen: licht, snel om en om, en je ziet je board gewoon.</p>"
           }
         },
         "qa-6": {
           "type": "qa",
           "settings": {
-            "question": "Maken jullie meer dan de draagtas?",
-            "answer": "<p>Ja. De draagtas is waar het begon, maar Tide Tode is een merk voor de hele weg naar zee. We maken <a href=\"/collections/kleding-en-accessoires\">kleding en accessoires</a>: zware T-shirts met een verhaal op de rug, longsleeves, een hoodie, een pet, een bucket hat en een UV-shirt, een surfponcho, een strandhanddoek in onze tegelprint en een canvas tas. En <a href=\"/collections/surfgear\">surfgear</a>: wax voor koud, koel en warm water, een waxkam, karabijnhaken en stickers.</p>"
+            "question": "Kan de tas mee in het vliegtuig?",
+            "answer": "<p>Ja, opgevouwen past hij in je koffer. Huur je op je bestemming een board, dan heb je hem daar meteen.</p>"
           }
         }
       },
@@ -61,6 +62,138 @@
         "qa-6"
       ]
     },
+    "faq-bestel": {
+      "type": "surf-faq",
+      "settings": {
+        "heading_tag": "h2",
+        "heading": "Bestellen en verzenden",
+        "eyebrow": "",
+        "text": "Verzendkosten, levertijd en betalen.",
+        "knop": false
+      },
+      "blocks": {
+        "qa-1": {
+          "type": "qa",
+          "settings": {
+            "question": "Wat kost verzenden?",
+            "answer": "<p>Nederland € 4,95, gratis vanaf € 50. België € 6,95, gratis vanaf € 75. Rest van Europa € 9,95.</p>"
+          }
+        },
+        "qa-2": {
+          "type": "qa",
+          "settings": {
+            "question": "Hoe snel heb ik mijn bestelling?",
+            "answer": "<p>Besteld op een werkdag voor 15.00 uur, dan gaat hij dezelfde dag weg. In Nederland heb je hem binnen 1 tot 2 werkdagen, in België in 2 tot 3, in de rest van Europa in 3 tot 7.</p>"
+          }
+        },
+        "qa-3": {
+          "type": "qa",
+          "settings": {
+            "question": "Hoe kan ik betalen?",
+            "answer": "<p>Met iDEAL, creditcard, Apple Pay en andere methodes die je bij het afrekenen ziet.</p>"
+          }
+        },
+        "qa-4": {
+          "type": "qa",
+          "settings": {
+            "question": "Kan ik mijn pakket volgen?",
+            "answer": "<p>Ja. We versturen met PostNL en DHL. Zodra je pakket onderweg is, krijg je een mail met de track and trace.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "qa-1",
+        "qa-2",
+        "qa-3",
+        "qa-4"
+      ]
+    },
+    "faq-retour": {
+      "type": "surf-faq",
+      "settings": {
+        "heading_tag": "h2",
+        "heading": "Retour en reparatie",
+        "eyebrow": "",
+        "text": "Terugsturen, ruilen en wat we doen als er iets stuk gaat.",
+        "knop": false
+      },
+      "blocks": {
+        "qa-1": {
+          "type": "qa",
+          "settings": {
+            "question": "Kan ik iets terugsturen?",
+            "answer": "<p>Ja, je hebt 14 dagen bedenktijd. Meld het via <a href=\"/pages/herroepen\">Bestelling herroepen</a> en stuur het binnen 14 dagen terug. Je krijgt je geld binnen 14 dagen terug.</p>"
+          }
+        },
+        "qa-2": {
+          "type": "qa",
+          "settings": {
+            "question": "Is er iets stuk gegaan?",
+            "answer": "<p>Stuur ons een foto. We repareren de tas eerst, en lukt dat niet, dan krijg je een nieuwe. Is het een fout van ons, dan betaal je geen verzendkosten.</p>"
+          }
+        },
+        "qa-3": {
+          "type": "qa",
+          "settings": {
+            "question": "Kan ik ruilen voor een ander ontwerp?",
+            "answer": "<p>Ja. Stuur ons een bericht welk ontwerp je liever hebt, dan regelen we het.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "qa-1",
+        "qa-2",
+        "qa-3"
+      ]
+    },
+    "faq-kleding": {
+      "type": "surf-faq",
+      "settings": {
+        "heading_tag": "h2",
+        "heading": "Kleding en surfgear",
+        "eyebrow": "",
+        "btn_label": "Stel je vraag",
+        "btn_link": "shopify://pages/contact",
+        "text": "Maten, stof, wassen en de juiste wax. Staat je vraag er niet tussen? Stuur ons een bericht.",
+        "knop": true
+      },
+      "blocks": {
+        "qa-1": {
+          "type": "qa",
+          "settings": {
+            "question": "Hoe vallen de shirts en truien?",
+            "answer": "<p>Ruim en recht, met een zware stof. Twijfel je tussen twee maten, neem dan de kleinste voor een normale pasvorm. Alle maten staan in de <a href=\"/pages/maatwijzer\">maatwijzer</a>.</p>"
+          }
+        },
+        "qa-2": {
+          "type": "qa",
+          "settings": {
+            "question": "Van welke stof is de kleding?",
+            "answer": "<p>Biologisch katoen, gedrukt met inkt op waterbasis.</p>"
+          }
+        },
+        "qa-3": {
+          "type": "qa",
+          "settings": {
+            "question": "Hoe was ik de kleding?",
+            "answer": "<p>Binnenstebuiten op 30 graden en niet in de droger. Dan blijft de print mooi.</p>"
+          }
+        },
+        "qa-4": {
+          "type": "qa",
+          "settings": {
+            "question": "Welke wax heb ik nodig?",
+            "answer": "<p>Dat hangt af van de watertemperatuur: koud onder 14 graden, koel van 14 tot 19, warm boven 19. Op de Noordzee is het meestal koud of koel.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "qa-1",
+        "qa-2",
+        "qa-3",
+        "qa-4"
+      ]
+    },
     "patroon": {
       "type": "tt-patroon",
       "settings": {
@@ -71,6 +204,9 @@
   },
   "order": [
     "faq",
+    "faq-bestel",
+    "faq-retour",
+    "faq-kleding",
     "patroon"
   ]
 }

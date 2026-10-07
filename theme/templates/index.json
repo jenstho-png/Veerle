@@ -261,13 +261,13 @@
     "wie": {
       "type": "tt-wie",
       "settings": {
-        "heading": "Voor wie is *hij*"
+        "heading": "Voor *beginners* en gevorderden"
       },
       "blocks": {
         "kaart-1": {
           "type": "kaart",
           "settings": {
-            "titel": "Als je leert surfen",
+            "titel": "Beginners",
             "tekst": "Een grote softtop en een lange wandeling naar het strand. Met de tas heb je je handen vrij.",
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-beginner",
@@ -278,8 +278,8 @@
         "kaart-2": {
           "type": "kaart",
           "settings": {
-            "titel": "Als je rustige spots zoekt",
-            "tekst": "Over rotsen of achterop de scooter. Je board hangt over je schouder, jij kunt klimmen.",
+            "titel": "Gevorderden",
+            "tekst": "Een hardboard, rotsen of de scooter naar een rustige spot. Je board hangt over je schouder.",
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-avontuur",
             "filename": "tide-tode-avontuur.jpg",
@@ -295,7 +295,9 @@
     "duurzaam": {
       "type": "tt-duurzaam",
       "settings": {
-        "link": "/pages/duurzaamheid"
+        "link": "/pages/duurzaamheid",
+        "heading": "Gemaakt om|*lang* mee te gaan",
+        "text": "Klein merk, eerlijke keuzes."
       },
       "blocks": {
         "punt-1": {
@@ -304,7 +306,7 @@
             "icoon": "tas",
             "kleur": "baby",
             "titel": "Gaat jaren mee",
-            "tekst": "Eén band van sterk nylon loopt in één stuk rond je board. De naden zijn stevig gestikt, juist waar de tas het zwaarst draagt."
+            "tekst": "Sterke band, stevige naden."
           }
         },
         "punt-2": {
@@ -312,8 +314,8 @@
           "settings": {
             "icoon": "tij",
             "kleur": "rose",
-            "titel": "We repareren je tas",
-            "tekst": "Gaat er een band of naad stuk? Stuur ons een bericht. We maken hem eerst weer heel, voordat we het over een nieuwe hebben."
+            "titel": "We repareren",
+            "tekst": "Stuk? Wij maken hem heel."
           }
         },
         "punt-3": {
@@ -321,8 +323,8 @@
           "settings": {
             "icoon": "golfjes",
             "kleur": "zand",
-            "titel": "Geen plastic in je pakket",
-            "tekst": "Je bestelling komt in een kartonnen doos, met papier als opvulling. Geen plastic zakjes, geen bubbeltjesfolie."
+            "titel": "Geen plastic",
+            "tekst": "Karton en papier, meer niet."
           }
         },
         "punt-4": {
@@ -331,7 +333,7 @@
             "icoon": "schelp",
             "kleur": "baby",
             "titel": "Drie dingen mee",
-            "tekst": "Neem na het surfen drie dingen mee van het strand. Een dop, een touwtje, een stukje plastic. Twee minuten werk."
+            "tekst": "Na het surfen: drie stuks afval mee."
           }
         }
       },

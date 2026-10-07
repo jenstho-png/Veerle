@@ -20,7 +20,15 @@
   endif
 -%}
 <section class="tt tt-patroon">
-  <div class="tt-patroon__vormen" aria-hidden="true" data-tt-snelheid="0.22">{%- render 'tt-patroon' -%}</div>
+  <div class="tt-patroon__foto" aria-hidden="true"><img src="{{ 'tt-foto-hero-home.jpg' | asset_url }}" alt="" loading="lazy" width="2560" height="1440"></div>
+  <div class="tt-patroon__stickers" aria-hidden="true">
+    <span class="ps ps--zon" data-tt-snelheid="0.45">{% render 'tt-stk', naam: 'zon' %}</span>
+    <span class="ps ps--golf" data-tt-snelheid="0.3">{% render 'tt-stk', naam: 'golf' %}</span>
+    <span class="ps ps--schelp" data-tt-snelheid="0.55">{% render 'tt-stk', naam: 'schelp' %}</span>
+    <span class="ps ps--ster" data-tt-snelheid="0.7">{% render 'tt-stk', naam: 'zeester' %}</span>
+    <span class="ps ps--palm" data-tt-snelheid="0.4">{% render 'tt-stk', naam: 'palm' %}</span>
+    <span class="ps ps--tas" data-tt-snelheid="0.35">{% render 'tt-stk', naam: 'draagtas' %}</span>
+  </div>
   <div class="tt-patroon__inhoud">
     <div class="tt-patroon__logo">{%- render 'tt-logo', variant: 'staand', label: shop.name -%}</div>
     {%- if section.settings.hand != blank -%}<p class="tt-patroon__hand">{{ section.settings.hand }}</p>{%- endif -%}

@@ -4,8 +4,8 @@
       "type": "tt-hero",
       "settings": {
         "pagina": true,
-        "heading": "Hoe Tide Tode|begon",
-        "text": "Het begon met een tas die we zelf zochten op elke surftrip en nergens konden vinden. Nu is Tide Tode een merk voor de hele weg naar zee.",
+        "heading": "Ons *verhaal*",
+        "text": "Van een frustratie op surftrip naar een eigen merk.",
         "btn_label": "Bekijk de draagtas",
         "link_label": "",
         "kaart": false,
@@ -22,89 +22,6 @@
         "heading": "“Dit moet stukken|comfortabeler kunnen.”",
         "text": "<p>Tijdens mijn reizen door Australië, Midden- en Zuid-Amerika en Azië liep ik me vaak te frustreren. Op hikes naar afgelegen surfspots sjouwde ik een longboard mee dat nergens lekker vast te houden is. En met een board onder je arm op de scooter of fiets naar het strand rijden is ook geen pretje.</p><p>Na een flinke hike naar een verstopte spot, met pijn in mijn schouders en schuurplekken van de wax onder mijn arm, dacht ik: dit moet stukken comfortabeler kunnen. Een tas waarmee je je handen vrij hebt en het gewicht makkelijk draagt.</p><p>Losse touwtjes, spanbanden en standaardhoezen hielden het geen van allen vol. In februari 2025 kwam er een vriend bij die net zo gek is op surfen en precies dezelfde frustratie kende. Toen zijn we het gewoon gaan maken.</p>"
       }
-    },
-    "raster": {
-      "type": "tt-raster",
-      "settings": {},
-      "blocks": {
-        "foto-1": {
-          "type": "foto",
-          "settings": {
-            "fallback": "tt-foto-lifestyle-busje",
-            "alt": "De Tide Tode draagtas om een board op het zand"
-          }
-        },
-        "tekst-2": {
-          "type": "tekst",
-          "settings": {
-            "titel": "De Draagtas",
-            "regels": "Zware stof\nBrede schouderband\nSofttop en hardboard",
-            "link_label": "Bekijk de draagtas"
-          }
-        },
-        "foto-3": {
-          "type": "foto",
-          "settings": {
-            "fallback": "tt-foto-beginner",
-            "alt": "Board in de Tide Tode draagtas bij de zee"
-          }
-        },
-        "logo-4": {
-          "type": "logo",
-          "settings": {
-            "icoon": "maan",
-            "onder": "Est 2025"
-          }
-        },
-        "foto-5": {
-          "type": "foto",
-          "settings": {
-            "fallback": "tt-product-1",
-            "alt": "De draagtas Tegel om een crème surfboard"
-          }
-        },
-        "logo-6": {
-          "type": "logo",
-          "settings": {
-            "icoon": "icoon-zon",
-            "onder": "Handen vrij"
-          }
-        },
-        "foto-7": {
-          "type": "foto",
-          "settings": {
-            "fallback": "tt-product-3",
-            "alt": "Geweven label en schouderband van de draagtas"
-          }
-        },
-        "tekst-8": {
-          "type": "tekst",
-          "settings": {
-            "titel": "Het Verhaal",
-            "regels": "Bedacht in Australië\nGemaakt voor onderweg\nVan surfers voor surfers",
-            "link_label": "Lees het verhaal",
-            "link": "/pages/over-ons"
-          }
-        },
-        "foto-9": {
-          "type": "foto",
-          "settings": {
-            "fallback": "tt-foto-lifestyle-knuffel",
-            "alt": "Surfer houdt een board met de draagtas vast"
-          }
-        }
-      },
-      "block_order": [
-        "foto-1",
-        "tekst-2",
-        "foto-3",
-        "logo-4",
-        "foto-5",
-        "logo-6",
-        "foto-7",
-        "tekst-8",
-        "foto-9"
-      ]
     },
     "patroon": {
       "type": "tt-patroon",
@@ -235,14 +152,67 @@
         "item-5",
         "item-6"
       ]
+    },
+    "stappen": {
+      "type": "tt-duurzaam",
+      "settings": {
+        "heading": "Zo is het *gegaan*",
+        "text": "In vier stappen.",
+        "noot": "",
+        "link_label": ""
+      },
+      "blocks": {
+        "punt-1": {
+          "type": "punt",
+          "settings": {
+            "icoon": "voeten",
+            "kleur": "baby",
+            "titel": "Op reis",
+            "tekst": "Australië, Midden- en Zuid-Amerika, Azië. Elke hike naar een spot met een board onder de arm."
+          }
+        },
+        "punt-2": {
+          "type": "punt",
+          "settings": {
+            "icoon": "golf",
+            "kleur": "rose",
+            "titel": "Het idee",
+            "tekst": "Een tas waarmee je board over je schouder hangt en je handen vrij zijn."
+          }
+        },
+        "punt-3": {
+          "type": "punt",
+          "settings": {
+            "icoon": "tas",
+            "kleur": "zand",
+            "titel": "Februari 2025",
+            "tekst": "Samen met een vriend gaan we de tas zelf maken."
+          }
+        },
+        "punt-4": {
+          "type": "punt",
+          "settings": {
+            "icoon": "zon",
+            "kleur": "baby",
+            "titel": "Nu",
+            "tekst": "De draagtas in negen ontwerpen, plus kleding en surfgear."
+          }
+        }
+      },
+      "block_order": [
+        "punt-1",
+        "punt-2",
+        "punt-3",
+        "punt-4"
+      ]
     }
   },
   "order": [
     "hero",
-    "usp",
+    "stappen",
     "verhaal",
+    "usp",
     "meer",
-    "raster",
     "patroon"
   ]
 }

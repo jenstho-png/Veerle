@@ -17,7 +17,7 @@
         {%- if section.settings.eyebrow != blank -%}<p class="surf-eyebrow">{% render 'tt-logo', variant: 'golfje' %}{{ section.settings.eyebrow }}</p>{%- endif -%}
         {%- render 'surf-headline', text: section.settings.heading, tag: section.settings.heading_tag -%}
         {%- if section.settings.text != blank -%}<p class="surf-lead">{{ section.settings.text }}</p>{%- endif -%}
-        {%- if section.settings.btn_label != blank -%}
+        {%- if section.settings.btn_label != blank and section.settings.knop -%}
           <div class="surf-btns">
             <a href="{{ section.settings.btn_link | default: '/pages/contact' }}" class="surf-btn surf-btn--ghost">{{ section.settings.btn_label }}</a>
           </div>
@@ -98,6 +98,12 @@
       "id": "text",
       "label": "Tekst",
       "default": "Staat je vraag er niet tussen? Stuur ons een bericht, we helpen je graag."
+    },
+    {
+      "type": "checkbox",
+      "id": "knop",
+      "label": "Knop tonen",
+      "default": true
     },
     {
       "type": "text",

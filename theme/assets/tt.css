@@ -2048,3 +2048,54 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
 @media (prefers-reduced-motion: reduce) { .surf-balk__baan { animation: none; } }
 .surf-header summary:has(.surf-nav__hoofd) { gap: 4px; }
 .surf-nav__hoofd { padding: 0 !important; }
+
+/* ---------- duurzaam op de homepage: kort en snel te lezen ---------- */
+.template-index .tt-duurzaam { padding-block: clamp(56px, 6vw, 96px) !important; }
+.template-index .tt-duurzaam .tt-kop--l { font-size: clamp(28px, 3.4vw, 52px) !important; }
+.template-index .tt-duurzaam__punt { text-align: center; border-top: 0 !important; padding-top: 0 !important; }
+.template-index .tt-duurzaam__icoon { margin-inline: auto !important; width: 64px !important; height: 64px !important; }
+.template-index .tt-duurzaam__punt h3 { font-size: 11.5px !important; margin-top: 14px !important; }
+.template-index .tt-duurzaam__punt p { font-size: 13px !important; line-height: 1.5 !important; margin-top: 6px !important; }
+
+/* ---------- voor wie: twee gekleurde kaarten met foto, ruimer en mooier ---------- */
+.template-index .tt-wie { padding-block: clamp(56px, 6vw, 96px) !important; }
+.tt .tt-wie__grid .tt-wie__kaart { grid-template-columns: 190px minmax(0, 1fr); gap: 26px; padding: 0 28px 0 0 !important; border-radius: 14px; overflow: hidden; transition: transform .5s cubic-bezier(.22, 1, .36, 1), box-shadow .5s; }
+.tt .tt-wie__grid .tt-wie__kaart:nth-child(1) { background: #BFD3EA; }
+.tt .tt-wie__grid .tt-wie__kaart:nth-child(2) { background: #EDBDB8; }
+.tt .tt-wie__grid .tt-wie__kaart:hover { transform: translateY(-4px); box-shadow: 0 22px 40px -26px rgba(15, 30, 50, .55); }
+.tt-wie__foto { width: 190px !important; height: 100%; min-height: 190px; aspect-ratio: auto !important; border-radius: 0 !important; }
+.tt-wie__foto .tt-onthul, .tt-wie__foto img { height: 100% !important; width: 100%; object-fit: cover; }
+.tt-wie__tekst h3 { font: 400 clamp(20px, 1.8vw, 26px)/1.1 var(--tt-display, 'Tide Tode Display') !important; letter-spacing: 0 !important; text-transform: uppercase; }
+.tt-wie__tekst p { font-size: 13px !important; }
+.tt-wie__tekst .tt-link::after { content: ' →'; }
+@media (max-width: 749px) {
+  .tt .tt-wie__grid .tt-wie__kaart { grid-template-columns: 110px minmax(0, 1fr); gap: 16px; padding-right: 16px !important; }
+  .tt-wie__foto { width: 110px !important; min-height: 140px; }
+}
+
+/* ---------- afsluiter: foto van de boards met een blauwe gradient, kleurige stickers als badges ---------- */
+.tt-patroon { position: relative; overflow: hidden; }
+.tt-patroon__foto { position: absolute; inset: 0; z-index: 0; }
+.tt-patroon__foto img { width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; display: block; }
+.tt-patroon__foto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(34, 50, 79, .78) 0%, rgba(34, 50, 79, .9) 60%, #22324F 100%), linear-gradient(90deg, rgba(34, 50, 79, .35), rgba(34, 50, 79, 0) 50%, rgba(34, 50, 79, .35)); }
+.tt-patroon__vormen { display: none !important; }
+.tt-patroon__inhoud { position: relative; z-index: 2; }
+.tt-patroon__stickers { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.tt-patroon__stickers .ps { position: absolute; display: block; filter: drop-shadow(0 12px 16px rgba(5, 12, 25, .45)); }
+.tt-patroon__stickers .ps svg { width: 100%; height: auto; display: block; }
+.ps--zon { width: clamp(70px, 8vw, 130px); top: 14%; left: 8%; rotate: -10deg; }
+.ps--palm { width: clamp(60px, 6.5vw, 105px); top: 12%; right: 10%; rotate: 8deg; }
+.ps--golf { width: clamp(90px, 10vw, 165px); bottom: 14%; left: 14%; rotate: 5deg; }
+.ps--schelp { width: clamp(58px, 6vw, 96px); bottom: 18%; right: 16%; rotate: -12deg; }
+.ps--ster { width: clamp(50px, 5vw, 84px); top: 46%; right: 4%; rotate: 14deg; }
+.ps--tas { width: clamp(100px, 11vw, 180px); top: 44%; left: 2%; rotate: -6deg; }
+.tt-js:not(.tt-stil) .tt-patroon.is-in .ps, .tt-js:not(.tt-stil) .tt-patroon .ps { animation: tt-stk-in .9s cubic-bezier(.34, 1.56, .64, 1) both; }
+@media (max-width: 749px) { .ps--ster, .ps--schelp, .ps--tas { display: none; } .ps--zon { top: 6%; left: 4%; } .ps--palm { top: 6%; right: 4%; } .ps--golf { bottom: 6%; left: 4%; } }
+.template-page .tt-duurzaam__punt { text-align: center; border-top: 0 !important; }
+.template-page .tt-duurzaam__icoon { margin-inline: auto !important; }
+.template-page .tt-duurzaam .tt-kop--l { font-size: clamp(28px, 3.4vw, 52px) !important; }
+/* collectiekop: niet meer zoveel lege ruimte boven */
+.tt-col { padding-top: 0 !important; }
+.tt-col__held { padding-top: 132px !important; }
+.tt-col__drie { max-width: 560px; justify-self: end; width: 100%; }
+@media (max-width: 989px) { .tt-col__held { padding-top: 104px !important; } .tt-col__drie { justify-self: stretch; } }
