@@ -23,40 +23,45 @@ poly([(675, 760), (925, 760), (915, 900), (810, 900), (800, 820), (790, 900), (6
 poly([(700, 900), (780, 900), (770, 1150), (710, 1150)], (0.82, 0.66, 0.54))
 poly([(820, 900), (900, 900), (890, 1150), (830, 1150)], (0.82, 0.66, 0.54))
 poly([(560, 735), (640, 735), (650, 960), (575, 960)], (0.30, 0.45, 0.62))           # handdoek
-# board met tas: echte render, staand, schuin op de rug
+# board met tas: echte render, liggend (lus komt uit de bovenste rail), lus langer zodat hij over de schouder reikt
 rb, rl = S2.bouw('draagtas-tegel')
-rb = cv2.rotate(rb, cv2.ROTATE_90_COUNTERCLOCKWISE)
-ys, xs = np.where(rb[..., 3] > .01); rb = rb[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
-s = 880 / rb.shape[0]; rb = cv2.resize(rb, None, fx=s, fy=s, interpolation=cv2.INTER_AREA)
-h, w = rb.shape[:2]
-M = cv2.getRotationMatrix2D((w / 2, h / 2), -28, 1.0)
-M[0, 2] += 790 - w / 2; M[1, 2] += 730 - h / 2
-laag = cv2.warpAffine(rb, M, (W, H), flags=cv2.INTER_AREA)
+ys, xs = np.where(np.maximum(rb[..., 3], rl[..., 3]) > .01)
+rb = rb[ys.min():ys.max() + 1, xs.min():xs.max() + 1]; rl = rl[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+# board-bovenrand (eerste rij met board) en de lus erboven uitrekken
+rij_b = np.where(rb[..., 3].max(1) > .5)[0].min()
+boven = rl[:rij_b]; onder_l = rl[rij_b:]
+rek = 1.9
+boven = cv2.resize(boven, (boven.shape[1], int(boven.shape[0] * rek)), interpolation=cv2.INTER_LINEAR)
+pad_b = np.zeros((boven.shape[0] - rij_b, rb.shape[1], 4), np.float32)
+rb = np.concatenate([pad_b, rb], 0); rl = np.concatenate([boven, onder_l], 0)
+laag_rgba = rl.copy()
+a_b = rb[..., 3:4]
+laag_rgba[..., :3] = rb[..., :3] * a_b + rl[..., :3] * rl[..., 3:4] * (1 - a_b)
+laag_rgba[..., 3:4] = np.clip(a_b + rl[..., 3:4] * (1 - a_b), 0, 1)
+laag_rgba[..., :3] = laag_rgba[..., :3] / np.maximum(laag_rgba[..., 3:4], 1e-4)
+s_ = 980 / laag_rgba.shape[1]
+laag_rgba = cv2.resize(laag_rgba, None, fx=s_, fy=s_, interpolation=cv2.INTER_AREA)
+h, w = laag_rgba.shape[:2]
+# toppunt van de lus vinden en op de rechterschouder leggen; board schuin (neus rechtsboven)
+ys2, xs2 = np.where(laag_rgba[..., 3] > .5)
+top = np.array([xs2[ys2 == ys2.min()].mean(), ys2.min()])
+hoek = 22
+M = cv2.getRotationMatrix2D((float(top[0]), float(top[1])), hoek, 1.0)
+M[0, 2] += 950 - top[0]; M[1, 2] += 392 - top[1]
+laag = cv2.warpAffine(laag_rgba, M, (W, H), flags=cv2.INTER_AREA)
 a = laag[..., 3:4]
-# schaduw van het board op de rug
 sch = cv2.GaussianBlur(cv2.warpAffine(a[..., 0], np.float32([[1, 0, 10], [0, 1, 14]]), (W, H)), (0, 0), 10)[..., None]
-img = img * (1 - 0.25 * sch) ; img = img * (1 - a) + laag[..., :3] * a
-# bovenrand van het vak: zoek de band (blauwe kleur) bovenaan in de laag
-def punt(x, y):
-    p = M @ np.array([x, y, 1.0]); return int(p[0]), int(p[1])
-lx, rx = punt(w * 0.02, h * 0.40), punt(w * 0.98, h * 0.37)
-band = (0.40, 0.52, 0.66)
-# de lus: van beide railkanten omhoog over de rechterschouder
-t = np.linspace(0, 1, 60)
-schouder = np.array([955, 392])
-links = np.array(lx, float); rechts = np.array(rx, float)
-p1 = [(1 - u) ** 2 * links + 2 * (1 - u) * u * np.array([820, 400]) + u ** 2 * schouder for u in t]
-p2 = [(1 - u) ** 2 * schouder + 2 * (1 - u) * u * np.array([1010, 430]) + u ** 2 * rechts for u in t]
-pad = np.int32(p1 + p2)
-cv2.polylines(img, [pad], False, band, 34, cv2.LINE_AA)
-cv2.polylines(img, [pad], False, (0.30, 0.40, 0.52), 2, cv2.LINE_AA)
+img = img * (1 - 0.25 * sch); img = img * (1 - a) + laag[..., :3] * a
+# schouder over de lus heen tekenen: de lus ligt OP de schouder
 # pijlen en uitleg
 img = (np.clip(img, 0, 1) * 255).astype(np.uint8)
 deep = (34, 50, 79)
 def tekst(t, xy):
     cv2.putText(img, t, xy, cv2.FONT_HERSHEY_SIMPLEX, 0.9, deep, 2, cv2.LINE_AA)
 tekst('strap loop over RIGHT shoulder', (1000, 380)); cv2.arrowedLine(img, (995, 372), (950, 410), deep, 3, cv2.LINE_AA, tipLength=.2)
-tekst('sleeve wraps around the board', (1060, 700)); cv2.arrowedLine(img, (1055, 692), (930, 640), deep, 3, cv2.LINE_AA, tipLength=.2)
+tekst('both strap ends come out of the TOP rail', (1030, 560)); cv2.arrowedLine(img, (1150, 575), (1080, 700), deep, 3, cv2.LINE_AA, tipLength=.2)
+tekst('sleeve wraps around the board', (1030, 1130)); cv2.arrowedLine(img, (1150, 1100), (1150, 960), deep, 3, cv2.LINE_AA, tipLength=.2)
+tekst('board hangs at the right side, deck facing out', (60, 1150))
 tekst('hands free', (230, 760)); cv2.arrowedLine(img, (420, 752), (570, 760), deep, 3, cv2.LINE_AA, tipLength=.2)
 cv2.putText(img, 'LAYOUT REFERENCE  (seen from behind)', (40, 60), cv2.FONT_HERSHEY_SIMPLEX, 1.1, deep, 2, cv2.LINE_AA)
 uit = R / 'docs' / 'producten' / 'proef' / 'referentie-schouder.jpg'
