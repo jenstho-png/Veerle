@@ -1640,7 +1640,9 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
 .tt-meer__kop .tt-lead { margin: 0 0 6px !important; }
 
 /* surfcheck: cijfers en grafiek pas tonen als er echte gegevens zijn */
-.tt-surfcheck:not(.is-klaar) .tt-surfcheck__cijfers, .tt-surfcheck:not(.is-klaar) .tt-surfcheck__curve { display: none; }
+/* ruimte blijft gereserveerd (visibility), zodat de pagina niet verspringt als de gegevens binnenkomen */
+.tt-surfcheck:not(.is-klaar) .tt-surfcheck__cijfers, .tt-surfcheck:not(.is-klaar) .tt-surfcheck__curve { visibility: hidden; }
+.tt-surfcheck.is-fout .tt-surfcheck__cijfers, .tt-surfcheck.is-fout .tt-surfcheck__curve { display: none; }
 .tt-surfcheck.is-fout .tt-surfcheck__oordeel { padding: 22px 24px; border: 1px dashed var(--tt-lijn); border-radius: 12px; }
 
 /* tekstpagina's: lange regels (modelformulier) mogen de kolom niet oprekken */

@@ -170,29 +170,6 @@ def teken_board(bm, d, n, stijl, zaad=1):
     return np.clip(kleur, 0, 1)
 
 
-def zandkorrels(beeld, bm, d, zaad=4, aantal=110):
-    """Een paar zandkorrels op de deck, vooral langs de rails en bij de staart (echt strand)."""
-    rng = np.random.default_rng(zaad)
-    zand = np.asarray(Image.open(ST.ZAND).convert('RGB')).astype(np.float32) / 255
-    kleuren = zand.reshape(-1, 3)[rng.integers(0, zand.shape[0] * zand.shape[1], 4000)]
-    ys, xs = np.where((bm > 0.99) & (d > 6) & (d < 110))
-    staart = (xs - S.BX0) / S.LB
-    w = np.exp(-d[ys, xs] / 35.0) + 0.6 * smooth(0.75, 0.95, staart) + 0.05
-    kies = rng.choice(len(ys), aantal, p=w / w.sum())
-    korrel = np.zeros(beeld.shape[:2], np.float32)
-    kk = np.zeros_like(beeld)
-    for i in kies:
-        y, x = ys[i], xs[i]
-        r = rng.uniform(0.7, 1.3)
-        c = kleuren[rng.integers(0, len(kleuren))] * np.array([0.92, 0.84, 0.72]) * rng.uniform(0.75, 1.0)
-        cv2.circle(korrel, (int(x * 4), int(y * 4)), int(r * 4), 1, -1, cv2.LINE_AA, shift=2)
-        cv2.circle(kk, (int(x * 4), int(y * 4)), int(r * 4 + 4), tuple(float(v) for v in c), -1, cv2.LINE_AA, shift=2)
-    sch = verschuif(korrel, 1.2, 0.9)
-    beeld = beeld * (1 - 0.35 * sch[..., None] * (1 - korrel[..., None]))
-    return beeld * (1 - korrel[..., None]) + kk * korrel[..., None]
-
-
-# ---------------------------------------------------------------- tas op het board
 def verkort(laag, m, d, alleen_onder=False):
     """De stof loopt over de rail naar beneden: van boven gezien schuift het patroon daar in elkaar."""
     yy, xx = np.mgrid[0:CH, 0:CW].astype(np.float32)
@@ -305,17 +282,25 @@ def zand():
 
 
 def bewaar(img, pad, max_kb=190):
-    """Altijd 1600 x 2000: alleen de kwaliteit zakt tot het bestand onder max_kb is."""
+    """Altijd 1600 x 2000: eerst de kwaliteit omlaag (tot 44); past het dan nog niet, dan eerst wat
+    kleurruis eruit (zoals tools/producten/echt_handdoek.py) en dan verder."""
     pad = pathlib.Path(pad)
-    im = Image.fromarray((np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8))
-    for q in range(90, 39, -2):
-        im.save(pad, quality=q, optimize=True, progressive=True)
-        if pad.stat().st_size < max_kb * 1000:
-            break
-    return q
+    u8 = (np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8)
+    for h, hk, qs in ((0, 0, range(90, 43, -2)), (2, 8, range(60, 43, -2)), (3, 10, range(56, 39, -2))):
+        b = u8 if not h else cv2.cvtColor(cv2.fastNlMeansDenoisingColored(cv2.cvtColor(u8, cv2.COLOR_RGB2BGR), None, h, hk, 5, 15),
+                                          cv2.COLOR_BGR2RGB)
+        im = Image.fromarray(b)
+        for q in qs:
+            im.save(pad, quality=q, optimize=True, progressive=True)
+            if pad.stat().st_size < max_kb * 1000:
+                return f'{q}' + (f' ontruis{h}' if h else '')
+    return f'{q} TE GROOT'
+
+
 
 def zand_detail(schaal, zaad=0):
-    """Zelfde zand als stijl.achtergrond('zand'), maar uit de volle resolutie voor close-ups."""
+    """Zelfde zand als stijl.achtergrond('zand'), maar uit de volle resolutie voor close-ups.
+    schaal: vergroting ten opzichte van de hero."""
     img = np.asarray(Image.open(ZAND_HR).convert('RGB')).astype(np.float32) / 255
     k = schaal * ST.B / 1600 * 1.15 / 2.0               # stijl: 1600 px breed x 1.15; deze foto is 2x zo groot
     img = cv2.resize(img, None, fx=k, fy=k, interpolation=cv2.INTER_AREA if k < 1 else cv2.INTER_CUBIC)
@@ -323,7 +308,7 @@ def zand_detail(schaal, zaad=0):
     y0 = int(rng.integers(0, max(1, img.shape[0] - ST.H)))
     x0 = int(rng.integers(0, max(1, img.shape[1] - ST.B)))
     img = img[y0:y0 + ST.H, x0:x0 + ST.B]
-    img = np.clip(img * np.array([1.03, 0.99, 0.92], np.float32) + 0.015, 0, 1)
+    img = np.clip(img * np.array([1.03, 0.99, 0.92], np.float32) + 0.015, 0, 1)    # zelfde warme zandkleur als stijl
     return ontruis(np.clip(img * ST._licht(), 0, 1), 4, 12)
 
 

@@ -1,6 +1,6 @@
 # Assortiment Tide Tode
 
-29 producten in 3 collecties. Importeren: Shopify admin, Producten, Importeren, `producten.csv`.
+32 producten in 3 collecties. Importeren: Shopify admin, Producten, Importeren, `producten.csv`.
 
 De productfoto's worden bij de import van GitHub opgehaald.
 
@@ -38,10 +38,13 @@ De productfoto's worden bij de import van GitHub opgehaald.
 | T-shirt Op weg naar zee | € 35,00 | `t-shirt-op-weg-naar-zee` |
 | T-shirt Klassiek | € 35,00 | `t-shirt-klassiek` |
 | T-shirt Board | € 35,00 | `t-shirt-board` |
-| Longsleeve Golf | € 45,00 | `longsleeve-golf` |
-| Longsleeve Tegel | € 45,00 | `longsleeve-tegel` |
+| T-shirt Zon | € 35,00 | `t-shirt-zon` |
+| T-shirt Golf | € 35,00 | `t-shirt-golf` |
+| Longsleeve Vin | € 45,00 | `longsleeve-vin` |
+| Longsleeve Zon | € 45,00 | `longsleeve-zon` |
+| Hoodie Twee boards | € 65,00 | `hoodie-twee-boards` |
+| Sweater Boards | € 55,00 | `sweater-boards` |
 | UV-shirt lange mouw | € 45,00 | `uv-shirt-lange-mouw` |
-| Hoodie Busje | € 65,00 | `hoodie-busje` |
 | Surfponcho | € 60,00 | `surfponcho-tegel` |
 | Pet navy | € 30,00 | `pet-navy` |
 | Bucket hat | € 30,00 | `bucket-hat-tegel` |

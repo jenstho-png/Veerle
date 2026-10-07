@@ -230,5 +230,45 @@
     "photographer": "mockupbee (Unsplash)",
     "what": "Blank white crew-neck t-shirt, flat lay shot straight from above on a seamless light grey background",
     "notes": "2400x1600. Background is digitally flat (RGB 226) with a soft drop shadow, garment hardly brighter than the background, so the mask is built on fabric texture plus GrabCut and snapped to the real fabric edge (flatlay_kleding.masker_vlak). Garment axis x=1191.5; body 827 to 1565 at chest height; collar top y about 212; hem y about 1395. Slim, long cut rather than boxy. Same photo as tshirt-wit-1.jpg, at higher resolution. Used for the t-shirt flat lays."
+  },
+  {
+    "file": "flatlay/pet-wit-voor-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/ozdzzeBu4Go",
+    "image_url": "https://images.unsplash.com/photo-1691256676359-20e5c6d4bc92?w=2400&q=85&fm=jpg",
+    "photographer": "Unsplash (free licence)",
+    "what": "Blank white flat-brim snapback, straight from the front, on an even grey studio background",
+    "notes": "2400x2400. Completely blank. Lit from the right, so mirrored in flatlay_accessoires.py to match the window light top-left. Top button and brim are traced by hand (GrabCut grabs cast shadow there). Recoloured navy #22324F; used for pet-navy-1..3. Looks like a very clean studio/3D-ish mockup render."
+  },
+  {
+    "file": "flatlay/buckethat-blanco-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/WasjFbEQy38",
+    "image_url": "(copy of stock/buckethat-olijf-1.jpg)",
+    "photographer": "OTTO CAP",
+    "what": "Blank olive washed-cotton bucket hat, studio cut-out on white, slight front-side view",
+    "notes": "1600x1600. Recoloured to cream #E9DFCB with the washed texture kept; navy board icon embroidered. Used for bucket-hat-tegel-1..3."
+  },
+  {
+    "file": "flatlay/tas-naturel-plat-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/smTDI-z1rlY",
+    "image_url": "https://images.unsplash.com/photo-1574365569389-a10d488ca3fb?w=2400&q=85&fm=jpg",
+    "photographer": "Brando Makes Branding",
+    "what": "Blank natural canvas tote lying flat, top-down, on even mid-grey",
+    "notes": "2400x1600 version of tote-naturel-1.jpg. Small navy circle-'b' logo bottom right at about (1576, 1404), retouched out. Cut out with GrabCut; handles only where the fabric is lighter than the background (no cast shadow). Used for canvas-tas-1..3."
+  },
+  {
+    "file": "flatlay/handdoek-franje-macro-1.jpg",
+    "unsplash_page": "https://unsplash.com/photos/ (search 'folded blanket white background', image id below)",
+    "image_url": "https://images.unsplash.com/photo-1564019472340-d564602d37c8?w=2400&q=85&fm=jpg",
+    "photographer": "Unsplash (free licence)",
+    "what": "Macro of a plain flat-woven cotton throw with twisted, knotted fringes, shallow depth of field",
+    "notes": "2400x1600, cool grey. Graded to the cream hem yarn; navy pinstripes and the tile pattern added parallel to the hem and blurred to the photo's own depth of field. Used for strandhanddoek-tegel-3."
+  },
+  {
+    "file": "handdoek2-zand-1.jpg",
+    "unsplash_page": "(existing entry)",
+    "image_url": "",
+    "photographer": "",
+    "what": "Reused only as a fold map",
+    "notes": "flatlay_accessoires.kreukels() takes only the soft light-and-shadow of the folds from the towel area (stripes and sunglasses removed, hard sun softened) for strandhanddoek-tegel-2. Nothing else of the photo is visible."
   }
 ]

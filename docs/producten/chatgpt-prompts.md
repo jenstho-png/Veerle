@@ -278,45 +278,76 @@ Opslaan als `t-shirt-board.png`
 Use the attached drawing as reference. Create the product shown in the drawing. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
 ```
 
-## Longsleeve Golf
+## T-shirt Zon
 
 Stuur mee:
 
-1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/longsleeve-golf-tekening.png
-2. Tekening achterkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/longsleeve-golf-tekening-achter.png
-3. Rugprint (exact artwork): https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/longsleeve-golf-rugprint.png
-4. Borstprint (exact artwork): https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/longsleeve-golf-borst.png
+1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/t-shirt-zon-tekening.png
 
-Voorkant, opslaan als `longsleeve-golf.png`
+Opslaan als `t-shirt-zon.png`
 
 ```
-Use the attached drawing as reference. Create a flat lay of a cream cotton long sleeve t-shirt with a tiny navy surfboard icon on the chest and the words HANDEN VRIJ printed vertically along the left sleeve, laid out neatly and seen from above. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
+Use the attached drawing as reference. Create the product shown in the drawing. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
 ```
 
-Achterkant, opslaan als `longsleeve-golf-achter.png` (tekening: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/beelden/longsleeve-golf-2.jpg)
-
-```
-Use the attached drawing as reference. Create a flat lay of the same cream long sleeve seen from the back, with a large navy single-line drawing of a curling wave and the words HANDEN VRIJ below, laid out neatly and seen from above. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
-```
-
-## Longsleeve Tegel
+## T-shirt Golf
 
 Stuur mee:
 
-1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/longsleeve-tegel-tekening.png
-2. Tekening achterkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/longsleeve-tegel-tekening-achter.png
-3. Rugprint (exact artwork): https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/longsleeve-tegel-rugprint.png
+1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/t-shirt-golf-tekening.png
 
-Voorkant, opslaan als `longsleeve-tegel.png`
+Opslaan als `t-shirt-golf.png`
 
 ```
-Use the attached drawing as reference. Create a flat lay of a navy cotton long sleeve t-shirt with one small tile print on the chest, laid out neatly and seen from above. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
+Use the attached drawing as reference. Create the product shown in the drawing. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
 ```
 
-Achterkant, opslaan als `longsleeve-tegel-achter.png` (tekening: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/beelden/longsleeve-tegel-2.jpg)
+## Longsleeve Vin
+
+Stuur mee:
+
+1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/longsleeve-vin-tekening.png
+
+Opslaan als `longsleeve-vin.png`
 
 ```
-Use the attached drawing as reference. Create a flat lay of the same navy long sleeve seen from the back, with a large rectangular tile print in terracotta, dusty blue, rust and cream and the cream stacked TIDE TODE logo below, laid out neatly and seen from above. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
+Use the attached drawing as reference. Create the product shown in the drawing. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
+```
+
+## Longsleeve Zon
+
+Stuur mee:
+
+1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/longsleeve-zon-tekening.png
+
+Opslaan als `longsleeve-zon.png`
+
+```
+Use the attached drawing as reference. Create the product shown in the drawing. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
+```
+
+## Hoodie Twee boards
+
+Stuur mee:
+
+1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/hoodie-twee-boards-tekening.png
+
+Opslaan als `hoodie-twee-boards.png`
+
+```
+Use the attached drawing as reference. Create the product shown in the drawing. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
+```
+
+## Sweater Boards
+
+Stuur mee:
+
+1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/sweater-boards-tekening.png
+
+Opslaan als `sweater-boards.png`
+
+```
+Use the attached drawing as reference. Create the product shown in the drawing. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
 ```
 
 ## UV-shirt lange mouw
@@ -337,27 +368,6 @@ Achterkant, opslaan als `uv-shirt-lange-mouw-achter.png` (tekening: https://raw.
 
 ```
 Use the attached drawing as reference. Create a flat lay of the same navy rash vest seen from the back, with a small cream surfboard icon and TIDE TODE between the shoulders, laid out neatly and seen from above. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
-```
-
-## Hoodie Busje
-
-Stuur mee:
-
-1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/hoodie-busje-tekening.png
-2. Tekening achterkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/hoodie-busje-tekening-achter.png
-3. Rugprint (exact artwork): https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/hoodie-busje-rugprint.png
-4. Borstprint (exact artwork): https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/hoodie-busje-borst.png
-
-Voorkant, opslaan als `hoodie-busje.png`
-
-```
-Use the attached drawing as reference. Create a flat lay of a heavyweight baby blue cotton hoodie with kangaroo pocket, navy drawstrings and the small stacked navy TIDE TODE logo on the chest, laid out neatly and seen from above. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
-```
-
-Achterkant, opslaan als `hoodie-busje-achter.png` (tekening: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/beelden/hoodie-busje-2.jpg)
-
-```
-Use the attached drawing as reference. Create a flat lay of the same baby blue hoodie seen from the back, with a large navy single-line drawing of a camper van with a surfboard on the roof and OP WEG NAAR ZEE below, laid out neatly and seen from above. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
 ```
 
 ## Surfponcho

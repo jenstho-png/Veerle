@@ -316,7 +316,7 @@ def zon(k):
         r1, r2 = 262, 262 + (70 if i % 2 == 0 else 42)
         o.append(f'<line x1="{cx + math.cos(a) * r1:.1f}" y1="{cy + math.sin(a) * r1:.1f}" x2="{cx + math.cos(a) * r2:.1f}" y2="{cy + math.sin(a) * r2:.1f}" stroke="{k["hoofd"]}" stroke-width="14" stroke-linecap="round"/>')
     o.append(f'<defs><path id="zc" d="M{cx - 400} {cy} a400 400 0 1 1 800 0 a400 400 0 1 1 -800 0"/></defs>')
-    o.append(f'<text {DISP} font-size="70" fill="{k["hoofd"]}"><textPath href="#zc" startOffset="0%" textLength="2500" lengthAdjust="spacing">TIDE TODE ✦ TIDE TODE ✦ TIDE TODE ✦ </textPath></text>')
+    o.append(f'<text {DISP} font-size="70" fill="{k["hoofd"]}"><textPath href="#zc" startOffset="0%" textLength="2500" lengthAdjust="spacing">TIDE TODE   TIDE TODE   TIDE TODE   </textPath></text>')
     return ''.join(o)
 
 
@@ -347,7 +347,13 @@ def tweeboards(k):
             f'<text {DISP} font-size="88" letter-spacing="12" fill="{k["hoofd"]}"><textPath href="#tb" startOffset="50%" text-anchor="middle">TIDE TODE</textPath></text>')
 
 
-ONTWERPEN = {'zon': zon, 'golf': golf, 'vin': vin, 'tweeboards': tweeboards, 'paklijst': paklijst, 'hawaii': hawaii, 'groeten': groeten, 'zout': zout, 'grootboard': grootboard, 'koudwater': koudwater, 'evenweg': evenweg, 'herhaling': herhaling, 'weerbericht': weerbericht, 'boog': boog, 'lijn': lijn, 'getij': getij, 'club': club, 'handen': handen, 'board': board, 'klok': klok, 'tegel': tegel}
+def tweeboardslos(k):
+    """Twee boards naast elkaar, zonder tekst."""
+    b = BB.board_in(0, 0, 820, k['hoofd'])
+    return f'<g transform="translate(340 600)">{b}</g><g transform="translate(660 600)">{b}</g>'
+
+
+ONTWERPEN = {'tweeboardslos': tweeboardslos, 'zon': zon, 'golf': golf, 'vin': vin, 'tweeboards': tweeboards, 'paklijst': paklijst, 'hawaii': hawaii, 'groeten': groeten, 'zout': zout, 'grootboard': grootboard, 'koudwater': koudwater, 'evenweg': evenweg, 'herhaling': herhaling, 'weerbericht': weerbericht, 'boog': boog, 'lijn': lijn, 'getij': getij, 'club': club, 'handen': handen, 'board': board, 'klok': klok, 'tegel': tegel}
 
 if __name__ == '__main__':
     for naam, f in ONTWERPEN.items():
