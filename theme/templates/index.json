@@ -3,15 +3,21 @@
     "hero": {
       "type": "tt-hero",
       "settings": {
-        "text": "Tide Tode is een surfmerk voor de weg naar zee. Het begon met een draagtas voor je board, bedacht op surftrips door Australië, Midden- en Zuid-Amerika en Azië. Nu maken we ook kleding en surfgear met dezelfde zorg.",
+        "text": "",
         "fallback": "tt-foto-hero-home",
         "stickers": false,
-        "boards": false
+        "boards": false,
+        "btn_label": "Naar de shop",
+        "btn_link": "/collections/all",
+        "link_label": ""
       }
     },
     "usp": {
       "type": "tt-usp",
-      "settings": {},
+      "settings": {
+        "bg": "papier",
+        "zegel": false
+      },
       "blocks": {
         "usp-1": {
           "type": "usp",
@@ -248,10 +254,6 @@
         "text": "Een merk voor de hele weg naar zee. Zware shirts met een tekening op de rug, een hoodie voor na het surfen en kleine dingen die je elke sessie gebruikt."
       }
     },
-    "probleem": {
-      "type": "tt-probleem",
-      "settings": {}
-    },
     "wie": {
       "type": "tt-wie",
       "settings": {},
@@ -403,7 +405,6 @@
     "hero",
     "usp",
     "uitgelicht",
-    "probleem",
     "zo",
     "meer",
     "wie",

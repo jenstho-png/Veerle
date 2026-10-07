@@ -187,6 +187,28 @@
     });
   }
 
+  /* ---------- uitgelicht product: grote foto wisselt mee met het ontwerp onder je muis ---------- */
+  document.querySelectorAll('[data-tt-uit]').forEach((sec) => {
+    const groot = sec.querySelector('.tt-uit__foto img');
+    if (!groot) return;
+    const begin = groot.currentSrc || groot.src;
+    let actief = null;
+    const zet = (src, a) => {
+      if (!src || groot.dataset.nu === src) return;
+      groot.dataset.nu = src;
+      const nieuw = new Image();
+      nieuw.onload = () => { groot.removeAttribute('srcset'); groot.classList.add('is-wissel'); groot.src = src; requestAnimationFrame(() => groot.classList.remove('is-wissel')); };
+      nieuw.src = src;
+      if (actief) actief.classList.remove('is-actief');
+      actief = a; if (a) a.classList.add('is-actief');
+    };
+    sec.querySelectorAll('[data-tt-groot]').forEach((a) => {
+      a.addEventListener('mouseenter', () => zet(a.dataset.ttGroot, a));
+      a.addEventListener('focus', () => zet(a.dataset.ttGroot, a));
+    });
+    sec.querySelector('.tt-uit__ontwerpen')?.addEventListener('mouseleave', () => { if (actief) zet(begin, null); });
+  });
+
   /* ---------- 4. Productpagina: galerij, lightbox, varianten, toevoegen ---------- */
   function galerij(sectie) {
     const baan = sectie.querySelector('[data-tt-galerij]');

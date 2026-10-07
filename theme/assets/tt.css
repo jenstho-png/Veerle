@@ -1947,3 +1947,41 @@ main .shopify-section-group-footer-group, footer { position: relative; }
 .tt-uit__ontwerpen { margin-bottom: 30px !important; }
 .tt-uit__kies { margin-top: 30px !important; }
 .tt-uit .tt-knoppen { margin-top: 0 !important; }
+
+/* ---------- hero homepage: alleen logo, ondertitel en één knop ---------- */
+.template-index .tt-hero__icoon { display: none !important; }
+
+/* ---------- kortingsknop: strak en luxe in plaats van een sticker ---------- */
+.tt-pop__teaser {
+  width: auto !important; height: auto !important; border-radius: 999px !important; padding: 15px 22px 15px 24px !important;
+  display: inline-flex !important; align-items: center; gap: 14px; background: var(--tt-deep) !important; color: var(--tt-creme) !important;
+  font: 700 11px/1 var(--tt-tekst) !important; letter-spacing: .2em; text-transform: uppercase; rotate: 0deg !important;
+  box-shadow: 0 0 0 1px rgba(243, 236, 221, .18) inset, 0 0 0 5px var(--tt-deep), 0 0 0 6px rgba(243, 236, 221, .35), 0 18px 34px -16px rgba(10, 20, 35, .6) !important;
+  animation: tt-teaser-in .8s cubic-bezier(.22, 1, .36, 1) both !important;
+}
+.tt-pop__teaser[hidden] { display: none !important; }
+.tt-pop__teaser:hover { scale: 1 !important; transform: translateY(-2px); }
+.tt-pop__teaser-pijl { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--tt-creme); color: var(--tt-deep); letter-spacing: 0; transition: transform .35s cubic-bezier(.22, 1, .36, 1); }
+.tt-pop__teaser:hover .tt-pop__teaser-pijl { transform: translateX(3px); }
+@keyframes tt-teaser-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (max-width: 749px) { .tt-pop__teaser { padding: 12px 16px 12px 18px !important; font-size: 10px !important; right: 12px !important; bottom: 12px !important; } }
+
+/* ---------- voordelenstrook onder de hero: licht en rustig ---------- */
+.template-index .tt-usp { background: var(--tt-creme, #F3ECDD) !important; color: var(--tt-deep) !important; border-top: 1px solid rgba(34, 50, 79, .12); border-bottom: 1px solid rgba(34, 50, 79, .12); }
+.template-index .tt-usp .tt-icoon { color: var(--tt-deep) !important; width: 22px !important; height: 22px !important; opacity: .8; }
+.template-index .tt-usp__lijst li { padding-top: 16px !important; padding-bottom: 16px !important; font-size: 11px !important; letter-spacing: .16em; }
+.template-index .tt-usp + * , .template-index .shopify-section:has(.tt-usp) + .shopify-section > section.tt { margin-top: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+
+/* duimnagels van de ontwerpen: altijd 4:5, ook met de echte productfoto's */
+.tt-uit__ontwerpen img { height: auto !important; aspect-ratio: 4 / 5 !important; object-fit: cover !important; max-height: 132px; }
+.tt-uit__ontwerpen li { min-width: 0; }
+.tt-uit__foto img { height: 100% !important; }
+/* overlappende secties: de sectie erboven krijgt onderaan ruimte, zodat er niets onder de ronde rand verdwijnt */
+main .shopify-section > section.tt, main .shopify-section > .surf { border-bottom: 28px solid transparent; }
+main .shopify-section > section.tt-hero, main .shopify-section > section.tt-usp { border-bottom: 0; }
+/* na de voordelenstrook geen overlap, zodat de kop vrij staat */
+main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-top: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+.tt-uit__foto { aspect-ratio: 1 / 1 !important; max-height: 78vh; }
+.tt-uit__foto img { transition: opacity .35s ease; }
+.tt-uit__foto img.is-wissel { opacity: .35; }
+.tt-uit__ontwerpen a.is-actief img { box-shadow: 0 0 0 2px var(--tt-deep); }

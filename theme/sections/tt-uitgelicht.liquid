@@ -9,7 +9,7 @@
     assign link = p.url
   endif
 -%}
-<section class="tt tt-uit tt-bg--{{ section.settings.bg }}">
+<section class="tt tt-uit tt-bg--{{ section.settings.bg }}" data-tt-uit>
   <div class="tt-wrap tt-uit__grid">
     <a class="tt-uit__foto tt-onthul" href="{{ link }}" tabindex="-1" aria-hidden="true">
       {%- if p != blank and p.featured_media -%}
@@ -33,8 +33,13 @@
         <ul class="tt-uit__ontwerpen tt-in">
           {%- for block in section.blocks -%}
             {%- assign bp = all_products[block.settings.handle] -%}
+            {%- if bp != blank and bp.featured_media -%}
+              {%- assign groot = bp.featured_media | image_url: width: 1400 -%}
+            {%- else -%}
+              {%- assign groot = block.settings.fallback | append: '.jpg' | asset_url -%}
+            {%- endif -%}
             <li {{ block.shopify_attributes }}>
-              <a href="{% if bp != blank %}{{ bp.url }}{% else %}/products/{{ block.settings.handle }}{% endif %}" aria-label="{{ block.settings.naam | escape }}">
+              <a data-tt-groot="{{ groot }}" href="{% if bp != blank %}{{ bp.url }}{% else %}/products/{{ block.settings.handle }}{% endif %}" aria-label="{{ block.settings.naam | escape }}">
                 {%- if bp != blank and bp.featured_media -%}
                   {{ bp.featured_media | image_url: width: 240 | image_tag: loading: 'lazy', sizes: '90px', widths: '120, 240', alt: '' }}
                 {%- else -%}

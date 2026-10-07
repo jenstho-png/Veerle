@@ -43,8 +43,8 @@
     </div>
   </div>
   {%- if settings.surf_popup_teaser != blank -%}
-    <button type="button" class="tt-pop__teaser tt-sticker tt-sticker--sunshine tt-sticker--rond" data-surf-popup-open hidden>
-      {%- render 'tt-icoon', icoon: 'zon' -%}<span>{{ settings.surf_popup_teaser }}</span>
+    <button type="button" class="tt-pop__teaser" data-surf-popup-open hidden>
+      <span class="tt-pop__teaser-tekst">{{ settings.surf_popup_teaser }}</span><span class="tt-pop__teaser-pijl" aria-hidden="true">→</span>
     </button>
   {%- endif -%}
 {%- endif -%}
