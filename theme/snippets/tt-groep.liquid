@@ -1,0 +1,12 @@
+{%- comment -%}
+  Geeft de productgroep terug op basis van het producttype:
+  draagtas, kleding, accessoires, surfgear of overig.
+  Gebruik: {%- capture groep -%}{%- render 'tt-groep', type: product.type -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- case type -%}
+  {%- when 'Draagtas' -%}draagtas
+  {%- when 'T-shirt', 'Longsleeve', 'UV-shirt', 'Hoodie', 'Poncho' -%}kleding
+  {%- when 'Pet', 'Hoed', 'Handdoek', 'Tas' -%}accessoires
+  {%- when 'Surfwax', 'Surfgear', 'Stickers' -%}surfgear
+  {%- else -%}overig
+{%- endcase -%}

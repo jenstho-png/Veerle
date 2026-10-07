@@ -57,8 +57,35 @@ def zonder_lege_defaults(schema):
     return schema
 
 
+#: secties die op de productpagina alleen bij bepaalde producttypes horen
+NIET_TOONBAAR = {'tt-koop', 'tt-hero', 'tt-collectie', 'tt-collecties', 'tt-contact', 'tt-tekst', 'tt-maattabel'}
+TOON_OPTIES = [{"value": v, "label": l} for v, l in [
+    ("alle", "Altijd"), ("draagtas", "Alleen draagtassen"), ("kleding", "Alleen kleding"),
+    ("accessoires", "Alleen accessoires"), ("surfgear", "Alleen surfgear"), ("anders", "Alles behalve draagtassen")]]
+TOON_SETTING = {"type": "select", "id": "toon", "label": "Tonen op de productpagina bij", "options": TOON_OPTIES, "default": "alle",
+                "info": "Alleen op productpagina's. Elders staat de sectie er altijd."}
+# Liquid: zet tt_zie op false als de sectie niet bij dit producttype hoort
+TOON_LIQUID = """{%- assign tt_zie = true -%}
+{%- if template.name == 'product' and product != blank -%}
+  {%- capture tt_groep -%}{%- render 'tt-groep', type: product.type -%}{%- endcapture -%}
+  {%- assign tt_groep = tt_groep | strip -%}
+  {%- assign tt_toon = section.settings.toon | default: 'alle' -%}
+  {%- if tt_toon == 'anders' -%}
+    {%- if tt_groep == 'draagtas' -%}{%- assign tt_zie = false -%}{%- endif -%}
+  {%- elsif tt_toon != 'alle' and tt_toon != tt_groep -%}
+    {%- assign tt_zie = false -%}
+  {%- endif -%}
+{%- endif -%}
+"""
+
+
 def schrijf(naam, body, schema):
     schema = zonder_lege_defaults(schema)
+    if naam not in NIET_TOONBAAR:
+        schema.setdefault('settings', []).append(TOON_SETTING)
+        body = TOON_LIQUID + "{%- if tt_zie -%}\n" + body.strip() + "\n{%- endif -%}"
+    for x in [schema] + schema.get('blocks', []) + schema.get('presets', []):
+        assert len(x.get('name', '')) <= 25, f"naam te lang voor Shopify: {x.get('name')}"
     (T / f'{naam}.liquid').write_text(body.strip() + "\n\n{% schema %}\n" + json.dumps(schema, indent=2, ensure_ascii=False) + "\n{% endschema %}\n")
 
 

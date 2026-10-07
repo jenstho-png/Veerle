@@ -261,8 +261,9 @@ def kruisstiksel(kleur, punt, richting, breedte=BAND, garen=(0.62, 0.7, 0.8)):
     return kleur * (1 - 0.8 * laag[..., None]) + g * 0.8 * laag[..., None]
 
 
-def label(kleur, midden, b=118, h=74):
-    """Geweven label: navy met het crème logo, vastgestikt aan twee kanten."""
+def label(kleur, midden, b=118, h=74, schaduw=(3, 2)):
+    """Geweven label: navy met het crème logo, vastgestikt aan twee kanten.
+    schaduw = (dy, dx) verschuiving van de slagschaduw in pixels (richting van het licht)."""
     logo = np.asarray(Image.open(REF / 'logo-navy.png').convert('RGBA')).astype(np.float32) / 255
     ys, xs = np.where(logo[..., 3] > 0.05)
     logo = logo[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
@@ -278,7 +279,7 @@ def label(kleur, midden, b=118, h=74):
     stuk[ly:ly + lh, lx:lx + lw] = stuk[ly:ly + lh, lx:lx + lw] * (1 - a) + creme * weef[ly:ly + lh, lx:lx + lw, None] * a
     # schaduw onder het label
     m = np.zeros(kleur.shape[:2], np.float32); m[y0:y0 + h, x0:x0 + b] = 1
-    s = cv2.GaussianBlur(np.roll(np.roll(m, 3, 0), 2, 1), (0, 0), 2.5)
+    s = cv2.GaussianBlur(np.roll(np.roll(m, schaduw[0], 0), schaduw[1], 1), (0, 0), 2.5)
     kleur = kleur * (1 - 0.35 * s[..., None])
     kleur[y0:y0 + h, x0:x0 + b] = stuk
     for x in (x0 + 5, x0 + b - 6):
