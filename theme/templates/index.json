@@ -99,93 +99,6 @@
         "detail-6"
       ]
     },
-    "raster": {
-      "type": "tt-raster",
-      "settings": {},
-      "blocks": {
-        "foto-1": {
-          "type": "foto",
-          "settings": {
-            "fallback": "tt-foto-lifestyle-busje",
-            "alt": "De Tide Tode draagtas om een board op het zand"
-          }
-        },
-        "tekst-2": {
-          "type": "tekst",
-          "settings": {
-            "titel": "De Draagtas",
-            "regels": "Zware stof\nBrede schouderband\nSofttop en hardboard",
-            "link_label": "Bekijk de draagtas"
-          }
-        },
-        "foto-3": {
-          "type": "foto",
-          "settings": {
-            "fallback": "tt-foto-beginner",
-            "alt": "Board in de Tide Tode draagtas bij de zee"
-          }
-        },
-        "logo-4": {
-          "type": "logo",
-          "settings": {
-            "icoon": "maan",
-            "onder": "Est 2025"
-          }
-        },
-        "foto-5": {
-          "type": "foto",
-          "settings": {
-            "fallback": "tt-product-1",
-            "alt": "De draagtas Tegel om een crème surfboard"
-          }
-        },
-        "logo-6": {
-          "type": "logo",
-          "settings": {
-            "icoon": "icoon-zon",
-            "onder": "Handen vrij"
-          }
-        },
-        "foto-7": {
-          "type": "foto",
-          "settings": {
-            "fallback": "tt-product-3",
-            "alt": "Geweven label en schouderband van de draagtas"
-          }
-        },
-        "tekst-8": {
-          "type": "tekst",
-          "settings": {
-            "titel": "Het Verhaal",
-            "regels": "Bedacht in Australië\nGemaakt voor onderweg\nVan surfers voor surfers",
-            "link_label": "Lees het verhaal",
-            "link": "/pages/over-ons"
-          }
-        },
-        "foto-9": {
-          "type": "foto",
-          "settings": {
-            "fallback": "tt-foto-lifestyle-knuffel",
-            "alt": "Surfer houdt een board met de draagtas vast"
-          }
-        }
-      },
-      "block_order": [
-        "foto-1",
-        "tekst-2",
-        "foto-3",
-        "logo-4",
-        "foto-5",
-        "logo-6",
-        "foto-7",
-        "tekst-8",
-        "foto-9"
-      ]
-    },
-    "probleem": {
-      "type": "tt-probleem",
-      "settings": {}
-    },
     "zo": {
       "type": "tt-zo",
       "settings": {
@@ -222,7 +135,7 @@
             "tekst": "Lopend door de duinen, op de fiets of achterop de scooter. Op het strand haal je hem er zo weer uit.",
             "fallback": "tt-foto-stap-3",
             "filename": "tide-tode-stap-3.jpg",
-            "alt": "Board met de draagtas Tegel op het strand"
+            "alt": "Board met de draagtas Tegel tegen een betonnen muur"
           }
         }
       },
@@ -230,189 +143,6 @@
         "stap-1",
         "stap-2",
         "stap-3"
-      ]
-    },
-    "stickerzee": {
-      "type": "tt-stickerzee",
-      "settings": {}
-    },
-    "wie": {
-      "type": "tt-wie",
-      "settings": {},
-      "blocks": {
-        "kaart-1": {
-          "type": "kaart",
-          "settings": {
-            "titel": "Als je leert surfen",
-            "tekst": "Een grote softtop, een lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.",
-            "knop": "Bekijk de draagtas",
-            "fallback": "tt-foto-beginner",
-            "filename": "tide-tode-beginner.jpg",
-            "alt": "Surfer houdt een board met de Tide Tode draagtas vast bij de zee"
-          }
-        },
-        "kaart-2": {
-          "type": "kaart",
-          "settings": {
-            "titel": "Als je de rustige spots opzoekt",
-            "tekst": "Door de bush, over rotsen, achterop de scooter. Je board hangt over je schouder, zodat je je handen vrij hebt om te klimmen.",
-            "knop": "Bekijk de draagtas",
-            "fallback": "tt-foto-avontuur",
-            "filename": "tide-tode-avontuur.jpg",
-            "alt": "Board met de Tide Tode draagtas op het zand"
-          }
-        }
-      },
-      "block_order": [
-        "kaart-1",
-        "kaart-2"
-      ]
-    },
-    "surfcheck": {
-      "type": "tt-surfcheck",
-      "settings": {
-        "btn_label": "Welke wax past bij dit water",
-        "btn_link": "/collections/surfgear"
-      },
-      "blocks": {
-        "spot-1": {
-          "type": "spot",
-          "settings": {
-            "naam": "Scheveningen",
-            "lat": "52.11",
-            "lon": "4.26"
-          }
-        },
-        "spot-2": {
-          "type": "spot",
-          "settings": {
-            "naam": "Zandvoort",
-            "lat": "52.37",
-            "lon": "4.50"
-          }
-        },
-        "spot-3": {
-          "type": "spot",
-          "settings": {
-            "naam": "Domburg",
-            "lat": "51.57",
-            "lon": "3.47"
-          }
-        },
-        "spot-4": {
-          "type": "spot",
-          "settings": {
-            "naam": "Hossegor",
-            "lat": "43.66",
-            "lon": "-1.46"
-          }
-        },
-        "spot-5": {
-          "type": "spot",
-          "settings": {
-            "naam": "Ericeira",
-            "lat": "38.97",
-            "lon": "-9.43"
-          }
-        },
-        "spot-6": {
-          "type": "spot",
-          "settings": {
-            "naam": "Canggu, Bali",
-            "lat": "-8.66",
-            "lon": "115.12"
-          }
-        }
-      },
-      "block_order": [
-        "spot-1",
-        "spot-2",
-        "spot-3",
-        "spot-4",
-        "spot-5",
-        "spot-6"
-      ]
-    },
-    "kaart": {
-      "type": "tt-kaart",
-      "settings": {},
-      "blocks": {
-        "regel-1": {
-          "type": "regel",
-          "settings": {
-            "label": "Bedacht",
-            "waarde": "in Australië"
-          }
-        },
-        "regel-2": {
-          "type": "regel",
-          "settings": {
-            "label": "Sinds",
-            "waarde": "2025"
-          }
-        },
-        "regel-3": {
-          "type": "regel",
-          "settings": {
-            "label": "Voor",
-            "waarde": "surfers overal"
-          }
-        }
-      },
-      "block_order": [
-        "regel-1",
-        "regel-2",
-        "regel-3"
-      ]
-    },
-    "duurzaam": {
-      "type": "tt-duurzaam",
-      "settings": {
-        "link": "/pages/duurzaamheid"
-      },
-      "blocks": {
-        "punt-1": {
-          "type": "punt",
-          "settings": {
-            "icoon": "tas",
-            "kleur": "baby",
-            "titel": "Gaat jaren mee",
-            "tekst": "Eén band van sterk nylon loopt in één stuk rond je board. De naden zijn stevig gestikt, juist waar de tas het zwaarst draagt."
-          }
-        },
-        "punt-2": {
-          "type": "punt",
-          "settings": {
-            "icoon": "tij",
-            "kleur": "rose",
-            "titel": "We repareren je tas",
-            "tekst": "Gaat er een band of naad stuk? Stuur ons een bericht. We maken hem eerst weer heel, voordat we het over een nieuwe hebben."
-          }
-        },
-        "punt-3": {
-          "type": "punt",
-          "settings": {
-            "icoon": "golfjes",
-            "kleur": "zand",
-            "titel": "Geen plastic in je pakket",
-            "tekst": "Je bestelling komt in een kartonnen doos, met papier als opvulling. Geen plastic zakjes, geen bubbeltjesfolie."
-          }
-        },
-        "punt-4": {
-          "type": "punt",
-          "settings": {
-            "icoon": "schelp",
-            "kleur": "baby",
-            "titel": "Drie dingen mee",
-            "tekst": "Neem na het surfen drie dingen mee van het strand. Een dop, een touwtje, een stukje plastic. Twee minuten werk."
-          }
-        }
-      },
-      "block_order": [
-        "punt-1",
-        "punt-2",
-        "punt-3",
-        "punt-4"
       ]
     },
     "faq": {
@@ -573,15 +303,8 @@
     "hero",
     "usp",
     "koop",
-    "raster",
-    "probleem",
     "zo",
-    "stickerzee",
-    "wie",
     "meer",
-    "surfcheck",
-    "kaart",
-    "duurzaam",
     "faq",
     "patroon"
   ]
