@@ -493,6 +493,7 @@ def poncho():
     groot = foto('poncho-rug-1.jpg')
     p = groot[Y0 * 2:2620 * 2, X0 * 2:1250 * 2].copy(); del groot
     p = E.poets(p, *k((715, 1918)), 76, 104)            # klein merkje op de schouder
+    p = E.poets(p, *k((1200, 1951)), 70, 100)           # merkje op de groene poncho ernaast
     # schaduwkant van de poncho en het zand hebben dezelfde kleur: omtrek met de hand, GrabCut verfijnt de rand
     omtrek = poly(p.shape, k([(790, 1775), (850, 1765), (930, 1800), (1000, 1890), (1030, 1980), (1025, 2100), (1010, 2200), (990, 2260),
                               (962, 2326), (870, 2342), (790, 2340), (765, 2290), (715, 2205), (680, 2130), (660, 2070), (668, 2000),
@@ -501,7 +502,7 @@ def poncho():
     if PROEF:
         cv2.imwrite(str(UIT / 'proef-masker-poncho2.jpg'), (m * 255).astype(np.uint8)[::4, ::4])
     lab = cv2.cvtColor(p, cv2.COLOR_RGB2Lab)
-    p = kleur_lab(p, m, ZEEBLAUW, chroma=0.8, spreiding=0.5, ref_L=np.median(lab[..., 0][m > 0.5]) * 1.12)
+    p = kleur_lab(p, m, ZEEBLAUW, chroma=0.72, spreiding=0.5, ref_L=np.median(lab[..., 0][m > 0.5]) * 1.12)
     licht = np.percentile(MK.helderheid(p)[m > 0.5], 85)
     p = druk(p, plaats(p.shape, rug, *k((850, 2075)), 330, draai=-1.5), ref=licht, verplaatsing=12, schaduw=1.0, structuur=1.0,
              dekking=0.93, masker=m, blur=1.2)

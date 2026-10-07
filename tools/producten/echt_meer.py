@@ -451,17 +451,33 @@ def tegel_klein():
     return a[int(y0):int(y0 + t), int(x0):int(x0 + t)]
 
 
+def wit_masker(img, omtrek, band=20):
+    """Wit kledingstuk: getekende omtrek + GrabCut in de band, en alleen lichte, kleurloze pixels (geen huid of jeans)."""
+    m = grabcut_poly(img, omtrek, band=band)
+    hsv = cv2.cvtColor((np.clip(img, 0, 1) * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
+    licht = (hsv[..., 1] < 60) & (MK.helderheid(img) > 0.45)
+    m = m & licht
+    m = cv2.morphologyEx(m.astype(np.uint8), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+    n, lab, st, _ = cv2.connectedComponentsWithStats(m)
+    m = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
+    return vul_gaten(m)
+
+
 def golf_voor():
     """Voorkant, gedragen in de studio: witte longsleeve wordt crème, klein navy board op de linkerborst,
     HANDEN VRIJ langs de linkermouw."""
     t = foto('longsleeve2-wit-voor-1.jpg')
-    m = E.shirt_masker(t)
+    omtrek = [(936, 854), (854, 882), (759, 943), (718, 1032), (705, 1195), (711, 1468), (725, 1740), (739, 2040), (827, 2027),
+              (909, 2013), (923, 2027), (1250, 1999), (1556, 1925), (1563, 1877), (1522, 1727), (1530, 1712), (1604, 1700),
+              (1672, 1693), (1666, 1522), (1631, 1263), (1590, 1059), (1536, 895), (1413, 786), (1243, 756), (1222, 841),
+              (1100, 909), (977, 882)]
+    m = wit_masker(t, omtrek)
     L = MK.helderheid(t)
-    ref = float(np.percentile(L[m > 0.5], 80))
-    t, _ = kleur_rand(t, (m > 0.5).astype(np.uint8), CREME_T, gamma=1.0, ref=ref, rand=3)
+    ref = float(np.percentile(L[m > 0], 80))
+    t, _ = kleur_rand(t, m, CREME_T, gamma=1.0, ref=ref, rand=3)
     mz = zacht(m, 1.0)
-    t = MK.zet_print(t, E.art('icoon-navy.png', NAVY), 1290, 1040, 42, verplaatsing=2, masker=mz)
-    t = MK.zet_print(t, mouwtekst(), 1582, 1290, 30, draai=5, verplaatsing=3, schaduw_sterkte=0.9, masker=mz)
+    t = MK.zet_print(t, E.art('icoon-navy.png', NAVY), 1285, 1035, 32, verplaatsing=2, masker=mz)
+    t = MK.zet_print(t, mouwtekst(), 1584, 1300, 21, draai=5, verplaatsing=3, schaduw_sterkte=0.9, masker=mz)
     E.bewaar(t, 'longsleeve-golf-1', vul=1.0, uitsnede=(400, 250, 2000, 2250))
 
 
