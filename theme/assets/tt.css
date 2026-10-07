@@ -2215,3 +2215,26 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
 .template-index .tt-hero { min-height: 0 !important; height: 100svh !important; max-height: none !important; }
 .template-index main .shopify-section:has(> .tt-hero) + .shopify-section > section.tt,
 .template-index main .shopify-section:has(> .tt-hero) + .shopify-section > .surf { margin-top: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+
+/* ---------- mobiel: lange secties korter, zodat geen sectie veel langer is dan één scherm ---------- */
+@media (max-width: 749px) {
+  .tt-specs__kaart dl { display: grid !important; grid-template-columns: 1fr 1fr; gap: 14px 16px !important; }
+  .tt-specs__kaart dl > div { margin: 0 !important; padding: 0 !important; border: 0 !important; }
+  .tt-specs__kaart dd { font-size: 13px !important; line-height: 1.45 !important; }
+  .tt-specs__kaartkop svg { width: 28px !important; height: auto !important; }
+  .tt-specs__beeld { max-width: 78%; margin-inline: auto; }
+  .tt-specs__vlak { padding-block: 18px !important; }
+  .tt-verhaal__foto { aspect-ratio: 1 / 1 !important; width: 100% !important; }
+  .tt-verhaal__foto img { object-position: 50% 30% !important; }
+  .tt-verhaal__body { font-size: 14px !important; line-height: 1.65 !important; }
+  .tt-contact__wegen { display: grid !important; grid-template-columns: 1fr 1fr; gap: 10px !important; }
+  .tt-contact__weg { min-width: 0; }
+  .tt-contact__wegwaarde { overflow-wrap: anywhere; font-size: 12px !important; }
+  .tt-contact__ill { display: none !important; }
+  .tt-contact textarea { min-height: 96px !important; height: 96px !important; }
+  .template-index .surf-faq__item:nth-of-type(n+5) { display: none; }
+}
+@media (max-width: 749px) {
+  .tt-contact__wegen { display: none !important; }
+  .template-product .surf-faq__item:nth-of-type(n+5), body:has(.tt-contact) .surf-faq__item:nth-of-type(n+5) { display: none; }
+}
