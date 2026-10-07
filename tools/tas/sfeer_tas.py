@@ -52,7 +52,8 @@ class Board:
         sel = np.abs(self.tt - self.tb) < span
         self.href = float(np.max((self.hi - self.lo)[sel]) / 2)
         self.k = HS / (SMAX * 2 * self.href)        # huidpixels per fotopixel (dwars, in het midden)
-        self.kx = self.k * kort                     # langs (kort < 1 als het board in de lengte verkort is)
+        # langs (kort < 1 als het board in de lengte verkort is); teken zo dat huid -> beeld nooit spiegelt
+        self.kx = self.k * kort * (-lus)
 
     def mid(self, t):
         return (np.interp(t, self.tt, self.lo) + np.interp(t, self.tt, self.hi)) / 2
