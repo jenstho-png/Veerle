@@ -12,7 +12,7 @@
           "type": "tab",
           "settings": {
             "label": "Shop",
-            "link": "/collections",
+            "link": "/collections/all",
             "dd1_label": "Draagtassen",
             "dd1_link": "/collections/draagtassen",
             "dd2_label": "Surfgear",

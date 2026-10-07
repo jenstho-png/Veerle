@@ -147,9 +147,9 @@ def wax_blok(soort, b=1450, h=1000, zaad=3, kam=False, gebruikt=False):
     if gebruikt:
         # linkerkant is al over een board gewreven: hoeken rond, vlak licht glimmend met strepen in de wrijfrichting
         slijt = np.clip(1 - xx / (b * 0.32), 0, 1) ** 1.5 * boven
-        streep = cv2.GaussianBlur(np.random.default_rng(zaad + 30).normal(0, 1, (h, b)).astype(np.float32), (0, 0), sigmaX=1.2, sigmaY=10)
+        streep = cv2.GaussianBlur(np.random.default_rng(zaad + 30).normal(0, 1, (h, b)).astype(np.float32), (0, 0), sigmaX=4, sigmaY=6)
         streep = streep / (streep.std() + 1e-6)
-        f = f * (1 + slijt * (0.035 + 0.03 * streep))
+        f = f * (1 + slijt * (0.03 + 0.008 * streep))
     # wax is satijnmat: heel zacht glanslicht naar het raam toe
     f = f * (1.03 - 0.05 * (xx / b * 0.5 + yy / h * 0.5))
     rgb = np.clip(kleur[None, None] * f[..., None] ** 1.1, 0, 1)
@@ -331,8 +331,12 @@ def wax_op_deck(img, hoogte, basis, wax_hex, zaad=7, schaal=11.0):
     sch = np.clip(verschoven - hoogte, 0, 1)
     sch = cv2.GaussianBlur(sch, (0, 0), 1.5)
     wax = hexrgb(wax_hex)
-    wax = wax * 0.93 + 0.06                                               # wax is lichter dan de verpakkingskleur doet vermoeden
-    dekking = np.clip(0.08 + 0.5 * hoogte, 0, 0.62)
+    wax = np.clip(wax + (wax - wax.mean()) * 0.6, 0, 1)                                               # wax is lichter dan de verpakkingskleur doet vermoeden
+    dekking = np.clip(0.10 + 0.62 * hoogte, 0, 0.72)
+    # onder de wax is de deck (en de stringer) iets onscherp
+    onder = cv2.GaussianBlur(img, (0, 0), 1.8)
+    w = np.clip(hoogte * 3, 0, 1)[..., None]
+    img = img * (1 - w) + onder * w
     # doorschijnend: de deck schemert erdoor, de kleur van de wax zacht verlopen
     kleur = img * (1 - dekking[..., None]) + wax[None, None] * dekking[..., None]
     kleur = cv2.GaussianBlur(kleur, (0, 0), 0.6)
@@ -388,7 +392,7 @@ def surfwax(soort, shots=(1, 2, 3)):
         hoogte, basis = wax_parels(B, H, gebied, zaad=11, cirkels=420)
         img = wax_op_deck(img, hoogte, basis, EW.SOORTEN[soort]['kleur'])
         pak = wikkel_pak(soort, verschuif=200, gebruikt=True, zaad=9)
-        img = ST.leg(img, pak, breedte=840, midden=(760, 700), hoogte=22, contact=0.6)
+        img = ST.leg(img, pak, breedte=880, midden=(800, 760), hoogte=22, contact=0.6)
         bewaar(img, f'surfwax-{soort}-3')
 
 

@@ -12,6 +12,6 @@
         {%- assign odd = forloop.index0 | modulo: 2 -%}
         {%- if odd == 1 -%}<em>{{ deel | escape }}</em>{%- else -%}{{ deel | escape }}{%- endif -%}
       {%- endfor -%}
-    </span></span>
+    </span></span>{% unless forloop.last %} {% endunless %}
   {%- endfor -%}
 </{{ tag }}>

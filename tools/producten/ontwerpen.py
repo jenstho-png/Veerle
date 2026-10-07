@@ -98,7 +98,69 @@ def handen(k):
 <text x="500" y="1110" {MONO} font-size="30" letter-spacing="13" fill="{k["zacht"]}" text-anchor="middle">TIDE TODE  OP WEG NAAR ZEE</text>'''
 
 
-ONTWERPEN = {'lijn': lijn, 'getij': getij, 'club': club, 'handen': handen}
+def board(k):
+    """Technische tekening van een board, met maatlijnen."""
+    o = [f'<text x="500" y="70" {MONO} font-size="28" letter-spacing="12" fill="{k["hoofd"]}" text-anchor="middle">GEMAAKT VOOR DE NOORDZEE</text>']
+    # board van boven, neus boven
+    pad = 'M500 140 C585 210 640 380 640 620 C640 860 600 1010 560 1060 L440 1060 C400 1010 360 860 360 620 C360 380 415 210 500 140 Z'
+    o.append(f'<path d="{pad}" fill="none" stroke="{k["hoofd"]}" stroke-width="6"/>')
+    o.append(f'<line x1="500" y1="146" x2="500" y2="1056" stroke="{k["accent"]}" stroke-width="3" stroke-dasharray="14 10"/>')
+    # vinnen
+    for x in (455, 545):
+        o.append(f'<path d="M{x - 10} 985 q10 -40 20 0" fill="none" stroke="{k["hoofd"]}" stroke-width="4"/>')
+    o.append(f'<path d="M490 1020 q10 -45 20 0" fill="none" stroke="{k["hoofd"]}" stroke-width="4"/>')
+    def pijl(x1, y1, x2, y2, tekst, tx, ty, draai=0):
+        return (f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{k["zacht"]}" stroke-width="3"/>'
+                f'<circle cx="{x1}" cy="{y1}" r="6" fill="{k["zacht"]}"/><circle cx="{x2}" cy="{y2}" r="6" fill="{k["zacht"]}"/>'
+                f'<text transform="translate({tx} {ty}) rotate({draai})" {MONO} font-size="30" letter-spacing="4" fill="{k["hoofd"]}" text-anchor="middle">{tekst}</text>')
+    o.append(pijl(760, 140, 760, 1060, "7'2\"", 800, 600, 90))
+    o.append(pijl(360, 1120, 640, 1120, '22\"', 500, 1170))
+    o.append(pijl(240, 560, 240, 680, '2¾\"', 200, 620, -90))
+    o.append(f'<text x="500" y="1225" {MONO} font-size="22" letter-spacing="9" fill="{k["accent"]}" text-anchor="middle">TIDE TODE  HANDEN VRIJ SINDS 2025</text>')
+    return ''.join(o)
+
+
+def klok(k):
+    """Getijdenklok: hoog water boven, laag water onder."""
+    import math
+    cx, cy, r = 500, 560, 360
+    o = [f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="{k["hoofd"]}" stroke-width="10"/>',
+         f'<circle cx="{cx}" cy="{cy}" r="{r - 28}" fill="none" stroke="{k["hoofd"]}" stroke-width="2.5"/>']
+    for i in range(48):
+        a = 2 * math.pi * i / 48
+        l = 30 if i % 4 == 0 else 14
+        x1, y1 = cx + math.sin(a) * (r - 30), cy - math.cos(a) * (r - 30)
+        x2, y2 = cx + math.sin(a) * (r - 30 - l), cy - math.cos(a) * (r - 30 - l)
+        o.append(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" stroke="{k["hoofd"]}" stroke-width="{4 if l == 30 else 2.5}"/>')
+    o.append(f'<text x="{cx}" y="{cy - r + 120}" {DISP} font-size="64" fill="{k["hoofd"]}" text-anchor="middle">HOOG</text>')
+    o.append(f'<text x="{cx}" y="{cy + r - 80}" {DISP} font-size="64" fill="{k["hoofd"]}" text-anchor="middle">LAAG</text>')
+    for t, u in [(2, '2'), (4, '4'), (8, '4'), (10, '2')]:
+        a = 2 * math.pi * t / 12
+        o.append(f'<text x="{cx + math.sin(a) * (r - 105):.1f}" y="{cy - math.cos(a) * (r - 105) + 14:.1f}" {MONO} font-size="38" fill="{k["zacht"]}" text-anchor="middle">{u}</text>')
+    # golfje in het midden en de wijzer
+    o.append(BB.board_in(cx, cy, 150, k['accent']))
+    a = 2 * math.pi * 1.6 / 12
+    o.append(f'<line x1="{cx}" y1="{cy}" x2="{cx + math.sin(a) * (r - 75):.1f}" y2="{cy - math.cos(a) * (r - 75):.1f}" stroke="{k["hoofd"]}" stroke-width="10" stroke-linecap="round"/>')
+    o.append(f'<circle cx="{cx}" cy="{cy}" r="16" fill="{k["hoofd"]}"/>')
+    o.append(f'<text x="500" y="1035" {DISP} font-size="78" letter-spacing="4" fill="{k["hoofd"]}" text-anchor="middle">TIDE TODE</text>')
+    o.append(f'<text x="500" y="1105" {MONO} font-size="26" letter-spacing="10" fill="{k["accent"]}" text-anchor="middle">SURF ALS HET TIJ GOED STAAT</text>')
+    return ''.join(o)
+
+
+def tegel(k):
+    """Eén grote tegel uit de echte stof van de tas."""
+    tg = BB.b64(ROOT / 'docs' / 'producten' / 'fabriek' / 'tegels-2x2.png', 'image/png')
+    return f'''
+<defs><clipPath id="tgc"><rect x="230" y="150" width="540" height="540" rx="10"/></clipPath></defs>
+<image href="{tg}" x="230" y="150" width="1080" height="1080" clip-path="url(#tgc)" preserveAspectRatio="xMinYMin slice"/>
+<rect x="230" y="150" width="540" height="540" rx="10" fill="none" stroke="{k["hoofd"]}" stroke-width="8"/>
+<rect x="206" y="126" width="588" height="588" rx="18" fill="none" stroke="{k["hoofd"]}" stroke-width="2.5"/>
+<text x="500" y="820" {DISP} font-size="92" letter-spacing="4" fill="{k["hoofd"]}" text-anchor="middle">TIDE TODE</text>
+<text x="500" y="890" {MONO} font-size="28" letter-spacing="10" fill="{k["accent"]}" text-anchor="middle">UIT DE STOF VAN ONZE TAS</text>
+<text x="500" y="960" {MONO} font-size="22" letter-spacing="9" fill="{k["zacht"]}" text-anchor="middle">HANDEN VRIJ OP WEG NAAR ZEE</text>'''
+
+
+ONTWERPEN = {'lijn': lijn, 'getij': getij, 'club': club, 'handen': handen, 'board': board, 'klok': klok, 'tegel': tegel}
 
 if __name__ == '__main__':
     for naam, f in ONTWERPEN.items():

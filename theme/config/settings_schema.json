@@ -45,8 +45,7 @@
       {
         "type": "text",
         "id": "tt_telefoon",
-        "label": "Telefoonnummer",
-        "default": "+31 6 12345678"
+        "label": "Telefoonnummer"
       },
       {
         "type": "textarea",
@@ -63,8 +62,7 @@
       {
         "type": "text",
         "id": "tt_btw",
-        "label": "Btw-nummer",
-        "default": "NL000000000B01"
+        "label": "Btw-nummer"
       },
       {
         "type": "text",
@@ -194,7 +192,8 @@
         "type": "text",
         "id": "surf_popup_code",
         "label": "Kortingscode",
-        "info": "Maak de code eerst aan in Shopify > Kortingen. Leeg = geen code tonen (bijvoorbeeld bij alleen een wachtlijst)."
+        "info": "Maak de code eerst aan in Shopify > Kortingen. Leeg = geen code tonen (bijvoorbeeld bij alleen een wachtlijst).",
+        "default": "WELKOM10"
       },
       {
         "type": "text",

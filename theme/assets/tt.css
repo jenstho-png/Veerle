@@ -1628,3 +1628,54 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
 .tt-contact__ill .tt-ill { width: 120px; }
 .tt-contact__ill figcaption { font-size: clamp(20px, 1.8vw, 26px); }
 .tt-contact { padding-top: clamp(84px, 8vw, 120px); }
+
+/* ==========================================================================
+   AUDIT: kleine reparaties
+   ========================================================================== */
+/* lijsten in .tt krijgen margin 0 van '.tt ul'; daarom hier met .tt ervoor */
+.tt .tt-meer__rij { margin-top: clamp(40px, 5vw, 72px); }
+.tt .tt-cols__grid { margin-top: clamp(36px, 4vw, 64px); }
+.tt .tt-koop__duimen { margin-top: 12px; }
+.tt-meer__kop { align-items: end; row-gap: 20px; }
+.tt-meer__kop .tt-lead { margin: 0 0 6px !important; }
+
+/* surfcheck: cijfers en grafiek pas tonen als er echte gegevens zijn */
+.tt-surfcheck:not(.is-klaar) .tt-surfcheck__cijfers, .tt-surfcheck:not(.is-klaar) .tt-surfcheck__curve { display: none; }
+.tt-surfcheck.is-fout .tt-surfcheck__oordeel { padding: 22px 24px; border: 1px dashed var(--tt-lijn); border-radius: 12px; }
+
+/* tekstpagina's: lange regels (modelformulier) mogen de kolom niet oprekken */
+.tt-tekst__inhoud { min-width: 0; }
+.tt-tekst__inhoud .tt-formulier, .tt-tekst__inhoud pre { overflow-wrap: anywhere; word-break: break-word; }
+@media (max-width: 989px) { .tt-tekst__grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* fotoraster op mobiel: foto's over de volle breedte, geen halve gaten */
+@media (max-width: 749px) {
+  .tt-raster__grid { grid-template-columns: minmax(0, 1fr); }
+  .tt-raster__vak--foto, .tt-raster__vak--foto.tt-onthul { grid-column: 1 / -1; aspect-ratio: 4 / 3 !important; }
+}
+
+/* maattabel op mobiel: elke maat een eigen rij met labels, niets valt weg */
+@media (max-width: 600px) {
+  .tt-maat__wrap { overflow: visible; }
+  .tt-maat__tabel, .tt-maat__tabel tbody, .tt-maat__tabel tr { display: block; width: 100%; }
+  .tt-maat__tabel thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .tt-maat__tabel tr { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); border-bottom: 1px solid rgba(34, 50, 79, .14); }
+  .tt-maat__tabel tbody th { grid-column: 1 / -1; padding: 14px 16px 4px; border: 0; font: 400 22px/1 var(--tt-display); }
+  .tt-maat__tabel td { display: grid; gap: 4px; padding: 6px 16px 14px; border: 0; white-space: normal; }
+  .tt-maat__tabel td::before { content: attr(data-label); font: 700 10px var(--tt-tekst); letter-spacing: .18em; text-transform: uppercase; opacity: .6; }
+}
+
+/* contrast: tekst over foto's en grijze intro's */
+.tt-hero--pagina::after { background: linear-gradient(90deg, rgba(20, 36, 60, .5) 0%, rgba(20, 36, 60, .15) 60%, rgba(20, 36, 60, .25) 100%), linear-gradient(180deg, rgba(20, 36, 60, .4) 0%, rgba(20, 36, 60, .15) 40%, rgba(20, 36, 60, .65) 100%); }
+/* geen grote text-shadow op koppen: .tt-regel knipt hem af tot een zichtbaar vlak */
+.tt-hero .tt-kop { text-shadow: none; }
+.tt-hero__rechts, .tt-hero .tt-lead { text-shadow: 0 1px 2px rgba(10, 25, 45, .35); }
+.tt-hero::after { background: linear-gradient(90deg, rgba(20, 36, 60, .42) 0%, rgba(20, 36, 60, .12) 55%, rgba(20, 36, 60, .3) 100%), linear-gradient(180deg, rgba(20, 36, 60, .25) 0%, rgba(20, 36, 60, 0) 35%, rgba(20, 36, 60, .6) 100%); }
+.tt-hero__rechts { position: relative; }
+.tt-hero__rechts::before { content: ''; position: absolute; z-index: -1; inset: -60px -80px -60px -60px; background: radial-gradient(closest-side, rgba(20, 36, 60, .42), rgba(20, 36, 60, 0)); pointer-events: none; }
+.surf-faq .surf-lead, .surf .surf-lead { color: var(--surf-ink); opacity: .85; }
+.tt-js:not(.tt-stil) [data-tt-vul] .tt-w { opacity: .3; }
+.tt-lead { color: color-mix(in srgb, var(--tt-fg, var(--tt-ink)) 86%, transparent); }
+
+/* plakbalk: productnaam altijd in kapitalen */
+.tt-balk__naam { text-transform: uppercase; }

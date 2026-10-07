@@ -609,11 +609,12 @@
           $('nu').setAttribute('x1', x); $('nu').setAttribute('x2', x);
           $('oordeel').textContent = oordeel(c.wave_height, wind);
           $('tijd').textContent = `${spots[i].naam}, nu (${uur(c.time)} lokale tijd)`;
-          s.classList.remove('is-fout');
+          s.classList.remove('is-fout'); s.classList.add('is-klaar');
         } catch (e) {
-          $('oordeel').textContent = 'De gegevens zijn nu niet te laden. Probeer het later nog eens.';
-          $('tijd').textContent = '';
-          s.classList.add('is-fout');
+          delete cache[i]; /* een volgende klik probeert het opnieuw */
+          $('oordeel').textContent = 'De zee laat zich nu even niet checken. Probeer het over een paar minuten nog eens, of kies een andere spot.';
+          $('tijd').textContent = 'De gegevens komen van Open-Meteo en zijn tijdelijk niet bereikbaar.';
+          s.classList.add('is-fout'); s.classList.remove('is-klaar');
         }
         s.classList.remove('is-laden');
       }

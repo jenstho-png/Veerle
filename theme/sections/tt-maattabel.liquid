@@ -11,7 +11,7 @@
         <tbody>
           {%- for block in section.blocks -%}
             {%- assign cellen = block.settings.cellen | split: '|' -%}
-            <tr {{ block.shopify_attributes }}>{%- for c in cellen -%}{%- if forloop.first -%}<th scope="row">{{ c }}</th>{%- else -%}<td>{{ c }}</td>{%- endif -%}{%- endfor -%}</tr>
+            <tr {{ block.shopify_attributes }}>{%- for c in cellen -%}{%- if forloop.first -%}<th scope="row">{{ c }}</th>{%- else -%}<td data-label="{{ koppen[forloop.index0] | escape }}">{{ c }}</td>{%- endif -%}{%- endfor -%}</tr>
           {%- endfor -%}
         </tbody>
       </table>

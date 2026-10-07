@@ -257,6 +257,41 @@ def pet():
     opslaan(ST.leg(ST.achtergrond('rose', zaad=3), rgba2, breedte=rgba2.shape[1] * s, midden=mid, hoogte=20), 'pet-navy-3')
 
 
+# ---------- bucket hat ----------
+def bucket_rgba(schaal=1.0):
+    """Blanco bucket hat (Unsplash, olijf, studio op wit), omgekleurd naar crème #E9DFCB, navy board-icoon geborduurd."""
+    import echt as E
+    img = MK.laad(STOCK / 'buckethat-blanco-1.jpg')
+    m = E.omkleur_masker(img, 0.06, (800, 640))
+    m = verfijn_rand(m, img, straal=3)
+    img, m = kopie_schaal(img, m, schaal)
+    k = schaal
+    L = MK.helderheid(img)
+    ref = float(np.percentile(L[m > 0.5], 70))
+    s_ = np.clip(L / ref, 0, 1.5)
+    doel = hexrgb('#E9DFCB')
+    # crème stof: schaduwen iets warmer, de gewassen structuur blijft
+    nieuw = doel[None, None] * (s_ ** 0.9)[..., None] * np.array([1.0, 0.985, 0.96], np.float32)
+    p = img * (1 - m[..., None]) + np.clip(nieuw, 0, 1) * m[..., None]
+    licht = cv2.GaussianBlur(L, (0, 0), 30 * k) / ref
+    cx, cy = 800 * k, 600 * k
+    p = borduur(p, art(REF / 'icoon-navy.png', NAVY), cx, cy, 78 * k, hoek=3, steek=2.7 * k, schaduw_bron=licht ** 0.8, zaad=5)
+    return p, m, {'icoon': (cx, cy)}
+
+
+def bucket():
+    p, m, pt = bucket_rgba()
+    rgba = ST.vrijstaand(p, m)
+    opslaan(ST.leg(ST.achtergrond('baby'), rgba, breedte=1400, midden=(800, 1000), hoogte=16), 'bucket-hat-tegel-1')
+    opslaan(ST.leg(ST.achtergrond('baby', zaad=2), rgba, breedte=1060, midden=(800, 1020), hoogte=14), 'bucket-hat-tegel-2')
+    k = 2.0
+    p2, m2, pt2 = bucket_rgba(schaal=k)
+    rgba2 = ST.vrijstaand(p2, m2)
+    s = 1.15
+    mid = midden_voor(m2, (pt2['icoon'][0], pt2['icoon'][1] + 140 * k), s, (800, 1000))
+    opslaan(ST.leg(ST.achtergrond('baby', zaad=3), rgba2, breedte=rgba2.shape[1] * s, midden=mid, hoogte=20), 'bucket-hat-tegel-3')
+
+
 def proef():
     PROEF.mkdir(parents=True, exist_ok=True)
     p, m, _ = pet_navy_rgba()
