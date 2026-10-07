@@ -351,17 +351,17 @@ GEAR = [
          seo_tekst='Waxkam met schraper om je surfwax ruw te maken of eraf te halen.',
          svg=lambda: (kam(), '0 0 600 600', 1650, 0), achter=BABY, label='Waxkam', alt='Navy waxkam met het Tide-Tode icoon', regel='Meer grip'),
     dict(handle='karabijnhaak-messing', titel='Karabijnhaak messing', type='Surfgear', prijs='10.00', gram=40, tags=['karabijnhaak', 'gear'],
-         tekst='<p>Karabijnhaak van messing. Handig voor je sleutels, een waterfles of je slippers aan je tas.</p><p>Niet geschikt om te klimmen.</p>',
-         seo_tekst='Messing karabijnhaak voor sleutels, waterfles of slippers aan je tas.',
-         svg=lambda: (karabijn('#B48A3E', '#E9CF8E', 'm'), '0 0 600 600', 1450, 0), achter=ROSE, label='Messing', alt='Messing karabijnhaak', regel='Alles aan je tas'),
+         tekst='<p>Karabijnhaak van messing met TIDE TODE in het metaal gegoten. Aan een D-ring hangt een lus van dezelfde band als onze draagtas, navy met het geweven logo, zodat je je sleutels niet kwijtraakt. Ook handig voor een waterfles of je slippers aan je tas.</p><ul><li>Haak ongeveer 7 cm, lus 12 cm</li><li>Schroefsluiting</li></ul><p>Niet geschikt om te klimmen.</p>',
+         seo_tekst='Messing karabijnhaak met sleutellus van onze draagtasband en gegoten Tide-Tode logo.',
+         svg=lambda: (karabijn('#B48A3E', '#E9CF8E', 'm'), '0 0 600 600', 1450, 0), achter=ROSE, label='Messing', alt='Messing karabijnhaak met navy sleutellus', regel='Alles aan je tas'),
     dict(handle='karabijnhaak-zwart', titel='Karabijnhaak zwart', type='Surfgear', prijs='8.00', gram=40, tags=['karabijnhaak', 'gear'],
-         tekst='<p>Karabijnhaak in mat zwart metaal. Handig voor je sleutels, een waterfles of je slippers aan je tas.</p><p>Niet geschikt om te klimmen.</p>',
-         seo_tekst='Zwarte karabijnhaak voor sleutels, waterfles of slippers aan je tas.',
-         svg=lambda: (karabijn('#2B2F36', '#6B7280', 'z'), '0 0 600 600', 1450, 0), achter=ZAND, label='Mat zwart', alt='Zwarte karabijnhaak', regel='Alles aan je tas'),
+         tekst='<p>Karabijnhaak in zwart metaal met TIDE TODE in het metaal gegoten. Aan een D-ring hangt een lus van dezelfde band als onze draagtas, in stoffig blauw met het geweven logo, zodat je je sleutels niet kwijtraakt.</p><ul><li>Haak ongeveer 7 cm, lus 12 cm</li><li>Schroefsluiting</li></ul><p>Niet geschikt om te klimmen.</p>',
+         seo_tekst='Zwarte karabijnhaak met sleutellus van onze draagtasband en gegoten Tide-Tode logo.',
+         svg=lambda: (karabijn('#2B2F36', '#6B7280', 'z'), '0 0 600 600', 1450, 0), achter=ZAND, label='Mat zwart', alt='Zwarte karabijnhaak met blauwe sleutellus', regel='Alles aan je tas'),
     dict(handle='stickerset', titel='Stickerset', type='Stickers', prijs='6.00', gram=20, tags=['stickers', 'gear', 'cadeau'],
-         tekst='<p>Zes vinyl stickers met onze tekeningen: golf, zon, schelp, palm, zeester en board. Waterbestendig, dus ook voor je board, fles of laptop.</p>',
-         seo_tekst='Zes vinyl stickers van Tide-Tode: golf, zon, schelp, palm, zeester en board.',
-         svg=lambda: (stickerset(), '0 0 600 600', 1250, -3), achter=BABY, label='Zes stickers', alt='Vel met zes Tide-Tode stickers', regel='Plak ze overal op'),
+         tekst='<p>Stickervel met zeven vinyl stickers in onze stijl: de zonsondergang, op weg naar zee, een rond tegeltje, het vaantje van de surfclub, een postzegel, de ruitjesband en het board. Waterbestendig, dus ook voor je board, fles of laptop.</p>',
+         seo_tekst='Stickervel met zeven vinyl stickers van Tide-Tode, waterbestendig.',
+         svg=lambda: (stickerset(), '0 0 600 600', 1250, -3), achter=BABY, label='Stickervel', alt='Stickervel met zeven Tide-Tode stickers', regel='Plak ze overal op'),
 ]
 for g in GEAR:
     P.append(dict(handle=g['handle'], titel=g['titel'], type=g['type'], collectie='Surfgear', prijs=g['prijs'], gram=g['gram'], tags=g['tags'],
@@ -389,6 +389,47 @@ def met_foto(f, breedte):
     return (f'<image href="file://{f}" x="0" y="0" width="600" height="600" preserveAspectRatio="xMidYMid meet"/>', '0 0 600 600', breedte, 0)
 
 
+# Echte productfoto's (echt.py, echt_wax.py, echt_handdoek.py, echt_extra.py, echt_meer.py): die gebruiken we in plaats van de tekeningen.
+ECHT = {
+    't-shirt-lijn-naar-zee': ['Crème T-shirt Lijn naar zee aan een hanger, voorkant met een klein board op de borst',
+                              'Achterkant van het crème T-shirt Lijn naar zee met de surfspots van Petten tot Domburg',
+                              'Crème T-shirt Lijn naar zee gedragen, met het kleine board op de borst'],
+    't-shirt-getijden': ['Navy T-shirt Getijden aan een hanger, voorkant met klein logo op de borst',
+                         'Achterkant van het navy T-shirt Getijden met de getijdenlijn van Scheveningen',
+                         'Navy T-shirt Getijden gedragen buiten'],
+    'longsleeve-golf': ['Crème longsleeve Golf, voorkant met klein board en HANDEN VRIJ op de mouw',
+                        'Achterkant van de crème longsleeve Golf met de golf en HANDEN VRIJ',
+                        'Crème longsleeve Golf gedragen'],
+    'longsleeve-tegel': ['Navy longsleeve Tegel, voorkant met een klein tegeltje op de borst',
+                         'Achterkant van de navy longsleeve Tegel met de tegelprint van de draagtas',
+                         'Navy longsleeve Tegel gedragen'],
+    'uv-shirt-lange-mouw': ['Navy UV-shirt met lange mouw en het logo op de borst',
+                            'Achterkant van het navy UV-shirt met tegelprint aan het eind van de mouwen',
+                            'Navy UV-shirt te drogen na het surfen'],
+    'hoodie-busje': ['Baby blue hoodie aan een hanger met klein logo op de borst',
+                     'Achterkant van de baby blue hoodie met het busje en OP WEG NAAR ZEE',
+                     'Detail van het logo op de borst van de baby blue hoodie'],
+    'surfponcho-tegel': ['Surfponcho van badstof met capuchon en tegelrand',
+                         'Achterkant van de surfponcho met het Tide-Tode logo',
+                         'Surfponcho in gebruik op het strand'],
+    'pet-navy': ['Navy pet met het geborduurde board-icoon en de Tide-Tode klepsticker', 'Navy pet met geborduurd board-icoon in gebruik'],
+    'bucket-hat-tegel': ['Crème bucket hat met geborduurd board-icoon', 'Crème bucket hat met geborduurd board-icoon in gebruik'],
+    'canvas-tas': ['Canvas tas met het busje en OP WEG NAAR ZEE', 'Canvas tas met busjesprint in gebruik'],
+    'strandhanddoek-tegel': ['Strandhanddoek in de tegelprint, opgevouwen', 'Strandhanddoek in de tegelprint op het strand', 'Detail van de strandhanddoek met franjes en geweven label'],
+    'waxkam': ['Waxkam met schraper en het Tide-Tode logo', 'Waxkam op een gewaxt board', 'Waxkam naast een blok surfwax'],
+    'karabijnhaak-messing': ['Messing karabijnhaak met gegoten logo en een navy sleutellus van tasband', 'Messing karabijnhaak met sleutellus in gebruik'],
+    'karabijnhaak-zwart': ['Zwarte karabijnhaak met gegoten logo en een blauwe sleutellus van tasband', 'Zwarte karabijnhaak met sleutellus in gebruik'],
+    'stickerset': ['Tide-Tode stickervel op een houten tafel', 'Tide-Tode stickers op een wit surfboard'],
+}
+for soort, naam in [('koud', 'Surfwax koud'), ('koel', 'Surfwax koel'), ('warm', 'Surfwax warm')]:
+    ECHT[f'surfwax-{soort}'] = [f'{naam} in de Tide-Tode verpakking', f'{naam} uit de verpakking']
+for p in P:
+    if p['handle'] in ECHT:
+        p['beelden'] = [('extern', alt) for alt in ECHT[p['handle']]]
+
+# oude tekenpagina's weg, zodat render.mjs nooit een echte foto overschrijft met een tekening
+for oud in UIT.glob('*.html'):
+    oud.unlink()
 for p in P:
     p['bestanden'] = []
     for i, b in enumerate(p['beelden'], 1):
@@ -548,9 +589,9 @@ OVERIG_EN = {
     'canvas-tas': 'a cream heavy canvas tote bag with sand coloured handles and the stacked TIDE TODE logo printed in navy',
 }
 KLEDING_EN = {
-    't-shirt-zonsopkomst': ('a cream heavyweight cotton t-shirt with a tiny navy surfboard icon on the left chest',
+    't-shirt-lijn-naar-zee': ('a cream heavyweight cotton t-shirt with a tiny navy surfboard icon on the left chest',
                             'the same cream t-shirt seen from the back, with a large screen print: a terracotta half sun with cream horizontal cut lines rising above three navy wave lines, the words TIDE TODE in an arc above it and HANDEN VRIJ OP WEG NAAR ZEE in small type below'),
-    't-shirt-stickers': ('a navy heavyweight cotton t-shirt with the small stacked cream TIDE TODE logo on the left chest',
+    't-shirt-getijden': ('a navy heavyweight cotton t-shirt with the small stacked cream TIDE TODE logo on the left chest',
                          'the same navy t-shirt seen from the back, with a print of six colourful sticker illustrations (wave, sun, shell, palm, starfish, camper van) and the small text TIDE TODE SURF CLUB below'),
     'longsleeve-golf': ('a cream cotton long sleeve t-shirt with a tiny navy surfboard icon on the chest and the words HANDEN VRIJ printed vertically along the left sleeve',
                         'the same cream long sleeve seen from the back, with a large navy single-line drawing of a curling wave and the words HANDEN VRIJ below'),

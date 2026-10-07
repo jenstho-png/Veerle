@@ -64,7 +64,7 @@ pagina('post-09-stickers', 1080, 1350, BABY, stk + f'<p class="label" style="pos
 pagina('facebook-header', 1640, 624, NAVY, f'<div style="display:flex;align-items:center;gap:80px">{icoon(CREME, 260)}{logo(CREME, 520)}</div>')
 
 # bestaande productbeelden als post (4:5, 1080x1350)
-for nr, bron in [('02', 'draagtas-tegel-1'), ('03', 'draagtas-tegel-3'), ('04', 't-shirt-zonsopkomst-2'), ('05', 'draagtas-tegel-2'), ('07', 'hoodie-busje-2'), ('08', 'draagtas-golfjes-1')]:
+for nr, bron in [('02', 'draagtas-tegel-1'), ('03', 'draagtas-tegel-3'), ('04', 't-shirt-lijn-naar-zee-2'), ('05', 'draagtas-tegel-2'), ('07', 'hoodie-busje-2'), ('08', 'draagtas-golfjes-1')]:
     im = Image.open(PB / f'{bron}.jpg').convert('RGB').resize((1080, 1350), Image.LANCZOS)
     im.save(DOEL / f'post-{nr}-{bron}.jpg', quality=88, optimize=True)
 print('klaar')

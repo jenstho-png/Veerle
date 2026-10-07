@@ -194,7 +194,7 @@ def logo_strook(breedte=BAND, periode=170, hoogte=13):
     return cv2.resize(m.astype(np.float32), (periode, breedte), interpolation=cv2.INTER_AREA)
 
 
-def teken_band(onder, pad, tex, breedte=BAND, stofmasker=None, kleur_band=(0.56, 0.66, 0.78)):
+def teken_band(onder, pad, tex, breedte=BAND, stofmasker=None, kleur_band=(0.56, 0.66, 0.78), tekst_kleur=None):
     """Leg de echte webbingtextuur langs het pad; geeft beeld en masker terug."""
     seg = np.diff(pad, axis=0)
     lengte = np.r_[0, np.cumsum(np.linalg.norm(seg, axis=1))]
@@ -225,6 +225,8 @@ def teken_band(onder, pad, tex, breedte=BAND, stofmasker=None, kleur_band=(0.56,
     tv = (langs % tekst.shape[1]).reshape(yy.shape).astype(np.float32)
     t = cv2.remap(tekst, tv, tu, cv2.INTER_LINEAR)[..., None]
     kleur = kleur * (1 - t) + np.clip(kleur * 1.28 + 0.04, 0, 1) * t      # ingeweven, iets lichter blauw
+    if tekst_kleur is not None:
+        kleur = kleur * (1 - t) + np.array(tekst_kleur, np.float32)[None, None] * ((1 + 0.16 * struct) * golf)[..., None] * t
     # nylon webbing: fijne ribbels in de lengte en een zachte glans
     dw = dwars.reshape(yy.shape)
     rib = 1 + 0.045 * np.sin(dw * 2 * np.pi / 2.2) + 0.015 * np.sin(langs.reshape(yy.shape) * 2 * np.pi / 1.7)

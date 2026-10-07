@@ -34,8 +34,8 @@ De beelden zijn getekend in de merkstijl en worden bij de import van GitHub opge
 
 | Product | Prijs | Handle |
 |---|---|---|
-| T-shirt Zonsopkomst | € 35,00 | `t-shirt-zonsopkomst` |
-| T-shirt Stickers | € 35,00 | `t-shirt-stickers` |
+| T-shirt Lijn naar zee | € 35,00 | `t-shirt-lijn-naar-zee` |
+| T-shirt Getijden | € 35,00 | `t-shirt-getijden` |
 | Longsleeve Golf | € 45,00 | `longsleeve-golf` |
 | Longsleeve Tegel | € 45,00 | `longsleeve-tegel` |
 | UV-shirt lange mouw | € 45,00 | `uv-shirt-lange-mouw` |

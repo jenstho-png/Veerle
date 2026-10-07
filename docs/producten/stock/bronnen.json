@@ -126,5 +126,77 @@
     "photographer": "Roman Raizen",
     "what": "Pale aqua shortboard with dark navy rails and nose, standing upright in white sand (PARTIAL MATCH, fallback only)",
     "notes": "2000x1496. Straight-on deck view, no stickers or logos, very plain pale background (white sand, hazy sea and sky). Real film photo (Mamiya 645 scan), so it has film grain and a few dust specks. Does NOT fully meet the brief: the tail is buried in sand (about 15% of the board not visible), the deck is pale aqua rather than cream (recolourable, but the dark rails and nose are part of the board), and there are faint scuff or drip marks on the lower deck. No clean, whole, cream or white, sticker-free board seen top-down on a plain background was found on free Unsplash."
+  },
+  {
+    "file": "tshirt2-creme-1.jpg",
+    "source_page": "https://www.pexels.com/photo/20669538/",
+    "image_url": "https://images.pexels.com/photos/20669538/pexels-photo-20669538.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "photographer": "Dmitriy Steinke (Pexels)",
+    "what": "Off-white / warm ecru heavyweight boxy tee (dropped shoulders, thick rib collar), front view, held up on a hanger by a hand, plain warm-grey wall, soft even daylight",
+    "notes": "1600x2400. Fabric colour about RGB(227,220,213), a warm off-white. Front chest and back are blank. Chest centre is about (790,1050); a chest print about 420px wide looks right (body runs about x 345-1245, collar bottom y 805). Neck label: a blue woven 'HOSEKI' label inside the back neck, partly visible through the neck opening, centre about (820,762), about 140x28px; there is also orange neck tape (x 625-1000, y 660-700). WATCH OUT: a blue woven 'HOSEKI' hem patch sits on the front lower right hem, centre about (888,2116), about 90x80px; retouch it out (plain fabric around it). The hanger hook and the hand are at the top right (hand about x 700-1600, y 330-560). The shirt hangs slightly tilted."
+  },
+  {
+    "file": "tshirt2-creme-2.jpg",
+    "source_page": "https://www.pexels.com/photo/6786611/",
+    "image_url": "https://images.pexels.com/photos/6786611/pexels-photo-6786611.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "photographer": "Artem Podrez (Pexels)",
+    "what": "Beige / cream tee worn by a model, front torso crop (chin to waist, no face), light warm-grey studio wall",
+    "notes": "1600x976 (landscape). Fabric colour about RGB(225,216,199), a true cream/sand. Completely blank, no label visible. Chest centre is about (810,430); a chest print about 300px wide looks right (body x about 455-1045 at y 700, collar bottom y 255). The hem is cut off at the bottom edge. The fabric is midweight with a relaxed dolman-ish sleeve; it is clean and smooth with almost no folds, so a print will sit flat."
+  },
+  {
+    "file": "tshirt2-wit-voor-1.jpg",
+    "source_page": "https://www.pexels.com/photo/18257675/",
+    "image_url": "https://images.pexels.com/photos/18257675/pexels-photo-18257675.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "photographer": "Dayong Tien (Pexels)",
+    "what": "White heavyweight oversized/boxy tee, front view, whole shirt on a white wide-shoulder hanger on a steel rail, light grey wall, soft daylight",
+    "notes": "1600x2355 (portrait). Thick cotton with a wide rib collar and nice natural vertical drape folds: the best 'premium heavyweight' look. Chest is blank. Chest centre is about (765,1060); a chest print about 340px wide looks right (body x 420-1090, collar bottom y 835, hem about y 2200). Neck label: a printed white care/size label ('XL(180/96A) Made in China') inside the back neck, visible through the opening, centre about (788,753), about 55x70px; it is easy to retouch out or leave in. The hanger and rail are visible at the top."
+  },
+  {
+    "file": "tshirt2-wit-voor-2.jpg",
+    "unsplash_page": "https://unsplash.com/photos/8ACmRoleM24",
+    "image_url": "https://images.unsplash.com/photo-1778671394516-8270eac13c42?w=1600&q=85&fm=jpg",
+    "photographer": "Avtar Singh (Unsplash)",
+    "what": "White crew-neck tee, front view, whole shirt on a WOODEN hanger hanging from a wall hook, warm linen/plaster wall",
+    "notes": "1600x1067 (landscape). Very clean and centred. It looks like a studio render or AI-assisted mockup (very smooth). It is fine as a web mockup, but less 'real-fabric' than wit-voor-1. Completely blank, no label visible. Chest centre is about (800,470); a chest print about 250px wide looks right (body x 550-1048, collar bottom y 305, hem y 985). The wooden hanger is at the top centre (x 700-900, y 110-215)."
+  },
+  {
+    "file": "tshirt2-wit-rug-1.jpg",
+    "source_page": "https://www.pexels.com/photo/6311252/",
+    "image_url": "https://images.pexels.com/photos/6311252/pexels-photo-6311252.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "photographer": "Gabby K (Pexels)",
+    "what": "White tee, BACK view, worn by a male model (head bowed, no face), warm off-white studio wall, soft light",
+    "notes": "1600x2400 (portrait). The back is completely blank, with no label visible. Back-print centre is about (670,1100); a back print about 400px wide looks right (the upper-back print top is about y 850). The back body runs about x 350-1010, the back collar is at about y 650-700 (centre x 650) and the hem is about y 2000. The torso is turned slightly, so the body centre is left of the image centre. The fabric is midweight, clean and smooth."
+  },
+  {
+    "file": "tshirt2-navy-1.jpg",
+    "source_page": "https://www.pexels.com/photo/6599706/",
+    "image_url": "https://images.pexels.com/photos/6599706/pexels-photo-6599706.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "photographer": "Davdkuko (Pexels)",
+    "what": "Navy / dark slate-blue tee worn by a male model, 3/4 front view, overcast daylight outdoors (blurred trees and sand-coloured ground)",
+    "notes": "1600x2397 (portrait). Fabric colour about RGB(31,34,39), a real dark navy. Completely blank, no label visible. The face is in the top half, so crop at y >= 1100 for a torso-only shot. Chest centre is about (640,1600); a chest print about 380px wide looks right, but it needs a slight perspective warp because the torso is turned to the right (visible front body x about 300-1000; collar bottom about y 1250-1290 at x 600-650). A diagonal crease runs from about (800,1250) to (900,1800). The hem is cut off."
+  },
+  {
+    "file": "tshirt2-navy-2.jpg",
+    "source_page": "https://www.pexels.com/photo/8532616/",
+    "image_url": "https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "photographer": "Anna Nekrashevich (Pexels)",
+    "what": "BLACK crew-neck tee, front view, whole shirt on a white hanger against a white wall with soft window-light shadows",
+    "notes": "1600x1067 (landscape). NOTE: this is near-pure black (about RGB 11,10,10), not navy. It is used as the dark product shot because no good free blank navy hanger/flat-lay photo was found. Recolouring to navy works only as a tint and will look dark. Chest is blank. Chest centre is about (805,450); a chest print about 290px wide looks right (body x 525-1100, collar bottom y 270, hem about y 1015). Neck label: a BLANK white label inside the back neck, centre about (795,233), about 55x24px. The window-shadow diagonals cross the lower body. The fabric looks medium weight, not very boxy."
+  },
+  {
+    "file": "tshirt2-model-1.jpg",
+    "source_page": "https://www.pexels.com/photo/4066292/",
+    "image_url": "https://images.pexels.com/photos/4066292/pexels-photo-4066292.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "photographer": "cottonbro studio (Pexels)",
+    "what": "Black heavyweight boxy tee worn by a female model, front torso crop (lips to jeans/belt), editorial interior with a green tiled stove and dried grasses, soft daylight",
+    "notes": "1600x1069 (landscape). Very premium/editorial look; the thick fabric holds its shape. Black with a faint cool tint (about RGB 4,16,19). Completely blank, no label visible. Chest centre is about (870,380); a chest print about 260px wide looks right (body x 615-1130 at y 600, collar bottom y 185 at x 865, tucked hem about y 790). The left hand is on the hip; there are no props and no surfboard."
+  },
+  {
+    "file": "tshirt2-model-2.jpg",
+    "unsplash_page": "https://unsplash.com/photos/YxNVXfyicSc",
+    "image_url": "https://images.unsplash.com/photo-1789110520079-c2714bd40d42?w=1600&q=85&fm=jpg",
+    "photographer": "engin akyurt (Unsplash)",
+    "what": "White oversized boxy tee (rolled sleeves) worn by a female model, BACK view, torso crop (no face), pure white studio background",
+    "notes": "1600x2229 (portrait). Thick, structured oversized fit with a clean large blank back, ideal for a big back print. Back-print centre is about (790,650); a back print about 480px wide looks right (back collar about y 150-200 centred x 770, shoulders x 250-1150, body x about 390-1230, hem about y 2030). There is no neck label, only a tiny loose thread at the collar at about (632,165), about 15px. The background is plain white, so it is less atmospheric; you could swap in a warm backdrop."
   }
 ]

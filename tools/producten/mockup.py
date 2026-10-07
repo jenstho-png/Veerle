@@ -94,7 +94,7 @@ def naar_staand(img, achter=None, b=1600, h=2000, vul=0.88):
         rand = np.concatenate([img[:8].reshape(-1, 3), img[-8:].reshape(-1, 3), img[:, :8].reshape(-1, 3), img[:, -8:].reshape(-1, 3)])
         achter = np.median(rand, axis=0)
     schaal = min(b * vul / iw, h * vul / ih, b / iw, h / ih) if vul < 1 else max(b / iw, h / ih)
-    nw, nh = int(iw * schaal), int(ih * schaal)
+    nw, nh = int(np.ceil(iw * schaal - 1e-6)), int(np.ceil(ih * schaal - 1e-6))
     klein = cv2.resize(img, (nw, nh), interpolation=cv2.INTER_AREA if schaal < 1 else cv2.INTER_LANCZOS4)
     doek = np.ones((h, w_ := b, 3), np.float32) * np.array(achter, np.float32)
     x0, y0 = (b - nw) // 2, (h - nh) // 2
