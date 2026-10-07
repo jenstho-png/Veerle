@@ -342,6 +342,17 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
 .cover .tekst { position: absolute; right: 6cqw; bottom: 7cqw; width: 33cqw; color: var(--creme); font: 400 1.75cqw/1.5 var(--mono); }
 .cover .tekst .regel { display: flex; justify-content: space-between; margin-top: 2cqw; font: 400 2.2cqw var(--hand); }
 
+
+/* 1 kaft */
+.cover2 { background: var(--navy); color: var(--creme); }
+.cover2 .boven { position: absolute; top: 5cqw; left: 6cqw; right: 6cqw; display: flex; justify-content: space-between; }
+.cover2 .midden { position: absolute; left: 0; right: 0; top: 24cqw; display: grid; justify-items: center; gap: 5cqw; }
+.cover2 .icoon2 { height: 11cqw; width: auto; }
+.cover2 .woordmerk2 { width: 60cqw; }
+.cover2 .rondjes { position: absolute; left: 0; right: 0; bottom: 21cqw; display: flex; justify-content: center; gap: 2.4cqw; }
+.cover2 .rondjes i { width: 10cqw; aspect-ratio: 1; border-radius: 50%; background-size: 260%; background-position: 30% 42%; box-shadow: 0 0 0 .35cqw var(--navy), 0 0 0 .6cqw rgba(243, 236, 221, .35); }
+.cover2 .onder { position: absolute; left: 0; right: 0; bottom: 8cqw; margin: 0; text-align: center; opacity: .75; }
+
 /* 3 logofamilie */
 .familie { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; height: 100%; }
 .familie > div { position: relative; display: grid; place-items: center; }
@@ -448,14 +459,15 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
     S = lambda n, l, t, w, r: sticker(n, 's', f'left:{l}cqw;top:{t}cqw;width:{w}cqw;transform:rotate({r}deg)')
 
     paginas = []
-    # 1 cover
-    paginas.append(f'''<section class="pagina cover" aria-label="Cover">
-  <img class="bg" src="{foto('cover')}" alt="Twee surfers lopen met hun board naar zee bij zonsondergang">
-  <div class="boven label"><span>Brandbook</span><span>Tide Tode 2025</span></div>
-  {icoon(CREME, 'icoon')}
-  {logo('gestapeld', CREME, 'woordmerk')}
-  <p class="slogan hand">Handen vrij, op weg naar zee</p>
-  <div class="tekst">Tide Tode maakt draagtassen voor surfboards. Bedacht op surftrips in Australië en Midden-Amerika, voor de wandeling door de duinen, de fiets naar het strand en de scooter naar een spot verderop.<div class="regel"><span>est.</span><span>2025</span></div></div>
+    # 1 cover: navy, het logo groot en de stoffen van de tas als rondjes
+    PB0 = HIER.parent.parent / 'docs' / 'producten' / 'beelden'
+    rondjes = ''.join(f'<i style="background-image:url({productfoto(PB0 / f"draagtas-{n}-1.jpg", 700)})"></i>'
+                      for n in ('tegel', 'golfjes', 'zonsondergang', 'schelp', 'salie', 'duin'))
+    paginas.append(f'''<section class="pagina cover2" aria-label="Cover">
+  <div class="boven label"><span>Brandbook</span><span>Tide Tode</span><span>2025</span></div>
+  <div class="midden">{icoon(CREME, 'icoon2')}{logo('gestapeld', CREME, 'woordmerk2')}</div>
+  <div class="rondjes">{rondjes}</div>
+  <p class="onder label">Draagtassen voor je surfboard, surfkleding en gear</p>
 </section>''')
     # 2 constructie
     paginas.append(f'<section class="pagina" aria-label="Logo constructie">{constructie()}</section>')
@@ -482,7 +494,7 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
   <p>Het board erin, het tegelpaneel eromheen en de schouderband omhoog. Als lijntekening voor kaartjes en uitleg, als sticker in de kleuren van de stof.</p>
   <div style="display:grid;grid-template-rows:1fr 1.2fr;gap:2cqw;min-height:0">
     <div class="lijn" style="background:var(--creme);display:grid;place-items:center;padding:2cqw">{TAS.lijn()}</div>
-    <div class="foto" style="background-image:url({foto('zand')})">{TAS.sticker()}</div>
+    <div class="foto" style="background-image:url({foto('zand-studio')})">{TAS.sticker()}</div>
   </div>
 </div></section>''')
     # 3d productfotografie
@@ -504,13 +516,14 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
   <p>De schouderband krijgt per ontwerp een eigen kleur: dusty blue, navy, baby blue, terracotta of rose.</p>
   <div class="negen">{tegels9}</div>
 </div></section>''')
-    # 3f onderweg
+    # 3f onderweg: eigen beelden op het zand
+    A = HIER.parent.parent / 'theme' / 'assets'
     paginas.append(f'''<section class="pagina" aria-label="Onderweg"><div class="fotop">
   <h2>ONDERWEG</h2>
-  <p>Sfeerbeelden: echte plekken, natuurlijk licht, de tas in gebruik. Geen poses, geen studio.</p>
+  <p>De tas om het board, op het zand op weg naar zee. Van bovenaf, warm licht en zand, met voetstappen ernaast.</p>
   <div class="twee">
-    <div style="background-image:url({productfoto(PB / 'fotos' / 'sfeer-zand-tegel.jpg', 800)})"></div>
-    <div style="background-image:url({productfoto(PB / 'fotos' / 'sfeer-muur-tegel.jpg', 800)})"></div>
+    <div style="background-image:url({productfoto(A / 'tt-foto-stap-3.jpg', 900)})"></div>
+    <div style="background-image:url({productfoto(A / 'tt-foto-avontuur.jpg', 900)})"></div>
   </div>
 </div></section>''')
     # 3g kleding en accessoires: echte productfoto's
@@ -550,7 +563,7 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
   <p class="voet label">Stickers en illustraties</p></section>''')
     # 6 logostickers op zand
     paginas.append(f'''<section class="pagina badges" aria-label="Logostickers">
-  <img class="bg" src="{foto('zand')}" alt="">
+  <img class="bg" src="{foto('zand-studio')}" alt="">
   {ovaal().replace('class="badge"', 'class="badge" style="left:5cqw;top:5cqw;width:50cqw;transform:rotate(-7deg)"')}
   {zegel().replace('class="badge"', 'class="badge" style="left:60cqw;top:4cqw;width:33cqw;transform:rotate(8deg)"')}
   {golfrand().replace('class="badge"', 'class="badge" style="left:6cqw;top:42cqw;width:29cqw;transform:rotate(-6deg)"')}
@@ -591,9 +604,9 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
   <div class="tegel logo">{logo('gestapeld', NAVY)}<span class="m">Est 2025</span></div>
   <img src="{foto('g6')}" alt="Twee surfers lopen de zee in">
   <div class="tegel logo">{logo('gestapeld', NAVY)}<span class="m">Handen vrij</span></div>
-  <img src="{foto('g2')}" alt="Surfboard tegen een busje in de duinen">
+  <img src="{productfoto(HIER.parent.parent / 'theme' / 'assets' / 'tt-foto-beginner.jpg', 600)}" alt="Draagtas Salie om een rose board op het zand">
   <div class="tegel"><span class="hand">Het Verhaal</span><span class="m">Bedacht in Australië<br>Gemaakt voor onderweg<br>Van surfers voor surfers</span></div>
-  <img src="{foto('g4')}" alt="Wit surfboard rechtop in het zand">
+  <img src="{productfoto(HIER.parent.parent / 'theme' / 'assets' / 'tt-foto-stap-3.jpg', 600)}" alt="Twee boards in hun tas met voetstappen in het zand">
 </div></section>''')
     # 9 drukwerk
     paginas.append(f'''<section class="pagina" aria-label="Drukwerk">

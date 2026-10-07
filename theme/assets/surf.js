@@ -43,9 +43,10 @@
     get() { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; } },
     set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) { /* privé-venster */ } },
   };
-  let vorige = null;
+  let vorige = null, geopend = false;
   const show = () => {
     if (!popup.hidden) return;
+    geopend = true;
     vorige = document.activeElement;
     popup.hidden = false;
     requestAnimationFrame(() => popup.classList.add('is-open'));
@@ -67,19 +68,22 @@
   popup.addEventListener('click', (e) => { if (e.target === popup) hide(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
   popup.querySelector('form')?.addEventListener('submit', () => store.set({ ...store.get(), done: true }));
-  teaser?.addEventListener('click', show);
+  /* zelf geopend (klik of muis): dan nooit meer vanzelf openen */
+  const zelf = () => { store.set({ ...store.get(), zelf: true }); show(); };
+  teaser?.addEventListener('click', zelf);
   /* met de muis over de kortingsknop: de popup gaat open; ga je met de muis weg (en niet naar de kaart), dan sluit hij weer */
   if (teaser && window.matchMedia('(hover: hover)').matches) {
     const kaart = popup.querySelector('.tt-pop__kaart');
-    let viaHover = false, klok = null;
-    teaser.addEventListener('mouseenter', () => { viaHover = true; show(); });
+    let viaHover = false, klok = null, rust = 0;
+    teaser.addEventListener('mouseenter', () => { if (!popup.hidden) return; viaHover = true; rust = Date.now() + 800; zelf(); });
     document.addEventListener('pointermove', (e) => {
-      if (!viaHover || popup.hidden) return;
+      if (!viaHover || popup.hidden || Date.now() < rust) return;
       const binnen = kaart && kaart.contains(e.target);
       if (binnen) { clearTimeout(klok); klok = null; }
-      else if (!klok) klok = setTimeout(() => { viaHover = false; klok = null; hide(); }, 900);
+      else if (!klok) klok = setTimeout(() => { viaHover = false; klok = null; hide(); }, 500);
     });
-    popup.querySelector('form')?.addEventListener('focusin', () => { viaHover = false; clearTimeout(klok); });
+    /* pas als je echt typt of klikt in het formulier blijft hij open (de automatische focus telt niet) */
+    ['input', 'pointerdown'].forEach((t) => popup.querySelector('form')?.addEventListener(t, () => { viaHover = false; clearTimeout(klok); klok = null; }));
   }
   /* in de footer de kortingsknop verbergen, zodat de onderste regel leesbaar blijft */
   const voet = document.querySelector('footer, .surf-footer, [class*="footer-group"]');
@@ -102,24 +106,26 @@
   }
 
   const state = store.get();
-  if (state.done) return;
+  if (state.done || state.zelf) { if (teaser && !state.done) teaser.hidden = false; return; }
   if (window.Shopify && window.Shopify.designMode) return;
   /* elke nieuwe bezoek (sessie) komt hij één keer vanzelf op; in dezelfde sessie alleen nog via de badge */
   let gezien = false;
   try { gezien = sessionStorage.getItem('surfPopupSessie') === '1'; sessionStorage.setItem('surfPopupSessie', '1'); } catch (e) { gezien = state.seen && Date.now() - state.seen < WEEK; }
   if (gezien) { if (teaser) teaser.hidden = false; return; }
 
+  /* vanzelf hooguit één keer, en niet meer als hij al open is geweest */
+  const vanzelf = () => { if (geopend || store.get().zelf) return; show(); };
   const delay = Math.max(5, Number(popup.dataset.delay) || 12) * 1000;
-  setTimeout(show, delay);
+  setTimeout(vanzelf, delay);
   /* of eerder: halverwege de pagina */
   const halverwege = () => {
-    if (scrollY + innerHeight > document.documentElement.scrollHeight * 0.5) { removeEventListener('scroll', halverwege); show(); }
+    if (scrollY + innerHeight > document.documentElement.scrollHeight * 0.5) { removeEventListener('scroll', halverwege); vanzelf(); }
   };
   setTimeout(() => addEventListener('scroll', halverwege, { passive: true }), 4000);
   if (window.matchMedia('(pointer: fine)').matches) {
     setTimeout(() => {
       document.addEventListener('mouseout', (e) => {
-        if (!e.relatedTarget && e.clientY <= 0) show();
+        if (!e.relatedTarget && e.clientY <= 0) vanzelf();
       });
     }, 8000);
   }
