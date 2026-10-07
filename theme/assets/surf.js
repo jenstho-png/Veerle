@@ -85,6 +85,12 @@
     /* pas als je echt typt of klikt in het formulier blijft hij open (de automatische focus telt niet) */
     ['input', 'pointerdown'].forEach((t) => popup.querySelector('form')?.addEventListener(t, () => { viaHover = false; clearTimeout(klok); klok = null; }));
   }
+  /* op de home de kortingsknop pas tonen als de hero uit beeld is, zodat de hero eerst rustig is */
+  const held = document.querySelector('.template-index .tt-hero');
+  if (teaser && held && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('tt-in-hero');
+    new IntersectionObserver((es) => es.forEach((e) => document.documentElement.classList.toggle('tt-in-hero', e.intersectionRatio > 0.35)), { threshold: [0, 0.35, 1] }).observe(held);
+  }
   /* in de footer de kortingsknop verbergen, zodat de onderste regel leesbaar blijft */
   const voet = document.querySelector('footer, .surf-footer, [class*="footer-group"]');
   if (teaser && voet && 'IntersectionObserver' in window) {

@@ -718,3 +718,24 @@
   };
   zoek?.addEventListener('input', zoeken);
 })();
+
+/* ---------- verhaal: op mobiel 'lees verder' ---------- */
+document.querySelectorAll('.tt-verhaal__body').forEach((body) => {
+  if (body.querySelectorAll('p').length < 2) return;
+  const knop = document.createElement('button');
+  knop.type = 'button'; knop.className = 'tt-verhaal__meer'; knop.textContent = 'Lees verder';
+  knop.addEventListener('click', () => { const open = body.classList.toggle('is-open'); knop.textContent = open ? 'Minder' : 'Lees verder'; });
+  body.after(knop);
+});
+
+/* ---------- herovideo: altijd vanzelf afspelen; lukt dat niet (batterijbesparing), dan de foto zonder afspeelknop ---------- */
+document.querySelectorAll('.tt-hero__video').forEach((vak) => {
+  const v = vak.querySelector('video');
+  if (!v) return;
+  v.muted = true; v.defaultMuted = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('muted', ''); v.controls = false; v.removeAttribute('controls');
+  const weg = () => { if (vak.isConnected) vak.remove(); };
+  const probeer = v.play();
+  if (probeer && probeer.catch) probeer.catch(weg);
+  /* sommige telefoons weigeren stil, zonder fout: na twee seconden nog steeds stil, dan de foto */
+  setTimeout(() => { if (v.paused) weg(); }, 2500);
+});

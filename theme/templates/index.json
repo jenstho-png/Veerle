@@ -7,9 +7,10 @@
         "fallback": "tt-foto-hero-home",
         "stickers": false,
         "boards": false,
-        "btn_label": "Naar de shop",
+        "btn_label": "Shop",
         "btn_link": "/collections/all",
-        "link_label": ""
+        "link_label": "",
+        "btn_tas": true
       }
     },
     "zo": {

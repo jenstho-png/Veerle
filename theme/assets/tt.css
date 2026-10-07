@@ -2238,3 +2238,87 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
   .tt-contact__wegen { display: none !important; }
   .template-product .surf-faq__item:nth-of-type(n+5), body:has(.tt-contact) .surf-faq__item:nth-of-type(n+5) { display: none; }
 }
+
+/* ---------- mobiel: elke sectie past in één scherm ---------- */
+@media (max-width: 749px) {
+  /* koopblok */
+  .tt-koop__duimen, .tt-koop__punten, .tt-koop__vertrouwen, .tt-koop__betaal { display: none !important; }
+  .tt-koop__foto, .tt-koop__foto:first-child { max-height: 46svh !important; }
+  .tt-koop__pitch, .tt-koop__beschrijving { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .tt-koop__details summary { padding-block: 12px !important; }
+  .tt-koop__info { padding-top: 14px !important; }
+  /* boardcheck */
+  .tt-check__beeld { max-height: 22svh; }
+  .tt-check__beeld svg, .tt-check__svg { max-height: 22svh; width: auto; margin-inline: auto; display: block; }
+  .tt-check { padding-block: 40px !important; }
+  /* specificaties: alleen de kaart, de genummerde uitleg staat al bij zo werkt hij */
+  .tt-specs__uitleg, .tt-specs__beeld, .tt-specs__vlak { display: none !important; }
+  /* duurzaam */
+  .tt-duurzaam__noot { display: none !important; }
+  .tt-duurzaam__punt { padding: 16px !important; }
+  .tt-duurzaam__punt p { font-size: 13px !important; line-height: 1.55 !important; }
+  /* kaart met reparatie */
+  .tt-kaart__creme svg, .tt-kaart__creme .tt-ill { display: none !important; }
+  .tt-kaart__creme { padding: 18px !important; min-height: 0 !important; }
+  /* maatwijzer: gewoon een kleine tabel in plaats van losse kaarten */
+  .tt-maat__tabel { display: table !important; width: 100%; border-collapse: collapse; font-size: 12px !important; }
+  .tt-maat__tabel thead { display: table-header-group !important; }
+  .tt-maat__tabel tbody { display: table-row-group !important; }
+  .tt-maat__tabel tr { display: table-row !important; margin: 0 !important; padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
+  .tt-maat__tabel th, .tt-maat__tabel td { display: table-cell !important; padding: 9px 6px !important; border-bottom: 1px solid rgba(34, 50, 79, .14) !important; text-align: left; vertical-align: top; font-size: 12px !important; line-height: 1.35 !important; }
+  .tt-maat__tabel thead th { font-size: 9.5px !important; letter-spacing: .12em; text-transform: uppercase; }
+  .tt-maat__tabel td::before { content: none !important; display: none !important; }
+  .tt-maat { padding-block: 40px !important; }
+  /* collecties: lage kaarten */
+  .tt-cols__grid { gap: 10px !important; }
+  .tt-cols__tegel { min-height: 0 !important; }
+  .tt-cols__beeld, .tt-cols__ill { aspect-ratio: 16 / 7 !important; height: auto !important; min-height: 0 !important; }
+  .tt-cols__beeld img { height: 100% !important; object-fit: cover; }
+  /* contact */
+  .tt-contact__zij .tt-contact__kaart { display: none !important; }
+  .tt-contact__formkaart { padding: 18px !important; }
+  /* verhaal: eerst één alinea, de rest achter lees verder */
+  .tt-verhaal__body:not(.is-open) p:nth-child(n+2) { display: none; }
+  .tt-verhaal__meer { display: inline-block; margin-top: 4px; background: none; border: 0; padding: 0; color: inherit; font: 700 11px/1 var(--tt-tekst); letter-spacing: .16em; text-transform: uppercase; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+  .tt-verhaal__foto { aspect-ratio: 4 / 3 !important; }
+}
+@media (min-width: 750px) { .tt-verhaal__meer { display: none; } }
+@media (max-width: 749px) {
+  .tt-maat__tabel thead { position: static !important; width: auto !important; height: auto !important; overflow: visible !important; clip: auto !important; }
+  .tt-koop__foto, .tt-koop__foto:first-child { max-height: 38svh !important; }
+  .tt-koop .tt-kop--l, .tt-koop h1 { font-size: 30px !important; }
+  .tt-koop__voorraad { display: none !important; }
+  .tt-veld:has([name="contact[Telefoon]"]), .tt-veld:has([name="contact[Bestelnummer]"]) { display: none !important; }
+  .tt-contact textarea { min-height: 84px !important; height: 84px !important; }
+  .tt-cols__beeld { height: 104px !important; aspect-ratio: auto !important; display: block; overflow: hidden; }
+  .tt-cols__ill { height: 104px !important; aspect-ratio: auto !important; display: grid !important; place-items: center; }
+  .tt-cols__ill svg { height: 70px !important; width: auto !important; }
+}
+@media (max-width: 749px) {
+  main section.tt:not(.tt-hero):not(.tt-patroon) { padding-bottom: 40px !important; }
+  main section.tt + section.tt:not(.tt-hero):not(.tt-patroon),
+  main .shopify-section + .shopify-section > section.tt:not(.tt-hero):not(.tt-patroon) { padding-top: 44px !important; }
+  .tt-koop__foto, .tt-koop__foto:first-child { max-height: 34svh !important; }
+  .tt-koop__pillen { gap: 6px !important; }
+  .tt-cols__beeld, .tt-cols__ill { height: 86px !important; }
+  .tt-cols__kop p { font-size: 13px !important; }
+  .tt-verhaal__foto { aspect-ratio: 16 / 10 !important; }
+}
+@media (max-width: 749px) {
+  main section.tt-koop, main section.tt-contact, main section.tt-cols { padding-top: 84px !important; padding-bottom: 28px !important; }
+  .tt-koop__pitch, .tt-koop__beschrijving { -webkit-line-clamp: 2 !important; }
+  .tt-koop__pillen button, .tt-koop__pillen label, .tt-koop__optie label { min-height: 38px !important; height: 38px !important; }
+  .tt-meer .tt-lead { font-size: 13.5px !important; }
+}
+@media (max-width: 749px) {
+  .tt-koop__foto, .tt-koop__foto:first-child { max-height: 32svh !important; }
+  .tt-koop__details summary { padding-block: 9px !important; font-size: 10.5px !important; }
+  .tt-koop__optie { margin-top: 10px !important; }
+  .tt-koop__rij { margin-top: 12px !important; }
+}
+/* nooit een afspeelknop over de hero */
+.tt-hero__video video::-webkit-media-controls, .tt-hero__video video::-webkit-media-controls-start-playback-button, .tt-hero__video video::-webkit-media-controls-overlay-play-button { display: none !important; -webkit-appearance: none; opacity: 0 !important; }
+.tt-in-hero .tt-pop__teaser { opacity: 0 !important; transform: translateY(20px); pointer-events: none; }
+/* hero: kleine shopknop met tasje */
+.tt-knop--shop { display: inline-flex !important; align-items: center; gap: 10px; height: 46px !important; min-height: 0 !important; padding: 0 22px 0 18px !important; font-size: 12px !important; letter-spacing: .22em !important; }
+.tt-knop--shop svg { width: 18px; height: 18px; flex: none; }
