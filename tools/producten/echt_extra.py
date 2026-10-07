@@ -35,6 +35,21 @@ def foto(naam):
     return MK.laad(STOCK / naam)
 
 
+def foto_breed(naam, breedte):
+    """Stockfoto verkleind tot een vaste breedte."""
+    f = foto(naam)
+    return cv2.resize(f, (breedte, int(round(f.shape[0] * breedte / f.shape[1]))), interpolation=cv2.INTER_AREA)
+
+
+def schaal(k):
+    """Coordinaten (getallen, tuples, lijsten) vermenigvuldigen met k en afronden op hele pixels."""
+    def f(v):
+        if isinstance(v, (list, tuple)):
+            return type(v)(f(x) for x in v)
+        return int(round(v * k))
+    return f
+
+
 def bewaar(img, naam, uitsnede=None):
     """Uitsnede (x0, y0, x1, y1) in 4:5, dan naar 1600 x 2000 en als jpg onder 190 kB."""
     if uitsnede:
@@ -170,7 +185,7 @@ def band_zoom(img, zoom, hoogte, strook, omhoog=(0, -1), masker=None, **kw):
     return druk(img, laag, **kw)
 
 
-def masker_kleur(img, laag_hsv, hoog_hsv, zaad=None, sluit=9, rect=None, vullen=True):
+def masker_kleur(img, laag_hsv, hoog_hsv, zaad=None, sluit=9, rect=None, vullen=True, alle=0):
     """Masker op kleur (OpenCV-HSV, 0..180 / 0..255), dichtgemaakt, eventueel alleen het stuk onder zaad of binnen rect."""
     u8 = (np.clip(img, 0, 1) * 255).astype(np.uint8)
     hsv = cv2.cvtColor(u8, cv2.COLOR_RGB2HSV)
@@ -180,7 +195,9 @@ def masker_kleur(img, laag_hsv, hoog_hsv, zaad=None, sluit=9, rect=None, vullen=
     m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((sluit, sluit), np.uint8))
     m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
     n, lab, st, _ = cv2.connectedComponentsWithStats((m > 0).astype(np.uint8))
-    if n > 1:
+    if alle:
+        m = np.isin(lab, [i for i in range(1, n) if st[i, cv2.CC_STAT_AREA] >= alle]).astype(np.uint8)
+    elif n > 1:
         kies = lab[zaad[1], zaad[0]] if zaad else 0
         if kies == 0:
             kies = 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])
@@ -396,30 +413,67 @@ def uv_shirt():
     bewaar(r, 'uv-shirt-lange-mouw-3', uitsnede=(2060, 1180, 3500, 2980))
 
 
+def vlak_vullen(img, rect, omgeving):
+    """Een embleem op een effen vlak (bijvoorbeeld het voorpaneel van een pet) vervangen door dat vlak:
+    de kleur komt van de lichte pixels eromheen, met een zachte overgang en wat korrel."""
+    x0, y0, x1, y1 = rect
+    ox0, oy0, ox1, oy1 = omgeving
+    stuk = img[oy0:oy1, ox0:ox1]
+    L = MK.helderheid(stuk)
+    licht = L > np.percentile(L, 70)
+    kleur = np.median(stuk[licht], axis=0)
+    m = np.zeros(img.shape[:2], np.float32); m[y0:y1, x0:x1] = 1
+    m = cv2.GaussianBlur(m, (0, 0), 3)[..., None]
+    ruis = np.random.default_rng(2).normal(0, 0.01, img.shape[:2]).astype(np.float32)[..., None]
+    # licht verloop van boven naar onder zoals op het paneel
+    yy = np.mgrid[0:img.shape[0], 0:img.shape[1]][0].astype(np.float32)
+    verloop = (1.02 - 0.05 * np.clip((yy - y0) / max(y1 - y0, 1), 0, 1))[..., None]
+    return img * (1 - m) + np.clip(kleur * verloop + ruis, 0, 1) * m
+
+
 # ---------- surfponcho ----------
 def poncho():
     strook2 = tegelstrook(2)
     icoon = art('icoon-navy.png', CREME)
     rug = art('surfponcho-tegel-rugprint-los.png')
 
-    # 1. voorkant, gedragen bij een strandhut (Pexels 36527913): middelste poncho wordt zeeblauw met tegelband en icoon
-    p = foto('poncho-voor-1.jpg')
-    for x, y, b, h in [(1180, 2207, 72, 98), (846, 1978, 64, 84), (1546, 2096, 64, 84), (1053, 1914, 50, 44),
-                       (1190, 2045, 120, 100), (1352, 2058, 100, 76)]:
-        p = E.poets(p, x, y, b, h)                      # merklogo's op de ponchos en de pet, letters op de hut
-    m = masker_kleur(p, (72, 25, 140), (102, 255, 255), zaad=(1050, 2500), sluit=15)
-    oranje = masker_kleur(p, (5, 120, 120), (22, 255, 255), zaad=(760, 2300), sluit=15, rect=(450, 1700, 1000, 2600), vullen=False)
-    petrol = masker_kleur(p, (88, 60, 25), (110, 255, 150), zaad=(1500, 2400), sluit=15, rect=(1320, 1760, 1800, 2720))
+    # 1. voorkant, gedragen bij een strandhut (Pexels 36527913): middelste poncho wordt zeeblauw met tegelband en icoon.
+    #    Coordinaten zijn gemeten op de 2400 px brede versie; we werken op 3840 px (k = 1.6) zodat de uitsnede scherp blijft.
+    k = schaal(1.6)
+    p = foto_breed('poncho-voor-1.jpg', 3840)
+    for x, y, b, h in [(1180, 2207, 72, 98), (846, 1978, 64, 84), (1546, 2096, 64, 84)]:
+        p = E.poets(p, *k((x, y, b, h)))                 # merklogo's op de ponchos
+    p = vlak_vullen(p, k((1026, 1890, 1097, 1937)), k((995, 1882, 1130, 1940)))   # embleem op de pet: effen wit paneel
+    # letters op de donkere deuropening van de hut: alleen de donkere pixels vervagen (hand en hoodie blijven)
+    x0, y0, x1, y1 = k((1120, 1990, 1316, 2100))
+    vak = np.zeros(p.shape[:2], np.float32); vak[y0:y1, x0:x1] = 1
+    donker = (MK.helderheid(p) < 0.3) & (vak > 0)
+    donker = cv2.erode(donker.astype(np.uint8), np.ones((7, 7), np.uint8)).astype(np.float32)
+    zacht = cv2.GaussianBlur(donker, (0, 0), 3)[..., None]
+    p = p * (1 - zacht) + cv2.GaussianBlur(p, (0, 0), 22) * zacht
+    m = masker_kleur(p, (72, 25, 140), (102, 255, 255), zaad=k((1050, 2500)), sluit=23)
+    hsv0 = cv2.cvtColor((np.clip(p, 0, 1) * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
+    oranje = masker_kleur(p, (8, 205, 110), (24, 255, 255), zaad=k((760, 2300)), sluit=11, rect=k((450, 1700, 1000, 2600)), vullen=False, alle=800)
+    huid = poly(p.shape, k([(850, 1945), (1005, 1945), (1005, 2120), (905, 2300), (790, 2300), (795, 2150)])) | \
+        poly(p.shape, k([(650, 1760), (780, 1760), (780, 1880), (650, 1880)])) | poly(p.shape, k([(990, 1700), (1110, 1700), (1110, 1935), (990, 1935)])) | \
+        poly(p.shape, k([(440, 1700), (505, 1700), (505, 1895), (440, 1895)]))
+    rand = cv2.dilate((oranje > 0.3).astype(np.uint8), np.ones((39, 39), np.uint8)) & (hsv0[..., 0] <= 30) & (hsv0[..., 1] > 95) & ~huid
+    oranje = np.maximum(oranje, cv2.GaussianBlur(rand.astype(np.float32), (0, 0), 1.5))
+    petrol = masker_kleur(p, (88, 60, 25), (110, 255, 150), zaad=k((1500, 2400)), sluit=23, rect=k((1320, 1760, 1800, 2720)))
+    binnen = masker_kleur(p, (70, 20, 30), (105, 255, 255), rect=k((830, 2855, 1270, 2940)), vullen=False)
+    m = np.maximum(m, binnen)
+    rand = cv2.dilate((m > 0.3).astype(np.uint8), np.ones((17, 17), np.uint8)) & (hsv0[..., 0] >= 68) & (hsv0[..., 0] <= 106) & (hsv0[..., 1] > 15)
+    m = np.maximum(m, cv2.GaussianBlur(rand.astype(np.float32), (0, 0), 1.5))
     if PROEF:
-        cv2.imwrite(str(UIT / 'proef-masker-poncho1.jpg'), (np.dstack([petrol, m, oranje]) * 255).astype(np.uint8)[::4, ::4])
+        cv2.imwrite(str(UIT / 'proef-masker-poncho1.jpg'), (np.dstack([petrol, m, oranje]) * 255).astype(np.uint8)[::6, ::6])
     p = kleur_lab(p, m, ZEEBLAUW, chroma=0.9, spreiding=0.5)
-    p = kleur_lab(p, oranje, '#CDB894', chroma=0.8, spreiding=0.3)
+    p = kleur_lab(p, oranje, '#B5713F', chroma=0.9, spreiding=0.5)
     p = kleur_lab(p, petrol, '#3B4046', chroma=0.6, spreiding=0.3)
     licht = np.percentile(MK.helderheid(p)[m > 0.5], 85)
-    p = druk(p, plaats(p.shape, icoon, 1182, 2212, 25), ref=licht, verplaatsing=3, schaduw=0.9, structuur=1.0, dekking=0.92, masker=m, blur=0.5)
-    p = band_zoom(p, [(840, 2866), (962, 2876), (1115, 2879), (1256, 2867)], 78, strook2, masker=m, ref=licht,
-                  verplaatsing=10, schaduw=1.15, structuur=0.9, blur=0.6)
-    bewaar(p, 'surfponcho-tegel-1', uitsnede=(470, 1860, 1470, 3110))
+    p = druk(p, plaats(p.shape, icoon, *k((1182, 2212, 25))), ref=licht, verplaatsing=5, schaduw=0.9, structuur=1.0, dekking=0.92, masker=m, blur=0.8)
+    p = band_zoom(p, k([(840, 2866), (962, 2876), (1115, 2879), (1256, 2867)]), k(78), strook2, masker=m, ref=licht,
+                  verplaatsing=16, schaduw=1.15, structuur=0.9, blur=1.0)
+    bewaar(p, 'surfponcho-tegel-1', uitsnede=k((470, 1860, 1470, 3110)))
 
 
 if __name__ == '__main__':

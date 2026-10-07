@@ -278,7 +278,7 @@ KARABIJN = {
 PX_PER_CM_RENDER = 880 / 7.0          # karabijnhaak van 7 cm is 880 px in de render van echt.karabijn
 
 
-def karabijn_laag(naam):
+def karabijn_laag(naam, r=None, L0=360, B=2600, buig=0.09, alleen_haak=False):
     """De karabijnhaak met D-ring en bandlus precies zoals op karabijnhaak-<naam>-1 (zelfde functies uit echt.py),
     maar als losse laag (RGBA) zonder de tafel en de schaduwen erop: twee keer renderen, op zwart en op wit,
     en de dekking uit het verschil halen."""
@@ -299,17 +299,20 @@ def karabijn_laag(naam):
     glans = cv2.morphologyEx((romp * grijs).astype(np.uint8), cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8)).astype(np.float32)
     zone = np.maximum(m, cv2.GaussianBlur(glans, (0, 0), 1.2))
     metaal = E.gegoten_logo(metaal, m, 760, 600, 250, 29.2, sterkte=1.0 if naam == 'messing' else 1.4)
-    L0, B0, B, H = 360, 300, 2600, 3250
+    B0, H = 300, 3250
     haak_a = np.zeros((H, B), np.float32); haak_a[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = zone
     haak_c = np.zeros((H, B, 3), np.float32); haak_c[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = metaal
     hm = np.zeros((H, B), np.float32); hm[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = np.maximum(m, 0)
-    r = np.array([-0.215, 0.977]); C = np.array([592 + L0, 1068 + B0])
+    r = np.array([-0.215, 0.977]) if r is None else np.asarray(r, float) / np.linalg.norm(r)
+    C = np.array([592 + L0, 1068 + B0])
     Sd = C + r * 150
+    if alleen_haak:
+        return np.dstack([haak_c, haak_a]).astype(np.float32), dict(C=C, r=r, L0=L0)
     lagen = []
     for achter in (0.0, 1.0):
         doek = haak_c * haak_a[..., None] + achter * (1 - haak_a[..., None])
         doek = E.d_ring(doek, hm, Sd, r, 300, 26, donker, licht)
-        doek = E.bandlabel(doek, tuple(Sd), tuple(r), 1450, 280, p['band'], p['garen'], p['tekst'], buig=0.09, R=13)
+        doek = E.bandlabel(doek, tuple(Sd), tuple(r), 1450, 280, p['band'], p['garen'], p['tekst'], buig=buig, R=13)
         lagen.append(doek.astype(np.float32))
     Cz, Cw = lagen
     A = np.clip(1 - (Cw - Cz).mean(-1), 0, 1)
@@ -317,10 +320,21 @@ def karabijn_laag(naam):
     voorwerp = np.maximum(haak_a, A * (F.max(-1) > 0.015))          # schaduwen (puur zwart) vallen weg
     voorwerp = np.where(A > 0.02, voorwerp, 0)
     kleur_v = np.clip(np.where(haak_a[..., None] > 0.5, Cz / np.maximum(A, 1e-3)[..., None], F), 0, 1)
-    return np.dstack([kleur_v, voorwerp]).astype(np.float32)
+    uit = np.dstack([kleur_v, voorwerp]).astype(np.float32)
+    return uit, dict(C=C, r=r, L0=L0)
 
 
-def haak_punten(laag):
+def karabijn_hangend(naam):
+    """Laag waarin D-ring en lus in het verlengde van de haak hangen (zwaartekracht), lus bijna recht."""
+    voorlopig, info = karabijn_laag(naam, alleen_haak=True)
+    contact, _ = haak_punten(voorlopig, info)
+    r = info['C'] - contact
+    L0 = 1500
+    laag, info = karabijn_laag(naam, r=r, L0=L0, B=3600, buig=0.015)
+    return laag, info
+
+
+def haak_punten(laag, info=None):
     """Binnenkant bovenin de haak (waar een band of ring in de haak rust) en het midden van de bandlus, in render-pixels."""
     al = laag[..., 3]
     haak = (al > 0.5).astype(np.uint8); haak[1400:] = 0
@@ -336,15 +350,16 @@ def haak_punten(laag):
         as_ = -as_                                   # wijst naar de smalle bovenkant (rechtsboven)
     proj = (pts - c) @ as_
     contact = pts[proj >= np.percentile(proj, 99.7)].mean(0)
-    r = np.array([-0.215, 0.977]); C = np.array([592 + 360, 1068 + 300]); band_mid = C + r * 150 + r * 725
+    info = info or dict(C=np.array([592 + 360, 1068 + 300]), r=np.array([-0.215, 0.977]))
+    band_mid = info['C'] + info['r'] * (150 + 725)
     return contact, band_mid
 
 
-def plaats_karabijn(scene, laag, px_per_cm, contact_doel, hoek, schaduw=(10, 22, 16, 0.28), zacht_s=0.9,
+def plaats_karabijn(scene, laag, info, px_per_cm, contact_doel, hoek, schaduw=(10, 22, 16, 0.28), zacht_s=0.9,
                     verzadiging=0.9, licht=1.0, korrel=0.012):
     """Zet de laag in de foto: schalen naar echte grootte, draaien om het contactpunt, schaduw, scherpte en korrel
     van de foto overnemen. Geeft (beeld, dekking) terug."""
-    contact, _ = haak_punten(laag)
+    contact, _ = haak_punten(laag, info)
     s = px_per_cm / PX_PER_CM_RENDER
     pre = np.dstack([laag[..., :3] * laag[..., 3:], laag[..., 3:]])
     klein = cv2.resize(pre, None, fx=s, fy=s, interpolation=cv2.INTER_AREA)
@@ -371,12 +386,12 @@ def plaats_karabijn(scene, laag, px_per_cm, contact_doel, hoek, schaduw=(10, 22,
 def karabijn_zwart():
     """Zwarte karabijnhaak aan de schouderband van een zwarte leren rugzak die aan een haak tegen een witte muur hangt."""
     sc = foto('karabijn-rugzak-muur-1.jpg')
-    laag = karabijn_laag('zwart')
-    contact, mid = haak_punten(laag)
+    laag, info = karabijn_hangend('zwart')
+    contact, mid = haak_punten(laag, info)
     v = mid - contact
     hoek = -(90 - np.degrees(np.arctan2(v[1], v[0])))          # band-midden recht onder het contactpunt
-    doel = (2770, 3770)
-    uit, a = plaats_karabijn(sc, laag, 48, doel, hoek)
+    doel = (2770, 3783)
+    uit, a = plaats_karabijn(sc, laag, info, 48, doel, hoek)
     # de band loopt door de haak: links ligt hij voor de haak (daar de originele band terug)
     L = MK.helderheid(sc)
     band = (L < 0.35).astype(np.uint8)
@@ -387,6 +402,26 @@ def karabijn_zwart():
     uit = uit * (1 - voor[..., None]) + sc * voor[..., None]
     np.save('/tmp/claude-0/-home-user-Veerle/e622134c-148a-50b2-bdf1-45d3e9d54d8e/scratchpad/em/kz.npy', uit[2700:4900, 1700:3500])
     E.bewaar(uit, 'karabijnhaak-zwart-2', vul=1.0, uitsnede=(1820, 2850, 3500, 4950))
+
+
+def karabijn_messing():
+    """Messing karabijnhaak aan de linker schouderband van dezelfde zwarte rugzak (gespiegelde compositie)."""
+    sc = foto('karabijn-rugzak-muur-1.jpg')
+    laag, info = karabijn_hangend('messing')
+    contact, mid = haak_punten(laag, info)
+    v = mid - contact
+    hoek = -(90 - np.degrees(np.arctan2(v[1], v[0])))
+    doel = (1425, 3952)
+    uit, a = plaats_karabijn(sc, laag, info, 48, doel, hoek, verzadiging=0.92, licht=0.97)
+    # de band loopt door de haak: rechts ligt hij voor de haak
+    L = MK.helderheid(sc)
+    band = (L < 0.35).astype(np.uint8)
+    band[:3900] = 0; band[4000:] = 0; band[:, :1300] = 0; band[:, 1560:] = 0
+    band = zacht(cv2.dilate(band, np.ones((3, 3), np.uint8)), 1.0)
+    rechts = zacht((np.arange(sc.shape[1]) > doel[0] + 4)[None, :].repeat(sc.shape[0], 0), 2)
+    voor = band * rechts
+    uit = uit * (1 - voor[..., None]) + sc * voor[..., None]
+    E.bewaar(uit, 'karabijnhaak-messing-2', vul=1.0, uitsnede=(760, 2850, 2440, 4950))
 
 
 def borduur_op(img, L_bron, ref, a, cx, cy, breedte, draai=0, sterkte=0.8):

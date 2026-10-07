@@ -195,7 +195,8 @@ LABEL_POS = (81.0, 4.3, 5.0, 2.4)    # u, v, breedte, hoogte in cm: plat op de t
 def ontwerp_met_label(ppc):
     """Ontwerp plus het geweven label (plat opgestikt, met stiksel en een heel klein beetje dikte)."""
     img = ontwerp(ppc)
-    lab = label_geweven()
+    # 180 graden gedraaid gestikt: leesbaar als je vanaf de franjes naar de handdoek kijkt
+    lab = label_geweven()[::-1, ::-1].copy()
     u, v, b, h = LABEL_POS
     bw, bh = int(round(b * ppc)), int(round(h * ppc))
     klein = cv2.resize(lab, (bw, bh), interpolation=cv2.INTER_AREA)
@@ -246,7 +247,7 @@ def weefsel(U, V, sterkte, garen=0.11):
     return 1 + sterkte * np.clip(t, -2.5, 2.5)
 
 
-def breng_aan(foto, masker, U, V, ppc, ontw, schoon=None, verplaatsing=0.35, detail=1.0, ref=None, gamma=1.0,
+def breng_aan(foto, masker, U, V, ppc, ontw, labelm=None, schoon=None, verplaatsing=0.35, detail=1.0, ref=None, gamma=1.0,
               detail_sigma=1.3, schaduw_sigma=1.6, wrap=False, waas=0.0, weef=0.0, rust=None, mono=False):
     """Ontwerp (bij ppc px/cm) via de coördinaatkaarten U, V (cm) op de foto zetten.
 
@@ -261,8 +262,14 @@ def breng_aan(foto, masker, U, V, ppc, ontw, schoon=None, verplaatsing=0.35, det
         # geen verplaatsing rond voorwerpen op de stof en hun slagschaduw (dat zijn geen plooien)
         w_ = 1 - np.clip(cv2.GaussianBlur(rust, (0, 0), 25) * 2.5, 0, 1)
         gx, gy = gx * w_, gy * w_
-    Ud = U + np.clip(gx / nrm, -1.5, 1.5) * verplaatsing
-    Vd = V + np.clip(gy / nrm, -1.5, 1.5) * verplaatsing
+    stijf = 1.0
+    if labelm is not None:
+        # het label is stugger dan de handdoek: het buigt minder mee en de stofstructuur komt er nauwelijks door
+        lab0 = cv2.remap(labelm, (U * ppc - 0.5).astype(np.float32), (V * ppc - 0.5).astype(np.float32), cv2.INTER_LINEAR,
+                         borderMode=cv2.BORDER_CONSTANT)
+        stijf = 1 - 0.8 * cv2.GaussianBlur(cv2.dilate(lab0, np.ones((15, 15), np.uint8)), (0, 0), 6)
+    Ud = U + np.clip(gx / nrm, -1.5, 1.5) * verplaatsing * stijf
+    Vd = V + np.clip(gy / nrm, -1.5, 1.5) * verplaatsing * stijf
     mx = (Ud * ppc - 0.5).astype(np.float32)
     my = (Vd * ppc - 0.5).astype(np.float32)
     rand = cv2.BORDER_WRAP if wrap else cv2.BORDER_REPLICATE
@@ -283,10 +290,16 @@ def breng_aan(foto, masker, U, V, ppc, ontw, schoon=None, verplaatsing=0.35, det
     fijn = (Lf - cv2.GaussianBlur(Lf, (0, 0), detail_sigma))[..., None]
     if mono:
         fijn = fijn / max(float(ref[0]), 0.2) * 0.75
-    donker = 0.55 + 0.45 * MK.helderheid(patroon)[..., None]   # op donker garen valt structuur minder op
+    donker = 0.3 + 0.7 * MK.helderheid(patroon)[..., None]     # op donker garen valt structuur minder op
+    if labelm is not None:
+        lab = cv2.remap(labelm, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)[..., None]
+        donker = donker * (1 - 0.8 * lab)
     kleur = np.clip(kleur + fijn * detail * 1.6 * donker, 0, 1)
     if weef:
         kleur = kleur * weefsel(U, V, weef)[..., None]
+    if labelm is not None:
+        # een heel klein beetje glans op het geweven label (polyester damast)
+        kleur = np.clip(kleur * (1 + 0.04 * lab), 0, 1)
     m = masker[..., None]
     return foto * (1 - m) + kleur * m
 
@@ -462,7 +475,7 @@ def foto2():
     masker = cv2.GaussianBlur(binnen, (0, 0), 1.0) * (1 - cv2.GaussianBlur(bril, (0, 0), 1.0))
     schoon = strepen_weg(f, 61)
     ontw, lm = ontwerp_met_label(s * 1.5)
-    uit = breng_aan(f, masker, U, V, s * 1.5, ontw, schoon=schoon, verplaatsing=0.5, detail=0.6, waas=0.12, weef=0.012,
+    uit = breng_aan(f, masker, U, V, s * 1.5, ontw, labelm=lm, schoon=schoon, verplaatsing=0.5, detail=0.6, waas=0.12, weef=0.012,
                     rust=cv2.dilate(bril, np.ones((61, 61), np.uint8)))
     global LAATSTE
     LAATSTE = uit
@@ -474,25 +487,27 @@ def foto2():
 # ---------- foto 3: detail van stof, band, label en franjes ----------
 ZOOM_3 = [(0, 1450), (100, 1420), (500, 1330), (900, 1250), (1100, 1180), (1300, 1110), (1400, 1060), (1500, 1000), (1600, 900),
           (1700, 780), (1800, 640), (1900, 520), (2000, 420), (2100, 330), (2200, 220), (2300, 120), (2400, 40)]
-HOEK_3 = 2350          # hier (x) vouwt de zijkant van de handdoek weg: u = 90 cm
+HOEK_3 = 560           # zijkant van de handdoek (u = 90 cm) net links buiten de uitsnede; het label zit 4 tot 9 cm daarvandaan
 UITSNEDE_3 = (600, 0, 2200, 2000)
 
 
 def langs_zoom(punten, xx, yy, dicht=4000):
     """Voor elk pixel: booglengte van het dichtstbijzijnde punt op de zoom en de afstand tot de zoom (px)."""
     from scipy.spatial import cKDTree
+    from scipy.interpolate import splprep, splev
     p = np.array(punten, np.float32)
-    seg = np.linspace(0, len(p) - 1, dicht)
-    i0 = np.minimum(np.floor(seg).astype(int), len(p) - 2)
-    f = (seg - i0)[:, None]
-    q = p[i0] * (1 - f) + p[i0 + 1] * f
+    tck, _ = splprep([p[:, 0], p[:, 1]], s=len(p) * 60.0)     # vloeiende zoom, geen knikken
+    q = np.stack(splev(np.linspace(0, 1, dicht), tck), 1).astype(np.float32)
     boog = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(q, axis=0), axis=1))])
     d, idx = cKDTree(q).query(np.stack([xx.ravel(), yy.ravel()], 1), workers=-1)
     # aan welke kant van de zoom: de stof ligt linksboven (normaal wijst naar de stof)
     t = np.gradient(q, axis=0)
     nrm = np.stack([t[:, 1], -t[:, 0]], 1)
     kant = np.sign(((np.stack([xx.ravel(), yy.ravel()], 1) - q[idx]) * nrm[idx]).sum(1))
-    return boog[idx].reshape(xx.shape), (d * kant).reshape(xx.shape), np.interp(HOEK_3, q[:, 0], boog)
+    B = boog[idx].reshape(xx.shape).astype(np.float32)
+    # booglengte gladstrijken: aan de binnenkant van een bocht wijzen veel pixels naar hetzelfde zoompunt
+    B = cv2.GaussianBlur(B, (0, 0), 25)
+    return B, (d * kant).reshape(xx.shape).astype(np.float32), np.interp(HOEK_3, q[:, 0], boog)
 
 
 def foto3():
@@ -505,11 +520,11 @@ def foto3():
     boog, afst, boog_hoek = langs_zoom(ZOOM_3, xx, yy)
     if np.median(afst[:300, :300]) < 0:
         afst = -afst
-    U = BREED - (boog_hoek - boog) / ppc
+    U = BREED - (boog - boog_hoek) / ppc        # de handdoek ligt 180 graden gedraaid: franjes onder, hoek met label links
     V = afst / ppc
     masker = np.clip((afst - 4) / 6, 0, 1).astype(np.float32)
-    ontw, _ = ontwerp_met_label(ppc)
-    uit = breng_aan(f, masker, U, V, ppc, ontw, verplaatsing=0.25, detail=1.0, mono=True, gamma=0.9, weef=0.008, waas=0.03,
+    ontw, lm = ontwerp_met_label(ppc)
+    uit = breng_aan(f, masker, U, V, ppc, ontw, labelm=lm, verplaatsing=0.12, detail=0.85, mono=True, gamma=0.9, weef=0.008, waas=0.03,
                     detail_sigma=2.0)
     global LAATSTE
     LAATSTE = uit

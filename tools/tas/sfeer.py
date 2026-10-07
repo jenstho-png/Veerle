@@ -26,12 +26,12 @@ UIT = ROOT / 'docs' / 'producten' / 'fotos'
 LIJST = {
     'witte-muur-tegel': ('board-muur-4.jpg', 'draagtas-tegel', dict(lus=1, belicht=1.15, schaduw=(-6, 5, 0.35, 6), lus_schaduw=(-14, 5, 0.3, 5))),
     'oker-muur-ruit': ('board-muur-3.jpg', 'draagtas-ruit', dict(lus=1, belicht=0.85, tint=(1.02, 1.0, 0.96), schaduw=(-4, 5, 0.3, 8), lus_schaduw=(-8, 6, 0.25, 8))),
-    'rood-board-golfjes': ('board-zand-1.jpg', 'draagtas-golfjes', dict(lus=1, belicht=1.1, schaduw=(4, 5, 0.3, 6))),
-    'zonsondergang-zand': ('board-zand-2.jpg', 'draagtas-zonsondergang', dict(lus=-1, belicht=0.72, tint=(1.04, 1.0, 0.93), schaduw=(2, 4, 0.25, 8))),
-    'geel-board-navy': ('board-zand-3.jpg', 'draagtas-navy', dict(lus=1, belicht=0.95, lift=0.04, schaduw=(2, 4, 0.25, 8))),
-    'strand-tegel-navy': ('board-persoon-1.jpg', 'draagtas-tegel-navy', dict(lus=-1, belicht=0.95, schaduw=(3, 5, 0.25, 8))),
-    'gras-schelp': ('board-gras-1.jpg', 'draagtas-schelp', dict(lus=-1, plat=True, belicht=1.0, tint=(1.04, 1.0, 0.92), schaduw=(6, 6, 0.35, 5), lus_schaduw=(8, 8, 0.45, 5))),
-    'kever-salie': ('board-auto-1.jpg', 'draagtas-salie', dict(lus=-1, belicht=0.9, schaduw=(3, 4, 0.3, 6), lus_schaduw=(4, 3, 0.3, 4))),
+    'rood-board-golfjes': ('board-zand-1.jpg', 'draagtas-golfjes', dict(lus=1, albedo=0.8, schaduw=(4, 5, 0.3, 6))),
+    'zonsondergang-zand': ('board-zand-2.jpg', 'draagtas-zonsondergang', dict(lus=-1, albedo=0.8, tint=(1.04, 1.0, 0.93), schaduw=(2, 4, 0.25, 8))),
+    'geel-board-navy': ('board-zand-3.jpg', 'draagtas-navy', dict(lus=1, albedo=0.8, lift=0.04, schaduw=(2, 4, 0.25, 8))),
+    'strand-tegel-navy': ('board-persoon-1.jpg', 'draagtas-tegel-navy', dict(lus=-1, albedo=0.85, schaduw=(3, 5, 0.25, 8))),
+    'gras-schelp': ('board-gras-1.jpg', 'draagtas-schelp', dict(lus=-1, plat=True, albedo=0.9, tint=(1.04, 1.0, 0.92), schaduw=(6, 6, 0.35, 5), lus_schaduw=(8, 8, 0.45, 5))),
+    'kever-salie': ('board-auto-1.jpg', 'draagtas-salie', dict(lus=-1, albedo=0.85, schaduw=(3, 4, 0.3, 6), lus_schaduw=(4, 3, 0.3, 4))),
 }
 
 

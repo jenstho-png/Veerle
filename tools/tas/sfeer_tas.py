@@ -327,6 +327,9 @@ def simuleer_lus(E1, E2, d1, d2, L, w, botsing, g=(0.0, 1.0), stappen=500, min_r
     klem1 = E1[None]
     klem2 = E2[None]
     rest2 = 2 * l * math.cos(min(l / min_r, 1.0) / 2)
+    # bij de rail vouwt de band om (scherpe knik mag), verderop is hij stijf
+    booglen = np.arange(1, n - 1) * l
+    buig_w = np.clip((np.minimum(booglen, L - booglen) - 0.6 * w) / (1.0 * w), 0, 1)
     gap = int(math.ceil(2.5 * w / l)) + 2
     ii, jj = np.triu_indices(n, gap)
     for it in range(stappen):
@@ -342,7 +345,7 @@ def simuleer_lus(E1, E2, d1, d2, L, w, botsing, g=(0.0, 1.0), stappen=500, min_r
             dlt = P[2:] - P[:-2]
             dist = np.linalg.norm(dlt, axis=1) + 1e-9
             doel = np.maximum(dist, rest2) * (1 - stijf) + 2 * l * stijf
-            corr = ((dist - doel) / dist)[:, None] * dlt * 0.35
+            corr = ((dist - doel) / dist)[:, None] * dlt * 0.35 * buig_w[:, None]
             P[:-2] += corr; P[2:] -= corr
             D = P[jj] - P[ii]
             dd = np.linalg.norm(D, axis=1) + 1e-9
@@ -352,8 +355,8 @@ def simuleer_lus(E1, E2, d1, d2, L, w, botsing, g=(0.0, 1.0), stappen=500, min_r
                 np.add.at(P, ii[te], -c)
                 np.add.at(P, jj[te], c)
             afst, grad = botsing(P)
-            binnen = afst < w * 0.6
-            P[binnen] += grad[binnen] * np.clip(w * 0.6 - afst[binnen], 0, 2 * l)[:, None]
+            binnen = afst < w * 0.5
+            P[binnen] += grad[binnen] * np.clip(w * 0.5 - afst[binnen], 0, 2 * l)[:, None]
             P[:klem + 1] = klem1
             P[-klem - 1:] = klem2[::-1]
     if not np.isfinite(P).all():
@@ -391,7 +394,7 @@ def licht_op(L, t, s):
 # ---------------------------------------------------------------- samenstellen
 def maak(foto, naam, handle, lus=-1, stringer=0.0, kort=1.0, belicht=1.0, tint=(1.0, 1.0, 1.0), verzadiging=0.9,
          lift=0.0, zacht=0.5, korrel=None, schaduw=(6, 8, 0.35, 10), lus_schaduw=None, lus_licht=1.0, ondergrens=None,
-         occluder=None, plat=False, debug=False, lus_lengte_factor=1.0):
+         occluder=None, plat=False, debug=False, lus_lengte_factor=1.0, albedo=None):
     """foto: float32 RGB 0..1. Geeft het samengestelde beeld.
     schaduw: (dx, dy, sterkte, zachtheid) van de band op het vak (fotopixels per 300 px boardbreedte).
     lus_schaduw: (dx, dy, sterkte, zachtheid) van de lus op de achtergrond, of None."""
@@ -425,20 +428,16 @@ def maak(foto, naam, handle, lus=-1, stringer=0.0, kort=1.0, belicht=1.0, tint=(
     va = va * a_rand * (~occ)
     # ronding naar de rail: stof draait weg van het licht
     sa = np.abs(Sm)
-    rond = np.where(sa > 0.86, 0.80 + 0.20 * np.cos(np.clip((sa - 0.86) / 0.14, 0, 1) * math.pi / 2) ** 0.7, 1.0)
+    rond = np.where(sa > 0.82, 0.68 + 0.32 * np.cos(np.clip((sa - 0.82) / 0.18, 0, 1) * math.pi / 2) ** 0.8, 1.0)
     L = belichting(foto, B)
     lichtmap = licht_op(L, Tm, np.clip(Sm, -0.97, 0.97)) * rond
     # ---- band
     w_band = SC.BAND / B.k
-    pad, op_stof, info = band_pad(B, foto.shape[:2], w_band, plat=plat, lengte_factor=lus_lengte_factor, ondergrens=ondergrens)
+    info = band_pad(B, foto.shape[:2], w_band, plat=plat, lengte_factor=lus_lengte_factor, ondergrens=ondergrens)
     kleur = SC.hexkleur(SC.TASSEN[handle])
-    breed = info['breed']
-    brgb, ba, blang, padL = band((h, w), pad, w_band, kleur, op_stof=op_stof, breed=breed)
-
-    def attr(naam_, ys, xs):
-        return np.interp(np.maximum(blang[ys, xs], 0), padL, info[naam_])
     # ---- licht voor alles samen
-    E = belicht                            # belichting t.o.v. de studio (1 = zelfde licht als de studiofoto)
+    # belichting t.o.v. de studio: uit de helderheid van het board (als we weten hoe licht het board zelf is), anders handmatig
+    E = belicht * (L['ref'] / albedo if albedo else 1.0)
     tint = np.array(tint, np.float32)
 
     def kleurcorrectie(c, licht):
@@ -463,48 +462,44 @@ def maak(foto, naam, handle, lus=-1, stringer=0.0, kort=1.0, belicht=1.0, tint=(
     vak_k = kleurcorrectie(vak, lichtmap)
     sub = sub * (1 - va[..., None]) + vak_k * va[..., None]
     uit[y0:y1, x0:x1] = sub
-    # band: op het board met dezelfde belichting, in de lus met het omgevingslicht
-    by, bx = np.nonzero(ba > 0.001)
-    lb = np.ones((h, w), np.float32)
-    if len(by):
-        Pb = np.stack([bx, by], 1).astype(np.float64)
-        tb_, sb_, _ = B.naar_ts(Pb)
-        op_board = attr('op_board', by, bx)
-        l_board = licht_op(L, tb_, np.clip(sb_, -0.97, 0.97))
-        l_lus = attr('lus_licht', by, bx) * lus_licht
-        lb[by, bx] = np.where(op_board > 0.5, l_board * np.where(np.abs(sb_) > 0.86, 0.85, 1.0), l_lus)
-    # band op het board alleen binnen het silhouet (om de lange rail verdwijnt hij), lus vrij
-    clip = np.ones((h, w), np.float32)
-    if len(by):
-        ob = attr('op_board', by, bx)
-        afst_b = (np.abs(sb_) - 1) * B.half(tb_)
-        cb = np.clip(dik - afst_b + 0.5, 0, 1)
-        # bij de lusrail mag de band eroverheen (hij gaat de lus in)
-        lus_kant = (np.sign(sb_) == B.lus) & (np.abs(tb_ - B.tb) < (STR_KORT + 1.2 * w_band * B.k) / abs(B.kx))
-        clip[by, bx] = np.where((ob > 0.5) & ~lus_kant, cb, 1.0)
-        # occluders voor het board ook voor de band
-        z = B.zicht[by, bx]
-        binnen_omtrek = np.abs(sb_) < 0.99
-        clip[by, bx] *= np.where(binnen_omtrek & (z < 0.5), 0.0, 1.0)
+    # board-alpha over het hele beeld (silhouet + stofdikte), en zichtbaarheid (occluders)
+    Pall = np.stack([xx.ravel(), yy.ravel()], 1).astype(np.float64)
+    Ta, Sa, _ = B.naar_ts(Pall)
+    Ta, Sa = Ta.reshape(h, w), Sa.reshape(h, w)
+    binnen_lengte = (Ta > B.tt.min()) & (Ta < B.tt.max())
+    afst_a = (np.abs(Sa) - 1) * B.half(Ta)
+    bord_a = np.clip(dik - afst_a + 0.5, 0, 1) * binnen_lengte          # met stofdikte (voor alles op het board)
+    bord_kaal = np.clip(0.5 - afst_a, 0, 1) * binnen_lengte             # kaal silhouet
+    occ_a = ((B.zicht < 0.5) & (np.abs(Sa) < 0.99) & binnen_lengte).astype(np.float32)
     if occluder is not None:
-        clip *= 1 - occluder
-    ba = ba * clip
-    # schaduw van de band op vak/board
+        occ_a = np.maximum(occ_a, occluder)
+    # strengen over het vak: binnen het silhouet, om beide rails verdwijnend
+    kleur_l = np.ones((h, w), np.float32)
+    s_rgb = np.zeros((h, w, 3), np.float32); s_a = np.zeros((h, w), np.float32)
+    for st_ in info['strengen']:
+        r_, a_, _, _ = band((h, w), st_['P'], w_band, kleur, op_stof=np.ones(len(st_['P'])))
+        a_ = a_ * bord_a * (1 - occ_a)
+        s_rgb = s_rgb * (1 - a_[..., None]) + r_ * a_[..., None]
+        s_a = s_a + a_ * (1 - s_a)
+    s_rgb = s_rgb / np.maximum(s_a, 1e-6)[..., None]
+    l_board = licht_op(L, Ta, np.clip(Sa, -0.97, 0.97)) * np.where(np.abs(Sa) > 0.86, 0.8 + 0.2 * np.clip((1 - np.abs(Sa)) / 0.14, 0, 1), 1.0)
+    # lus: komt van achter de rail tevoorschijn
+    l_rgb, l_a, l_lang, l_L = band((h, w), info['lus'], w_band, kleur, op_stof=np.zeros(len(info['lus'])), breed=info['lus_breed'])
+    l_a = l_a * (1 - bord_kaal) * (1 - (occluder if occluder is not None else 0))
+    l_licht = np.interp(np.maximum(l_lang, 0), l_L, info['lus_licht']).astype(np.float32) * lus_licht
+    # schaduw van de strengen op vak/board
     d = (int(round(schaduw[0] * schaal)), int(round(schaduw[1] * schaal)))
-    bs = cv2.GaussianBlur(np.roll(np.roll(ba, d[1], 0), d[0], 1), (0, 0), schaduw[3] * schaal * 0.5 + 0.5)
-    op_bord_masker = np.zeros((h, w), np.float32)
-    op_bord_masker[y0:y1, x0:x1] = np.maximum(va, (np.abs(Sm) < 1) * (zicht > 0.5))
-    uit = uit * (1 - schaduw[2] * np.clip(bs - ba, 0, 1) * op_bord_masker)[..., None]
+    bs = cv2.GaussianBlur(np.roll(np.roll(s_a, d[1], 0), d[0], 1), (0, 0), schaduw[3] * schaal * 0.5 + 0.5)
+    uit = uit * (1 - schaduw[2] * np.clip(bs - s_a, 0, 1) * bord_kaal * (1 - occ_a))[..., None]
+    # schaduw van de lus op de achtergrond (niet op het board dat ervoor staat)
     if lus_schaduw is not None:
         dx, dy, st, zz = lus_schaduw
-        lm = ba * (1 - op_bord_masker)
-        ls = cv2.GaussianBlur(np.roll(np.roll(lm, int(dy * schaal), 0), int(dx * schaal), 1), (0, 0), zz * schaal + 0.5)
-        # alleen op de achtergrond (de muur), niet op het board dat ervoor staat
-        bord_heel = np.zeros((h, w), np.uint8)
-        cv2.fillPoly(bord_heel, [np.round(B.omtrek() * 4).astype(np.int32)], 1, shift=2)
-        uit = uit * (1 - st * np.clip(ls - ba, 0, 1) * (1 - bord_heel))[..., None]
-    band_k = kleurcorrectie(brgb, lb)
-    uit = uit * (1 - ba[..., None]) + band_k * ba[..., None]
+        ls = cv2.GaussianBlur(np.roll(np.roll(l_a, int(dy * schaal), 0), int(dx * schaal), 1), (0, 0), zz * schaal + 0.5)
+        uit = uit * (1 - st * np.clip(ls - l_a, 0, 1) * (1 - bord_kaal) * (1 - occ_a))[..., None]
+    uit = uit * (1 - l_a[..., None]) + kleurcorrectie(l_rgb, l_licht) * l_a[..., None]
+    uit = uit * (1 - s_a[..., None]) + kleurcorrectie(s_rgb, l_board) * s_a[..., None]
+    ba = np.maximum(s_a, l_a)
+    pad = np.concatenate([info['strengen'][0]['P'], info['lus'], info['strengen'][1]['P']])
     # ---- camera: scherpte en korrel van de foto op de nieuwe delen
     nieuw = np.zeros((h, w), np.float32)
     nieuw[y0:y1, x0:x1] = va
@@ -525,31 +520,30 @@ def maak(foto, naam, handle, lus=-1, stringer=0.0, kort=1.0, belicht=1.0, tint=(
 
 
 def band_pad(B, shape, w, plat=False, lengte_factor=1.0, ondergrens=None):
-    """Het hele bandpad: lange rail -> streng 1 -> lus -> streng 2 -> lange rail. Beeldcoördinaten."""
+    """Strengen (recht over het vak, voorbij beide rails doorgetrokken; worden op het silhouet afgesneden)
+    en de lus (begint net achter de rail, hangt of ligt daarbuiten). Beeldcoördinaten."""
     h, wd = shape
     strengen = []
     for kant in (-1, 1):
         xl, xk = XM + kant * STR_LANG, XM + kant * STR_KORT
-        # van voorbij de lange rail tot de rand bij de lusrail
-        Ys = np.linspace(Y0 + HS + 80, Y0 - 60, 900)
+        Ys = np.linspace(Y0 + HS, Y0, 400)
         Xs = xl + (xk - xl) * (Ys - (Y0 + HS)) / (Y0 - (Y0 + HS))
-        Pb, op = B.huid_naar_beeld(Xs, Ys)
-        # alleen het deel dat op het board (zichtbaar of om de lange rail) ligt
-        sig_lus = (2 * (Ys - Y0) / HS - 1) * SMAX            # < 0 aan de luskant
-        t = B.tb + (Xs - XM) / B.kx
-        grens = -SMAX * B.half(t) / B.href                   # silhouet aan de luskant
-        # lange rail: de band verdwijnt om de rail naar de onderkant (stopt op het silhouet)
-        op_lus = (sig_lus >= grens) & op
-        Pb, Ys_, Xs_ = Pb[op_lus], Ys[op_lus], Xs[op_lus]
-        # vlakke richting bij het uittreepunt (zonder ronding): lijn in huid -> beeld bij 0,85 van de breedte
-        Ep = Pb[-1]
-        t_e = B.tb + (Xs_[-1] - XM) / B.kx
-        # richting van de streng in beeld, zonder de samendrukking van de ronding
-        richting = Pb[-1] - Pb[int(len(Pb) * 0.6)]
-        richting /= np.linalg.norm(richting)
-        strengen.append(dict(P=Pb, Y=Ys_, E=Ep, d=richting))
+        Pb, _ = B.huid_naar_beeld(Xs, Ys)
+        _, sb, _ = B.naar_ts(Pb)
+        vlak = np.abs(sb) <= 0.85
+        Pv = Pb[vlak]
+        # recht doortrekken (een strak gespannen band over het vlakke dek; de ronding van de rail is maar een paar px)
+        d = Pv[-1] - Pv[int(len(Pv) * 0.7)]; d /= np.linalg.norm(d)        # naar de lusrail
+        verder = 0.25 * B.W + 2 * w
+        Pl = np.concatenate([Pv[0] - d[None] * np.linspace(verder, 0, 60)[:, None], Pv[1:-1],
+                             Pv[-1] + d[None] * np.linspace(0, verder, 60)[:, None]])
+        # uittreepunt: waar de rechte streng het silhouet aan de luskant kruist
+        _, sl, _ = B.naar_ts(Pl)
+        na = np.arange(len(Pl)) >= len(Pv)
+        buiten = np.where(na & (np.abs(sl) >= 1.0))[0]
+        Ep = Pl[buiten[0]] if len(buiten) else Pl[-1]
+        strengen.append(dict(P=Pl, E=Ep, d=d))
     L_lus = lus_lengte() / B.k * lengte_factor
-    # board als botsingsvorm
     om = np.zeros((h, wd), np.uint8)
     cv2.fillPoly(om, [np.round(B.omtrek() * 4).astype(np.int32)], 1, shift=2)
     if ondergrens is not None:
@@ -568,23 +562,16 @@ def band_pad(B, shape, w, plat=False, lengte_factor=1.0, ondergrens=None):
     if plat:
         lus = plat_lus(B, w)
     else:
-        # bovenste streng eerst (komt het hoogst uit de rail), die hangt aan de buitenkant
         lus = simuleer_lus(s1['E'], s2['E'], s1['d'], s2['d'], L_lus, w, botsing)
-    # breedte: vlak op het board, in de lus licht gedraaid
-    n1, nl, n2 = len(s1['P']), len(lus), len(s2['P'])
-    pad = np.concatenate([s1['P'], lus[1:-1], s2['P'][::-1]])
-    op_stof = np.r_[np.ones(n1), np.zeros(nl - 2), np.ones(n2)]
-    op_board = op_stof.copy()
-    u = np.linspace(0, 1, nl - 2)
-    Lu = np.r_[0, np.cumsum(np.linalg.norm(np.diff(lus[1:-1], axis=0), axis=1))]
-    rand_af = np.minimum(Lu, Lu[-1] - Lu) / (2.5 * w)          # afstand tot het uittreepunt in bandbreedtes
-    # om de rail draait de band een kwartslag: even smaller en donkerder, daarna plat in beeld
-    draai = 1 - 0.28 * np.exp(-(rand_af - 0.35) ** 2 / 0.12) * (0 if plat else 1)
-    breed = np.r_[np.ones(n1), draai, np.ones(n2)]
-    # licht in de lus: iets donkerder waar hij gedraaid is, binnenkant van de bocht schaduw
-    lus_licht = np.r_[np.ones(n1), 0.94 * (0.55 + 0.45 * draai), np.ones(n2)]
-    # stof: stiksels alleen waar de band over het vak loopt (niet voorbij de vakrand)
-    return pad, op_stof, dict(breed=breed, op_board=op_board, lus_licht=lus_licht, lus=lus, strengen=strengen)
+    # de lus begint achter de rail (daar wordt hij door het board afgedekt)
+    in1 = s1['E'] - s1['d'] * 0.8 * w; in2 = s2['E'] - s2['d'] * 0.8 * w
+    lus = np.concatenate([[in1], lus, [in2]])
+    Lu = np.r_[0, np.cumsum(np.linalg.norm(np.diff(lus, axis=0), axis=1))]
+    rand_af = np.minimum(Lu, Lu[-1] - Lu) / (2.5 * w)
+    # om de rail draait de band: vlak na de rail even smaller en donkerder, daarna plat in beeld
+    draai = 1 - 0.25 * np.exp(-(rand_af - 0.45) ** 2 / 0.1) * (0 if plat else 1)
+    lus_licht = 0.94 * (0.6 + 0.4 * (draai - draai.min()) / (1 - draai.min() + 1e-6)) if not plat else np.full(len(lus), 0.95)
+    return dict(strengen=strengen, lus=lus, lus_breed=draai, lus_licht=lus_licht)
 
 
 def plat_lus(B, w):
