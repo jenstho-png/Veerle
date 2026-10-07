@@ -160,7 +160,64 @@ def tegel(k):
 <text x="500" y="960" {MONO} font-size="22" letter-spacing="9" fill="{k["zacht"]}" text-anchor="middle">HANDEN VRIJ OP WEG NAAR ZEE</text>'''
 
 
-ONTWERPEN = {'lijn': lijn, 'getij': getij, 'club': club, 'handen': handen, 'board': board, 'klok': klok, 'tegel': tegel}
+def koudwater(k):
+    """Koud water surfclub: ronde stempel, één kleur."""
+    return f'''
+<circle cx="500" cy="560" r="400" fill="none" stroke="{k["hoofd"]}" stroke-width="9"/>
+<circle cx="500" cy="560" r="300" fill="none" stroke="{k["hoofd"]}" stroke-width="3"/>
+<defs><path id="kb" d="M150 560 a350 350 0 0 1 700 0"/><path id="ko" d="M130 560 a370 370 0 0 0 740 0"/></defs>
+<text {MONO} font-size="56" letter-spacing="22" fill="{k["hoofd"]}"><textPath href="#kb" startOffset="50%" text-anchor="middle">KOUD WATER SURFCLUB</textPath></text>
+<text {MONO} font-size="40" letter-spacing="20" fill="{k["hoofd"]}"><textPath href="#ko" startOffset="50%" text-anchor="middle">NOORDZEE</textPath></text>
+{BB.ster(150, 575, 13, k["hoofd"])}{BB.ster(850, 575, 13, k["hoofd"])}
+<text x="500" y="610" {DISP} font-size="190" fill="{k["hoofd"]}" text-anchor="middle">9°</text>
+<text x="500" y="690" {MONO} font-size="30" letter-spacing="12" fill="{k["hoofd"]}" text-anchor="middle">EN TOCH GAAN</text>'''
+
+
+def evenweg(k):
+    """Bordje op de deur van een surfshop. Alleen tekst."""
+    return f'''
+<rect x="210" y="300" width="580" height="420" rx="26" fill="none" stroke="{k["hoofd"]}" stroke-width="8"/>
+<path d="M500 300 L380 160 M500 300 L620 160" stroke="{k["hoofd"]}" stroke-width="5"/>
+<circle cx="500" cy="155" r="14" fill="none" stroke="{k["hoofd"]}" stroke-width="5"/>
+<text x="500" y="440" {DISP} font-size="120" letter-spacing="4" fill="{k["hoofd"]}" text-anchor="middle">EVEN</text>
+<text x="500" y="560" {DISP} font-size="120" letter-spacing="4" fill="{k["hoofd"]}" text-anchor="middle">SURFEN</text>
+<text x="500" y="650" {MONO} font-size="24" letter-spacing="6" fill="{k["accent"]}" text-anchor="middle">TERUG ALS HET VLAK IS</text>
+<text x="500" y="820" {MONO} font-size="24" letter-spacing="10" fill="{k["hoofd"]}" text-anchor="middle">TIDE TODE</text>'''
+
+
+def herhaling(k):
+    """Dezelfde regel steeds opnieuw, de laatste in de accentkleur."""
+    regels = ''
+    for i in range(7):
+        # alleen omlijnd (één inktkleur), de laatste regel vol in de accentkleur
+        verf = f'fill="{k["accent"]}"' if i == 6 else f'fill="none" stroke="{k["hoofd"]}" stroke-width="2.6"'
+        regels += f'<text x="500" y="{230 + i * 112}" {DISP} font-size="96" letter-spacing="3" {verf} text-anchor="middle">OP WEG NAAR ZEE</text>'
+    return regels + f'<text x="500" y="1060" {MONO} font-size="26" letter-spacing="12" fill="{k["hoofd"]}" text-anchor="middle">TIDE TODE  HANDEN VRIJ</text>'
+
+
+def weerbericht(k):
+    """Surfbericht zoals je het 's ochtends checkt. Alleen tekst."""
+    rij = lambda y, a, b: (f'<text x="210" y="{y}" {MONO} font-size="34" letter-spacing="6" fill="{k["hoofd"]}">{a}</text>'
+                           f'<text x="790" y="{y}" {MONO} font-size="34" letter-spacing="6" fill="{k["hoofd"]}" text-anchor="end">{b}</text>'
+                           f'<line x1="210" y1="{y + 26}" x2="790" y2="{y + 26}" stroke="{k["hoofd"]}" stroke-width="2" stroke-dasharray="3 9"/>')
+    return (f'<text x="210" y="250" {MONO} font-size="28" letter-spacing="10" fill="{k["hoofd"]}">SURFBERICHT</text>'
+            f'<text x="210" y="380" {DISP} font-size="120" letter-spacing="3" fill="{k["hoofd"]}">ZATERDAG</text>'
+            + rij(480, 'GOLVEN', '1,2 M') + rij(560, 'PERIODE', '9 SEC') + rij(640, 'WIND', '2 BFT ZO') + rij(720, 'WATER', '14°')
+            + f'<text x="210" y="850" {DISP} font-size="84" letter-spacing="3" fill="{k["accent"]}">WE GAAN</text>'
+            + f'<text x="210" y="930" {MONO} font-size="24" letter-spacing="10" fill="{k["hoofd"]}">TIDE TODE</text>')
+
+
+def boog(k):
+    """Klassiek: naam in een boog boven een klein board. Eén kleur."""
+    return f'''
+<defs><path id="bg" d="M170 640 a330 330 0 0 1 660 0"/></defs>
+<text {DISP} font-size="150" letter-spacing="10" fill="{k["hoofd"]}"><textPath href="#bg" startOffset="50%" text-anchor="middle">TIDE TODE</textPath></text>
+{BB.board_in(500, 600, 210, k["hoofd"])}
+<text x="500" y="800" {MONO} font-size="34" letter-spacing="16" fill="{k["hoofd"]}" text-anchor="middle">HANDEN VRIJ</text>
+<text x="500" y="852" {MONO} font-size="24" letter-spacing="14" fill="{k["hoofd"]}" text-anchor="middle">SINDS 2025</text>'''
+
+
+ONTWERPEN = {'koudwater': koudwater, 'evenweg': evenweg, 'herhaling': herhaling, 'weerbericht': weerbericht, 'boog': boog, 'lijn': lijn, 'getij': getij, 'club': club, 'handen': handen, 'board': board, 'klok': klok, 'tegel': tegel}
 
 if __name__ == '__main__':
     for naam, f in ONTWERPEN.items():

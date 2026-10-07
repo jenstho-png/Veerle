@@ -346,24 +346,43 @@ def slagschaduw(doek, a, lagen):
     return doek * (1 - tot[..., None] * (1 - a[..., None]))
 
 
+def uitsnede(rgba, px, py, schaal, marge=160):
+    """Stuk van de staande laag rond (px, py), al op schaal (kubisch, geen overshoot), plus waar het op het doek komt."""
+    wx, hy = ST.B / (2 * schaal) + marge / schaal, ST.H / (2 * schaal) + marge / schaal
+    x0, x1, y0, y1 = int(px - wx), int(px + wx) + 1, int(py - hy), int(py + hy) + 1
+    h, w = rgba.shape[:2]
+    stuk = np.zeros((y1 - y0, x1 - x0, 4), np.float32)
+    ya, yb, xa, xb = max(y0, 0), min(y1, h), max(x0, 0), min(x1, w)
+    stuk[ya - y0:yb - y0, xa - x0:xb - x0] = rgba[ya:yb, xa:xb]
+    nw, nh = int(round(stuk.shape[1] * schaal)), int(round(stuk.shape[0] * schaal))
+    # voorvermenigvuldigd schalen, zodat de randen niet donker of licht worden
+    pm = np.dstack([stuk[..., :3] * stuk[..., 3:4], stuk[..., 3]])
+    pm = cv2.resize(pm, (nw, nh), interpolation=cv2.INTER_AREA if schaal < 1 else cv2.INTER_CUBIC)
+    a = np.clip(pm[..., 3], 0, 1)
+    rgb = np.clip(pm[..., :3] / np.maximum(a[..., None], 1e-4), 0, 1)
+    sx, sy = nw / stuk.shape[1], nh / stuk.shape[0]
+    links = int(round(ST.B / 2 - (px - x0) * sx))
+    boven = int(round(ST.H / 2 - (py - y0) * sy))
+    return np.dstack([rgb, a]).astype(np.float32), (links + nw / 2, boven + nh / 2)
+
+
 def foto(doek, rgba_board, rgba_lus, cx, cy, schaal, board_hoogte=20, dof=0.0):
     """Leg lus en board op de ondergrond; (cx, cy) = punt in het liggende canvas dat in het midden komt."""
-    hb, wb = CW, CH                                    # staand formaat van de lagen
     px, py = CH - cy, cx                               # dat punt in het staande canvas
-    midden = (ST.B / 2 + (wb / 2 - px) * schaal, ST.H / 2 + (hb / 2 - py) * schaal)
     k = schaal / 0.93
-    rl, rb = staand(rgba_lus), staand(rgba_board)
+    rl, midden = uitsnede(staand(rgba_lus), px, py, schaal)
+    rb, _ = uitsnede(staand(rgba_board), px, py, schaal)
+    w = rl.shape[1]
     # band op de grond: dikte (licht randje linksboven, donker rechtsonder) en een echte contactschaduw
-    a_l = alfa_op_doek(rl, schaal, midden, doek)
+    a_l = alfa_op_doek(rl, 1.0, midden, doek)
     doek = slagschaduw(doek, a_l, [(1.5 * k, 1.3 * k, 0.55), (5 * k, 5 * k, 0.28)])
-    doek = ST.leg(doek, rl, breedte=wb * schaal, midden=midden, hoogte=1.6 * k, contact=0.6)
+    doek = ST.leg(doek, rl, breedte=w, midden=midden, hoogte=1.6 * k, contact=0.6)
     if dof:                                            # close-up: de grond ligt 7 cm lager dan de deck, net onscherp
         doek = cv2.GaussianBlur(doek, (0, 0), dof)
     # board: ligt op zijn bolle onderkant, de rails los van het zand -> donkere spleet en een zachte slagschaduw
-    a_b = alfa_op_doek(rb, schaal, midden, doek)
+    a_b = alfa_op_doek(rb, 1.0, midden, doek)
     doek = slagschaduw(doek, a_b, [(3 * k, 3 * k, 0.5), (14 * k, 12 * k, 0.32), (40 * k, 34 * k, 0.26)])
-    doek = ST.leg(doek, staand(rgba_board), breedte=wb * schaal, midden=midden, hoogte=board_hoogte * schaal / 0.93,
-                  zachtheid=0.9, contact=0.7)
+    doek = ST.leg(doek, rb, breedte=w, midden=midden, hoogte=board_hoogte * k, zachtheid=0.9, contact=0.7)
     return doek
 
 
@@ -384,10 +403,10 @@ def maak_alles(handle):
     uit.append(foto(ST.achtergrond(stijl['papier'], zaad=3), rb, rl, XM, 1080, s2))
     # 3: macro van het geweven label op de stof, met de band en het geweven logo en de rail
     s3 = ST.B / 680
-    uit.append(foto(zand_detail(s3 / s1, zaad=1), rb, rl, XM + 40, 1010, s3, dof=2.0))
+    uit.append(foto(zand_detail(s3 / s1, zaad=1), rb, rl, XM + 60, 930, s3, dof=2.0))
     # 4: de band die over de rail van het board af loopt naar de lus, met het vak dat om de rail valt
     s4 = ST.B / 700
-    uit.append(foto(zand_detail(s4 / s1, zaad=2), rb, rl, XM + 225, 985, s4, dof=1.6))
+    uit.append(foto(zand_detail(s4 / s1, zaad=2), rb, rl, XM + 250, 900, s4, dof=1.6))
     for i, img in enumerate(uit, 1):
         q = bewaar(ST.afwerking(img, korrel=0.005, zaad=7 + i), DOEL / f'{handle}-{i}.jpg')
         print(f'  {handle}-{i}.jpg q{q}', (DOEL / f'{handle}-{i}.jpg').stat().st_size // 1000, 'kB')

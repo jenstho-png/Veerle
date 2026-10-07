@@ -1588,7 +1588,7 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
 .tt-pop__sticker .tt-icoon { width: 20px; height: 20px; }
 .tt-pop__inhoud { padding: 24px 24px 20px; }
 .tt-pop__maan { display: none; }
-.tt-pop__kop { font-size: clamp(24px, 2.2vw, 30px); line-height: 1; max-width: 12ch; }
+.tt-pop__kop { font-size: clamp(24px, 2.1vw, 28px); line-height: 1.02; max-width: none; padding-right: 70px; }
 .tt-pop__tekst { margin-top: 10px !important; font-size: 14px; line-height: 1.55; }
 .tt-pop__form { display: grid; }
 .tt-pop__veld { margin: 16px 0 8px; padding: 15px 18px; font-size: 15px; }
@@ -1596,7 +1596,7 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
 .tt-pop__klein { margin-top: 8px !important; font-size: 10.5px; }
 .tt-pop__nee { margin-top: 6px; font-size: 11px; }
 .tt-pop__sluit { top: 10px; right: 10px; z-index: 8; width: 36px; height: 36px; background: rgba(243, 236, 221, .92); }
-.tt-pop__sluit span, .tt-pop__sluit span::after { left: 11px; right: 11px; }
+.tt-pop__sluit > span { left: 11px; right: 11px; }
 .tt-pop__beeld + .tt-pop__inhoud .tt-pop__sluit { top: -122px; }
 @media (max-width: 749px) {
   .tt-pop { inset: auto 0 0 0; width: 100%; }
@@ -1605,7 +1605,7 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
   .tt-pop__beeld { display: none; }
   .tt-pop__inhoud { padding: 28px 20px calc(16px + env(safe-area-inset-bottom)); }
   .tt-pop__beeld + .tt-pop__inhoud .tt-pop__sluit { top: 12px; }
-  .tt-pop__kop { font-size: 26px; max-width: 14ch; }
+  .tt-pop__kop { font-size: 25px; padding-right: 40px; }
 }
 
 /* ---------- minder beweging ---------- */
@@ -1659,10 +1659,10 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
   .tt-maat__wrap { overflow: visible; }
   .tt-maat__tabel, .tt-maat__tabel tbody, .tt-maat__tabel tr { display: block; width: 100%; }
   .tt-maat__tabel thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-  .tt-maat__tabel tr { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); border-bottom: 1px solid rgba(34, 50, 79, .14); }
-  .tt-maat__tabel tbody th { grid-column: 1 / -1; padding: 14px 16px 4px; border: 0; font: 400 22px/1 var(--tt-display); }
-  .tt-maat__tabel td { display: grid; gap: 4px; padding: 6px 16px 14px; border: 0; white-space: normal; }
-  .tt-maat__tabel td::before { content: attr(data-label); font: 700 10px var(--tt-tekst); letter-spacing: .18em; text-transform: uppercase; opacity: .6; }
+  .tt-maat__tabel tr { display: flex; flex-wrap: wrap; border-bottom: 1px solid rgba(34, 50, 79, .14); }
+  .tt-maat__tabel tbody th { display: block; flex: 0 0 100%; padding: 16px 16px 6px; border: 0; font: 400 20px/1.1 var(--tt-display); text-transform: uppercase; letter-spacing: .03em; white-space: normal; }
+  .tt-maat__tabel td { display: block; flex: 1 1 0; min-width: 0; padding: 6px 16px 16px; border: 0; white-space: normal; line-height: 1.4; }
+  .tt-maat__tabel td::before { content: attr(data-label); display: block; margin-bottom: 4px; font: 700 10px/1.2 var(--tt-tekst); letter-spacing: .16em; text-transform: uppercase; opacity: .6; }
 }
 
 /* contrast: tekst over foto's en grijze intro's */

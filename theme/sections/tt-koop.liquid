@@ -42,13 +42,6 @@
     assign leeg = true
     assign aantal = 1
   endif
-  assign maat_optie = false
-  for o in p.options_with_values
-    assign on = o.name | downcase
-    if on == 'maat' or on == 'size'
-      assign maat_optie = true
-    endif
-  endfor
 -%}
 <section class="tt tt-koop tt-bg--{{ section.settings.bg }} tt-koop--{{ groep }}" id="tt-koop-{{ section.id }}" data-tt-koop>
   <div class="tt-wrap tt-koop__grid">

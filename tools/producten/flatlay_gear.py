@@ -396,6 +396,132 @@ def surfwax(soort, shots=(1, 2, 3)):
         bewaar(img, f'surfwax-{soort}-3')
 
 
+# ---------- waxkam ----------
+# kam-plat-voor-1.jpg (4000 x 5600): plat plastic kammetje recht van voren. Sleufjes (midden) van x 1128 tot 2701,
+# steek ca. 75 px; de sleufjes beginnen op y ca. 2752, de tanden eindigen op y ca. 4570.
+KAM_X0, KAM_X1 = 1128, 2701
+TERRA = '#C0603E'
+
+
+def kam_textuur(img, b, h, zaad=12):
+    """Fijne korrel van het echte plastic (b x h, rond 1): stroken effen plastic links en rechts naast de sleufjes,
+    met zachte naden naast elkaar gelegd (alleen de fijne structuur, het licht maken we zelf)."""
+    L = MK.helderheid(img)
+    detail = L / np.maximum(cv2.GaussianBlur(L, (0, 0), 6), 1e-3)
+    stroken = [(978, 1092), (2738, 2836)]
+    rng = np.random.default_rng(zaad)
+    som = np.zeros((h, b), np.float32)
+    gew = np.zeros((h, b), np.float32)
+    x = -10
+    while x < b:
+        sx0, sx1 = stroken[rng.integers(len(stroken))]
+        y0 = int(rng.uniform(2830, 4330 - h)) if 4330 - h > 2830 else 2830
+        stuk = detail[y0:y0 + h, sx0:sx1]
+        if stuk.shape[0] < h:
+            stuk = np.concatenate([stuk, stuk[::-1]], 0)[:h]
+        w = stuk.shape[1]
+        rand = np.minimum(np.arange(w) + 1, w - np.arange(w)).astype(np.float32)
+        wt = np.clip(rand / 12, 0, 1)[None, :] * np.ones((h, 1), np.float32)
+        xa, xb = max(x, 0), min(x + w, b)
+        som[:, xa:xb] += (stuk * wt)[:, xa - x:xb - x]
+        gew[:, xa:xb] += wt[:, xa - x:xb - x]
+        x += w - 14
+    return (som / np.maximum(gew, 1e-3)).astype(np.float32)
+
+
+def logo_masker(breedte):
+    """Liggend Tide Tode-logo uit de wikkel-artwork (navy op crème) als masker."""
+    art = EW.art('band-zij-koud')
+    stuk = art[80:190, :, :3]
+    m = np.clip((0.55 - MK.helderheid(stuk)) / 0.2, 0, 1)
+    ys, xs = np.where(m > 0.1)
+    m = m[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+    h = int(round(m.shape[0] * breedte / m.shape[1]))
+    return cv2.resize(m, (breedte, h), interpolation=cv2.INTER_AREA)
+
+
+def waxkam(hoogte_verhouding=0.62):
+    """Waxkam met schraper: plat terracotta plastic, tanden onder (echt, uit de foto), rechte schraaprand boven,
+    logo licht in het plastic gedrukt. Geeft RGBA (float32) op ca. 16 px per mm."""
+    img = MK.laad(FLAT / 'kam-plat-voor-1.jpg')
+    hsv = cv2.cvtColor((img * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
+    S = hsv[..., 1].astype(np.float32)
+    W = KAM_X1 - KAM_X0
+    H = int(round(W * hoogte_verhouding))
+    # tandenrij: bovenkant van de sleufjes + de getrapte punten, in het midden van de tanden in elkaar overgevloeid
+    boven = slice(2700, 2830)
+    onder = slice(4395, 4600)
+    ov = 30
+    def rij(y):
+        return img[y, KAM_X0:KAM_X1], S[y, KAM_X0:KAM_X1]
+    rb, sb = rij(boven)
+    ro, so = rij(onder)
+    t = np.linspace(0, 1, ov, dtype=np.float32)[:, None]
+    mid_rgb = rb[-ov:] * (1 - t[..., None]) + ro[:ov] * t[..., None]
+    mid_s = sb[-ov:] * (1 - t) + so[:ov] * t
+    tand_rgb = np.concatenate([rb[:-ov], mid_rgb, ro[ov:]], 0)
+    tand_s = np.concatenate([sb[:-ov], mid_s, so[ov:]], 0)
+    th = tand_rgb.shape[0]
+    tand_a = np.clip((tand_s - 80) / 25, 0, 1) * np.clip((MK.helderheid(tand_rgb) - 0.28) / 0.08, 0, 1)
+    tand_a = cv2.GaussianBlur(tand_a, (0, 0), 0.9)
+    # lijf: glad plastic met de echte korrel, licht zoals op de foto (vlakke belichting)
+    lijf_h = H - th + 52                                   # 52 px plastic boven de sleufjes overlapt
+    tex = kam_textuur(img, W, lijf_h)
+    ref = np.median(MK.helderheid(tand_rgb)[tand_a > 0.9])
+    Lt = MK.helderheid(tand_rgb) / ref
+    Llijf = tex * float(np.median(Lt[:40][tand_a[:40] > 0.9]))
+    L = np.ones((H, W), np.float32)
+    L[:lijf_h] = Llijf
+    # overgang lijf -> tandenrij zacht (52 px): tanden-plastic is hetzelfde plastic
+    ovl = np.linspace(0, 1, 52, dtype=np.float32)[:, None]
+    L[lijf_h - 52:lijf_h] = Llijf[-52:] * (1 - ovl) + Lt[:52] * ovl
+    L[lijf_h:] = Lt[52:]
+    alpha = np.ones((H, W), np.float32)
+    alpha[lijf_h - 52:] = tand_a
+    alpha[lijf_h - 52:lijf_h] = np.maximum(alpha[lijf_h - 52:lijf_h], 1 - ovl)
+    # buitenrand: rechte zijkanten en schraaprand, afgeronde bovenhoeken
+    d = rand_afstand((H, W), 0, 0, W - 1, H + 200, 46, 31, ruw=0.6)
+    alpha = alpha * np.clip(d + 0.5, 0, 1)
+    # rand van het plastic (2,5 mm dik, afgeschuind): licht naar het raam, schaduw aan de andere kant
+    L = L * schuine_rand(d, 10, 0.16)
+    # schraaprand boven: smalle facet die het licht vangt
+    yy = np.arange(H, dtype=np.float32)[:, None]
+    L = L * (1 + 0.10 * np.exp(-((yy - 9) / 3.5) ** 2) - 0.05 * np.exp(-((yy - 18) / 3) ** 2))
+    # logo in het plastic gedrukt (ca. 0,3 mm diep): binnenrand linksboven in de schaduw, rechtsonder licht
+    lm = logo_masker(int(W * 0.52))
+    lh, lw = lm.shape
+    ly = int((lijf_h - 52) * 0.47 - lh / 2)
+    lx = (W - lw) // 2
+    diep = np.zeros((H, W), np.float32)
+    diep[ly:ly + lh, lx:lx + lw] = lm
+    h_ = -cv2.GaussianBlur(diep, (0, 0), 1.6) * 3.0
+    gy, gx = np.gradient(h_)
+    n = np.dstack([-gx, -gy, np.ones_like(gx)])
+    n /= np.linalg.norm(n, axis=2, keepdims=True)
+    reliëf = (np.clip(n @ L3, 0, 1) / L3[2])
+    L = L * (1 + (reliëf - 1) * 0.9) * (1 - 0.035 * cv2.GaussianBlur(diep, (0, 0), 1.0))
+    kleur = hexrgb(TERRA)
+    rgb = np.clip(kleur[None, None] * (0.93 * np.clip(L, 0.3, 1.3))[..., None] ** 1.05, 0, 1)
+    return np.dstack([rgb, alpha]).astype(np.float32)
+
+
+def waxkam_fotos():
+    kam = waxkam()
+    # 1: hero, recht van boven, groot in het midden
+    doek = ST.achtergrond('zand')
+    doek = ST.leg(doek, kam, breedte=1240, midden=(800, 1000), hoogte=7, contact=0.6)
+    bewaar(doek, 'waxkam-1')
+    # 2: detail van de tanden en het ingedrukte logo
+    doek = ST.achtergrond('zand', zaad=3)
+    doek = ST.leg(doek, kam, breedte=2700, midden=(1000, 780), hoogte=14, contact=0.6)
+    bewaar(doek, 'waxkam-2')
+    # 3: naast een pak surfwax (echte maten: pak 85 mm, kam 95 mm)
+    doek = ST.achtergrond('zand', zaad=4)
+    doek = ST.leg(doek, wikkel_pak('koel'), breedte=930, midden=(800, 640), hoogte=14, contact=0.6)
+    doek = ST.leg(doek, kam, breedte=1040, midden=(800, 1400), hoogte=7, contact=0.6)
+    bewaar(doek, 'waxkam-3')
+
+
 if __name__ == '__main__':
     for stap in sys.argv[1:] or ['proef']:
         globals()[stap]()
