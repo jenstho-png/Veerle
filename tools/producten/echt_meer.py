@@ -394,9 +394,8 @@ def karabijn_zwart():
     uit, a = plaats_karabijn(sc, laag, info, 48, doel, hoek)
     # de band loopt door de haak: links ligt hij voor de haak (daar de originele band terug)
     L = MK.helderheid(sc)
-    band = (L < 0.35).astype(np.uint8)
+    band = np.clip((0.55 - L) / 0.3, 0, 1)                        # donker leer = band, zacht naar de muur
     band[:3730] = 0; band[3830:] = 0; band[:, :2600] = 0; band[:, 2950:] = 0
-    band = zacht(cv2.dilate(band, np.ones((3, 3), np.uint8)), 1.0)
     links = zacht((np.arange(sc.shape[1]) < doel[0] - 4)[None, :].repeat(sc.shape[0], 0), 2)
     voor = band * links
     uit = uit * (1 - voor[..., None]) + sc * voor[..., None]
@@ -415,13 +414,55 @@ def karabijn_messing():
     uit, a = plaats_karabijn(sc, laag, info, 48, doel, hoek, verzadiging=0.92, licht=0.97)
     # de band loopt door de haak: rechts ligt hij voor de haak
     L = MK.helderheid(sc)
-    band = (L < 0.35).astype(np.uint8)
+    band = np.clip((0.55 - L) / 0.3, 0, 1)
     band[:3900] = 0; band[4000:] = 0; band[:, :1300] = 0; band[:, 1560:] = 0
-    band = zacht(cv2.dilate(band, np.ones((3, 3), np.uint8)), 1.0)
     rechts = zacht((np.arange(sc.shape[1]) > doel[0] + 4)[None, :].repeat(sc.shape[0], 0), 2)
     voor = band * rechts
     uit = uit * (1 - voor[..., None]) + sc * voor[..., None]
     E.bewaar(uit, 'karabijnhaak-messing-2', vul=1.0, uitsnede=(760, 2850, 2440, 4950))
+
+
+# ---------- longsleeves ----------
+def mouwtekst(tekst='HANDEN VRIJ', kleur=NAVY, px=160, spatie=0.22):
+    """Tekst langs de mouw: Courier Prime (vet), hoofdletters, iets gespatieerd; leest van boven naar beneden."""
+    f = ImageFont.truetype(str(FONT_COURIER), px)
+    stap = f.getlength('M') * (1 + spatie)
+    b = int(stap * len(tekst) + px)
+    im = Image.new('RGBA', (b, int(px * 1.4)), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    k = tuple(int(kleur[i:i + 2], 16) for i in (1, 3, 5))
+    for i, ch in enumerate(tekst):
+        d.text((px * 0.3 + i * stap, px * 0.15), ch, font=f, fill=k + (255,))
+    im = im.rotate(-90, expand=True, resample=Image.BICUBIC)
+    a = np.asarray(im).astype(np.float32) / 255
+    ys, xs = np.where(a[..., 3] > 0.02)
+    return a[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+
+
+def tegel_klein():
+    """Eén tegel uit de tegelprint (voor op de borst van de navy longsleeve)."""
+    a = E.art('longsleeve-tegel-rugprint-los.png')
+    h, w = a.shape[:2]
+    # de tegelblok is 3 x 4 tegels bovenaan; neem de tegel linksboven
+    blok = a[: int(h * 0.70)]
+    ys, xs = np.where(blok[..., 3] > 0.5)
+    t = (xs.max() - xs.min()) / 3
+    x0, y0 = xs.min(), ys.min()
+    return a[int(y0):int(y0 + t), int(x0):int(x0 + t)]
+
+
+def golf_voor():
+    """Voorkant, gedragen in de studio: witte longsleeve wordt crème, klein navy board op de linkerborst,
+    HANDEN VRIJ langs de linkermouw."""
+    t = foto('longsleeve2-wit-voor-1.jpg')
+    m = E.shirt_masker(t)
+    L = MK.helderheid(t)
+    ref = float(np.percentile(L[m > 0.5], 80))
+    t, _ = kleur_rand(t, (m > 0.5).astype(np.uint8), CREME_T, gamma=1.0, ref=ref, rand=3)
+    mz = zacht(m, 1.0)
+    t = MK.zet_print(t, E.art('icoon-navy.png', NAVY), 1290, 1040, 42, verplaatsing=2, masker=mz)
+    t = MK.zet_print(t, mouwtekst(), 1582, 1290, 30, draai=5, verplaatsing=3, schaduw_sterkte=0.9, masker=mz)
+    E.bewaar(t, 'longsleeve-golf-1', vul=1.0, uitsnede=(400, 250, 2000, 2250))
 
 
 def borduur_op(img, L_bron, ref, a, cx, cy, breedte, draai=0, sterkte=0.8):

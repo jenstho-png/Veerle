@@ -5,7 +5,8 @@
     "surf-footer": {
       "type": "surf-footer",
       "settings": {
-        "show_word": false
+        "show_word": false,
+        "text": "Tide Tode is een surfmerk voor de weg naar zee. De draagtas voor je board, kleding en surfgear. Van surfers, voor surfers."
       },
       "blocks": {
         "menu-1": {

@@ -24,7 +24,8 @@ LB = 2420                     # lengte board
 BX0, BY = 240, 1300           # neus x, middellijn y
 TEGEL = 1.08                  # schaal van de echte tegels (98 x 115 px in de foto)
 BAND = round(47 / 98 * 98 * TEGEL)   # bandbreedte, zelfde verhouding tot de tegels als op de foto
-DOEK = np.array([0.935, 0.912, 0.872], np.float32)
+DOEK = np.array([0.95, 0.93, 0.895], np.float32)
+KLEUR_STOF = 1.28                # verzadiging van de stof (1 = zoals de fabrieksfoto)
 
 
 def smooth(a, b, x):
@@ -325,6 +326,9 @@ def maak(patroon=None, band=(0.56, 0.66, 0.78), los=False):
     rail = (0.86 + 0.14 * smooth(0, WB * 0.16, bd))
     laag = laag * rail[..., None] * (1 + 0.025 * np.clip((BY - yy) / (WB / 2), -1, 1))[..., None]
     laag = zoom(laag, pm, hoeken)
+    # meer kleur in de stof: iets voller en met wat meer contrast, zoals echte geweven stof in daglicht
+    lum = (laag @ np.array([.299, .587, .114], np.float32))[..., None]
+    laag = np.clip((lum + (laag - lum) * KLEUR_STOF - 0.5) * 1.07 + 0.505, 0, 1)
     ps = cv2.GaussianBlur(np.roll(np.roll(pm, 5, 0), 3, 1), (0, 0), 4)
     beeld = beeld * (1 - 0.35 * ps[..., None] * (1 - pm[..., None]))
     beeld = beeld * (1 - pm[..., None]) + laag * pm[..., None]

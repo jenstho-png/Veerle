@@ -76,17 +76,22 @@ def motief(naam, n=480):
         for k in range(4):
             acc += [np.rot90(L, k), np.fliplr(np.rot90(L, k))]
     X = cv2.GaussianBlur(np.mean(acc, 0), (0, 0), n / 260)
-    X = (X - X.mean()) / (X.std() + 1e-6)
-    uit = []
-    for pct in (30, 58):
-        Y = X - np.percentile(X, pct)
-        # spikkels weg: losse vlekjes kleiner dan ca. 3 mm worden opgevuld met de omringende kleur
-        for teken in (1, -1):
-            m = (teken * Y > 0).astype(np.uint8)
+    # drie garenniveaus (0 navy, 1 baby blue, 2 crème), daarna opschonen zoals een patroontekenaar dat doet:
+    # mediaanfilter rondt rafelige randen af, losse spikkels kleiner dan ca. 4 mm verdwijnen
+    niv = (X > np.percentile(X, 30)).astype(np.uint8) + (X > np.percentile(X, 58)).astype(np.uint8)
+    niv = cv2.medianBlur(niv * 100, 2 * (n // 90) + 1) // 100
+    for _ in range(2):
+        for k in (0, 1, 2):
+            m = (niv == k).astype(np.uint8)
             n_, lab, st, _ = cv2.connectedComponentsWithStats(m, connectivity=4)
-            klein = np.isin(lab, 1 + np.where(st[1:, cv2.CC_STAT_AREA] < (n / 50) ** 2)[0])
-            Y = np.where(klein, -teken * np.maximum(np.abs(Y), 0.3), Y)
-        uit.append(cv2.GaussianBlur(Y, (0, 0), n / 500))
+            klein = np.isin(lab, 1 + np.where(st[1:, cv2.CC_STAT_AREA] < (n / 36) ** 2)[0])
+            if klein.any():
+                buur = cv2.medianBlur(np.where(klein, 255, niv * 100).astype(np.uint8), 2 * (n // 40) + 1)
+                niv = np.where(klein, np.where(buur == 255, niv, buur // 100), niv).astype(np.uint8)
+    uit = []
+    for k in (1, 2):
+        Y = cv2.GaussianBlur((niv >= k).astype(np.float32), (0, 0), n / 320) - 0.5
+        uit.append(Y * 4)
     return np.dstack(uit)
 
 
@@ -390,35 +395,35 @@ def foto1():
                      D=[(181, 740), (286, 834), (386, 875), (486, 908), (586, 938), (686, 954), (786, 979), (886, 1024), (986, 1050),
                         (1086, 1071), (1186, 1100), (1286, 1125), (1386, 1158), (1486, 1174), (1586, 1197), (1686, 1219), (1786, 1249),
                         (1886, 1250), (2000, 1250), (2250, 1250)],
-                     u0=34.0, v0=58.0),
+                     u0=40.0, v0=58.0),
         'teal': dict(B=[(135, 1000), (240, 874), (340, 863), (440, 870), (2195, 1100)],
                      C=[(135, 1040), (240, 1000), (340, 1030), (440, 1050), (640, 1080), (840, 1120), (1040, 1170), (1240, 1215),
                         (1440, 1250), (1640, 1290), (1840, 1300), (2040, 1290), (2195, 1280)],
                      D=[(135, 1093), (240, 1202), (340, 1236), (440, 1267), (540, 1295), (640, 1314), (740, 1344), (840, 1383), (940, 1414),
                         (1040, 1455), (1140, 1485), (1240, 1512), (1340, 1540), (1440, 1575), (1540, 1605), (1640, 1634), (1740, 1649),
                         (1840, 1650), (1940, 1640), (2195, 1640)],
-                     u0=40.0, v0=96.0),
+                     u0=45.0, v0=96.0),
     }
     rand = np.zeros((h, w), np.float32)
     for naam, g in stapel.items():
-        m = cv2.dilate(kleurmasker(f, naam), np.ones((5, 5), np.uint8))
+        m = cv2.dilate(kleurmasker(f, naam), np.ones((7, 7), np.uint8))
         m = m * (yy <= interp(g['D'], xx) + 4)          # niet de gekleurde weerschijn op de tafel
         rand = np.maximum(rand, m)
         B = lambda x, p=g['B']: interp(p, x)
         C = lambda x, p=g['C']: interp(p, x)
         D = lambda x, p=g['D']: interp(p, x)
-        s, t = gevouwen_uv(xx, yy, B, C, D, 1200, 36.0, float(D(np.float32(1200)) - C(np.float32(1200))), 22.0, 10.5)
+        s, t = gevouwen_uv(xx, yy, B, C, D, 1200, 30.0, float(D(np.float32(1200)) - C(np.float32(1200))), 22.0, 10.5)
         U = g['u0'] + s
         V = g['v0'] + t
         mz = cv2.GaussianBlur(m, (0, 0), 1.2)
-        uit = breng_aan(uit, mz, U, V, ppc, ontw, schoon=f, verplaatsing=0.25, detail=0.9, mono=True, weef=0.01, waas=0.04, gamma=0.75,
-                        ref=np.full(3, np.percentile(MK.helderheid(f)[m > 0.5], 88), np.float32))
+        uit = breng_aan(uit, mz, U, V, ppc, ontw, schoon=f, verplaatsing=0.25, detail=0.6, mono=True, weef=0.01, waas=0.03, gamma=0.6,
+                        ref=np.full(3, np.percentile(MK.helderheid(f)[m > 0.5], 80), np.float32))
     # losse rode en turquoise pluisjes langs de randen en de gekleurde weerschijn op de tafel neutraal maken
     zone = cv2.dilate(rand, np.ones((25, 25), np.uint8)) > 0
     zone |= (yy > 900)
     hsv = cv2.cvtColor((np.clip(uit, 0, 1) * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
     Hh, Ss = hsv[..., 0].astype(int), hsv[..., 1].astype(int)
-    fel = zone & (rand < 0.5) & (Ss > 12) & ((Hh < 12) | (Hh > 160) | ((Hh > 75) & (Hh < 105)))
+    fel = zone & (rand < 0.5) & (Ss > 12) & ((Hh < 22) | (Hh > 160) | ((Hh > 75) & (Hh < 105)))
     fel = cv2.GaussianBlur(fel.astype(np.float32), (0, 0), 1.5)[..., None]
     grijs = MK.helderheid(uit)[..., None] * np.array([1.02, 1.0, 0.96], np.float32)
     uit = uit * (1 - fel) + grijs * fel

@@ -361,7 +361,13 @@ def simuleer_lus(E1, E2, d1, d2, L, w, botsing, g=(0.0, 1.0), stappen=500, min_r
             P[-klem - 1:] = klem2[::-1]
     if not np.isfinite(P).all():
         raise RuntimeError('lus-simulatie niet stabiel')
-    return P
+    # gladmaken langs het pad (geen knikjes van de simulatie), uiteinden vast
+    from scipy.ndimage import gaussian_filter1d
+    P = _herbemonster(P, max(int(L / 0.5), 50))
+    sig = 0.3 * w / 0.5 * (L / (len(P) - 1)) / 0.5 if False else 0.3 * w / (L / (len(P) - 1))
+    Q = np.stack([gaussian_filter1d(P[:, 0], sig, mode='nearest'), gaussian_filter1d(P[:, 1], sig, mode='nearest')], 1)
+    wgt = np.clip(np.minimum(np.arange(len(P)), np.arange(len(P))[::-1]) / max(sig, 1), 0, 1)[:, None]
+    return P * (1 - wgt) + Q * wgt
 
 
 # ---------------------------------------------------------------- belichting
@@ -420,7 +426,7 @@ def maak(foto, naam, handle, lus=-1, stringer=0.0, kort=1.0, belicht=1.0, tint=(
     Tm, Sm = T.reshape(sh), S.reshape(sh)
     # randen van het board: stof volgt het silhouet + dikte van de stof (max ~1,5 px)
     afst = (np.abs(Sm) - 1) * B.half(Tm)        # px buiten het silhouet (+)
-    dik = float(np.clip(0.004 * B.W, 0.8, 1.6))
+    dik = float(np.clip(0.005 * B.W, 1.2, 2.0))
     a_rand = np.clip(dik - afst + 0.5, 0, 1)
     zicht = B.zicht[y0:y1, x0:x1]
     # occluders (in de foto voor het board) zijn niet in zicht; omtrek zelf komt uit de gladde fit

@@ -2,7 +2,9 @@
   "sections": {
     "hero": {
       "type": "tt-hero",
-      "settings": {}
+      "settings": {
+        "text": "Tide Tode is een surfmerk voor de weg naar zee. Het begon met een draagtas voor je board, bedacht op surftrips in Australië en Midden-Amerika. Nu maken we ook kleding en surfgear met dezelfde zorg."
+      }
     },
     "usp": {
       "type": "tt-usp",
@@ -19,21 +21,21 @@
           "type": "usp",
           "settings": {
             "icoon": "board",
-            "tekst": "Past op softtop én hardboard"
+            "tekst": "Kleding van biologisch katoen"
           }
         },
         "usp-3": {
           "type": "usp",
           "settings": {
             "icoon": "golf",
-            "tekst": "Sterke, waterbestendige stof"
+            "tekst": "Verzending door heel Europa"
           }
         },
         "usp-4": {
           "type": "usp",
           "settings": {
             "icoon": "tas",
-            "tekst": "Makkelijk mee in het vliegtuig"
+            "tekst": "We repareren je tas"
           }
         }
       },
@@ -451,15 +453,15 @@
         "qa-5": {
           "type": "qa",
           "settings": {
-            "question": "Zitten er lussen of karabijnhaken aan?",
-            "answer": "<p>Het eerste model houden we bewust simpel. Lussen en karabijnhaken om extra spullen aan de tas te hangen komen op een later model. Stevige karabijnhaken komen ook los in de shop.</p>"
+            "question": "Kan ik spullen aan de tas hangen?",
+            "answer": "<p>Aan de tas zit één doorlopende band met een lus over je schouder. Wil je je sleutels, een fles of slippers meenemen, dan klik je die vast met een van onze <a href=\"/collections/surfgear\">karabijnhaken</a>. Die hebben een lus van dezelfde band als de tas.</p>"
           }
         },
         "qa-6": {
           "type": "qa",
           "settings": {
-            "question": "Verkopen jullie ook andere spullen?",
-            "answer": "<p>Naast de tas komen er waxblokjes en karabijnhaken. In een later stadium volgen t-shirts.</p>"
+            "question": "Maken jullie meer dan de draagtas?",
+            "answer": "<p>Ja. De draagtas is waar het begon, maar Tide Tode is een merk voor de hele weg naar zee. We maken <a href=\"/collections/kleding-en-accessoires\">kleding en accessoires</a>: zware T-shirts met een verhaal op de rug, longsleeves, een hoodie, een pet, een bucket hat en een strandhanddoek in onze tegelprint. En <a href=\"/collections/surfgear\">surfgear</a>: wax voor koud, koel en warm water, een waxkam, karabijnhaken en stickers.</p>"
           }
         }
       },
@@ -558,7 +560,10 @@
         "item-6"
       ],
       "settings": {
-        "bg": "creme"
+        "bg": "creme",
+        "label": "Tide Tode",
+        "heading": "Meer dan|een *tas*",
+        "text": "Een merk voor de hele weg naar zee. Zware shirts met een verhaal op de rug, een hoodie voor na het surfen en kleine dingen die je elke sessie gebruikt."
       }
     }
   },
