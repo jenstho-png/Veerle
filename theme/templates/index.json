@@ -57,34 +57,34 @@
         "punt-2": {
           "type": "punt",
           "settings": {
-            "tekst": "Gewicht goed verdeeld over je rug, niet op één schouder"
+            "tekst": "Brede schouderband, je handen blijven vrij"
           }
         },
         "punt-3": {
           "type": "punt",
           "settings": {
-            "tekst": "Je natte board hoeft niet vol zand in een dichte hoes"
+            "tekst": "Je natte board mag er gewoon in"
           }
         },
         "detail-4": {
           "type": "detail",
           "settings": {
             "titel": "Wat past erin",
-            "tekst": "<p>Eén universele maat. Van de grote softtop waar je op leert surfen tot je hardboard voor de verstopte spot.</p>"
+            "tekst": "<p>Eén maat voor softtops en hardboards. In de <a href=\"/pages/maatwijzer\">maatwijzer</a> zie je welke boards passen.</p>"
           }
         },
         "detail-5": {
           "type": "detail",
           "settings": {
             "titel": "Materiaal",
-            "tekst": "<p>Zware, waterbestendige stof en sterke stiksels. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"
+            "tekst": "<p>Zware, waterbestendige stof en sterke stiksels.</p>"
           }
         },
         "detail-6": {
           "type": "detail",
           "settings": {
             "titel": "Verzending en retour",
-            "tekst": "<p>We versturen door heel Europa. Past hij toch niet bij je? Je hebt 14 dagen bedenktijd.</p>"
+            "tekst": "<p>We versturen door heel Europa. Je hebt 14 dagen bedenktijd.</p>"
           }
         }
       },
@@ -251,7 +251,7 @@
           "type": "kaart",
           "settings": {
             "titel": "Als je de rustige spots opzoekt",
-            "tekst": "Door de bush, over rotsen, achterop de scooter. Jouw board hangt veilig op je rug, jij houdt je handen vrij om te klimmen.",
+            "tekst": "Door de bush, over rotsen, achterop de scooter. Je board hangt over je schouder, zodat je je handen vrij hebt om te klimmen.",
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-avontuur",
             "filename": "tide-tode-avontuur.jpg",

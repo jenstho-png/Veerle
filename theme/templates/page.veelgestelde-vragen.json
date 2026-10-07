@@ -61,17 +61,13 @@
         "qa-6"
       ]
     },
-    "cta": {
-      "type": "surf-cta",
-      "settings": {
-        "btn2_label": "Contact",
-        "btn2_link": "shopify://pages/contact",
-        "eyebrow": ""
-      }
+    "patroon": {
+      "type": "tt-patroon",
+      "settings": {}
     }
   },
   "order": [
     "faq",
-    "cta"
+    "patroon"
   ]
 }

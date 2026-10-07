@@ -188,3 +188,14 @@ for k in MERCH:
     P.append(dict(handle=k['handle'], titel=k['titel'], type=k['type'], collectie='Kleding en merch', prijs=k['prijs'], gram=k['gram'], tags=['merch'],
                   tekst=k['tekst'] + VERZENDING, seo_titel=f"{k['titel']} | Tide-Tode", seo_tekst=k['seo_tekst'],
                   beelden=[('pack', k['svg'], k['achter'], k['label'], k['alt']), ('sfeer', k['svg'], k['regel'], k['alt'] + ' als sticker op een foto van de zee')]))
+
+# losse printbestanden (zelfde artwork als op de kleding), voor de referentie bij ChatGPT
+PRINTS = {
+    't-shirt-zonsopkomst': [('rugprint', lambda: print_zonsopkomst(300, 250, 380), CREME), ('borst', lambda: icoon_a(300, 300, 300, NAVY), CREME)],
+    't-shirt-stickers': [('rugprint', lambda: print_stickers(300, 240, 330), NAVY), ('borst', lambda: logo_g(300, 300, 420, CREME), NAVY)],
+    'longsleeve-golf': [('rugprint', lambda: print_golf(300, 270, 460), CREME), ('borst', lambda: icoon_a(300, 300, 300, NAVY), CREME)],
+    'longsleeve-tegel': [('rugprint', lambda: print_tegel(300, 250, 260), NAVY)],
+    'uv-shirt-lange-mouw': [('borst', lambda: logo_g(300, 300, 420, CREME), NAVY)],
+    'hoodie-busje': [('rugprint', lambda: print_busje(300, 270, 440), BABY), ('borst', lambda: logo_g(300, 300, 420, NAVY), BABY)],
+    'surfponcho-tegel': [('rugprint', lambda: logo_g(300, 300, 420, CREME), ZEE)],
+}

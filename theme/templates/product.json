@@ -13,34 +13,34 @@
         "punt-2": {
           "type": "punt",
           "settings": {
-            "tekst": "Gewicht goed verdeeld over je rug, niet op één schouder"
+            "tekst": "Brede schouderband, je handen blijven vrij"
           }
         },
         "punt-3": {
           "type": "punt",
           "settings": {
-            "tekst": "Je natte board hoeft niet vol zand in een dichte hoes"
+            "tekst": "Je natte board mag er gewoon in"
           }
         },
         "detail-4": {
           "type": "detail",
           "settings": {
             "titel": "Wat past erin",
-            "tekst": "<p>Eén universele maat. Van de grote softtop waar je op leert surfen tot je hardboard voor de verstopte spot.</p>"
+            "tekst": "<p>Eén maat voor softtops en hardboards. In de <a href=\"/pages/maatwijzer\">maatwijzer</a> zie je welke boards passen.</p>"
           }
         },
         "detail-5": {
           "type": "detail",
           "settings": {
             "titel": "Materiaal",
-            "tekst": "<p>Zware, waterbestendige stof en sterke stiksels. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"
+            "tekst": "<p>Zware, waterbestendige stof en sterke stiksels.</p>"
           }
         },
         "detail-6": {
           "type": "detail",
           "settings": {
             "titel": "Verzending en retour",
-            "tekst": "<p>We versturen door heel Europa. Past hij toch niet bij je? Je hebt 14 dagen bedenktijd.</p>"
+            "tekst": "<p>We versturen door heel Europa. Je hebt 14 dagen bedenktijd.</p>"
           }
         }
       },
@@ -149,14 +149,14 @@
           "type": "spec",
           "settings": {
             "label": "Print",
-            "waarde": "Tegels in terracotta, dusty blue en mosterd"
+            "waarde": "Tegels in terracotta, dusty blue, roest en crème"
           }
         },
         "spec-9": {
           "type": "spec",
           "settings": {
             "label": "Dragen",
-            "waarde": "Over je schouder of op je rug"
+            "waarde": "Over je schouder of schuin over je rug"
           }
         },
         "spec-10": {
@@ -211,7 +211,7 @@
           "type": "detail",
           "settings": {
             "titel": "De tegelprint",
-            "tekst": "Geweven in terracotta, dusty blue en mosterd.",
+            "tekst": "Geweven in terracotta, dusty blue, roest en crème.",
             "filename": "tide-tode-detail-print.jpg"
           }
         }
@@ -302,7 +302,7 @@
         "rij-3": {
           "type": "rij",
           "settings": {
-            "punt": "Gewicht verdeeld over je rug",
+            "punt": "Makkelijk over je schouder",
             "wij": "ja",
             "arm": "nee",
             "banden": "nee",
@@ -376,8 +376,8 @@
           "settings": {
             "kleur": "zand",
             "ill": "zon",
-            "titel": "Gemaakt om mee te gaan",
-            "tekst": "Sterke stiksels en zware stof. Voor jaren aan surftrips, niet voor één zomer."
+            "titel": "Garantie",
+            "tekst": "Gaat er iets stuk door een fout in de stof of de stiksels? Dan repareren of vervangen we hem."
           }
         }
       },

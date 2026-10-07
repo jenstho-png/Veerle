@@ -463,6 +463,41 @@ regels += ['## Collecties aanmaken', '',
 (DOCS / 'overzicht.md').write_text('\n'.join(regels))
 print(len(P), 'producten,', sum(len(p['bestanden']) for p in P), 'beelden')
 
+# ---------- referentiebestanden voor ChatGPT ----------
+REF = DOCS / 'referentie'
+REF.mkdir(exist_ok=True)
+UIT_REF = HIER / 'uit_ref'
+UIT_REF.mkdir(exist_ok=True)
+for oud in UIT_REF.glob('*.html'):
+    oud.unlink()
+
+
+def ref_pagina(naam, svg, vb, achter='#FFFFFF', breedte=1400, draai=0, b=1600, h=2000):
+    html = (f'<!doctype html><meta charset="utf-8"><style>{fonts()} * {{ margin: 0; }} html, body {{ width: {b}px; height: {h}px; overflow: hidden; background: {achter}; }}</style>'
+            f'<body><svg viewBox="{vb}" style="position:absolute;left:50%;top:50%;width:{breedte}px;translate:-50% -50%;rotate:{draai}deg">{svg}</svg></body>')
+    (UIT_REF / f'{naam}.html').write_text(html)
+
+
+# vaste logobestanden
+ref_pagina('logo-navy', logo_g(300, 300, 560, NAVY), '0 0 600 600', 'transparent', 1400, 0, 1600, 1600)
+ref_pagina('logo-creme', logo_g(300, 300, 560, CREME), '0 0 600 600', NAVY, 1400, 0, 1600, 1600)
+ref_pagina('icoon-navy', icoon_a(300, 300, 520, NAVY), '0 0 600 600', 'transparent', 1400, 0, 1600, 1600)
+ref_pagina('tegelprint', p_tegel(0, 0, 600, 600, 100), '0 0 600 600', 'transparent', 1600, 0, 1600, 1600)
+for p in P:
+    eerste = p['beelden'][0]
+    if eerste[0] == 'pack':
+        svg, vb, br, dr = eerste[1]()
+        ref_pagina(f"{p['handle']}-tekening", svg, vb, '#FFFFFF', min(br, 1500), dr)
+    if len(p['beelden']) > 1 and p['beelden'][1][0] == 'pack':
+        svg, vb, br, dr = p['beelden'][1][1]()
+        ref_pagina(f"{p['handle']}-tekening-achter", svg, vb, '#FFFFFF', min(br, 1500), dr)
+    if p['collectie'] == 'Draagtassen':
+        t = next(x for x in TASSEN if x[0] == p['handle'])
+        ref_pagina(f"{p['handle']}-stof", patroon(t[2], 0, 0, 600, 600, 100), '0 0 600 600', 'transparent', 1600, 0, 1600, 1600)
+for h, lijst in PRINTS.items():
+    for soort, f, bg in lijst:
+        ref_pagina(f'{h}-{soort}', f(), '0 0 600 600', bg, 1400, 0, 1600, 1600)
+
 # ---------- prompts voor echte productfoto's ----------
 TAS_EN = ('a surfboard carry bag. It is a trapezoid-shaped fabric sleeve that wraps around the middle of a cream surfboard, '
           'made of thick woven jacquard fabric with {kleur}. A wide padded {band} shoulder strap is stitched to the two top corners of the sleeve '
@@ -508,19 +543,30 @@ KLEDING_EN = {
     'surfponcho-tegel': ('a sea blue terry cotton surf changing poncho with hood and short wide sleeves, a tile pattern border at the bottom hem and a small cream surfboard icon on the chest',
                          'the same sea blue surf poncho seen from the back, with the large cream stacked TIDE TODE logo and the tile pattern border at the bottom'),
 }
-STIJL = ('Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, '
+STIJL = ('Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, '
+         'reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, '
          'subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. '
          'Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.')
 regels = ['# Prompts voor echte productfoto\'s', '',
           'Zo maak je met ChatGPT een echte productfoto van elk product, waarna het script alle productbeelden opnieuw opbouwt met die foto.', '',
-          '1. Open ChatGPT en upload de tekening die bij het product staat (link hieronder). Upload bij de draagtassen ook de fabrieksfoto van de tas, dan klopt de vorm beter.',
+          '1. Open een nieuw gesprek in ChatGPT en upload de bestanden onder **Stuur mee** (open de link en sla het bestand op). Ze staan ook in `docs/producten/referentie/`.',
           '2. Plak de prompt. Vraag om een **png met transparante achtergrond**.',
           '3. Sla de foto op in `docs/producten/fotos/` met precies de naam die erbij staat. Bij kleding maak je twee foto\'s: voorkant en achterkant.',
           '4. Vraag mij om de productbeelden opnieuw te maken. Het script zet je foto dan in de packshot, het sfeerbeeld met stickerrand en alle labels.', '',
-          'Let op: een AI-foto is een visualisatie. Laat de echte tas en kleding later fotograferen, zodat klanten zien wat ze krijgen.', '']
+          'Komt een logo of tekst er toch net anders uit? Selecteer dat stukje in ChatGPT (bewerken) en vraag: *replace this with the exact artwork from the attached file*. Lukt het niet, stuur mij dan de foto; ik kan het logo er ook zelf strak overheen zetten.', '', 'Let op: een AI-foto is een visualisatie. Laat de echte tas en kleding later fotograferen, zodat klanten zien wat ze krijgen.', '']
 for p in P:
     h = p['handle']
-    regels += [f"## {p['titel']}", '', f"Tekening: {RAW}{h}-1.jpg", '']
+    R = RAW.replace('/beelden/', '/referentie/')
+    regels += [f"## {p['titel']}", '', 'Stuur mee:', '', f"1. Tekening voorkant: {R}{h}-tekening.png"]
+    n = 2
+    if p['collectie'] == 'Draagtassen':
+        regels += [f"2. De stof (exact patroon): {R}{h}-stof.png", '3. De fabrieksfoto van de tas (die je zelf hebt)']
+        n = 4
+    if h in KLEDING_EN:
+        regels.append(f"{n}. Tekening achterkant: {R}{h}-tekening-achter.png"); n += 1
+        for soort, _, _ in PRINTS.get(h, []):
+            regels.append(f"{n}. {'Rugprint' if soort == 'rugprint' else 'Borstprint'} (exact artwork): {R}{h}-{soort}.png"); n += 1
+    regels.append('')
     if p['collectie'] == 'Draagtassen':
         t = next(x for x in TASSEN if x[0] == h)
         wat = TAS_EN.format(kleur=PATROON_EN[t[2]], band=BAND_EN.get(t[3], 'dusty blue'))

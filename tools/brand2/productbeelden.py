@@ -106,7 +106,7 @@ punten = [('Schouderband', 50, 8), ('Tegelstof', 50, 70), ('Je board', 88, 50)]
 stippen = ''.join(f'<span class="stip" style="left:{x}%;top:{y}%">{i}</span>' for i, (_, x, y) in enumerate(punten, 1))
 legenda = ''.join(f'<li><span class="stip stip--los">{i}</span>{t}</li>' for i, (t, _, _) in enumerate(punten, 1))
 pagina('tt-product-5', PAPIER, f'''
-<div class="hoek" style="left:90px;top:100px"><p class="hand" style="color:#4a6b97">De details</p><p style="font:400 120px/1 'Tide Tode Display';letter-spacing:.03em;text-transform:uppercase;margin-top:10px">Zo zit hij<br>in elkaar</p></div>
+<div class="hoek" style="left:90px;top:100px"><p style="font:400 120px/1 'Tide Tode Display';letter-spacing:.03em;text-transform:uppercase">Onderdelen</p></div>
 <div class="vlakje" style="position:absolute;left:90px;right:90px;top:640px;background:{CREME};padding:110px 70px"><div style="position:relative">{TAS.lijn('lijn')}{stippen}</div></div>
 <ul class="legenda">{legenda}</ul>''', '''
 .lijn { width: 100%; height: auto; display: block; }
@@ -123,10 +123,10 @@ pagina('tt-product-6', '#2a2f36', f'''
 <div class="hoek" style="left:90px;top:90px">{logo(CREME, 260)}</div>''')
 
 # 7. De kleuren van de tas
-stalen = [('Terracotta', TERRA), ('Dusty blue', BLAUW), ('Mosterd', MOSTERD), ('Roest', ROEST), ('Crème', CREME), ('Navy', NAVY)]
+stalen = [('Terracotta', TERRA), ('Dusty blue', BLAUW), ('Roest', ROEST), ('Crème', CREME), ('Navy', NAVY), ('Zand', '#E3CFAE')]
 staal_html = ''.join(f'''<div class="staal"><div class="tegel" style="background:{k}"><i style="background:{CREME if k not in (CREME,) else TERRA}"></i><b style="background:{CREME if k == NAVY else NAVY}"></b></div><p class="label">{n}</p><p class="hex">{k}</p></div>''' for n, k in stalen)
 pagina('tt-product-7', CREME, f'''
-<div class="hoek" style="left:90px;top:100px"><p class="hand" style="color:#4a6b97">Uit de tas</p><p style="font:400 120px/1 'Tide Tode Display';letter-spacing:.03em;text-transform:uppercase;margin-top:10px">De kleuren</p></div>
+<div class="hoek" style="left:90px;top:100px"><p style="font:400 120px/1 'Tide Tode Display';letter-spacing:.03em;text-transform:uppercase">Kleuren</p></div>
 <div class="stalen">{staal_html}</div>
 <div class="hoek" style="right:90px;bottom:90px">{icoon(NAVY, 74)}</div>''', f'''
 .stalen {{ position: absolute; left: 90px; right: 90px; top: 520px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 70px 50px; }}

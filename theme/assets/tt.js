@@ -174,7 +174,7 @@
         schuif.style.setProperty('--p', `${((i - 48) / 84) * 100}%`);
         const past = i >= min && i <= max;
         s.classList.toggle('is-past', past); s.classList.toggle('is-niet', !past);
-        if (past) { antwoord.textContent = 'Ja, die past.'; uitleg.textContent = `Een board van ${voet(i)} gaat in de tas. Erin schuiven, over je schouder en gaan.`; }
+        if (past) { antwoord.textContent = 'Ja, die past.'; uitleg.textContent = `Een board van ${voet(i)} past in de tas.`; }
         else if (i > max) { antwoord.textContent = 'Net te lang.'; uitleg.textContent = `Deze tas past op boards tot ${voet(max)}. Een grotere maat staat op de planning.`; }
         else { antwoord.textContent = 'Te klein voor deze tas.'; uitleg.textContent = `Deze tas is gemaakt voor boards vanaf ${voet(min)}.`; }
       };

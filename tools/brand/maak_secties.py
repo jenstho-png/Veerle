@@ -183,7 +183,7 @@ schrijf('tt-koop', PRIJS + """
               {%- when 4 -%}{%- assign alt_n = 'De dusty blue schouderband van de draagtas' -%}
               {%- when 5 -%}{%- assign alt_n = 'Tekening van de draagtas met genummerde onderdelen' -%}
               {%- when 6 -%}{%- assign alt_n = 'De draagtas als sticker op een zwart-witfoto van de zee' -%}
-              {%- else -%}{%- assign alt_n = 'De kleuren van de tegelstof: terracotta, dusty blue, mosterd, roest, crème en navy' -%}
+              {%- else -%}{%- assign alt_n = 'De kleuren van de tegelstof: terracotta, dusty blue, roest, crème en navy' -%}
             {%- endcase -%}
             <div class="tt-koop__foto tt-onthul">{%- render 'tt-beeld', fallback: naam, alt: alt_n, sizes: '(min-width: 990px) 55vw, 100vw' -%}</div>
           {%- endfor -%}
@@ -310,7 +310,7 @@ schrijf('tt-koop', PRIJS + """
         bg("creme"),
         {"type": "product", "id": "product", "label": "Product", "info": "Leeg = op de productpagina het product van die pagina, elders het product uit Thema-instellingen > Tide-Tode."},
         kop("De Tide Tode draagtas"),
-        {"type": "textarea", "id": "text", "label": "Korte pitch", "default": "Voor iedereen die zijn board een eind moet dragen. Je schuift je board in de tas en hangt hem over je schouder. Het gewicht zit verdeeld over je schouders en de wax blijft van je arm af."},
+        {"type": "textarea", "id": "text", "label": "Korte pitch", "default": "Een draagtas voor je surfboard. Je schuift je board erin en hangt de tas over je schouder. Zo heb je je handen vrij en blijft de wax van je arm af."},
         {"type": "text", "id": "prijs_tekst", "label": "Tekst als er nog geen product is", "default": "Binnenkort"},
         {"type": "text", "id": "sticker", "label": "Sticker op de eerste foto", "default": ""},
         {"type": "checkbox", "id": "stickers", "label": "Sticker bij de foto's", "default": True},
@@ -332,11 +332,11 @@ schrijf('tt-koop', PRIJS + """
     ],
     "presets": [{"name": "TT: kopen", "blocks": [
         {"type": "punt", "settings": {"tekst": "Past op softtops en vollere boards én op hardboards"}},
-        {"type": "punt", "settings": {"tekst": "Gewicht goed verdeeld over je rug, niet op één schouder"}},
-        {"type": "punt", "settings": {"tekst": "Je natte board hoeft niet vol zand in een dichte hoes"}},
-        {"type": "detail", "settings": {"titel": "Wat past erin", "tekst": "<p>Eén universele maat. Van de grote softtop waar je op leert surfen tot je hardboard voor de verstopte spot.</p>"}},
-        {"type": "detail", "settings": {"titel": "Materiaal", "tekst": "<p>Zware, waterbestendige stof en sterke stiksels. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"}},
-        {"type": "detail", "settings": {"titel": "Verzending en retour", "tekst": "<p>We versturen door heel Europa. Past hij toch niet bij je? Je hebt 14 dagen bedenktijd.</p>"}}]}]})
+        {"type": "punt", "settings": {"tekst": "Brede schouderband, je handen blijven vrij"}},
+        {"type": "punt", "settings": {"tekst": "Je natte board mag er gewoon in"}},
+        {"type": "detail", "settings": {"titel": "Wat past erin", "tekst": "<p>Eén maat voor softtops en hardboards. In de <a href=\"/pages/maatwijzer\">maatwijzer</a> zie je welke boards passen.</p>"}},
+        {"type": "detail", "settings": {"titel": "Materiaal", "tekst": "<p>Zware, waterbestendige stof en sterke stiksels.</p>"}},
+        {"type": "detail", "settings": {"titel": "Verzending en retour", "tekst": "<p>We versturen door heel Europa. Je hebt 14 dagen bedenktijd.</p>"}}]}]})
 
 # ---------- PROBLEEM: tekst die volloopt, met losse foto's ----------
 s1, fb1 = beeld('', 'Foto links', 'tt-foto-probleem-1', 'tide-tode-sjouwen.jpg', 'Board onder de arm op weg naar het strand')
@@ -467,7 +467,7 @@ schrijf('tt-wie', """
         {"type": "select", "id": "sticker_icoon", "label": "Stickericoon", "options": [{"value": "", "label": "Geen"}] + ICONEN, "default": ""}] + blok_beeld('tt-foto-beginner', '', '')}],
     "presets": [{"name": "TT: voor wie", "blocks": [
         {"type": "kaart", "settings": {"titel": "Als je leert surfen", "tekst": "Een grote softtop, een lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.", "knop": "Bekijk de draagtas", "fallback": "tt-foto-beginner", "filename": "tide-tode-beginner.jpg", "alt": "Beginner met een softtop op het strand"}},
-        {"type": "kaart", "settings": {"titel": "Als je de rustige spots opzoekt", "tekst": "Door de bush, over rotsen, achterop de scooter. Jouw board hangt veilig op je rug, jij houdt je handen vrij om te klimmen.", "knop": "Bekijk de draagtas", "fallback": "tt-foto-avontuur", "filename": "tide-tode-avontuur.jpg", "alt": "Surfer klimt over rotsen naar een afgelegen spot"}}]}]})
+        {"type": "kaart", "settings": {"titel": "Als je de rustige spots opzoekt", "tekst": "Door de bush, over rotsen, achterop de scooter. Je board hangt over je schouder, zodat je je handen vrij hebt om te klimmen.", "knop": "Bekijk de draagtas", "fallback": "tt-foto-avontuur", "filename": "tide-tode-avontuur.jpg", "alt": "Surfer klimt over rotsen naar een afgelegen spot"}}]}]})
 
 # ---------- VERHAAL ----------
 s, fb = beeld('', 'Foto', 'tt-foto-verhaal', 'tide-tode-verhaal.jpg', 'Op reis met een surfboard')
@@ -727,7 +727,7 @@ schrijf('tt-vergelijk', """
     "presets": [{"name": "TT: vergelijken", "blocks": [
         {"type": "rij", "settings": {"punt": "Allebei je handen vrij", "wij": "ja", "arm": "nee", "banden": "deels", "hoes": "deels"}},
         {"type": "rij", "settings": {"punt": "Geen wax op je arm", "wij": "ja", "arm": "nee", "banden": "deels", "hoes": "ja"}},
-        {"type": "rij", "settings": {"punt": "Gewicht verdeeld over je rug", "wij": "ja", "arm": "nee", "banden": "nee", "hoes": "nee"}},
+        {"type": "rij", "settings": {"punt": "Makkelijk over je schouder", "wij": "ja", "arm": "nee", "banden": "nee", "hoes": "nee"}},
         {"type": "rij", "settings": {"punt": "Nat en zanderig board meteen mee", "wij": "ja", "arm": "ja", "banden": "ja", "hoes": "nee"}},
         {"type": "rij", "settings": {"punt": "Veilig op de fiets of scooter", "wij": "ja", "arm": "nee", "banden": "deels", "hoes": "deels"}},
         {"type": "rij", "settings": {"punt": "Klein mee in je reisbagage", "wij": "ja", "arm": "ja", "banden": "ja", "hoes": "nee"}}]}]})
@@ -768,8 +768,8 @@ schrijf('tt-detail', """
 {%- endif -%}
 """, {
     "name": "TT: details van de tas", "tag": "div", "max_blocks": 8,
-    "settings": [{"type": "paragraph", "content": "Bezoekers zien deze sectie pas als er minstens één foto in staat."}, bg("creme"), kop("De details"),
-                 {"type": "textarea", "id": "text", "label": "Tekst", "default": "Robuust, van zware stof, en gemaakt om jaren mee op reis te gaan."}],
+    "settings": [{"type": "paragraph", "content": "Bezoekers zien deze sectie pas als er minstens één foto in staat."}, bg("creme"), kop("Details"),
+                 {"type": "textarea", "id": "text", "label": "Tekst", "default": "De stof, de stiksels en de schouderband van dichtbij."}],
     "blocks": [{"type": "detail", "name": "Detail", "settings": [
         {"type": "image_picker", "id": "image", "label": "Foto (close-up, vierkant)"},
         {"type": "text", "id": "filename", "label": "Bestandsnaam", "info": "Of upload in Content > Bestanden met precies deze naam."},
@@ -779,7 +779,7 @@ schrijf('tt-detail', """
         {"type": "detail", "settings": {"titel": "Zware stof", "tekst": "Waterbestendig en gemaakt voor nat, zand en zout.", "filename": "tide-tode-detail-stof.jpg"}},
         {"type": "detail", "settings": {"titel": "Sterke stiksels", "tekst": "Stevig gestikt op de plekken waar de tas het zwaarst draagt.", "filename": "tide-tode-detail-stiksels.jpg"}},
         {"type": "detail", "settings": {"titel": "De schouderband", "tekst": "Breed, zodat hij niet in je schouder snijdt.", "filename": "tide-tode-detail-schouderband.jpg"}},
-        {"type": "detail", "settings": {"titel": "De tegelprint", "tekst": "Geweven in terracotta, dusty blue en mosterd.", "filename": "tide-tode-detail-print.jpg"}}]}]})
+        {"type": "detail", "settings": {"titel": "De tegelprint", "tekst": "Geweven in terracotta, dusty blue, roest en crème.", "filename": "tide-tode-detail-print.jpg"}}]}]})
 
 # ---------- RASTER: fotogrid met tekstvakken (zoals het merkboek) ----------
 schrijf('tt-raster', """
@@ -910,7 +910,7 @@ schrijf('tt-patroon', PRODUCT + """
     "name": "TT: patroon", "tag": "div",
     "settings": [
         {"type": "product", "id": "product", "label": "Product", "info": "Leeg = het product uit Thema-instellingen > Tide-Tode."},
-        {"type": "text", "id": "hand", "label": "Handgeschreven regel", "default": "Tot in het water"},
+        {"type": "text", "id": "hand", "label": "Handgeschreven regel", "default": ""},
         {"type": "text", "id": "btn_label", "label": "Knop", "default": "Bestel de draagtas"},
         {"type": "url", "id": "btn_link", "label": "Knop-link"},
     ],
@@ -952,8 +952,8 @@ schrijf('tt-specs', """
     "name": "TT: de tas uitgelegd", "tag": "div", "max_blocks": 16,
     "settings": [
         bg("papier"),
-        {"type": "text", "id": "hand", "label": "Handgeschreven regel", "default": "De details"},
-        kop("Zo zit hij|in elkaar"),
+        {"type": "text", "id": "hand", "label": "Handgeschreven regel", "default": ""},
+        kop("Productinformatie"),
         {"type": "text", "id": "kaart_titel", "label": "Titel van de kaart", "default": "Specificaties"},
     ],
     "blocks": [
@@ -973,8 +973,8 @@ schrijf('tt-specs', """
         {"type": "spec", "settings": {"label": "Maat", "waarde": "Eén universele maat"}},
         {"type": "spec", "settings": {"label": "Past op", "waarde": "Softtops en hardboards"}},
         {"type": "spec", "settings": {"label": "Stof", "waarde": "Geweven jacquard met tegelprint"}},
-        {"type": "spec", "settings": {"label": "Print", "waarde": "Tegels in terracotta, dusty blue en mosterd"}},
-        {"type": "spec", "settings": {"label": "Dragen", "waarde": "Over je schouder of op je rug"}},
+        {"type": "spec", "settings": {"label": "Print", "waarde": "Tegels in terracotta, dusty blue, roest en crème"}},
+        {"type": "spec", "settings": {"label": "Dragen", "waarde": "Over je schouder of schuin over je rug"}},
         {"type": "spec", "settings": {"label": "Onderhoud", "waarde": "Uitspoelen met zoet water en laten drogen"}}]}]})
 
 # ---------- KAARTEN: drie gekleurde kaarten met een tekening ----------
@@ -995,7 +995,7 @@ schrijf('tt-kaarten', """
 </section>
 """, {
     "name": "TT: drie kaarten", "tag": "div", "max_blocks": 4,
-    "settings": [bg("creme"), kop("Goed om te weten")],
+    "settings": [bg("creme"), kop("Service")],
     "blocks": [{"type": "kaart", "name": "Kaart", "settings": [
         {"type": "select", "id": "kleur", "label": "Kleur", "options": [{"value": v, "label": l} for v, l in [("baby", "Baby"), ("rose", "Rose"), ("zand", "Zand"), ("papier", "Papier")]], "default": "baby"},
         {"type": "select", "id": "ill", "label": "Tekening", "options": [{"value": v, "label": l} for v, l in [("busje", "Busje"), ("golf", "Golf"), ("zon", "Zon"), ("parasol", "Parasol"), ("draagtas", "De draagtas"), ("tas", "Board met banden")]], "default": "busje"},
@@ -1004,7 +1004,7 @@ schrijf('tt-kaarten', """
     "presets": [{"name": "TT: drie kaarten", "blocks": [
         {"type": "kaart", "settings": {"kleur": "baby", "ill": "busje", "titel": "Verzending", "tekst": "We versturen door heel Europa. Je krijgt een track and trace zodra hij onderweg is."}},
         {"type": "kaart", "settings": {"kleur": "rose", "ill": "golf", "titel": "14 dagen bedenktijd", "tekst": "Past hij toch niet bij je board? Stuur hem binnen 14 dagen terug, ongebruikt en met label."}},
-        {"type": "kaart", "settings": {"kleur": "zand", "ill": "zon", "titel": "Gemaakt om mee te gaan", "tekst": "Sterke stiksels en zware stof. Voor jaren aan surftrips, niet voor één zomer."}}]}]})
+        {"type": "kaart", "settings": {"kleur": "zand", "ill": "zon", "titel": "Garantie", "tekst": "Gaat er iets stuk door een fout in de stof of de stiksels? Dan repareren of vervangen we hem."}}]}]})
 
 # ---------- CONTACT: formulier en gegevens ----------
 GEGEVENS = """
@@ -1112,7 +1112,7 @@ schrijf('tt-tekst', """
     "name": "TT: tekstpagina", "tag": "div",
     "settings": [
         bg("papier"),
-        {"type": "text", "id": "label", "label": "Label boven de titel", "default": "Klantenservice"},
+        {"type": "text", "id": "label", "label": "Label boven de titel", "default": ""},
         {"type": "text", "id": "datum", "label": "Laatst bijgewerkt", "default": "7 oktober 2026"},
         {"type": "paragraph", "content": "In de paginatekst worden [BEDRIJF], [EMAIL], [TELEFOON], [ADRES], [KVK] en [BTW] vervangen door de gegevens uit Thema-instellingen > Tide-Tode."},
     ],

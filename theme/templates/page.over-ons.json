@@ -23,117 +23,98 @@
         "text": "<p>Tijdens mijn reizen door Australië, Midden- en Zuid-Amerika en Azië liep ik me vaak te frustreren. Op hikes naar afgelegen surfspots sjouwde ik een longboard mee dat nergens lekker vast te houden is. En met een board onder je arm op de scooter of fiets naar het strand rijden is ook geen pretje.</p><p>Na een flinke hike naar een verstopte spot, met pijn in mijn schouders en schuurplekken van de wax onder mijn arm, dacht ik: dit moet stukken comfortabeler kunnen. Een tas waarmee je je handen vrij hebt en het gewicht makkelijk draagt.</p><p>Losse touwtjes, spanbanden en standaardhoezen hielden het geen van allen vol. In februari 2025 kwam er een vriend bij die net zo gek is op surfen en precies dezelfde frustratie kende. Toen zijn we het gewoon gaan maken.</p>"
       }
     },
-    "muur": {
-      "type": "tt-muur",
-      "settings": {
-        "heading": "Onderweg",
-        "bg": "zand"
-      },
+    "raster": {
+      "type": "tt-raster",
+      "settings": {},
       "blocks": {
         "foto-1": {
           "type": "foto",
           "settings": {
-            "vorm": "hoog",
-            "fallback": "tt-foto-mood-1",
-            "onderschrift": "de hike naar de spot",
-            "alt": "Pad door de duinen naar zee"
+            "fallback": "tt-foto-stap-3",
+            "alt": "Surfer loopt met een geel board over het strand"
           }
         },
-        "foto-2": {
-          "type": "foto",
+        "tekst-2": {
+          "type": "tekst",
           "settings": {
-            "vorm": "vierkant",
-            "fallback": "tt-foto-mood-2",
-            "alt": "Boards in het zand"
+            "titel": "De Draagtas",
+            "regels": "Zware stof\nBrede schouderband\nSofttop en hardboard",
+            "link_label": "Bekijk de draagtas"
           }
         },
         "foto-3": {
           "type": "foto",
           "settings": {
-            "vorm": "boog",
-            "fallback": "tt-foto-mood-3",
-            "onderschrift": "zonsondergang",
-            "alt": "Zee bij zonsondergang"
+            "fallback": "tt-foto-beginner",
+            "alt": "Surfster met board onder een roze lucht"
           }
         },
-        "foto-4": {
-          "type": "foto",
+        "logo-4": {
+          "type": "logo",
           "settings": {
-            "vorm": "liggend",
-            "fallback": "tt-foto-mood-4",
-            "alt": "Rustige golven"
+            "icoon": "maan",
+            "onder": "Est 2025"
           }
         },
         "foto-5": {
           "type": "foto",
           "settings": {
-            "vorm": "staand",
             "fallback": "tt-foto-mood-5",
-            "onderschrift": "op weg naar zee",
-            "alt": "Surfer op weg naar zee"
+            "alt": "Twee surfers lopen de zee in"
           }
         },
-        "foto-6": {
-          "type": "foto",
+        "logo-6": {
+          "type": "logo",
           "settings": {
-            "vorm": "hoog",
-            "fallback": "tt-foto-mood-6",
-            "alt": "Board tegen een muur"
+            "icoon": "icoon-zon",
+            "onder": "Handen vrij"
           }
         },
         "foto-7": {
           "type": "foto",
           "settings": {
-            "vorm": "staand",
-            "fallback": "tt-foto-mood-7",
-            "onderschrift": "van surfers voor surfers",
-            "alt": "Surfers op het strand"
+            "fallback": "tt-foto-mood-6",
+            "alt": "Surfboard tegen een busje in de duinen"
           }
         },
-        "foto-8": {
-          "type": "foto",
+        "tekst-8": {
+          "type": "tekst",
           "settings": {
-            "vorm": "boog",
-            "fallback": "tt-foto-mood-8",
-            "alt": "Kust van bovenaf"
+            "titel": "Het Verhaal",
+            "regels": "Bedacht in Australië\nGemaakt voor onderweg\nVan surfers voor surfers",
+            "link_label": "Lees het verhaal",
+            "link": "/pages/over-ons"
           }
         },
         "foto-9": {
           "type": "foto",
           "settings": {
-            "vorm": "vierkant",
-            "fallback": "tt-foto-mood-9",
-            "onderschrift": "door de duinen",
-            "alt": "Hek tussen het duingras"
+            "fallback": "tt-foto-stap-1",
+            "alt": "Wit surfboard rechtop in het zand"
           }
         }
       },
       "block_order": [
         "foto-1",
-        "foto-2",
+        "tekst-2",
         "foto-3",
-        "foto-4",
+        "logo-4",
         "foto-5",
-        "foto-6",
+        "logo-6",
         "foto-7",
-        "foto-8",
+        "tekst-8",
         "foto-9"
       ]
     },
-    "slot": {
-      "type": "tt-slot",
-      "settings": {}
-    },
-    "merk": {
-      "type": "tt-merk",
+    "patroon": {
+      "type": "tt-patroon",
       "settings": {}
     }
   },
   "order": [
     "hero",
     "verhaal",
-    "merk",
-    "muur",
-    "slot"
+    "raster",
+    "patroon"
   ]
 }
