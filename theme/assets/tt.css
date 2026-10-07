@@ -1686,3 +1686,7 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
 .tt-surfcheck__zin { min-height: 2.3em; }
 .tt-surfcheck__tijd { min-height: 1.4em; }
 @media (max-width: 749px) { .tt-surfcheck__zin { min-height: 3.45em; } }
+
+/* Geen kleine labels boven koppen (zoals CONTACT boven "Vraag het ons gewoon"): de kop staat op zichzelf */
+.tt-col__label, .tt-duurzaam__label, .tt-tekst__label, .tt-stickerzee__label, .tt-koop__label,
+.surf-eyebrow, .mk-label { display: none !important; }
