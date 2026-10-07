@@ -503,14 +503,18 @@ def longsleeve_basis(smal=1.0):
     img, a, cx = sweater_basis()
     H, W = a.shape
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
-    y_knip, y_zoom = 1280.0, 1600.0
+    y_knip, y_zoom = 1190.0, 1600.0
     xl, xr = SW_ROMP
     kolom = (xx >= xl) & (xx <= xr)
+    romp = np.zeros((H * 4, W * 4), np.uint8)
+    cv2.rectangle(romp, (int(xl * 4), int((y_knip - 40) * 4)), (int(xr * 4), int(y_zoom * 4)), 255, -1)
+    romp = cv2.GaussianBlur(cv2.resize(romp.astype(np.float32) / 255, (W, H), interpolation=cv2.INTER_AREA), (0, 0), 0.7)
     # nieuwe onderkant van de romp, met stof uit de buik (iets samengedrukt zodat er geen mouwrand in zit)
-    mapx = (cx + (xx - cx) * 0.70).astype(np.float32)
-    mapy = (yy - 330).astype(np.float32)
+    mapx = (cx + (xx - cx) * 0.66).astype(np.float32)
+    mapy = (yy - 290).astype(np.float32)
     bron = cv2.remap(img, mapx, mapy, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
-    w = np.clip((yy - y_knip) / 40, 0, 1) * kolom
+    w = np.clip((yy - y_knip) / 90, 0, 1) * kolom
+    w = np.maximum(w, (romp > 0.01) & (a < 0.97))         # ook de hoekjes waar eerst ondergrond zat
     w = cv2.GaussianBlur(w.astype(np.float32), (0, 0), 3)
     img = img * (1 - w[..., None]) + bron * w[..., None]
     # zoom: dubbel stiksel 2,2 cm boven de onderrand, de omgeslagen rand iets lichter, onderrand iets donkerder
@@ -521,11 +525,7 @@ def longsleeve_basis(smal=1.0):
     f = (1 - 0.10 * steek + 0.025 * zoom - 0.10 * rand) * (yy > y_knip)
     f = np.where(kolom & (yy > y_knip), f, 1.0)
     img = img * f[..., None]
-    romp = np.zeros((H * 4, W * 4), np.uint8)
-    cv2.rectangle(romp, (int(xl * 4), int((y_knip - 60) * 4)), (int(xr * 4), int(y_zoom * 4)), 255, -1)
-    romp = cv2.resize(romp.astype(np.float32) / 255, (W, H), interpolation=cv2.INTER_AREA)
-    romp = cv2.GaussianBlur(romp, (0, 0), 0.7)
-    oud = np.where(kolom & (yy > y_knip - 60), 0, a)
+    oud = np.where(kolom & (yy > y_knip - 40), 0, a)
     a = np.maximum(oud, romp)
     if smal != 1.0:
         M = np.float32([[smal, 0, cx * (1 - smal)], [0, 1, 0]])
