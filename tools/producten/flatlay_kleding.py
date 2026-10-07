@@ -279,13 +279,13 @@ def neklabel_art(kleur):
     return E.art(UIT_ECHT / ('neklabel-creme.png' if is_donker(kleur) else 'neklabel-navy.png'))
 
 
-def kleur_stof(img, a, kleur, sterkte=1.5):
+def kleur_stof(img, a, kleur, sterkte=1.5, fijn_donker=2.4, plooi_donker=2.2):
     m = (a > 0.5).astype(np.float32)
     if not is_donker(kleur):
         img = plooien(img, m, sterkte=sterkte)
         return MK.kleur_om(img, m, kleur, 1.0)
     # donkere stof: plooien en breiwerk zie je vooral als lichte glans op de bolle kanten, niet als donkere schaduw
-    img = plooien(img, m, sterkte=2.2, fijn=2.4)
+    img = plooien(img, m, sterkte=plooi_donker, fijn=fijn_donker)
     L = MK.helderheid(img)
     ref = float(np.median(L[m > 0.5]))
     s = L / max(ref, 1e-3)
@@ -618,8 +618,8 @@ def uv_shirt():
 HOOD_PUNTEN = [(1350, 838), (1420, 842), (1480, 850), (1540, 862), (1580, 880), (1600, 905), (1615, 950), (1625, 1000),
                (1640, 1050), (1645, 1100), (1650, 1150), (1655, 1200), (1662, 1250), (1690, 1290), (1750, 1312), (1850, 1350),
                (1950, 1390), (2030, 1440), (2055, 1475), (2100, 1560), (2150, 1650), (2200, 1740), (2250, 1830), (2290, 1900),
-               (2302, 1935), (2265, 1980), (2200, 2055), (2140, 2125), (2085, 2190), (2050, 2240), (2045, 2300), (2045, 2450),
-               (2045, 2600), (2035, 2638), (2000, 2642), (1700, 2642), (1350, 2642)]
+               (2302, 1935), (2265, 1980), (2200, 2055), (2140, 2125), (2085, 2190), (2050, 2240), (2045, 2300), (2040, 2400),
+               (2025, 2480), (2003, 2540), (1992, 2600), (1978, 2640), (1940, 2648), (1700, 2648), (1350, 2648)]
 HOOD_CX = 1350.0
 HOOD_MAAT = 22.4                         # px per cm (romp 1390 px = 62 cm)
 
@@ -630,22 +630,25 @@ def hoodie_basis():
     if 'hood' in _CACHE:
         return _CACHE['hood']
     img = MK.laad(FLAT / 'hoodie-blauw-plat-1.jpg')
+    # de foto is korrelig (hoge iso): eerst ontruisen, anders wordt de korrel bij het omkleuren vlekkerig
+    u8 = (np.clip(img, 0, 1) * 255).astype(np.uint8)
+    img = cv2.fastNlMeansDenoisingColored(u8, None, 7, 7, 7, 21).astype(np.float32) / 255
     H, W = img.shape[:2]
     cx = HOOD_CX
-    # buik onder de schoen: stof van 160 px hoger
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
-    buik = ((xx >= cx - 40) & (xx < 1712) & (yy >= 2350) & (yy < 2482)).astype(np.float32)
+    # buik onder de schoen: stof van 200 px hoger
+    buik = ((xx >= cx - 40) & (xx < 1800) & (yy >= 2360) & (yy < 2452)).astype(np.float32)
     buik = cv2.GaussianBlur(buik, (0, 0), 4)
-    img = img * (1 - buik[..., None]) + np.roll(img, 160, axis=0) * buik[..., None]
-    # zoomboord: de zichtbare strook (x 1880 tot 2030) herhaald, telkens gespiegeld zodat er geen naad is
-    strook = img[2470:2650, 1880:2030]
-    rij = np.concatenate([strook, strook[:, ::-1]] * 6, axis=1)
+    img = img * (1 - buik[..., None]) + np.roll(img, 200, axis=0) * buik[..., None]
+    # zoomboord: de zichtbare strook (x 1800 tot 1950) herhaald, telkens gespiegeld zodat er geen naad is
+    strook = img[2440:2660, 1800:1950]
+    rij = np.concatenate([strook[:, ::-1], strook] * 8, axis=1)
     x0 = int(cx) - 60
-    breedte = 1880 - x0
+    breedte = 1800 - x0
     boord = np.zeros_like(img)
-    boord[2470:2650, x0:1880] = rij[:, -breedte:]
-    bm = ((xx >= x0) & (xx < 1886) & (yy >= 2476) & (yy < 2650)).astype(np.float32)
-    bm = cv2.GaussianBlur(bm, (0, 0), 3)
+    boord[2440:2660, x0:1800] = rij[:, -breedte:]
+    bm = ((xx >= x0) & (xx < 1804) & (yy >= 2446) & (yy < 2660)).astype(np.float32)
+    bm = cv2.GaussianBlur(bm, (0, 0), 2.5)
     img = img * (1 - bm[..., None]) + boord * bm[..., None]
     a = pen_masker(img, HOOD_PUNTEN, cx, zoek=6)
     img, a = img[:, ::-1].copy(), a[:, ::-1].copy()
@@ -672,9 +675,10 @@ def hoodie_rug(img, a, cx):
     naad = np.exp(-((xx - cx) / 2.2) ** 2) * (yy > 850) * (yy < 1320)
     img = img * (1 - 0.18 * naad[..., None])
     # buidelzak weg: stof van boven
-    zak = ((np.abs(xx - cx) < 400) & (yy > 1900) & (yy < 2440)).astype(np.float32)
-    zak = cv2.GaussianBlur(zak, (0, 0), 14)
-    img = img * (1 - zak[..., None]) + np.roll(img, 420, axis=0) * zak[..., None]
+    zak = ((np.abs(xx - cx) < 420) & (yy > 1925) & (yy < 2440)).astype(np.float32)
+    zak = cv2.GaussianBlur(zak, (0, 0), 12)
+    spiegel = cv2.remap(img, xx, (2 * 1915 - yy).astype(np.float32), cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+    img = img * (1 - zak[..., None]) + spiegel * zak[..., None]
     img, a = img[:, ::-1].copy(), a[:, ::-1].copy()
     return img, a, W - 1 - cx
 
@@ -682,7 +686,7 @@ def hoodie_rug(img, a, cx):
 def hoodie(handle, kleur, naam, achtergrond):
     img, a, cx = hoodie_basis()
     art = ontwerp(naam, kleur)
-    v = kleur_stof(img, a, kleur)
+    v = kleur_stof(img, a, kleur, fijn_donker=1.3, plooi_donker=1.5)
     H, W = a.shape
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
     # ons label binnen in de kap, achter in de nek
@@ -693,7 +697,7 @@ def hoodie(handle, kleur, naam, achtergrond):
     br = hoogte * ic.shape[1] / ic.shape[0]
     v = druk(v, a, ic, cx + 10 * HOOD_MAAT, 1500 + 7 * HOOD_MAAT, br, verplaatsing=3)
     r, ra, rcx = hoodie_rug(img, a, cx)
-    r = kaal = kleur_stof(r, ra, kleur)
+    r = kaal = kleur_stof(r, ra, kleur, fijn_donker=1.3, plooi_donker=1.5)
     r, pr = rugprint(r, ra, rcx, art, HOOD_MAAT, 1360, breedte_cm=26, max_cm=38, onder_kraag_cm=7)
     product(handle, (v, a), (r, ra), achtergrond, rugprint_macro_kader(pr, art, naam), [pr], HOOD_MAAT, macro_img=(kaal, ra),
             vulling=(0.84, 0.78))
