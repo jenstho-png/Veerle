@@ -232,9 +232,6 @@ def board():
     a = math.radians(-45)
     T = lambda x, y: (32 + x * math.cos(a) - y * math.sin(a), 32 + x * math.sin(a) + y * math.cos(a))
     snedes = [strook([T(-24, 0), T(27, 0)], 0.5, 0.5, False)]
-    for bx in (-11, 10):  # draagbanden: twee sneden per band
-        for dx in (-2.8, 2.8):
-            snedes.append(strook([T(bx + dx, -10), T(bx + dx, 10)], 0.6, 0.6, False))
     return vorm.difference(unary_union(snedes))
 
 
@@ -243,10 +240,8 @@ def tas():
     a = math.radians(-32)
     T = lambda x, y: (31 + x * math.cos(a) - y * math.sin(a), 40 + x * math.sin(a) + y * math.cos(a))
     band = strook([T(-14, -5), T(-17, -19), T(-4, -29), T(12, -22), T(12, -5)], 2.6, 2.6)
-    gesp = affinity.rotate(box(-3.2, -2.2, 3.2, 2.2), -32).buffer(0.5)
-    gesp = affinity.translate(gesp, *T(-4, -28.6))
-    snedes = unary_union([strook([T(bx + dx, -9), T(bx + dx, 9)], 0.6, 0.6, False) for bx in (-14, 12) for dx in (-2.6, 2.6)])
-    return unary_union([vorm.difference(snedes), band.difference(affinity.translate(gesp, 0, 0).buffer(0.9)), gesp])
+    paneel = strook([T(-8, 0), T(8, 0)], 0.6, 0.6, False)  # naad van het tegelpaneel
+    return unary_union([vorm.difference(paneel.buffer(0)), band])
 
 
 def wax():

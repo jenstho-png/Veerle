@@ -77,7 +77,7 @@
           "type": "detail",
           "settings": {
             "titel": "Materiaal",
-            "tekst": "<p>Zware, waterbestendige stof, sterke stiksels en stevige gespen. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"
+            "tekst": "<p>Zware, waterbestendige stof en sterke stiksels. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"
           }
         },
         "detail-6": {
@@ -112,7 +112,7 @@
           "type": "tekst",
           "settings": {
             "titel": "De Draagtas",
-            "regels": "Zware stof\nTwee banden\nSofttop en hardboard",
+            "regels": "Zware stof\nBrede schouderband\nSofttop en hardboard",
             "link_label": "Bekijk de draagtas"
           }
         },
@@ -192,7 +192,7 @@
           "type": "stap",
           "settings": {
             "ill": "draagtas",
-            "titel": "Leg je board in de tas",
+            "titel": "Schuif je board in de tas",
             "tekst": "Softtop of hardboard, nat of droog. Je hoeft hem niet eerst schoon te maken.",
             "fallback": "tt-foto-stap-1",
             "filename": "tide-tode-stap-1.jpg",
@@ -202,20 +202,20 @@
         "stap-2": {
           "type": "stap",
           "settings": {
-            "ill": "tas",
-            "titel": "Trek de banden aan",
-            "tekst": "Twee banden houden je board op zijn plek, ook als je klimt of fietst.",
+            "ill": "golf",
+            "titel": "Hang hem over je schouder",
+            "tekst": "De brede schouderband draagt het gewicht. Je handen zijn vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
             "fallback": "tt-foto-stap-2",
             "filename": "tide-tode-stap-2.jpg",
-            "alt": "Handen trekken een band strak"
+            "alt": "Surfer met de tas over de schouder"
           }
         },
         "stap-3": {
           "type": "stap",
           "settings": {
-            "ill": "golf",
-            "titel": "Hang hem op je rug",
-            "tekst": "Zoals een rugzak. Je hebt je handen vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
+            "ill": "busje",
+            "titel": "Op naar de spot",
+            "tekst": "Lopend door de duinen, op de fiets of achterop de scooter. Op het strand haal je hem er zo weer uit.",
             "fallback": "tt-foto-stap-3",
             "filename": "tide-tode-stap-3.jpg",
             "alt": "Surfer loopt met board naar zee"

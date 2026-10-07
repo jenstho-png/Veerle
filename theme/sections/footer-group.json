@@ -4,7 +4,7 @@
   "sections": {
     "surf-footer": {
       "type": "surf-footer",
-      "settings": {},
+      "settings": { "show_word": false },
       "blocks": {
         "menu-1": {
           "type": "menu",

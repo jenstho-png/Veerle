@@ -97,12 +97,12 @@ if "'icoon-zon'" not in sn:
 
 # illustraties
 cases = ''
-for n in ('parasol', 'golf', 'busje', 'zon', 'tas'):
+for n in ('parasol', 'golf', 'busje', 'zon'):
     cases += f"  {{%- when '{n}' -%}}\n    " + kort(IL.svg(n, 'currentColor', 3.2)).replace('<svg ', '<svg class="tt-ill {{ class }}" aria-hidden="true" ', 1) + '\n'
 cases += "  {%- when 'draagtas' -%}\n    " + TAS.lijn('tt-ill {{ class }}', 'currentColor') + '\n'
 (THEMA / 'snippets' / 'tt-ill.liquid').write_text(
     "{%- comment -%}\n  Lijnillustraties (gegenereerd door tools/brand2/export_shopify.py). Kleur volgt currentColor.\n"
-    "  Gebruik: {% render 'tt-ill', naam: 'parasol' %}  Namen: parasol, golf, busje, zon, tas, draagtas\n{%- endcomment -%}\n"
+    "  Gebruik: {% render 'tt-ill', naam: 'parasol' %}  Namen: parasol, golf, busje, zon, draagtas\n{%- endcomment -%}\n"
     "{%- case naam -%}\n" + cases + "{%- endcase -%}\n")
 
 # tas-sticker toevoegen aan tt-stk

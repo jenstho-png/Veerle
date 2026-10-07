@@ -314,7 +314,7 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
     # 3c de tas
     paginas.append(f'''<section class="pagina" aria-label="De draagtas"><div class="tasp">
   <h2>DE DRAAGTAS</h2>
-  <p>Het board erop, het tegelpaneel eroverheen, de banden eromheen en de schouderband omhoog. Als lijntekening voor kaartjes en uitleg, als sticker in de kleuren van de stof.</p>
+  <p>Het board erin, het tegelpaneel eromheen en de schouderband omhoog. Als lijntekening voor kaartjes en uitleg, als sticker in de kleuren van de stof.</p>
   <div style="display:grid;grid-template-rows:1fr 1.2fr;gap:2cqw;min-height:0">
     <div class="lijn" style="background:var(--creme);display:grid;place-items:center;padding:2cqw">{TAS.lijn()}</div>
     <div class="foto" style="background-image:url({foto('zand')})">{TAS.sticker()}</div>
@@ -326,7 +326,7 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
     paginas.append(f'''<section class="pagina" aria-label="Kleur en letter"><div class="kleur">{strook}</div>
   <div class="letters">
     <div class="rij"><span class="label">Display<br>koppen en logo</span><span class="proef-d">HANDEN VRIJ</span></div>
-    <div class="rij"><span class="label">Courier Prime<br>tekst en labels</span><span class="proef-m">Leg je board in de tas, trek de banden aan en hang hem op je rug. Zo heb je allebei je handen vrij.</span></div>
+    <div class="rij"><span class="label">Courier Prime<br>tekst en labels</span><span class="proef-m">Schuif je board in de tas en hang hem over je schouder. Zo heb je allebei je handen vrij.</span></div>
     <div class="rij"><span class="label">Homemade Apple<br>één woord, met de hand</span><span class="proef-h">op weg naar zee</span></div>
   </div></section>''')
     # 5 stickers op zee
@@ -359,7 +359,7 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
     # 8 grid
     paginas.append(f'''<section class="pagina" aria-label="Collectie"><div class="grid9">
   <img src="{foto('g1')}" alt="Surfer loopt met een geel board over het strand">
-  <div class="tegel"><span class="hand">De Draagtas</span><span class="m">Zware stof<br>Twee banden<br>Softtop en hardboard</span></div>
+  <div class="tegel"><span class="hand">De Draagtas</span><span class="m">Zware stof<br>Brede schouderband<br>Softtop en hardboard</span></div>
   <img src="{foto('g3')}" alt="Surfster met board onder een roze lucht">
   <div class="tegel logo">{logo('gestapeld', NAVY)}<span class="m">Est 2025</span></div>
   <img src="{foto('g6')}" alt="Twee surfers lopen de zee in">

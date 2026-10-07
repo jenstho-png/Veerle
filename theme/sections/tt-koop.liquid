@@ -25,8 +25,21 @@
           <div class="tt-koop__foto tt-onthul"{% if forloop.first %}{% endif %}>{%- if forloop.first -%}{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}{%- endif -%}{{ m.preview_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 55vw, 100vw', widths: '600, 900, 1200, 1800', alt: m.alt | default: p.title, class: 'tt-beeld__img' }}</div>
         {%- endfor -%}
       {%- else -%}
-        <div class="tt-koop__foto tt-onthul">{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-product-1', alt: section.settings.alt, sizes: '(min-width: 990px) 55vw, 100vw' -%}</div>
-        <div class="tt-koop__foto tt-onthul">{%- render 'tt-beeld', image: section.settings.b2_image, filename: section.settings.b2_filename, fallback: 'tt-foto-product-2', alt: section.settings.b2_alt, sizes: '(min-width: 990px) 55vw, 100vw' -%}</div>
+        <div class="tt-koop__foto tt-onthul">{%- render 'tt-sticker', tekst: section.settings.sticker, kleur: 'poppy', vorm: 'rond', class: 'tt-sticker--rechtsboven' -%}{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-product-1', alt: section.settings.alt, sizes: '(min-width: 990px) 55vw, 100vw' -%}</div>
+        <div class="tt-koop__foto tt-onthul">{%- render 'tt-beeld', image: section.settings.b2_image, filename: section.settings.b2_filename, fallback: 'tt-product-2', alt: section.settings.b2_alt, sizes: '(min-width: 990px) 55vw, 100vw' -%}</div>
+        {%- if section.settings.extra_beelden -%}
+          {%- for n in (3..7) -%}
+            {%- assign naam = 'tt-product-' | append: n -%}
+            {%- case n -%}
+              {%- when 3 -%}{%- assign alt_n = 'Het tegelvak van de draagtas om het midden van het board' -%}
+              {%- when 4 -%}{%- assign alt_n = 'De dusty blue schouderband van de draagtas' -%}
+              {%- when 5 -%}{%- assign alt_n = 'Tekening van de draagtas met genummerde onderdelen' -%}
+              {%- when 6 -%}{%- assign alt_n = 'De draagtas als sticker op een zwart-witfoto van de zee' -%}
+              {%- else -%}{%- assign alt_n = 'De kleuren van de tegelstof: terracotta, dusty blue, mosterd, roest, crème en navy' -%}
+            {%- endcase -%}
+            <div class="tt-koop__foto tt-onthul">{%- render 'tt-beeld', fallback: naam, alt: alt_n, sizes: '(min-width: 990px) 55vw, 100vw' -%}</div>
+          {%- endfor -%}
+        {%- endif -%}
       {%- endif -%}
     </div>
     {%- liquid
@@ -36,6 +49,9 @@
       endif
       if aantal == 0
         assign aantal = 2
+        if section.settings.extra_beelden
+          assign aantal = 7
+        endif
       endif
     -%}
     {%- if section.settings.stickers -%}<div class="tt-stickers tt-stickers--koop" aria-hidden="true">{% render 'tt-stk', naam: 'draagtas' %}</div>{%- endif -%}
@@ -62,6 +78,7 @@
         <ul class="tt-koop__punten tt-in">
           {%- for block in section.blocks -%}{%- if block.type == 'punt' -%}<li {{ block.shopify_attributes }}><span class="tt-koop__vinkje" aria-hidden="true"></span>{{ block.settings.tekst }}</li>{%- endif -%}{%- endfor -%}
         </ul>
+        {%- if p != blank and v.available and section.settings.voorraad != blank -%}<p class="tt-koop__voorraad tt-in"><span class="tt-koop__stip" aria-hidden="true"></span>{{ section.settings.voorraad }}</p>{%- endif -%}
         <div class="tt-koop__form tt-in">
           {%- if p != blank -%}
             {%- form 'product', p, class: 'tt-koop__formulier', data-tt-form: '' -%}
@@ -91,6 +108,9 @@
           {%- if section.settings.v2 != blank -%}<li>{% render 'tt-icoon', icoon: 'tij' %}{{ section.settings.v2 }}</li>{%- endif -%}
           {%- if section.settings.v3 != blank -%}<li>{% render 'tt-icoon', icoon: 'schelp' %}{{ section.settings.v3 }}</li>{%- endif -%}
         </ul>
+        {%- if section.settings.betaal_iconen and shop.enabled_payment_types.size > 0 -%}
+          <ul class="tt-koop__betaal tt-in" aria-label="Betaalmethoden">{%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag }}</li>{%- endfor -%}</ul>
+        {%- endif -%}
         <div class="tt-koop__details tt-in">
           {%- for block in section.blocks -%}{%- if block.type == 'detail' -%}
             <details {{ block.shopify_attributes }}><summary>{{ block.settings.titel }}<i aria-hidden="true"></i></summary><div>{{ block.settings.tekst }}</div></details>
@@ -151,6 +171,10 @@
           "label": "Crème"
         },
         {
+          "value": "papier",
+          "label": "Papier"
+        },
+        {
           "value": "zand",
           "label": "Zand"
         },
@@ -190,7 +214,7 @@
       "type": "textarea",
       "id": "text",
       "label": "Korte pitch",
-      "default": "Voor iedereen die zijn board een eind moet dragen. Je legt je board in de tas, trekt de banden aan en hangt hem op je rug. Het gewicht zit verdeeld over je schouders en de wax blijft van je arm af."
+      "default": "Voor iedereen die zijn board een eind moet dragen. Je schuift je board in de tas en hangt hem over je schouder. Het gewicht zit verdeeld over je schouders en de wax blijft van je arm af."
     },
     {
       "type": "text",
@@ -214,6 +238,24 @@
       "type": "checkbox",
       "id": "snel_betalen",
       "label": "Snelle betaalknoppen tonen (Shop Pay, Apple Pay, enz.)",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "voorraad",
+      "label": "Voorraadregel (als hij op voorraad is)",
+      "default": "Op voorraad, binnen 2 werkdagen verstuurd"
+    },
+    {
+      "type": "checkbox",
+      "id": "betaal_iconen",
+      "label": "Betaalmethoden tonen onder de knop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "extra_beelden",
+      "label": "Getekende productbeelden tonen zolang het product geen foto's heeft",
       "default": true
     },
     {
@@ -280,7 +322,7 @@
       "type": "text",
       "id": "b2_alt",
       "label": "Alt-tekst",
-      "default": "Board op de rug onderweg naar de spot"
+      "default": "De tegelstof van de draagtas van dichtbij"
     }
   ],
   "blocks": [
@@ -348,7 +390,7 @@
           "type": "detail",
           "settings": {
             "titel": "Materiaal",
-            "tekst": "<p>Zware, waterbestendige stof, sterke stiksels en stevige gespen. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"
+            "tekst": "<p>Zware, waterbestendige stof en sterke stiksels. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"
           }
         },
         {

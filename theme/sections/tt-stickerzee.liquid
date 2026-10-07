@@ -1,12 +1,12 @@
 <section class="tt tt-stickerzee" aria-label="{{ section.settings.hand | escape }}">
   <div class="tt-stickerzee__foto">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-zee-zw', alt: section.settings.alt, sizes: '100vw' -%}</div>
   <div class="tt-stickerzee__stickers" aria-hidden="true">
-    <span class="sz sz--tas">{% render 'tt-stk', naam: 'draagtas' %}</span>
-    <span class="sz sz--zon">{% render 'tt-stk', naam: 'zon' %}</span>
-    <span class="sz sz--schelp">{% render 'tt-stk', naam: 'schelp' %}</span>
-    <span class="sz sz--ster">{% render 'tt-stk', naam: 'zeester' %}</span>
-    <span class="sz sz--golf">{% render 'tt-stk', naam: 'golf' %}</span>
-    <span class="sz sz--palm">{% render 'tt-stk', naam: 'palm' %}</span>
+    <span class="sz sz--tas" data-tt-snelheid="0.35">{% render 'tt-stk', naam: 'draagtas' %}</span>
+    <span class="sz sz--zon" data-tt-snelheid="0.6">{% render 'tt-stk', naam: 'zon' %}</span>
+    <span class="sz sz--schelp" data-tt-snelheid="0.5">{% render 'tt-stk', naam: 'schelp' %}</span>
+    <span class="sz sz--ster" data-tt-snelheid="0.75">{% render 'tt-stk', naam: 'zeester' %}</span>
+    <span class="sz sz--golf" data-tt-snelheid="0.25">{% render 'tt-stk', naam: 'golf' %}</span>
+    <span class="sz sz--palm" data-tt-snelheid="0.55">{% render 'tt-stk', naam: 'palm' %}</span>
   </div>
   <div class="tt-stickerzee__tekst">
     <p class="tt-stickerzee__hand">{{ section.settings.hand }}</p>

@@ -15,7 +15,22 @@
 
   function start(scope = document) {
     /* 1. In beeld komen */
-    const doelen = scope.querySelectorAll('[data-tt-regels], .tt-onthul, .tt-in, .tt-stickerzee');
+    /* lijntekeningen: lengte van elke lijn meten zodat ze zichzelf kunnen tekenen */
+    if (!stil) scope.querySelectorAll('.tt-teken .tt-ill path, .tt-teken .tt-ill line, .tt-teken .tt-ill circle').forEach((el) => {
+      if (el.dataset.len || el.closest('defs')) return;
+      try { const l = Math.ceil(el.getTotalLength()); el.dataset.len = l; el.style.setProperty('--len', l); } catch (e) {}
+    });
+    /* kaarten kantelen een paar graden mee met de muis */
+    if (!stil && matchMedia('(hover: hover) and (pointer: fine)').matches) scope.querySelectorAll('[data-tt-kantel]').forEach((el) => {
+      if (el.dataset.ttKantelAan) return; el.dataset.ttKantelAan = '1';
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        el.style.transform = `perspective(900px) rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 6).toFixed(2)}deg) translateY(-4px)`;
+      });
+      el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+    });
+    const doelen = scope.querySelectorAll('[data-tt-regels], .tt-onthul, .tt-in, .tt-stickerzee, .tt-teken');
     if (stil || !('IntersectionObserver' in window)) {
       doelen.forEach((el) => el.classList.add('is-in'));
     } else {

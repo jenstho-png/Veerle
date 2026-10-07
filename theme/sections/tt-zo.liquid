@@ -5,7 +5,7 @@
       {%- for block in section.blocks -%}
         <li class="tt-zo__stap" {{ block.shopify_attributes }} style="--d: {{ forloop.index0 | times: 0.12 }}s">
           {%- if section.settings.stijl == 'illustratie' and block.settings.ill != blank -%}
-            <div class="tt-zo__ill tt-in"><span class="tt-zo__nr">{{ forloop.index }}</span>{%- render 'tt-ill', naam: block.settings.ill -%}</div>
+            <div class="tt-zo__ill tt-in tt-teken"><span class="tt-zo__nr">{{ forloop.index }}</span>{%- render 'tt-ill', naam: block.settings.ill -%}</div>
           {%- else -%}
             <div class="tt-zo__foto tt-onthul">{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, fallback: block.settings.fallback, alt: block.settings.alt, sizes: '(min-width: 990px) 30vw, 80vw' -%}<span class="tt-zo__nr">{{ forloop.index }}</span></div>
           {%- endif -%}
@@ -32,6 +32,10 @@
         {
           "value": "creme",
           "label": "Crème"
+        },
+        {
+          "value": "papier",
+          "label": "Papier"
         },
         {
           "value": "zand",
@@ -175,10 +179,6 @@
               "label": "De draagtas"
             },
             {
-              "value": "tas",
-              "label": "Board met banden"
-            },
-            {
               "value": "golf",
               "label": "Golf"
             },
@@ -232,7 +232,7 @@
           "type": "stap",
           "settings": {
             "ill": "draagtas",
-            "titel": "Leg je board in de tas",
+            "titel": "Schuif je board in de tas",
             "tekst": "Softtop of hardboard, nat of droog. Je hoeft hem niet eerst schoon te maken.",
             "fallback": "tt-foto-stap-1",
             "filename": "tide-tode-stap-1.jpg",
@@ -242,20 +242,20 @@
         {
           "type": "stap",
           "settings": {
-            "ill": "tas",
-            "titel": "Trek de banden aan",
-            "tekst": "Twee banden houden je board op zijn plek, ook als je klimt of fietst.",
+            "ill": "golf",
+            "titel": "Hang hem over je schouder",
+            "tekst": "De brede schouderband draagt het gewicht. Je handen zijn vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
             "fallback": "tt-foto-stap-2",
             "filename": "tide-tode-stap-2.jpg",
-            "alt": "Handen trekken een band strak"
+            "alt": "Surfer met de tas over de schouder"
           }
         },
         {
           "type": "stap",
           "settings": {
-            "ill": "golf",
-            "titel": "Hang hem op je rug",
-            "tekst": "Zoals een rugzak. Je hebt je handen vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
+            "ill": "busje",
+            "titel": "Op naar de spot",
+            "tekst": "Lopend door de duinen, op de fiets of achterop de scooter. Op het strand haal je hem er zo weer uit.",
             "fallback": "tt-foto-stap-3",
             "filename": "tide-tode-stap-3.jpg",
             "alt": "Surfer loopt met board naar zee"

@@ -86,22 +86,6 @@ for x0 in (60, 110, 200, 300, 340):                                             
 d.append(lijn([(30, 280), (370, 279)], 1.0))
 TEKENINGEN['parasol'] = {'vb': '0 0 400 300', 'd': d}
 
-# 2. De tas: board schuin, twee banden eromheen en een schouderband
-d = []
-c = (200, 150)
-bo = board_omtrek(200, 150, 250, 64, 58)
-d.append(lijn(bo, 0.7, gesloten=True, stappen=3))
-d.append(lijn([rot((200, 45), c, 58), rot((200, 262), c, 58)], 0.5))
-for t in (-55, 45):                                                                 # banden
-    p1 = rot((200 - 40, 150 + t), c, 58); p2 = rot((200 + 40, 150 + t), c, 58)
-    p1b = rot((200 - 40, 150 + t + 14), c, 58); p2b = rot((200 + 40, 150 + t + 14), c, 58)
-    d.append(lijn([p1, p2], 0.4)); d.append(lijn([p1b, p2b], 0.4))
-# schouderband: een lus onder het board, van de ene band naar de andere
-for off in (0, 9):
-    a = rot((200 + 30, 150 - 48 + off * 0.3), c, 58); b = rot((200 + 30, 150 + 52 - off * 0.3), c, 58)
-    m1 = rot((200 + 92 + off, 150 - 20), c, 58); m2 = rot((200 + 92 + off, 150 + 26), c, 58)
-    d.append(lijn([a, m1, m2, b], 0.6))
-TEKENINGEN['tas'] = {'vb': '0 0 400 300', 'd': d}
 
 # 3. Golf
 d = []

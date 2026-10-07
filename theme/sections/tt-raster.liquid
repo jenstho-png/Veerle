@@ -11,7 +11,7 @@
             {%- if block.settings.link_label != blank -%}<a class="tt-link" href="{{ block.settings.link | default: routes.all_products_collection_url }}">{{ block.settings.link_label }}</a>{%- endif -%}
           </div>
         {%- when 'logo' -%}
-          <div class="tt-raster__vak tt-raster__vak--logo" {{ block.shopify_attributes }}>
+          <div class="tt-raster__vak tt-raster__vak--logo" {{ block.shopify_attributes }} data-tt-kantel>
             {%- render 'tt-logo', variant: block.settings.icoon -%}
             {%- render 'tt-logo', variant: 'staand' -%}
             <p class="tt-raster__onder">{{ block.settings.onder }}</p>
@@ -79,7 +79,7 @@
           "type": "textarea",
           "id": "regels",
           "label": "Regels (één per regel)",
-          "default": "Zware stof\nTwee banden\nSofttop en hardboard"
+          "default": "Zware stof\nBrede schouderband\nSofttop en hardboard"
         },
         {
           "type": "text",
@@ -141,7 +141,7 @@
           "type": "tekst",
           "settings": {
             "titel": "De Draagtas",
-            "regels": "Zware stof\nTwee banden\nSofttop en hardboard",
+            "regels": "Zware stof\nBrede schouderband\nSofttop en hardboard",
             "link_label": "Bekijk de draagtas"
           }
         },

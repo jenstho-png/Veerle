@@ -1,6 +1,6 @@
 <section class="tt tt-kaart tt-bg--{{ section.settings.bg }}" id="tt-verhaal">
   <div class="tt-wrap tt-kaart__grid">
-    <div class="tt-kaart__navy tt-in">
+    <div class="tt-kaart__navy tt-in" data-tt-kantel>
       <div class="tt-kaart__logo">{%- render 'tt-logo', variant: 'liggend' -%}</div>
       <div class="tt-kaart__body">
         {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
@@ -10,7 +10,7 @@
         {%- for block in section.blocks -%}<div {{ block.shopify_attributes }}><dt>{{ block.settings.label }}</dt><dd>{{ block.settings.waarde }}</dd></div>{%- endfor -%}
       </dl>
     </div>
-    <div class="tt-kaart__creme tt-in" style="--d: .2s">
+    <div class="tt-kaart__creme tt-in tt-teken" style="--d: .2s" data-tt-kantel>
       {%- render 'tt-ill', naam: section.settings.ill -%}
       {%- if section.settings.naam != blank -%}<p class="tt-handtekening">{{ section.settings.naam }}</p>{%- endif -%}
       {%- if section.settings.link_label != blank -%}<a class="tt-link" href="{{ section.settings.link | default: '/pages/over-ons' }}">{{ section.settings.link_label }}</a>{%- endif -%}
@@ -32,6 +32,10 @@
         {
           "value": "creme",
           "label": "Crème"
+        },
+        {
+          "value": "papier",
+          "label": "Papier"
         },
         {
           "value": "zand",

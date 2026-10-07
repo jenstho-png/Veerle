@@ -8,7 +8,7 @@
   endif
 -%}
 <section class="tt tt-patroon">
-  <div class="tt-patroon__vormen" aria-hidden="true">{%- render 'tt-patroon' -%}</div>
+  <div class="tt-patroon__vormen" aria-hidden="true" data-tt-snelheid="0.22">{%- render 'tt-patroon' -%}</div>
   <div class="tt-patroon__inhoud">
     <div class="tt-patroon__logo">{%- render 'tt-logo', variant: 'staand', label: shop.name -%}</div>
     {%- if section.settings.hand != blank -%}<p class="tt-patroon__hand">{{ section.settings.hand }}</p>{%- endif -%}

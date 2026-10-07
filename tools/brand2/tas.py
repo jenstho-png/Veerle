@@ -1,4 +1,4 @@
-"""De echte draagtas (naar de fabrieksfoto): board, tegelpaneel, blauwe schouderband, mosterdgele banden.
+"""De echte draagtas (naar de fabrieksfoto): board, tegelpaneel en blauwe schouderband.
 lijn() = handgetekende lijnillustratie, sticker() = kleurensticker met witte rand. viewBox 0 0 600 300."""
 NAVY, CREME, PAPIER = '#22324F', '#F3ECDD', '#FBF7EF'
 TERRA, BLAUW, MOSTERD, ROEST = '#C0603E', '#8FA9C8', '#D9A93B', '#9E3B2E'
@@ -37,7 +37,6 @@ def lijn(cls='', kleur=NAVY):
   <defs><clipPath id="tl-clip"><path d="{PANEEL}"/></clipPath></defs>
   <path d="{BOARD}" stroke-width="3.4"/>
   <path d="M60 170 L548 170" stroke-width="1.6" opacity=".55"/>
-  <path d="M148 92 L148 250 M160 92 L160 250 M440 92 L440 250 M452 92 L452 250" stroke-width="2.6"/>
   <path d="{PANEEL}" fill="{PAPIER}" stroke-width="3.2"/>
   <g clip-path="url(#tl-clip)">{tegels(True)}</g>
   <path d="{PANEEL}" stroke-width="3.2"/>
@@ -47,14 +46,13 @@ def lijn(cls='', kleur=NAVY):
 
 
 def sticker(cls='', stijl=''):
-    vorm = f'<path d="{BOARD}"/><path d="M142 88 h24 v166 h-24 Z M434 88 h24 v166 h-24 Z"/><path d="{PANEEL}"/><path d="{BAND}" fill="none"/>'
+    vorm = f'<path d="{BOARD}"/><path d="{PANEEL}"/><path d="{BAND}" fill="none"/>'
     return f'''<svg class="{cls}" style="{stijl}" viewBox="-20 -20 640 300" aria-hidden="true">
   <defs><clipPath id="ts-clip"><path d="{PANEEL}"/></clipPath></defs>
   <g fill="#000" stroke="#000" stroke-width="40" stroke-linejoin="round" opacity=".14" transform="translate(4 7)">{vorm}</g>
   <g fill="#FFFDF8" stroke="#FFFDF8" stroke-width="40" stroke-linejoin="round" stroke-linecap="round">{vorm}</g>
   <path d="{BOARD}" fill="{CREME}" stroke="{NAVY}" stroke-width="3"/>
   <path d="M60 170 L548 170" stroke="{NAVY}" stroke-width="1.6" opacity=".4"/>
-  <rect x="142" y="90" width="24" height="162" rx="3" fill="{MOSTERD}"/><rect x="434" y="90" width="24" height="162" rx="3" fill="{MOSTERD}"/>
   <g clip-path="url(#ts-clip)">{tegels()}</g>
   <path d="{PANEEL}" fill="none" stroke="{NAVY}" stroke-width="3"/>
   <path d="{BAND}" fill="none" stroke="{BLAUW}" stroke-width="15" stroke-linejoin="round"/>

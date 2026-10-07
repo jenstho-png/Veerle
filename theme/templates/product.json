@@ -33,7 +33,7 @@
           "type": "detail",
           "settings": {
             "titel": "Materiaal",
-            "tekst": "<p>Zware, waterbestendige stof, sterke stiksels en stevige gespen. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"
+            "tekst": "<p>Zware, waterbestendige stof en sterke stiksels. Gemaakt om jaren mee te gaan, niet voor één zomer.</p>"
           }
         },
         "detail-6": {
@@ -51,91 +51,6 @@
         "detail-4",
         "detail-5",
         "detail-6"
-      ]
-    },
-    "disclosures": {
-      "type": "disclosures",
-      "settings": {
-        "padding_top": 36,
-        "padding_bottom": 0
-      }
-    },
-    "related-products": {
-      "type": "related-products",
-      "settings": {
-        "heading": "You may also like",
-        "heading_size": "h2",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "color_scheme": "scheme-1",
-        "image_ratio": "square",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "columns_mobile": "2",
-        "padding_top": 36,
-        "padding_bottom": 28
-      }
-    },
-    "faq": {
-      "type": "surf-faq",
-      "settings": {
-        "btn_link": "shopify://pages/contact",
-        "eyebrow": "",
-        "heading": "Veelgestelde vragen"
-      },
-      "blocks": {
-        "qa-1": {
-          "type": "qa",
-          "settings": {
-            "question": "Welke surfboards passen in de tas?",
-            "answer": "<p>We beginnen met één kernmodel in een universele maat. Die past om de grote, vollere boards waar veel beginners op surfen en om hardboards in verschillende maten. Later komen er meer varianten bij.</p>"
-          }
-        },
-        "qa-2": {
-          "type": "qa",
-          "settings": {
-            "question": "Kan ik de tas meenemen in het vliegtuig?",
-            "answer": "<p>Ja. De tas past in je bagage. Huur je op je bestemming een board, dan neem je dat in je eigen tas mee naar de spot.</p>"
-          }
-        },
-        "qa-3": {
-          "type": "qa",
-          "settings": {
-            "question": "Kan ik ermee fietsen of op de scooter?",
-            "answer": "<p>Daar is hij juist voor bedacht. Je board zit op je rug, dus je hebt allebei je handen vrij voor het stuur.</p>"
-          }
-        },
-        "qa-4": {
-          "type": "qa",
-          "settings": {
-            "question": "Wat is het verschil met een boardbag?",
-            "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Daar moet je je natte, zanderige board na elke sessie weer in proppen. Onze tas is gemaakt om je board te dragen: naar de spot en weer terug.</p>"
-          }
-        },
-        "qa-5": {
-          "type": "qa",
-          "settings": {
-            "question": "Zitten er lussen of karabijnhaken aan?",
-            "answer": "<p>Het eerste model houden we bewust simpel. Lussen en karabijnhaken om extra spullen aan de tas te hangen komen op een later model. Stevige karabijnhaken komen ook los in de shop.</p>"
-          }
-        },
-        "qa-6": {
-          "type": "qa",
-          "settings": {
-            "question": "Verkopen jullie ook andere spullen?",
-            "answer": "<p>Naast de tas komen er waxblokjes en karabijnhaken. In een later stadium volgen t-shirts.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "qa-1",
-        "qa-2",
-        "qa-3",
-        "qa-4",
-        "qa-5",
-        "qa-6"
       ]
     },
     "tt-usp": {
@@ -178,9 +93,135 @@
         "usp-4"
       ]
     },
-    "tt-probleem": {
-      "type": "tt-probleem",
-      "settings": {}
+    "tt-specs": {
+      "type": "tt-specs",
+      "settings": {},
+      "blocks": {
+        "punt-1": {
+          "type": "punt",
+          "settings": {
+            "titel": "Schouderband",
+            "tekst": "Breed en stevig. Je hangt de tas over één schouder of schuin over je rug.",
+            "x": 50,
+            "y": 8
+          }
+        },
+        "punt-3": {
+          "type": "punt",
+          "settings": {
+            "titel": "Tegelstof",
+            "tekst": "Stevige geweven stof met ons tegelpatroon. Zand klop je er zo af.",
+            "x": 50,
+            "y": 70
+          }
+        },
+        "punt-4": {
+          "type": "punt",
+          "settings": {
+            "titel": "Je board",
+            "tekst": "Softtop of hardboard, kort of lang. Nat en vol zand mag gewoon.",
+            "x": 88,
+            "y": 50
+          }
+        },
+        "spec-5": {
+          "type": "spec",
+          "settings": {
+            "label": "Maat",
+            "waarde": "Eén universele maat"
+          }
+        },
+        "spec-6": {
+          "type": "spec",
+          "settings": {
+            "label": "Past op",
+            "waarde": "Softtops en hardboards"
+          }
+        },
+        "spec-7": {
+          "type": "spec",
+          "settings": {
+            "label": "Stof",
+            "waarde": "Geweven jacquard met tegelprint"
+          }
+        },
+        "spec-8": {
+          "type": "spec",
+          "settings": {
+            "label": "Print",
+            "waarde": "Tegels in terracotta, dusty blue en mosterd"
+          }
+        },
+        "spec-9": {
+          "type": "spec",
+          "settings": {
+            "label": "Dragen",
+            "waarde": "Over je schouder of op je rug"
+          }
+        },
+        "spec-10": {
+          "type": "spec",
+          "settings": {
+            "label": "Onderhoud",
+            "waarde": "Uitspoelen met zoet water en laten drogen"
+          }
+        }
+      },
+      "block_order": [
+        "punt-1",
+        "punt-3",
+        "punt-4",
+        "spec-5",
+        "spec-6",
+        "spec-7",
+        "spec-8",
+        "spec-9",
+        "spec-10"
+      ]
+    },
+    "tt-detail": {
+      "type": "tt-detail",
+      "settings": {},
+      "blocks": {
+        "detail-1": {
+          "type": "detail",
+          "settings": {
+            "titel": "Zware stof",
+            "tekst": "Waterbestendig en gemaakt voor nat, zand en zout.",
+            "filename": "tide-tode-detail-stof.jpg"
+          }
+        },
+        "detail-2": {
+          "type": "detail",
+          "settings": {
+            "titel": "Sterke stiksels",
+            "tekst": "Stevig gestikt op de plekken waar de tas het zwaarst draagt.",
+            "filename": "tide-tode-detail-stiksels.jpg"
+          }
+        },
+        "detail-3": {
+          "type": "detail",
+          "settings": {
+            "titel": "De schouderband",
+            "tekst": "Breed, zodat hij niet in je schouder snijdt.",
+            "filename": "tide-tode-detail-schouderband.jpg"
+          }
+        },
+        "detail-4": {
+          "type": "detail",
+          "settings": {
+            "titel": "De tegelprint",
+            "tekst": "Geweven in terracotta, dusty blue en mosterd.",
+            "filename": "tide-tode-detail-print.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "detail-1",
+        "detail-2",
+        "detail-3",
+        "detail-4"
+      ]
     },
     "tt-zo": {
       "type": "tt-zo",
@@ -189,31 +230,34 @@
         "stap-1": {
           "type": "stap",
           "settings": {
-            "titel": "Leg je board in de tas",
+            "titel": "Schuif je board in de tas",
             "tekst": "Softtop of hardboard, nat of droog. Je hoeft hem niet eerst schoon te maken.",
             "fallback": "tt-foto-stap-1",
             "filename": "tide-tode-stap-1.jpg",
-            "alt": "Surfboard in het zand"
+            "alt": "Surfboard in het zand",
+            "ill": "draagtas"
           }
         },
         "stap-2": {
           "type": "stap",
           "settings": {
-            "titel": "Trek de banden aan",
-            "tekst": "Twee banden houden je board op zijn plek, ook als je klimt of fietst.",
+            "titel": "Hang hem over je schouder",
+            "tekst": "De brede schouderband draagt het gewicht. Je handen zijn vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
             "fallback": "tt-foto-stap-2",
             "filename": "tide-tode-stap-2.jpg",
-            "alt": "Handen trekken een band strak"
+            "alt": "Surfer met de tas over de schouder",
+            "ill": "golf"
           }
         },
         "stap-3": {
           "type": "stap",
           "settings": {
-            "titel": "Hang hem op je rug",
-            "tekst": "Zoals een rugzak. Je hebt je handen vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
+            "titel": "Op naar de spot",
+            "tekst": "Lopend door de duinen, op de fiets of achterop de scooter. Op het strand haal je hem er zo weer uit.",
             "fallback": "tt-foto-stap-3",
             "filename": "tide-tode-stap-3.jpg",
-            "alt": "Surfer loopt met board naar zee"
+            "alt": "Surfer loopt met board naar zee",
+            "ill": "busje"
           }
         }
       },
@@ -223,102 +267,8 @@
         "stap-3"
       ]
     },
-    "tt-muur": {
-      "type": "tt-muur",
-      "settings": {},
-      "blocks": {
-        "foto-1": {
-          "type": "foto",
-          "settings": {
-            "vorm": "hoog",
-            "fallback": "tt-foto-mood-1",
-            "onderschrift": "de hike naar de spot",
-            "alt": "Pad door de duinen naar zee"
-          }
-        },
-        "foto-2": {
-          "type": "foto",
-          "settings": {
-            "vorm": "vierkant",
-            "fallback": "tt-foto-mood-2",
-            "alt": "Boards in het zand"
-          }
-        },
-        "foto-3": {
-          "type": "foto",
-          "settings": {
-            "vorm": "boog",
-            "fallback": "tt-foto-mood-3",
-            "onderschrift": "zonsondergang",
-            "alt": "Zee bij zonsondergang"
-          }
-        },
-        "foto-4": {
-          "type": "foto",
-          "settings": {
-            "vorm": "liggend",
-            "fallback": "tt-foto-mood-4",
-            "alt": "Rustige golven"
-          }
-        },
-        "foto-5": {
-          "type": "foto",
-          "settings": {
-            "vorm": "staand",
-            "fallback": "tt-foto-mood-5",
-            "onderschrift": "op weg naar zee",
-            "alt": "Surfer op weg naar zee"
-          }
-        },
-        "foto-6": {
-          "type": "foto",
-          "settings": {
-            "vorm": "hoog",
-            "fallback": "tt-foto-mood-6",
-            "alt": "Board tegen een muur"
-          }
-        },
-        "foto-7": {
-          "type": "foto",
-          "settings": {
-            "vorm": "staand",
-            "fallback": "tt-foto-mood-7",
-            "onderschrift": "van surfers voor surfers",
-            "alt": "Surfers op het strand"
-          }
-        },
-        "foto-8": {
-          "type": "foto",
-          "settings": {
-            "vorm": "boog",
-            "fallback": "tt-foto-mood-8",
-            "alt": "Kust van bovenaf"
-          }
-        },
-        "foto-9": {
-          "type": "foto",
-          "settings": {
-            "vorm": "vierkant",
-            "fallback": "tt-foto-mood-9",
-            "onderschrift": "door de duinen",
-            "alt": "Hek tussen het duingras"
-          }
-        }
-      },
-      "block_order": [
-        "foto-1",
-        "foto-2",
-        "foto-3",
-        "foto-4",
-        "foto-5",
-        "foto-6",
-        "foto-7",
-        "foto-8",
-        "foto-9"
-      ]
-    },
-    "tt-slot": {
-      "type": "tt-slot",
+    "tt-stickerzee": {
+      "type": "tt-stickerzee",
       "settings": {}
     },
     "tt-check": {
@@ -399,63 +349,204 @@
         "rij-6"
       ]
     },
-    "tt-detail": {
-      "type": "tt-detail",
+    "tt-kaarten": {
+      "type": "tt-kaarten",
       "settings": {},
       "blocks": {
-        "detail-1": {
-          "type": "detail",
+        "kaart-1": {
+          "type": "kaart",
           "settings": {
-            "titel": "Zware stof",
-            "tekst": "Waterbestendig en gemaakt voor nat, zand en zout.",
-            "filename": "tide-tode-detail-stof.jpg"
+            "kleur": "baby",
+            "ill": "busje",
+            "titel": "Verzending",
+            "tekst": "We versturen door heel Europa. Je krijgt een track and trace zodra hij onderweg is."
           }
         },
-        "detail-2": {
-          "type": "detail",
+        "kaart-2": {
+          "type": "kaart",
           "settings": {
-            "titel": "Sterke stiksels",
-            "tekst": "Stevig gestikt op de plekken waar de tas het zwaarst draagt.",
-            "filename": "tide-tode-detail-stiksels.jpg"
+            "kleur": "rose",
+            "ill": "golf",
+            "titel": "14 dagen bedenktijd",
+            "tekst": "Past hij toch niet bij je board? Stuur hem binnen 14 dagen terug, ongebruikt en met label."
           }
         },
-        "detail-3": {
-          "type": "detail",
+        "kaart-3": {
+          "type": "kaart",
           "settings": {
-            "titel": "De schouderbanden",
-            "tekst": "Verdelen het gewicht over je rug in plaats van over één schouder.",
-            "filename": "tide-tode-detail-banden.jpg"
-          }
-        },
-        "detail-4": {
-          "type": "detail",
-          "settings": {
-            "titel": "De gespen",
-            "tekst": "Stevig, en makkelijk open en dicht.",
-            "filename": "tide-tode-detail-gesp.jpg"
+            "kleur": "zand",
+            "ill": "zon",
+            "titel": "Gemaakt om mee te gaan",
+            "tekst": "Sterke stiksels en zware stof. Voor jaren aan surftrips, niet voor één zomer."
           }
         }
       },
       "block_order": [
-        "detail-1",
-        "detail-2",
-        "detail-3",
-        "detail-4"
+        "kaart-1",
+        "kaart-2",
+        "kaart-3"
       ]
+    },
+    "faq": {
+      "type": "surf-faq",
+      "settings": {
+        "btn_link": "shopify://pages/contact",
+        "eyebrow": "",
+        "heading": "Veelgestelde vragen"
+      },
+      "blocks": {
+        "qa-1": {
+          "type": "qa",
+          "settings": {
+            "question": "Welke surfboards passen in de tas?",
+            "answer": "<p>We beginnen met één kernmodel in een universele maat. Die past om de grote, vollere boards waar veel beginners op surfen en om hardboards in verschillende maten. Later komen er meer varianten bij.</p>"
+          }
+        },
+        "qa-2": {
+          "type": "qa",
+          "settings": {
+            "question": "Kan ik de tas meenemen in het vliegtuig?",
+            "answer": "<p>Ja. De tas past in je bagage. Huur je op je bestemming een board, dan neem je dat in je eigen tas mee naar de spot.</p>"
+          }
+        },
+        "qa-3": {
+          "type": "qa",
+          "settings": {
+            "question": "Kan ik ermee fietsen of op de scooter?",
+            "answer": "<p>Daar is hij juist voor bedacht. Je board zit op je rug, dus je hebt allebei je handen vrij voor het stuur.</p>"
+          }
+        },
+        "qa-4": {
+          "type": "qa",
+          "settings": {
+            "question": "Wat is het verschil met een boardbag?",
+            "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Daar moet je je natte, zanderige board na elke sessie weer in proppen. Onze tas is gemaakt om je board te dragen: naar de spot en weer terug.</p>"
+          }
+        },
+        "qa-5": {
+          "type": "qa",
+          "settings": {
+            "question": "Zitten er lussen of karabijnhaken aan?",
+            "answer": "<p>Het eerste model houden we bewust simpel. Lussen en karabijnhaken om extra spullen aan de tas te hangen komen op een later model. Stevige karabijnhaken komen ook los in de shop.</p>"
+          }
+        },
+        "qa-6": {
+          "type": "qa",
+          "settings": {
+            "question": "Verkopen jullie ook andere spullen?",
+            "answer": "<p>Naast de tas komen er waxblokjes en karabijnhaken. In een later stadium volgen t-shirts.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "qa-1",
+        "qa-2",
+        "qa-3",
+        "qa-4",
+        "qa-5",
+        "qa-6"
+      ]
+    },
+    "tt-raster": {
+      "type": "tt-raster",
+      "settings": {},
+      "blocks": {
+        "foto-1": {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-stap-3",
+            "alt": "Surfer loopt met een geel board over het strand"
+          }
+        },
+        "tekst-2": {
+          "type": "tekst",
+          "settings": {
+            "titel": "De Draagtas",
+            "regels": "Zware stof\nBrede schouderband\nSofttop en hardboard",
+            "link_label": "Bekijk de draagtas"
+          }
+        },
+        "foto-3": {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-beginner",
+            "alt": "Surfster met board onder een roze lucht"
+          }
+        },
+        "logo-4": {
+          "type": "logo",
+          "settings": {
+            "icoon": "maan",
+            "onder": "Est 2025"
+          }
+        },
+        "foto-5": {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-mood-5",
+            "alt": "Twee surfers lopen de zee in"
+          }
+        },
+        "logo-6": {
+          "type": "logo",
+          "settings": {
+            "icoon": "icoon-zon",
+            "onder": "Handen vrij"
+          }
+        },
+        "foto-7": {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-mood-6",
+            "alt": "Surfboard tegen een busje in de duinen"
+          }
+        },
+        "tekst-8": {
+          "type": "tekst",
+          "settings": {
+            "titel": "Het Verhaal",
+            "regels": "Bedacht in Australië\nGemaakt voor onderweg\nVan surfers voor surfers",
+            "link_label": "Lees het verhaal",
+            "link": "/pages/over-ons"
+          }
+        },
+        "foto-9": {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-stap-1",
+            "alt": "Wit surfboard rechtop in het zand"
+          }
+        }
+      },
+      "block_order": [
+        "foto-1",
+        "tekst-2",
+        "foto-3",
+        "logo-4",
+        "foto-5",
+        "logo-6",
+        "foto-7",
+        "tekst-8",
+        "foto-9"
+      ]
+    },
+    "tt-patroon": {
+      "type": "tt-patroon",
+      "settings": {}
     }
   },
   "order": [
     "main",
     "tt-usp",
+    "tt-specs",
     "tt-detail",
-    "tt-check",
-    "disclosures",
-    "tt-probleem",
     "tt-zo",
+    "tt-stickerzee",
+    "tt-check",
     "tt-vergelijk",
+    "tt-kaarten",
     "faq",
-    "tt-muur",
-    "related-products",
-    "tt-slot"
+    "tt-raster",
+    "tt-patroon"
   ]
 }

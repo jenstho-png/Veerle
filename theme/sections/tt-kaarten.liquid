@@ -1,0 +1,177 @@
+<section class="tt tt-kaarten tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap">
+    {%- if section.settings.heading != blank -%}<div class="tt-kaarten__kop">{%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}</div>{%- endif -%}
+    <div class="tt-kaarten__grid">
+      {%- for block in section.blocks -%}
+        <article class="tt-kaarten__kaart tt-kaarten__kaart--{{ block.settings.kleur }} tt-in tt-teken" style="--d: {{ forloop.index0 | times: 0.12 }}s" data-tt-kantel {{ block.shopify_attributes }}>
+          <div class="tt-kaarten__ill">{%- render 'tt-ill', naam: block.settings.ill -%}</div>
+          <h3>{{ block.settings.titel }}</h3>
+          <p>{{ block.settings.tekst }}</p>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: drie kaarten",
+  "tag": "div",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "papier",
+          "label": "Papier"
+        },
+        {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        }
+      ],
+      "default": "creme"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
+      "default": "Goed om te weten"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "kaart",
+      "name": "Kaart",
+      "settings": [
+        {
+          "type": "select",
+          "id": "kleur",
+          "label": "Kleur",
+          "options": [
+            {
+              "value": "baby",
+              "label": "Baby"
+            },
+            {
+              "value": "rose",
+              "label": "Rose"
+            },
+            {
+              "value": "zand",
+              "label": "Zand"
+            },
+            {
+              "value": "papier",
+              "label": "Papier"
+            }
+          ],
+          "default": "baby"
+        },
+        {
+          "type": "select",
+          "id": "ill",
+          "label": "Tekening",
+          "options": [
+            {
+              "value": "busje",
+              "label": "Busje"
+            },
+            {
+              "value": "golf",
+              "label": "Golf"
+            },
+            {
+              "value": "zon",
+              "label": "Zon"
+            },
+            {
+              "value": "parasol",
+              "label": "Parasol"
+            },
+            {
+              "value": "draagtas",
+              "label": "De draagtas"
+            },
+            {
+              "value": "tas",
+              "label": "Board met banden"
+            }
+          ],
+          "default": "busje"
+        },
+        {
+          "type": "text",
+          "id": "titel",
+          "label": "Titel",
+          "default": "Titel"
+        },
+        {
+          "type": "textarea",
+          "id": "tekst",
+          "label": "Tekst",
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: drie kaarten",
+      "blocks": [
+        {
+          "type": "kaart",
+          "settings": {
+            "kleur": "baby",
+            "ill": "busje",
+            "titel": "Verzending",
+            "tekst": "We versturen door heel Europa. Je krijgt een track and trace zodra hij onderweg is."
+          }
+        },
+        {
+          "type": "kaart",
+          "settings": {
+            "kleur": "rose",
+            "ill": "golf",
+            "titel": "14 dagen bedenktijd",
+            "tekst": "Past hij toch niet bij je board? Stuur hem binnen 14 dagen terug, ongebruikt en met label."
+          }
+        },
+        {
+          "type": "kaart",
+          "settings": {
+            "kleur": "zand",
+            "ill": "zon",
+            "titel": "Gemaakt om mee te gaan",
+            "tekst": "Sterke stiksels en zware stof. Voor jaren aan surftrips, niet voor één zomer."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
