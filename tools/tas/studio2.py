@@ -397,6 +397,7 @@ def maak_alles(handle):
     # 4: de andere rail: het vak met zijn schuine zoom valt om de rail, de band loopt eronderdoor naar de onderkant
     s4 = ST.B / 700
     uit.append(foto(zand_detail(s4 / s1, zaad=2), rb, rl, XM + 380, 1490, s4, dof=2.4))
+    uit = [uit[0], uit[2], uit[3], uit[1]]            # volgorde in de shop: hero, label (detail), rand, op papier
     for i, img in enumerate(uit, 1):
         q = bewaar(ST.afwerking(img, korrel=0.005, zaad=7 + i), DOEL / f'{handle}-{i}.jpg')
         print(f'  {handle}-{i}.jpg q{q}', (DOEL / f'{handle}-{i}.jpg').stat().st_size // 1000, 'kB')

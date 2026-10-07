@@ -190,7 +190,9 @@
             "color_scheme": "scheme-1"
           }
         }
-      }
+      },
+      "surf_popup_delay": 10,
+      "surf_popup_enable": true
     }
   },
   "surf_popup_code": "WELKOM10"

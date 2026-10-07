@@ -216,6 +216,11 @@
       zet(i);
     };
     duimen.forEach((d, n) => d.addEventListener('click', () => naar(n)));
+    /* pijltjes: vorige en volgende foto, rond (na de laatste weer de eerste) */
+    const vorige = sectie.querySelector('[data-tt-vorige]');
+    const volgende = sectie.querySelector('[data-tt-volgende]');
+    if (vorige) vorige.addEventListener('click', () => naar((huidig - 1 + dias.length) % dias.length));
+    if (volgende) volgende.addEventListener('click', () => naar((huidig + 1) % dias.length));
     /* klik op een foto: groot bekijken */
     dias.forEach((d, n) => {
       const knop = d.querySelector('[data-tt-zoom]');

@@ -431,12 +431,13 @@ for p in P:
     if t:
         p['tekst'] = t + VERZENDING
 
-# tasfoto's (tools/tas/studio2.py): op zand, op papier, label en band, de rand
+# tasfoto's (tools/tas/studio2.py): op zand, label en band (detail), de rand, op papier
 for p in P:
     if p['collectie'] == 'Draagtassen':
         n = p['titel']
-        ECHT[p['handle']] = [f'{n} om een gekleurd surfboard op het zand, van bovenaf', f'{n} op een surfboard, op gekleurd papier',
-                             f'Geweven Tide Tode label en de band met ingeweven logo van de {n.lower()}', f'De {n.lower()} waar het paneel over de rand van het board valt']
+        ECHT[p['handle']] = [f'{n} om een gekleurd surfboard op het zand, van bovenaf',
+                             f'Geweven Tide Tode label en de band met ingeweven logo van de {n.lower()}', f'De {n.lower()} waar het paneel over de rand van het board valt',
+                             f'{n} op een surfboard, op gekleurd papier']
 for p in P:
     if p['handle'] in ECHT:
         p['beelden'] = [('extern', alt) for alt in ECHT[p['handle']]]

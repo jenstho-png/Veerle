@@ -86,9 +86,12 @@
   const state = store.get();
   if (state.done) return;
   if (window.Shopify && window.Shopify.designMode) return;
-  if (state.seen && Date.now() - state.seen < WEEK) { if (teaser) teaser.hidden = false; return; }
+  /* elke nieuwe bezoek (sessie) komt hij één keer vanzelf op; in dezelfde sessie alleen nog via de badge */
+  let gezien = false;
+  try { gezien = sessionStorage.getItem('surfPopupSessie') === '1'; sessionStorage.setItem('surfPopupSessie', '1'); } catch (e) { gezien = state.seen && Date.now() - state.seen < WEEK; }
+  if (gezien) { if (teaser) teaser.hidden = false; return; }
 
-  const delay = Math.max(5, Number(popup.dataset.delay) || 25) * 1000;
+  const delay = Math.max(5, Number(popup.dataset.delay) || 12) * 1000;
   setTimeout(show, delay);
   /* of eerder: halverwege de pagina */
   const halverwege = () => {

@@ -3,7 +3,10 @@
     "hero": {
       "type": "tt-hero",
       "settings": {
-        "text": "Tide Tode is een surfmerk voor de weg naar zee. Het begon met een draagtas voor je board, bedacht op surftrips door Australië, Midden- en Zuid-Amerika en Azië. Nu maken we ook kleding en surfgear met dezelfde zorg."
+        "text": "Tide Tode is een surfmerk voor de weg naar zee. Het begon met een draagtas voor je board, bedacht op surftrips door Australië, Midden- en Zuid-Amerika en Azië. Nu maken we ook kleding en surfgear met dezelfde zorg.",
+        "fallback": "tt-foto-hero-home",
+        "stickers": true,
+        "boards": false
       }
     },
     "usp": {
@@ -297,14 +300,103 @@
         "heading": "Meer dan|een *tas*",
         "text": "Een merk voor de hele weg naar zee. Zware shirts met een tekening op de rug, een hoodie voor na het surfen en kleine dingen die je elke sessie gebruikt."
       }
+    },
+    "probleem": {
+      "type": "tt-probleem",
+      "settings": {}
+    },
+    "wie": {
+      "type": "tt-wie",
+      "settings": {},
+      "blocks": {
+        "kaart-1": {
+          "type": "kaart",
+          "settings": {
+            "titel": "Als je leert surfen",
+            "tekst": "Een grote softtop, een lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.",
+            "knop": "Bekijk de draagtas",
+            "fallback": "tt-foto-beginner",
+            "filename": "tide-tode-beginner.jpg",
+            "alt": "Surfer houdt een board met de Tide Tode draagtas vast bij de zee"
+          }
+        },
+        "kaart-2": {
+          "type": "kaart",
+          "settings": {
+            "titel": "Als je de rustige spots opzoekt",
+            "tekst": "Door de bush, over rotsen, achterop de scooter. Je board hangt over je schouder, zodat je je handen vrij hebt om te klimmen.",
+            "knop": "Bekijk de draagtas",
+            "fallback": "tt-foto-avontuur",
+            "filename": "tide-tode-avontuur.jpg",
+            "alt": "Board met de Tide Tode draagtas op het zand"
+          }
+        }
+      },
+      "block_order": [
+        "kaart-1",
+        "kaart-2"
+      ]
+    },
+    "duurzaam": {
+      "type": "tt-duurzaam",
+      "settings": {
+        "link": "/pages/duurzaamheid"
+      },
+      "blocks": {
+        "punt-1": {
+          "type": "punt",
+          "settings": {
+            "icoon": "tas",
+            "kleur": "baby",
+            "titel": "Gaat jaren mee",
+            "tekst": "Eén band van sterk nylon loopt in één stuk rond je board. De naden zijn stevig gestikt, juist waar de tas het zwaarst draagt."
+          }
+        },
+        "punt-2": {
+          "type": "punt",
+          "settings": {
+            "icoon": "tij",
+            "kleur": "rose",
+            "titel": "We repareren je tas",
+            "tekst": "Gaat er een band of naad stuk? Stuur ons een bericht. We maken hem eerst weer heel, voordat we het over een nieuwe hebben."
+          }
+        },
+        "punt-3": {
+          "type": "punt",
+          "settings": {
+            "icoon": "golfjes",
+            "kleur": "zand",
+            "titel": "Geen plastic in je pakket",
+            "tekst": "Je bestelling komt in een kartonnen doos, met papier als opvulling. Geen plastic zakjes, geen bubbeltjesfolie."
+          }
+        },
+        "punt-4": {
+          "type": "punt",
+          "settings": {
+            "icoon": "schelp",
+            "kleur": "baby",
+            "titel": "Drie dingen mee",
+            "tekst": "Neem na het surfen drie dingen mee van het strand. Een dop, een touwtje, een stukje plastic. Twee minuten werk."
+          }
+        }
+      },
+      "block_order": [
+        "punt-1",
+        "punt-2",
+        "punt-3",
+        "punt-4"
+      ]
     }
   },
   "order": [
     "hero",
     "usp",
     "koop",
+    "probleem",
     "zo",
     "meer",
+    "wie",
+    "duurzaam",
     "faq",
     "patroon"
   ]

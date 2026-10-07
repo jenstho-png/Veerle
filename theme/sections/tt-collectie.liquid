@@ -28,6 +28,14 @@
       {%- if intro != blank -%}<div class="tt-col__intro tt-in">{{ intro }}</div>{%- endif -%}
     </div>
     {%- if section.settings.beeld -%}
+      {%- assign met_foto = collection.products | where: 'featured_media' -%}
+      {%- if met_foto.size >= 3 -%}
+      <div class="tt-col__drie" aria-hidden="true">
+        {%- for cp in met_foto limit: 3 -%}
+          <a class="tt-col__drie-foto tt-onthul" href="{{ cp.url }}" tabindex="-1">{{ cp.featured_media | image_url: width: 700 | image_tag: loading: 'eager', sizes: '(min-width: 990px) 16vw, 32vw', widths: '360, 520, 700', alt: '', class: 'tt-beeld__img' }}</a>
+        {%- endfor -%}
+      </div>
+      {%- else -%}
       <div class="tt-col__beeld tt-onthul">
         {%- if collection.image -%}
           {{ collection.image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 990px) 42vw, 100vw', widths: '600, 900, 1200, 1600', alt: collection.title, class: 'tt-beeld__img' }}
@@ -37,6 +45,7 @@
           {%- render 'tt-beeld', fallback: section.settings.fallback, alt: collection.title, sizes: '(min-width: 990px) 42vw, 100vw', loading: 'eager' -%}
         {%- endif -%}
       </div>
+      {%- endif -%}
     {%- endif -%}
   </header>
   <div class="tt-wrap">

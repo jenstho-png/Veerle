@@ -9,7 +9,16 @@
   assign v = p.selected_or_first_available_variant
 -%}
 <section class="tt tt-hero{% if section.settings.pagina %} tt-hero--pagina{% endif %}" id="tt-hero-{{ section.id }}">
-  <div class="tt-hero__foto">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-hero', alt: section.settings.alt, sizes: '100vw', loading: 'eager' -%}</div>
+  {%- assign hero_fallback = section.settings.fallback | default: 'tt-foto-hero' -%}
+  <div class="tt-hero__foto">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: hero_fallback, alt: section.settings.alt, sizes: '100vw', loading: 'eager' -%}</div>
+  {%- if section.settings.stickers -%}
+  <div class="tt-hero__stickers" aria-hidden="true">
+    <span class="hs hs--zon" data-tt-snelheid="0.5">{% render 'tt-stk', naam: 'zon' %}</span>
+    <span class="hs hs--schelp" data-tt-snelheid="0.6">{% render 'tt-stk', naam: 'schelp' %}</span>
+    <span class="hs hs--ster" data-tt-snelheid="0.75">{% render 'tt-stk', naam: 'zeester' %}</span>
+    <span class="hs hs--palm" data-tt-snelheid="0.4">{% render 'tt-stk', naam: 'palm' %}</span>
+  </div>
+  {%- endif -%}
   <div class="tt-hero__inhoud tt-wrap">
     {%- if section.settings.poster -%}
     <div class="tt-hero__poster">
@@ -68,10 +77,23 @@
       "default": false
     },
     {
+      "type": "text",
+      "id": "fallback",
+      "label": "Achtergrondfoto uit het thema",
+      "info": "Naam van de themafoto zonder .jpg, zolang hieronder geen foto is gekozen.",
+      "default": "tt-foto-hero"
+    },
+    {
+      "type": "checkbox",
+      "id": "stickers",
+      "label": "Stickers in de hero",
+      "default": false
+    },
+    {
       "type": "checkbox",
       "id": "boards",
       "label": "Foto van de draagtas rechts tonen",
-      "default": true
+      "default": false
     },
     {
       "type": "checkbox",

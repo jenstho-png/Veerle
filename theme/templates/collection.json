@@ -2,34 +2,40 @@
   "sections": {
     "collectie": {
       "type": "tt-collectie",
-      "settings": {},
+      "settings": {
+        "fallback": "tt-foto-stap-3"
+      },
       "blocks": {
         "link-1": {
           "type": "link",
           "settings": {
             "label": "Alles",
-            "handle": "all"
+            "handle": "all",
+            "fallback": "tt-foto-stap-3"
           }
         },
         "link-2": {
           "type": "link",
           "settings": {
             "label": "Draagtassen",
-            "handle": "draagtassen"
+            "handle": "draagtassen",
+            "fallback": "tt-product-1"
           }
         },
         "link-3": {
           "type": "link",
           "settings": {
             "label": "Surfgear",
-            "handle": "surfgear"
+            "handle": "surfgear",
+            "fallback": "tt-meer-4"
           }
         },
         "link-4": {
           "type": "link",
           "settings": {
             "label": "Kleding en accessoires",
-            "handle": "kleding-en-accessoires"
+            "handle": "kleding-en-accessoires",
+            "fallback": "tt-meer-1"
           }
         }
       },
