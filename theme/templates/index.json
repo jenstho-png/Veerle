@@ -59,67 +59,6 @@
         "stap-3"
       ]
     },
-    "faq": {
-      "type": "surf-faq",
-      "settings": {
-        "btn_link": "shopify://pages/contact",
-        "color_scheme": "scheme-1",
-        "eyebrow": "",
-        "heading": "Veelgestelde vragen"
-      },
-      "blocks": {
-        "qa-1": {
-          "type": "qa",
-          "settings": {
-            "question": "Welke surfboards passen in de tas?",
-            "answer": "<p>De draagtas heeft één universele maat. Die past om softtops en vollere boards en om de meeste hardboards, tot ongeveer 9'6\". In de <a href=\"/pages/maatwijzer\">maatwijzer</a> zie je welke boards passen.</p>"
-          }
-        },
-        "qa-2": {
-          "type": "qa",
-          "settings": {
-            "question": "Kan ik de tas meenemen in het vliegtuig?",
-            "answer": "<p>Ja. De tas past in je bagage. Huur je op je bestemming een board, dan neem je dat in je eigen tas mee naar de spot.</p>"
-          }
-        },
-        "qa-3": {
-          "type": "qa",
-          "settings": {
-            "question": "Kan ik ermee fietsen of op de scooter?",
-            "answer": "<p>Daar is hij juist voor bedacht. Je board zit op je rug, dus je hebt allebei je handen vrij voor het stuur.</p>"
-          }
-        },
-        "qa-4": {
-          "type": "qa",
-          "settings": {
-            "question": "Wat is het verschil met een boardbag?",
-            "answer": "<p>Een boardbag is een dichte hoes die je board beschermt tijdens transport. Daar moet je je natte, zanderige board na elke sessie weer in proppen. Onze tas is gemaakt om je board te dragen: naar de spot en weer terug.</p>"
-          }
-        },
-        "qa-5": {
-          "type": "qa",
-          "settings": {
-            "question": "Kan ik spullen aan de tas hangen?",
-            "answer": "<p>Aan de tas zit één doorlopende band met een lus over je schouder. Wil je je sleutels, een fles of slippers meenemen, dan klik je die vast met een van onze <a href=\"/collections/surfgear\">karabijnhaken</a>. Die hebben een lus van dezelfde band als de tas.</p>"
-          }
-        },
-        "qa-6": {
-          "type": "qa",
-          "settings": {
-            "question": "Maken jullie meer dan de draagtas?",
-            "answer": "<p>Ja. De draagtas is waar het begon, maar Tide Tode is een merk voor de hele weg naar zee. We maken <a href=\"/collections/kleding-en-accessoires\">kleding en accessoires</a>: zware T-shirts met een verhaal op de rug, longsleeves, een hoodie, een pet, een bucket hat en een strandhanddoek in onze tegelprint. En <a href=\"/collections/surfgear\">surfgear</a>: wax voor koud, koel en warm water, een waxkam, karabijnhaken en stickers.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "qa-1",
-        "qa-2",
-        "qa-3",
-        "qa-4",
-        "qa-5",
-        "qa-6"
-      ]
-    },
     "patroon": {
       "type": "tt-patroon",
       "settings": {
@@ -382,7 +321,6 @@
     "wie",
     "meer",
     "duurzaam",
-    "faq",
     "patroon"
   ]
 }
