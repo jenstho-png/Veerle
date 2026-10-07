@@ -2150,3 +2150,9 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
 
 /* geen kleine labels boven koppen, nergens */
 .surf-eyebrow, .tt-duurzaam__label, .tt-col__label, .tt-koop__label, .tt-uit__label, .tt-tekst__label, .mk-label { display: none !important; }
+.tt-uit__meer { display: block; position: relative; aspect-ratio: 1 / 1; border-radius: 50%; overflow: hidden; color: var(--tt-deep, #22324F); text-decoration: none; box-shadow: 0 0 0 1px rgba(34, 50, 79, .14); transition: transform .4s cubic-bezier(.22, 1, .36, 1); }
+.tt-uit__meer img { width: 100% !important; height: 100% !important; max-height: none !important; aspect-ratio: 1 / 1 !important; object-fit: cover !important; object-position: 30% 42%; scale: 2.6; transform-origin: 30% 42%; filter: blur(2.5px); border-radius: 0 !important; }
+.tt-uit__meer::after { content: ""; position: absolute; inset: 0; background: rgba(243, 236, 221, .3); }
+.tt-uit__meer span { position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; font: 700 clamp(15px, 1.5vw, 20px)/1 var(--tt-tekst); letter-spacing: .04em; }
+.tt-uit__meer:hover { transform: translateY(-3px); }
+.tt-uit__meer:focus-visible { outline: 2px solid var(--tt-deep, #22324F); outline-offset: 4px; }
