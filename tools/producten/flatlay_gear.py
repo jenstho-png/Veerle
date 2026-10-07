@@ -546,13 +546,21 @@ def karabijn_rgba(naam):
     hm = np.zeros((CH_, CW_), np.float32); hm[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = np.maximum(m, 0)
     za = np.zeros((CH_, CW_), np.float32); za[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = zone
     zc = np.zeros((CH_, CW_, 3), np.float32); zc[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = uit
-    r = np.array([-0.215, 0.977]); C = np.array([592 + L0, 1068 + B0])
+    # lus recht in het verlengde van de haak (lange as uit het masker), vanaf het verste punt van de onderste bocht
+    ys, xs = np.nonzero(m > 0.5)
+    pts = np.stack([xs, ys], 1).astype(np.float32)
+    mid = pts.mean(0)
+    _, _, vt = np.linalg.svd(pts - mid, full_matrices=False)
+    r = vt[0] if vt[0][1] > 0 else -vt[0]                 # naar beneden
+    proj = (pts - mid) @ r
+    eind = pts[proj > proj.max() - 6].mean(0)
+    C = eind - r * 47 + np.array([L0, B0])               # hart van de staaf (ca. 94 px dik)
     Sd = C + r * 150
     lagen = []
     for grond in (0.0, 1.0):
         doek = zc * za[..., None] + grond * (1 - za[..., None])
         doek = E.d_ring(doek, hm, Sd, r, 300, 26, donker, licht)
-        doek = E.bandlabel(doek, tuple(Sd), tuple(r), 1450, 280, band, garen, tekst, buig=0.09, R=13)
+        doek = E.bandlabel(doek, tuple(Sd), tuple(r), 1450, 280, band, garen, tekst, buig=0.0, R=13)
         lagen.append(doek)
     P, Wt = lagen
     verschil = (Wt - P).mean(-1)                         # = (1 - dekking) x schaduw op de achtergrond
