@@ -1,0 +1,167 @@
+<section class="tt tt-kaart tt-bg--{{ section.settings.bg }}" id="tt-verhaal">
+  <div class="tt-wrap tt-kaart__grid">
+    <div class="tt-kaart__navy tt-in">
+      <div class="tt-kaart__logo">{%- render 'tt-logo', variant: 'liggend' -%}</div>
+      <div class="tt-kaart__body">
+        {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
+        <div class="tt-kaart__tekst">{{ section.settings.text }}</div>
+      </div>
+      <dl class="tt-kaart__gegevens">
+        {%- for block in section.blocks -%}<div {{ block.shopify_attributes }}><dt>{{ block.settings.label }}</dt><dd>{{ block.settings.waarde }}</dd></div>{%- endfor -%}
+      </dl>
+    </div>
+    <div class="tt-kaart__creme tt-in" style="--d: .2s">
+      {%- render 'tt-ill', naam: section.settings.ill -%}
+      {%- if section.settings.naam != blank -%}<p class="tt-handtekening">{{ section.settings.naam }}</p>{%- endif -%}
+      {%- if section.settings.link_label != blank -%}<a class="tt-link" href="{{ section.settings.link | default: '/pages/over-ons' }}">{{ section.settings.link_label }}</a>{%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: verhaal als kaart",
+  "tag": "div",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Achtergrond",
+      "options": [
+        {
+          "value": "creme",
+          "label": "Crème"
+        },
+        {
+          "value": "zand",
+          "label": "Zand"
+        },
+        {
+          "value": "deep",
+          "label": "Deep"
+        },
+        {
+          "value": "baby",
+          "label": "Baby"
+        },
+        {
+          "value": "rose",
+          "label": "Rose"
+        },
+        {
+          "value": "sunshine",
+          "label": "Sunshine"
+        }
+      ],
+      "default": "creme"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
+      "default": "“Dit moet stukken|comfortabeler kunnen.”"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Tekst",
+      "default": "<p>Op hikes naar afgelegen surfspots sjouwde ik een longboard mee dat nergens lekker vast te houden is. Losse touwtjes, spanbanden en standaardhoezen hielden het geen van allen vol.</p><p>In februari 2025 kwam er een vriend bij die precies dezelfde frustratie kende. Toen zijn we de tas gewoon zelf gaan maken.</p>"
+    },
+    {
+      "type": "select",
+      "id": "ill",
+      "label": "Illustratie",
+      "options": [
+        {
+          "value": "parasol",
+          "label": "Parasol"
+        },
+        {
+          "value": "draagtas",
+          "label": "De draagtas"
+        },
+        {
+          "value": "busje",
+          "label": "Busje"
+        },
+        {
+          "value": "golf",
+          "label": "Golf"
+        },
+        {
+          "value": "zon",
+          "label": "Zon"
+        }
+      ],
+      "default": "parasol"
+    },
+    {
+      "type": "text",
+      "id": "naam",
+      "label": "Ondertekening",
+      "default": "Veerle"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link",
+      "default": "Lees het hele verhaal"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link-adres"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "regel",
+      "name": "Gegeven",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Plaats"
+        },
+        {
+          "type": "text",
+          "id": "waarde",
+          "label": "Waarde (handgeschreven)",
+          "default": "Nederland"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: verhaal als kaart",
+      "blocks": [
+        {
+          "type": "regel",
+          "settings": {
+            "label": "Bedacht",
+            "waarde": "in Australië"
+          }
+        },
+        {
+          "type": "regel",
+          "settings": {
+            "label": "Sinds",
+            "waarde": "2025"
+          }
+        },
+        {
+          "type": "regel",
+          "settings": {
+            "label": "Voor",
+            "waarde": "surfers overal"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

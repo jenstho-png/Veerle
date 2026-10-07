@@ -15,7 +15,7 @@
 
   function start(scope = document) {
     /* 1. In beeld komen */
-    const doelen = scope.querySelectorAll('[data-tt-regels], .tt-onthul, .tt-in');
+    const doelen = scope.querySelectorAll('[data-tt-regels], .tt-onthul, .tt-in, .tt-stickerzee');
     if (stil || !('IntersectionObserver' in window)) {
       doelen.forEach((el) => el.classList.add('is-in'));
     } else {

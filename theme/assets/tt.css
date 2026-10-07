@@ -797,12 +797,12 @@ body { font-family: var(--tt-tekst); }
 /* stickers op de site */
 .tt-stk { display: block; width: 100%; height: auto; filter: drop-shadow(0 6px 10px rgba(34, 50, 79, .18)); }
 .tt-stickers { position: absolute; z-index: 6; pointer-events: none; }
-.tt-stickers--koop { left: -34px; top: -38px; width: 150px; rotate: -10deg; }
+.tt-stickers--koop { left: -34px; top: -38px; width: 210px; rotate: -10deg; }
 .tt-stickers--verhaal { right: -40px; top: -44px; width: 120px; rotate: 8deg; }
 .tt-stickers--muur1 { right: 34%; top: -54px; width: 104px; rotate: 10deg; }
 .tt-stickers--muur2 { right: 4%; top: 30px; width: 96px; rotate: -12deg; }
 @media (max-width: 749px) {
-  .tt-stickers--koop { left: auto; right: 4px; top: -30px; width: 96px; }
+  .tt-stickers--koop { left: auto; right: 4px; top: -30px; width: 140px; }
   .tt-stickers--verhaal { right: -8px; width: 84px; }
   .tt-stickers--muur1 { right: 26%; top: -46px; width: 76px; }
   .tt-stickers--muur2 { right: 2%; top: -20px; width: 70px; }
@@ -817,3 +817,88 @@ body { font-family: var(--tt-tekst); }
 .tt-koop h1.tt-kop, .tt-koop .tt-kop { hyphens: none; }
 .tt-hero__icoon { width: clamp(22px, 2.2vw, 34px); color: var(--tt-creme); margin-bottom: 18px; }
 .tt-hero__icoon svg { display: block; width: 100%; height: auto; }
+
+/* ==========================================================================
+   MERKBOEK-STIJL OP DE SITE
+   ========================================================================== */
+/* fotoraster, zoals de collectiepagina in het merkboek */
+.tt-raster { background: var(--tt-creme); }
+.tt-raster__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tt-raster__vak { aspect-ratio: 1; min-width: 0; position: relative; }
+.tt-raster__vak--foto img { position: absolute; inset: 0; }
+.tt-raster__vak--foto.tt-onthul { border-radius: 0 !important; aspect-ratio: 1 !important; }
+.tt-raster__vak--tekst, .tt-raster__vak--logo { background: #FBF7EF; display: flex; flex-direction: column; justify-content: center; padding: clamp(20px, 4vw, 64px); gap: 14px; }
+.tt-raster__hand { margin: 0; font: 400 clamp(22px, 2.4vw, 36px)/1.3 var(--tt-hand); text-transform: none; letter-spacing: 0; }
+.tt-raster__regels { margin: 0; font: 700 clamp(11px, 1vw, 14px)/1.9 var(--tt-tekst); letter-spacing: .14em; text-transform: uppercase; }
+.tt-raster__vak--logo { align-items: center; text-align: center; }
+.tt-raster__vak--logo .tt-board, .tt-raster__vak--logo .tt-icoon-zon, .tt-raster__vak--logo .tt-icoon-tegel { height: clamp(34px, 4vw, 60px); width: auto; }
+.tt-raster__vak--logo .tt-lock--staand { width: 62%; height: auto; }
+.tt-raster__onder { margin: 0; font: 700 12px var(--tt-tekst); letter-spacing: .24em; text-transform: uppercase; }
+@media (max-width: 749px) {
+  .tt-raster__grid { grid-template-columns: 1fr 1fr; }
+  .tt-raster__vak--tekst, .tt-raster__vak--logo { aspect-ratio: auto; grid-column: 1 / -1; padding: 40px 24px; }
+  .tt-raster__vak--logo .tt-lock--staand { width: 46%; }
+}
+
+/* stickers op een zwart-witte zee */
+.tt-stickerzee { position: relative; min-height: clamp(560px, 62vw, 860px); background: #2a2f36; color: var(--tt-creme); overflow: hidden; }
+.tt-stickerzee__foto { position: absolute; inset: 0; }
+.tt-stickerzee__foto img { filter: grayscale(1) brightness(.75) contrast(1.05) !important; }
+.tt-stickerzee__stickers { position: absolute; inset: 0; z-index: 2; }
+.sz { position: absolute; display: block; }
+.sz .tt-stk { width: 100%; height: auto; filter: drop-shadow(0 10px 16px rgba(0, 0, 0, .3)); }
+.sz--tas { left: 8%; top: 9%; width: 30%; rotate: -8deg; }
+.sz--zon { left: 62%; top: 7%; width: 16%; }
+.sz--schelp { left: 10%; top: 50%; width: 17%; rotate: 5deg; }
+.sz--ster { left: 56%; top: 38%; width: 16%; rotate: 12deg; }
+.sz--golf { left: 33%; top: 40%; width: 22%; rotate: -3deg; }
+.sz--palm { left: 80%; top: 52%; width: 11%; rotate: 6deg; }
+.tt-stickerzee__tekst { position: absolute; z-index: 3; left: 0; right: 0; bottom: 5%; text-align: center; }
+.tt-stickerzee__hand { margin: 0; font: 400 clamp(24px, 2.8vw, 40px) var(--tt-hand); }
+.tt-stickerzee__label { margin: 10px 0 0; font: 700 12px var(--tt-tekst); letter-spacing: .24em; text-transform: uppercase; opacity: .85; }
+.tt-js:not(.tt-stil) .sz { opacity: 0; transform: scale(1.4); transition: opacity .6s var(--tt-ease), transform .9s var(--tt-ease); }
+.tt-js:not(.tt-stil) .tt-stickerzee.is-in .sz { opacity: 1; transform: none; }
+.tt-stickerzee.is-in .sz:nth-child(2) { transition-delay: .1s; } .tt-stickerzee.is-in .sz:nth-child(3) { transition-delay: .2s; }
+.tt-stickerzee.is-in .sz:nth-child(4) { transition-delay: .3s; } .tt-stickerzee.is-in .sz:nth-child(5) { transition-delay: .4s; } .tt-stickerzee.is-in .sz:nth-child(6) { transition-delay: .5s; }
+@media (max-width: 749px) {
+  .tt-stickerzee { min-height: 640px; }
+  .sz--tas { left: 4%; top: 6%; width: 64%; } .sz--zon { left: 68%; top: 5%; width: 28%; }
+  .sz--schelp { left: 6%; top: 38%; width: 30%; } .sz--ster { left: 60%; top: 30%; width: 30%; }
+  .sz--golf { left: 22%; top: 52%; width: 46%; } .sz--palm { left: 76%; top: 52%; width: 20%; }
+}
+
+/* het verhaal als navy kaart en crème kaart */
+.tt-kaart { padding-block: var(--tt-ruimte); }
+.tt-kaart__grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 18px; }
+.tt-kaart__navy { position: relative; background: var(--tt-deep); color: var(--tt-creme); padding: clamp(28px, 4vw, 56px); display: grid; gap: 28px; box-shadow: 0 30px 50px -30px rgba(34, 50, 79, .5); }
+.tt-kaart__logo .tt-lock { font-size: clamp(28px, 4vw, 54px); }
+.tt-kaart__navy .tt-kop { --tt-acc: var(--tt-creme); }
+.tt-kaart__tekst { margin-top: 16px; font: 400 15px/1.7 var(--tt-tekst); opacity: .88; max-width: 52ch; }
+.tt-kaart__tekst p { margin: 0 0 .9em !important; }
+.tt-kaart__gegevens { margin: 0; display: grid; gap: 6px; justify-self: end; min-width: 260px; }
+.tt-kaart__gegevens div { display: grid; grid-template-columns: 90px 1fr; align-items: baseline; }
+.tt-kaart__gegevens dt { font: 400 13px var(--tt-tekst); }
+.tt-kaart__gegevens dd { margin: 0; font: 400 18px var(--tt-hand); }
+.tt-kaart__creme { background: #FBF7EF; display: grid; place-items: center; align-content: center; gap: 18px; padding: clamp(28px, 4vw, 56px); text-align: center; color: var(--tt-deep); box-shadow: 0 30px 50px -30px rgba(34, 50, 79, .35); }
+.tt-kaart__creme .tt-ill { width: min(100%, 360px); height: auto; }
+@media (max-width: 989px) { .tt-kaart__grid { grid-template-columns: 1fr; } .tt-kaart__gegevens { justify-self: start; } }
+
+/* patroon met de afsluiter */
+.tt-patroon { position: relative; min-height: clamp(520px, 60vw, 820px); background: var(--tt-deep); color: var(--tt-creme); display: grid; place-items: center; overflow: hidden; }
+.tt-patroon__vormen { position: absolute; inset: 0; color: var(--tt-creme); opacity: .9; }
+.tt-patroon-svg { width: 100%; height: 100%; display: block; }
+.tt-patroon__inhoud { position: relative; z-index: 2; display: grid; justify-items: center; gap: 22px; padding: 48px 40px; background: var(--tt-deep); border-radius: 999px / 46%; text-align: center; }
+.tt-patroon__logo .tt-lock--staand { height: auto; width: clamp(180px, 22vw, 300px); }
+.tt-patroon__hand { margin: 0; font: 400 clamp(20px, 2vw, 28px) var(--tt-hand); }
+
+/* zo werkt het met illustraties */
+.tt-zo__ill { position: relative; aspect-ratio: 4 / 3; background: #FBF7EF; display: grid; place-items: center; padding: 10%; color: var(--tt-deep); }
+.tt-zo__ill .tt-ill { width: 100%; height: auto; }
+.tt-zo__ill .tt-zo__nr { color: var(--tt-deep); left: 16px; bottom: auto; top: 10px; font-size: clamp(30px, 3vw, 44px); }
+
+/* voor wie: tekst in kleurvlakken, zoals de logofamilie */
+.tt-wie__kaart:nth-child(1) .tt-wie__tekst { background: var(--tt-baby); }
+.tt-wie__kaart:nth-child(2) .tt-wie__tekst { background: var(--tt-rose); }
+.tt-wie__tekst { padding: 26px 26px 30px !important; max-width: none !important; }
+.tt-patroon-svg--staand { display: none; }
+@media (max-width: 749px) { .tt-patroon-svg--breed { display: none; } .tt-patroon-svg--staand { display: block; } }

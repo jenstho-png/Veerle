@@ -1,0 +1,203 @@
+<section class="tt tt-raster" aria-label="{{ section.settings.label | escape }}">
+  <div class="tt-raster__grid">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'foto' -%}
+          <div class="tt-raster__vak tt-raster__vak--foto tt-onthul" {{ block.shopify_attributes }}>{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, fallback: block.settings.fallback, alt: block.settings.alt, sizes: '(min-width: 750px) 33vw, 50vw' -%}</div>
+        {%- when 'tekst' -%}
+          <div class="tt-raster__vak tt-raster__vak--tekst" {{ block.shopify_attributes }}>
+            <h3 class="tt-raster__hand">{{ block.settings.titel }}</h3>
+            <p class="tt-raster__regels">{{ block.settings.regels | newline_to_br }}</p>
+            {%- if block.settings.link_label != blank -%}<a class="tt-link" href="{{ block.settings.link | default: routes.all_products_collection_url }}">{{ block.settings.link_label }}</a>{%- endif -%}
+          </div>
+        {%- when 'logo' -%}
+          <div class="tt-raster__vak tt-raster__vak--logo" {{ block.shopify_attributes }}>
+            {%- render 'tt-logo', variant: block.settings.icoon -%}
+            {%- render 'tt-logo', variant: 'staand' -%}
+            <p class="tt-raster__onder">{{ block.settings.onder }}</p>
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: fotoraster",
+  "tag": "div",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Naam voor schermlezers",
+      "default": "Sfeer en het merk"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "foto",
+      "name": "Foto",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto"
+        },
+        {
+          "type": "text",
+          "id": "filename",
+          "label": "Bestandsnaam",
+          "default": ""
+        },
+        {
+          "type": "text",
+          "id": "fallback",
+          "label": "Sfeerfoto (asset)",
+          "default": "tt-foto-mood-1",
+          "info": "Wordt gebruikt zolang er geen eigen foto is."
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt-tekst",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "type": "tekst",
+      "name": "Tekstvak",
+      "settings": [
+        {
+          "type": "text",
+          "id": "titel",
+          "label": "Titel (handgeschreven)",
+          "default": "De Draagtas"
+        },
+        {
+          "type": "textarea",
+          "id": "regels",
+          "label": "Regels (één per regel)",
+          "default": "Zware stof\nTwee banden\nSofttop en hardboard"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link-adres"
+        }
+      ]
+    },
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icoon",
+          "label": "Icoon",
+          "options": [
+            {
+              "value": "maan",
+              "label": "A, het board"
+            },
+            {
+              "value": "icoon-zon",
+              "label": "B, zon en zee"
+            },
+            {
+              "value": "icoon-tegel",
+              "label": "C, de tegel"
+            }
+          ],
+          "default": "maan"
+        },
+        {
+          "type": "text",
+          "id": "onder",
+          "label": "Regel eronder",
+          "default": "Est 2025"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: fotoraster",
+      "blocks": [
+        {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-stap-3",
+            "alt": "Surfer loopt met een geel board over het strand"
+          }
+        },
+        {
+          "type": "tekst",
+          "settings": {
+            "titel": "De Draagtas",
+            "regels": "Zware stof\nTwee banden\nSofttop en hardboard",
+            "link_label": "Bekijk de draagtas"
+          }
+        },
+        {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-beginner",
+            "alt": "Surfster met board onder een roze lucht"
+          }
+        },
+        {
+          "type": "logo",
+          "settings": {
+            "icoon": "maan",
+            "onder": "Est 2025"
+          }
+        },
+        {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-mood-5",
+            "alt": "Twee surfers lopen de zee in"
+          }
+        },
+        {
+          "type": "logo",
+          "settings": {
+            "icoon": "icoon-zon",
+            "onder": "Handen vrij"
+          }
+        },
+        {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-mood-6",
+            "alt": "Surfboard tegen een busje in de duinen"
+          }
+        },
+        {
+          "type": "tekst",
+          "settings": {
+            "titel": "Het Verhaal",
+            "regels": "Bedacht in Australië\nGemaakt voor onderweg\nVan surfers voor surfers",
+            "link_label": "Lees het verhaal",
+            "link": "/pages/over-ons"
+          }
+        },
+        {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-stap-1",
+            "alt": "Wit surfboard rechtop in het zand"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

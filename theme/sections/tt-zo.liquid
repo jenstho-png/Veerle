@@ -4,7 +4,11 @@
     <ol class="tt-zo__stappen">
       {%- for block in section.blocks -%}
         <li class="tt-zo__stap" {{ block.shopify_attributes }} style="--d: {{ forloop.index0 | times: 0.12 }}s">
-          <div class="tt-zo__foto tt-onthul">{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, fallback: block.settings.fallback, alt: block.settings.alt, sizes: '(min-width: 990px) 30vw, 80vw' -%}<span class="tt-zo__nr">{{ forloop.index }}</span></div>
+          {%- if section.settings.stijl == 'illustratie' and block.settings.ill != blank -%}
+            <div class="tt-zo__ill tt-in"><span class="tt-zo__nr">{{ forloop.index }}</span>{%- render 'tt-ill', naam: block.settings.ill -%}</div>
+          {%- else -%}
+            <div class="tt-zo__foto tt-onthul">{%- render 'tt-beeld', image: block.settings.image, filename: block.settings.filename, fallback: block.settings.fallback, alt: block.settings.alt, sizes: '(min-width: 990px) 30vw, 80vw' -%}<span class="tt-zo__nr">{{ forloop.index }}</span></div>
+          {%- endif -%}
           {%- if block.settings.icoon != blank -%}<span class="tt-zo__icoon tt-zo__icoon--{{ forloop.index }}">{% render 'tt-icoon', icoon: block.settings.icoon %}</span>{%- endif -%}
           <h3>{{ block.settings.titel }}</h3>
           <p>{{ block.settings.tekst }}</p>
@@ -58,6 +62,22 @@
       "label": "Kop",
       "info": "Een | is een nieuwe regel. Zet woorden tussen *sterretjes* voor het cursieve accent.",
       "default": "Zo werkt hij"
+    },
+    {
+      "type": "select",
+      "id": "stijl",
+      "label": "Beeld per stap",
+      "options": [
+        {
+          "value": "illustratie",
+          "label": "Getekende illustratie"
+        },
+        {
+          "value": "foto",
+          "label": "Foto"
+        }
+      ],
+      "default": "illustratie"
     }
   ],
   "blocks": [
@@ -146,6 +166,38 @@
           "default": ""
         },
         {
+          "type": "select",
+          "id": "ill",
+          "label": "Illustratie",
+          "options": [
+            {
+              "value": "draagtas",
+              "label": "De draagtas"
+            },
+            {
+              "value": "tas",
+              "label": "Board met banden"
+            },
+            {
+              "value": "golf",
+              "label": "Golf"
+            },
+            {
+              "value": "parasol",
+              "label": "Parasol"
+            },
+            {
+              "value": "busje",
+              "label": "Busje"
+            },
+            {
+              "value": "zon",
+              "label": "Zon"
+            }
+          ],
+          "default": "draagtas"
+        },
+        {
           "type": "image_picker",
           "id": "image",
           "label": "Foto"
@@ -179,6 +231,7 @@
         {
           "type": "stap",
           "settings": {
+            "ill": "draagtas",
             "titel": "Leg je board in de tas",
             "tekst": "Softtop of hardboard, nat of droog. Je hoeft hem niet eerst schoon te maken.",
             "fallback": "tt-foto-stap-1",
@@ -189,6 +242,7 @@
         {
           "type": "stap",
           "settings": {
+            "ill": "tas",
             "titel": "Trek de banden aan",
             "tekst": "Twee banden houden je board op zijn plek, ook als je klimt of fietst.",
             "fallback": "tt-foto-stap-2",
@@ -199,6 +253,7 @@
         {
           "type": "stap",
           "settings": {
+            "ill": "golf",
             "titel": "Hang hem op je rug",
             "tekst": "Zoals een rugzak. Je hebt je handen vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
             "fallback": "tt-foto-stap-3",

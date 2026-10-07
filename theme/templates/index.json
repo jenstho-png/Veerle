@@ -97,6 +97,89 @@
         "detail-6"
       ]
     },
+    "raster": {
+      "type": "tt-raster",
+      "settings": {},
+      "blocks": {
+        "foto-1": {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-stap-3",
+            "alt": "Surfer loopt met een geel board over het strand"
+          }
+        },
+        "tekst-2": {
+          "type": "tekst",
+          "settings": {
+            "titel": "De Draagtas",
+            "regels": "Zware stof\nTwee banden\nSofttop en hardboard",
+            "link_label": "Bekijk de draagtas"
+          }
+        },
+        "foto-3": {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-beginner",
+            "alt": "Surfster met board onder een roze lucht"
+          }
+        },
+        "logo-4": {
+          "type": "logo",
+          "settings": {
+            "icoon": "maan",
+            "onder": "Est 2025"
+          }
+        },
+        "foto-5": {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-mood-5",
+            "alt": "Twee surfers lopen de zee in"
+          }
+        },
+        "logo-6": {
+          "type": "logo",
+          "settings": {
+            "icoon": "icoon-zon",
+            "onder": "Handen vrij"
+          }
+        },
+        "foto-7": {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-mood-6",
+            "alt": "Surfboard tegen een busje in de duinen"
+          }
+        },
+        "tekst-8": {
+          "type": "tekst",
+          "settings": {
+            "titel": "Het Verhaal",
+            "regels": "Bedacht in Australië\nGemaakt voor onderweg\nVan surfers voor surfers",
+            "link_label": "Lees het verhaal",
+            "link": "/pages/over-ons"
+          }
+        },
+        "foto-9": {
+          "type": "foto",
+          "settings": {
+            "fallback": "tt-foto-stap-1",
+            "alt": "Wit surfboard rechtop in het zand"
+          }
+        }
+      },
+      "block_order": [
+        "foto-1",
+        "tekst-2",
+        "foto-3",
+        "logo-4",
+        "foto-5",
+        "logo-6",
+        "foto-7",
+        "tekst-8",
+        "foto-9"
+      ]
+    },
     "probleem": {
       "type": "tt-probleem",
       "settings": {}
@@ -108,6 +191,7 @@
         "stap-1": {
           "type": "stap",
           "settings": {
+            "ill": "draagtas",
             "titel": "Leg je board in de tas",
             "tekst": "Softtop of hardboard, nat of droog. Je hoeft hem niet eerst schoon te maken.",
             "fallback": "tt-foto-stap-1",
@@ -118,6 +202,7 @@
         "stap-2": {
           "type": "stap",
           "settings": {
+            "ill": "tas",
             "titel": "Trek de banden aan",
             "tekst": "Twee banden houden je board op zijn plek, ook als je klimt of fietst.",
             "fallback": "tt-foto-stap-2",
@@ -128,6 +213,7 @@
         "stap-3": {
           "type": "stap",
           "settings": {
+            "ill": "golf",
             "titel": "Hang hem op je rug",
             "tekst": "Zoals een rugzak. Je hebt je handen vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
             "fallback": "tt-foto-stap-3",
@@ -142,99 +228,9 @@
         "stap-3"
       ]
     },
-    "muur": {
-      "type": "tt-muur",
-      "settings": {},
-      "blocks": {
-        "foto-1": {
-          "type": "foto",
-          "settings": {
-            "vorm": "hoog",
-            "fallback": "tt-foto-mood-1",
-            "onderschrift": "de hike naar de spot",
-            "alt": "Pad door de duinen naar zee"
-          }
-        },
-        "foto-2": {
-          "type": "foto",
-          "settings": {
-            "vorm": "vierkant",
-            "fallback": "tt-foto-mood-2",
-            "alt": "Boards in het zand"
-          }
-        },
-        "foto-3": {
-          "type": "foto",
-          "settings": {
-            "vorm": "boog",
-            "fallback": "tt-foto-mood-3",
-            "onderschrift": "zonsondergang",
-            "alt": "Zee bij zonsondergang"
-          }
-        },
-        "foto-4": {
-          "type": "foto",
-          "settings": {
-            "vorm": "liggend",
-            "fallback": "tt-foto-mood-4",
-            "alt": "Rustige golven"
-          }
-        },
-        "foto-5": {
-          "type": "foto",
-          "settings": {
-            "vorm": "staand",
-            "fallback": "tt-foto-mood-5",
-            "onderschrift": "op weg naar zee",
-            "alt": "Surfer op weg naar zee"
-          }
-        },
-        "foto-6": {
-          "type": "foto",
-          "settings": {
-            "vorm": "hoog",
-            "fallback": "tt-foto-mood-6",
-            "alt": "Board tegen een muur"
-          }
-        },
-        "foto-7": {
-          "type": "foto",
-          "settings": {
-            "vorm": "staand",
-            "fallback": "tt-foto-mood-7",
-            "onderschrift": "van surfers voor surfers",
-            "alt": "Surfers op het strand"
-          }
-        },
-        "foto-8": {
-          "type": "foto",
-          "settings": {
-            "vorm": "boog",
-            "fallback": "tt-foto-mood-8",
-            "alt": "Kust van bovenaf"
-          }
-        },
-        "foto-9": {
-          "type": "foto",
-          "settings": {
-            "vorm": "vierkant",
-            "fallback": "tt-foto-mood-9",
-            "onderschrift": "door de duinen",
-            "alt": "Hek tussen het duingras"
-          }
-        }
-      },
-      "block_order": [
-        "foto-1",
-        "foto-2",
-        "foto-3",
-        "foto-4",
-        "foto-5",
-        "foto-6",
-        "foto-7",
-        "foto-8",
-        "foto-9"
-      ]
+    "stickerzee": {
+      "type": "tt-stickerzee",
+      "settings": {}
     },
     "wie": {
       "type": "tt-wie",
@@ -330,9 +326,37 @@
         "spot-6"
       ]
     },
-    "verhaal": {
-      "type": "tt-verhaal",
-      "settings": {}
+    "kaart": {
+      "type": "tt-kaart",
+      "settings": {},
+      "blocks": {
+        "regel-1": {
+          "type": "regel",
+          "settings": {
+            "label": "Bedacht",
+            "waarde": "in Australië"
+          }
+        },
+        "regel-2": {
+          "type": "regel",
+          "settings": {
+            "label": "Sinds",
+            "waarde": "2025"
+          }
+        },
+        "regel-3": {
+          "type": "regel",
+          "settings": {
+            "label": "Voor",
+            "waarde": "surfers overal"
+          }
+        }
+      },
+      "block_order": [
+        "regel-1",
+        "regel-2",
+        "regel-3"
+      ]
     },
     "faq": {
       "type": "surf-faq",
@@ -395,8 +419,8 @@
         "qa-6"
       ]
     },
-    "slot": {
-      "type": "tt-slot",
+    "patroon": {
+      "type": "tt-patroon",
       "settings": {}
     }
   },
@@ -404,13 +428,14 @@
     "hero",
     "usp",
     "koop",
+    "raster",
     "probleem",
     "zo",
-    "muur",
+    "stickerzee",
     "wie",
     "surfcheck",
-    "verhaal",
+    "kaart",
     "faq",
-    "slot"
+    "patroon"
   ]
 }

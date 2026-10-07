@@ -1,0 +1,63 @@
+<section class="tt tt-stickerzee" aria-label="{{ section.settings.hand | escape }}">
+  <div class="tt-stickerzee__foto">{%- render 'tt-beeld', image: section.settings.image, filename: section.settings.filename, fallback: 'tt-foto-zee-zw', alt: section.settings.alt, sizes: '100vw' -%}</div>
+  <div class="tt-stickerzee__stickers" aria-hidden="true">
+    <span class="sz sz--tas">{% render 'tt-stk', naam: 'draagtas' %}</span>
+    <span class="sz sz--zon">{% render 'tt-stk', naam: 'zon' %}</span>
+    <span class="sz sz--schelp">{% render 'tt-stk', naam: 'schelp' %}</span>
+    <span class="sz sz--ster">{% render 'tt-stk', naam: 'zeester' %}</span>
+    <span class="sz sz--golf">{% render 'tt-stk', naam: 'golf' %}</span>
+    <span class="sz sz--palm">{% render 'tt-stk', naam: 'palm' %}</span>
+  </div>
+  <div class="tt-stickerzee__tekst">
+    <p class="tt-stickerzee__hand">{{ section.settings.hand }}</p>
+    {%- if section.settings.label != blank -%}<p class="tt-stickerzee__label">{{ section.settings.label }}</p>{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "TT: stickers op zee",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "text",
+      "id": "hand",
+      "label": "Handgeschreven regel",
+      "default": "Handen vrij, op weg naar zee"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Kleine regel",
+      "default": "Van surfers, voor surfers"
+    },
+    {
+      "type": "header",
+      "content": "Achtergrondfoto"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Foto"
+    },
+    {
+      "type": "text",
+      "id": "filename",
+      "label": "Bestandsnaam",
+      "default": "tide-tode-stickers-zee.jpg",
+      "info": "Of upload in Content > Bestanden met precies deze naam. Tot die tijd staat er een sfeerfoto."
+    },
+    {
+      "type": "text",
+      "id": "alt",
+      "label": "Alt-tekst",
+      "default": "Zee in zwart-wit"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TT: stickers op zee"
+    }
+  ]
+}
+{% endschema %}
