@@ -884,10 +884,11 @@ body { font-family: var(--tt-tekst); }
 @media (max-width: 989px) { .tt-kaart__grid { grid-template-columns: 1fr; } .tt-kaart__gegevens { justify-self: start; } }
 
 /* patroon met de afsluiter */
-.tt-patroon { position: relative; min-height: clamp(520px, 60vw, 820px); background: var(--tt-deep); color: var(--tt-creme); display: grid; place-items: center; overflow: hidden; }
-.tt-patroon__vormen { position: absolute; inset: 0; color: var(--tt-creme); opacity: .9; }
+.tt-patroon { position: relative; min-height: clamp(340px, 36vw, 500px); background: var(--tt-deep); color: var(--tt-creme); display: grid; place-items: center; overflow: hidden; }
+.tt-patroon__vormen { position: absolute; inset: 0; color: var(--tt-creme); opacity: .9;
+  -webkit-mask-image: radial-gradient(ellipse 30% 46% at 50% 50%, transparent 72%, #000 88%); mask-image: radial-gradient(ellipse 30% 46% at 50% 50%, transparent 72%, #000 88%); }
 .tt-patroon-svg { width: 100%; height: 100%; display: block; }
-.tt-patroon__inhoud { position: relative; z-index: 2; display: grid; justify-items: center; gap: 22px; padding: 48px 40px; background: var(--tt-deep); border-radius: 999px / 46%; text-align: center; }
+.tt-patroon__inhoud { position: relative; z-index: 2; display: grid; justify-items: center; gap: 22px; padding: 48px 40px; text-align: center; }
 .tt-patroon__logo .tt-lock--staand { height: auto; width: clamp(180px, 22vw, 300px); }
 .tt-patroon__hand { margin: 0; font: 400 clamp(20px, 2vw, 28px) var(--tt-hand); }
 

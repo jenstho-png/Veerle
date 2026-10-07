@@ -97,6 +97,12 @@ def ontwerp(ppc):
         for c in range(nk):
             i = MOTIEVEN[(r * 2 + c * 1 + (r // 2)) % len(MOTIEVEN)]
             veld[r * tp:(r + 1) * tp, c * tp:(c + 1) * tp] = _MOT[(i, tp)]
+    # jacquard: het patroon bestaat uit bindingspunten van ca. 2,5 mm, dus licht getrapte randen
+    cel = 0.25 * ppc
+    if cel >= 2.5:
+        kl = cv2.resize(veld, (int(veld.shape[1] / cel), int(veld.shape[0] / cel)), interpolation=cv2.INTER_AREA)
+        trap = cv2.resize(kl, (veld.shape[1], veld.shape[0]), interpolation=cv2.INTER_NEAREST)
+        veld = cv2.GaussianBlur(trap, (0, 0), cel * 0.18) * 0.7 + veld * 0.3
     # zachte rand tussen garens (scherpte past bij de schaal)
     a = np.clip(veld * 2.2 * max(1.0, ppc / 12) + 0.5, 0, 1)
     x0, y0 = int(round(u0 * ppc)), int(round(v0 * ppc))
@@ -162,7 +168,7 @@ def label_geweven(ppc_label=None):
     return np.dstack([rgb * rand[..., None], a[..., 3]])
 
 
-LABEL_POS = (80.6, 10.3, 5.0, 2.4)   # u, v, breedte, hoogte in cm: plat op de hoek gestikt, tussen band en kader
+LABEL_POS = (81.0, 4.3, 5.0, 2.4)    # u, v, breedte, hoogte in cm: plat op de terracotta band gestikt, vlak bij de hoek
 
 
 def ontwerp_met_label(ppc):
@@ -205,7 +211,7 @@ def strepen_weg(img, dikte=31):
 
 
 def breng_aan(foto, masker, U, V, ppc, ontw, labelm=None, schoon=None, verplaatsing=0.35, detail=1.0, ref=None, gamma=1.0,
-              detail_sigma=1.3, schaduw_sigma=1.6, wrap=False):
+              detail_sigma=1.3, schaduw_sigma=1.6, wrap=False, waas=0.0):
     """Ontwerp (bij ppc px/cm) via de coördinaatkaarten U, V (cm) op de foto zetten.
 
     schoon: de foto zonder de streepjes van de stockhanddoek (voor de schaduw); detail: sterkte van de stofstructuur."""
@@ -221,6 +227,10 @@ def breng_aan(foto, masker, U, V, ppc, ontw, labelm=None, schoon=None, verplaats
     my = (Vd * ppc - 0.5).astype(np.float32)
     rand = cv2.BORDER_WRAP if wrap else cv2.BORDER_REPLICATE
     patroon = cv2.remap(ontw, mx, my, cv2.INTER_LINEAR, borderMode=rand)
+    if waas:
+        # de kleurbewerking van de foto overnemen: opgetilde zwarten in de tint van de stof
+        tint = np.median(schoon[masker > 0.5].reshape(-1, 3), axis=0)
+        patroon = patroon * (1 - waas) + tint[None, None] * waas
     # schaduw en licht van de foto, per kleurkanaal (warme schaduwen in de zon blijven warm)
     Ps = cv2.GaussianBlur(schoon, (0, 0), schaduw_sigma)
     if ref is None:
@@ -237,6 +247,22 @@ def breng_aan(foto, masker, U, V, ppc, ontw, labelm=None, schoon=None, verplaats
         kleur = kleur * (1 - 0.0 * lab[..., None])
     m = masker[..., None]
     return foto * (1 - m) + kleur * m
+
+
+def bewaar(img, naam, max_kb=190):
+    """JPG onder max_kb: eerst kwaliteit omlaag, daarna een heel lichte vervaging (zandkorrels kosten veel bytes)."""
+    import io
+    for blur in (0, 0.45, 0.7, 0.9):
+        b = cv2.GaussianBlur(img, (0, 0), blur) if blur else img
+        im = Image.fromarray((np.clip(b, 0, 1) * 255 + 0.5).astype(np.uint8))
+        for q in range(88, 59, -3):
+            buf = io.BytesIO()
+            im.save(buf, 'JPEG', quality=q, optimize=True, progressive=True)
+            if buf.tell() < max_kb * 1000:
+                (DOEL / f'{naam}.jpg').write_bytes(buf.getvalue())
+                print('foto', naam, f'q{q} blur{blur}', buf.tell() // 1000, 'kB')
+                return
+    raise SystemExit('te groot: ' + naam)
 
 
 def grade(img, warm=0.0, contrast=1.0, licht=1.0):
@@ -278,11 +304,10 @@ def foto2():
     masker = cv2.GaussianBlur(binnen, (0, 0), 1.0) * (1 - cv2.GaussianBlur(bril, (0, 0), 1.0))
     schoon = strepen_weg(f)
     ontw, lm = ontwerp_met_label(s * 1.5)
-    uit = breng_aan(f, masker, U, V, s * 1.5, ontw, schoon=schoon, verplaatsing=0.5, detail=0.9)
+    uit = breng_aan(f, masker, U, V, s * 1.5, ontw, schoon=schoon, verplaatsing=0.5, detail=0.9, waas=0.12)
     uit = uit[0:1950, 0:1560]
     uit = cv2.resize(uit, (1600, 2000), interpolation=cv2.INTER_CUBIC)
-    MK.bewaar(uit, DOEL / 'strandhanddoek-tegel-2.jpg')
-    print('foto strandhanddoek-tegel-2')
+    bewaar(uit, 'strandhanddoek-tegel-2')
 
 
 if __name__ == '__main__':
