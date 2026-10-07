@@ -682,3 +682,39 @@
   startMaan(document); startCheck(document); startSurfcheck(document);
   document.addEventListener('shopify:section:load', (e) => { start(e.target); startMaan(e.target); startCheck(e.target); startSurfcheck(e.target); });
 })();
+
+/* ---------- FAQ: onderwerpen bovenaan en zoeken in alle vragen ---------- */
+(() => {
+  const top = document.querySelector('[data-tt-faqtop]');
+  if (!top) return;
+  const blokken = [...document.querySelectorAll('.surf-faq')];
+  const nav = top.querySelector('[data-tt-faqnav]');
+  const zoek = top.querySelector('[data-tt-faqzoek]');
+  const uitslag = top.querySelector('[data-tt-faquitslag]');
+  blokken.forEach((b) => {
+    const kop = b.querySelector('h1, h2, h3');
+    if (!kop || !nav) return;
+    const a = document.createElement('a');
+    a.href = '#' + b.id;
+    a.textContent = kop.textContent.trim();
+    a.addEventListener('click', (e) => { e.preventDefault(); b.scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', '#' + b.id); });
+    nav.appendChild(a);
+  });
+  const items = [...document.querySelectorAll('.surf-faq__item')];
+  const zoeken = () => {
+    const q = zoek.value.trim().toLowerCase();
+    let n = 0;
+    items.forEach((it) => {
+      const kop = it.closest('.surf-faq')?.querySelector('h1, h2, h3')?.textContent || '';
+      const raak = !q || (it.textContent + ' ' + kop).toLowerCase().includes(q);
+      it.hidden = !raak;
+      if (q) it.open = raak; else it.open = false;
+      if (raak) n++;
+    });
+    blokken.forEach((b) => { b.hidden = q !== '' && !b.querySelector('.surf-faq__item:not([hidden])'); });
+    if (!q) { uitslag.hidden = true; return; }
+    uitslag.hidden = false;
+    uitslag.innerHTML = n ? `${n} ${n === 1 ? 'vraag' : 'vragen'} gevonden` : `<a href="/pages/contact">${uitslag.dataset.geen || 'Niets gevonden.'}</a>`;
+  };
+  zoek?.addEventListener('input', zoeken);
+})();

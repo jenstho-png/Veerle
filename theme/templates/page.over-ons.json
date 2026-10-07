@@ -6,7 +6,8 @@
         "link_label": "Zo maken we de tas",
         "link": "/pages/duurzaamheid",
         "heading": "“Dit moet stukken|comfortabeler kunnen.”",
-        "text": "<p>Tijdens mijn reizen door Australië, Midden- en Zuid-Amerika en Azië liep ik me vaak te frustreren. Op hikes naar afgelegen surfspots sjouwde ik een longboard mee dat nergens lekker vast te houden is. En met een board onder je arm op de scooter of fiets naar het strand rijden is ook geen pretje.</p><p>Na een flinke hike naar een verstopte spot, met pijn in mijn schouders en schuurplekken van de wax onder mijn arm, dacht ik: dit moet stukken comfortabeler kunnen. Een tas waarmee je je handen vrij hebt en het gewicht makkelijk draagt.</p><p>Losse touwtjes, spanbanden en standaardhoezen hielden het geen van allen vol. In februari 2025 kwam er een vriend bij die net zo gek is op surfen en precies dezelfde frustratie kende. Toen zijn we het gewoon gaan maken.</p>"
+        "text": "<p>Tijdens mijn reizen door Australië, Midden- en Zuid-Amerika en Azië liep ik me vaak te frustreren. Op hikes naar afgelegen surfspots sjouwde ik een longboard mee dat nergens lekker vast te houden is. En met een board onder je arm op de scooter of fiets naar het strand rijden is ook geen pretje.</p><p>Na een flinke hike naar een verstopte spot, met pijn in mijn schouders en schuurplekken van de wax onder mijn arm, dacht ik: dit moet stukken comfortabeler kunnen. Een tas waarmee je je handen vrij hebt en het gewicht makkelijk draagt.</p><p>Losse touwtjes, spanbanden en standaardhoezen hielden het geen van allen vol. In februari 2025 kwam er een vriend bij die net zo gek is op surfen en precies dezelfde frustratie kende. Toen zijn we het gewoon gaan maken.</p>",
+        "alt": "Veerle loopt met haar board over het strand naar zee"
       }
     },
     "patroon": {
@@ -15,46 +16,6 @@
         "link2_label": "Of bekijk de hele shop",
         "link2_url": "/collections/all"
       }
-    },
-    "usp": {
-      "type": "tt-usp",
-      "settings": {},
-      "blocks": {
-        "usp-1": {
-          "type": "usp",
-          "settings": {
-            "icoon": "voeten",
-            "tekst": "Handen vrij, ook op de scooter"
-          }
-        },
-        "usp-2": {
-          "type": "usp",
-          "settings": {
-            "icoon": "board",
-            "tekst": "Kleding van biologisch katoen"
-          }
-        },
-        "usp-3": {
-          "type": "usp",
-          "settings": {
-            "icoon": "golf",
-            "tekst": "Verzending door heel Europa"
-          }
-        },
-        "usp-4": {
-          "type": "usp",
-          "settings": {
-            "icoon": "tas",
-            "tekst": "We repareren je tas"
-          }
-        }
-      },
-      "block_order": [
-        "usp-1",
-        "usp-2",
-        "usp-3",
-        "usp-4"
-      ]
     },
     "meer": {
       "type": "tt-meer",
@@ -197,7 +158,6 @@
     "stappen",
     "verhaal",
     "meer",
-    "usp",
     "patroon"
   ]
 }

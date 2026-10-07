@@ -94,48 +94,6 @@
         "detail-6"
       ]
     },
-    "tt-usp": {
-      "type": "tt-usp",
-      "settings": {
-        "toon": "draagtas"
-      },
-      "blocks": {
-        "usp-1": {
-          "type": "usp",
-          "settings": {
-            "icoon": "voeten",
-            "tekst": "Handen vrij, ook op de scooter"
-          }
-        },
-        "usp-2": {
-          "type": "usp",
-          "settings": {
-            "icoon": "board",
-            "tekst": "Past op softtop én hardboard"
-          }
-        },
-        "usp-3": {
-          "type": "usp",
-          "settings": {
-            "icoon": "golf",
-            "tekst": "Sterke, waterbestendige stof"
-          }
-        },
-        "usp-4": {
-          "type": "usp",
-          "settings": {
-            "icoon": "tas",
-            "tekst": "Makkelijk mee in het vliegtuig"
-          }
-        }
-      },
-      "block_order": [
-        "usp-1",
-        "usp-2",
-        "usp-3",
-        "usp-4"
-      ]
-    },
     "tt-specs": {
       "type": "tt-specs",
       "settings": {
@@ -490,7 +448,6 @@
   },
   "order": [
     "main",
-    "tt-usp",
     "weten-kleding",
     "weten-gear",
     "weten-acc",

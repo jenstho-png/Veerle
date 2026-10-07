@@ -1,12 +1,16 @@
 {
   "sections": {
+    "top": {
+      "type": "tt-faq-top",
+      "settings": {}
+    },
     "faq": {
       "type": "surf-faq",
       "settings": {
-        "heading_tag": "h1",
-        "heading": "Veelgestelde vragen",
+        "heading_tag": "h2",
+        "heading": "De draagtas",
         "eyebrow": "",
-        "text": "Alles over de draagtas: welke boards passen, hoe je hem draagt en waar hij tegen kan.",
+        "text": "Welke boards passen, hoe je hem draagt en waar hij tegen kan.",
         "knop": false
       },
       "blocks": {
@@ -203,6 +207,7 @@
     }
   },
   "order": [
+    "top",
     "faq",
     "faq-bestel",
     "faq-retour",

@@ -53,51 +53,10 @@
         "link2_label": "Of bekijk de hele shop",
         "link2_url": "/collections/all"
       }
-    },
-    "usp": {
-      "type": "tt-usp",
-      "settings": {},
-      "blocks": {
-        "usp-1": {
-          "type": "usp",
-          "settings": {
-            "icoon": "voeten",
-            "tekst": "Handen vrij, ook op de scooter"
-          }
-        },
-        "usp-2": {
-          "type": "usp",
-          "settings": {
-            "icoon": "board",
-            "tekst": "Kleding van biologisch katoen"
-          }
-        },
-        "usp-3": {
-          "type": "usp",
-          "settings": {
-            "icoon": "golf",
-            "tekst": "Verzending door heel Europa"
-          }
-        },
-        "usp-4": {
-          "type": "usp",
-          "settings": {
-            "icoon": "tas",
-            "tekst": "We repareren je tas"
-          }
-        }
-      },
-      "block_order": [
-        "usp-1",
-        "usp-2",
-        "usp-3",
-        "usp-4"
-      ]
     }
   },
   "order": [
     "collectie",
-    "usp",
     "patroon"
   ]
 }

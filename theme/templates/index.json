@@ -12,49 +12,6 @@
         "link_label": ""
       }
     },
-    "usp": {
-      "type": "tt-usp",
-      "settings": {
-        "bg": "papier",
-        "zegel": false
-      },
-      "blocks": {
-        "usp-1": {
-          "type": "usp",
-          "settings": {
-            "icoon": "voeten",
-            "tekst": "Handen vrij, ook op de scooter"
-          }
-        },
-        "usp-2": {
-          "type": "usp",
-          "settings": {
-            "icoon": "board",
-            "tekst": "Kleding van biologisch katoen"
-          }
-        },
-        "usp-3": {
-          "type": "usp",
-          "settings": {
-            "icoon": "golf",
-            "tekst": "Verzending door heel Europa"
-          }
-        },
-        "usp-4": {
-          "type": "usp",
-          "settings": {
-            "icoon": "tas",
-            "tekst": "We repareren je tas"
-          }
-        }
-      },
-      "block_order": [
-        "usp-1",
-        "usp-2",
-        "usp-3",
-        "usp-4"
-      ]
-    },
     "zo": {
       "type": "tt-zo",
       "settings": {
@@ -283,7 +240,7 @@
           "type": "kaart",
           "settings": {
             "titel": "Gevorderden",
-            "tekst": "Een hardboard, rotsen of de scooter naar een rustige spot. Je board hangt over je schouder.",
+            "tekst": "Met een hardboard over de rotsen of op de scooter naar een rustige spot. Je board hangt veilig over je schouder.",
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-avontuur",
             "filename": "tide-tode-avontuur.jpg",
@@ -420,7 +377,6 @@
   "order": [
     "hero",
     "uitgelicht",
-    "usp",
     "zo",
     "wie",
     "meer",
