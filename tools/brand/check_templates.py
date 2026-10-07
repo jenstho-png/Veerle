@@ -13,6 +13,11 @@ for naam, sch in schemas.items():
     for n in [sch.get('name')] + [b.get('name') for b in sch.get('blocks', [])] + [p.get('name') for p in sch.get('presets', [])]:
         if isinstance(n, str) and not n.startswith('t:') and len(n) > 25:
             fouten.append(f'{naam}: naam langer dan 25 tekens: {n}')
+    # Shopify: tussenkoppen (type header) maximaal 50 tekens
+    for st in sch.get('settings', []) + [x for b in sch.get('blocks', []) for x in b.get('settings', [])]:
+        c = st.get('content', '')
+        if st.get('type') == 'header' and not c.startswith('t:') and len(c) > 50:
+            fouten.append(f'{naam}: tussenkop langer dan 50 tekens: {c}')
 
 
 def check_settings(waar, defs, waarden):

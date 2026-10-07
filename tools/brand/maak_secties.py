@@ -190,7 +190,7 @@ schrijf('tt-usp', """
         {"type": "usp", "settings": {"icoon": "tas", "tekst": "Makkelijk mee in het vliegtuig"}}]}]})
 
 # ---------- KOPEN: galerij + koopblok (homepage en productpagina, voor elk producttype) ----------
-s1, fb1 = beeld('', 'Productfoto 1 (zolang het product geen foto\'s heeft)', 'tt-product-1', 'tide-tode-draagtas-1.jpg', 'De Tide-Tode draagtas met board')
+s1, fb1 = beeld('', "Productfoto 1 (als het product geen foto's heeft)", 'tt-product-1', 'tide-tode-draagtas-1.jpg', 'De Tide-Tode draagtas met board')
 s2, fb2 = beeld('b2_', 'Productfoto 2', 'tt-product-2', 'tide-tode-draagtas-2.jpg', 'De tegelstof van de draagtas van dichtbij')
 TOON_BLOK = {"type": "select", "id": "toon", "label": "Tonen bij", "options": TOON_OPTIES, "default": "alle"}
 # Liquid: zie = of dit blok bij de productgroep hoort
