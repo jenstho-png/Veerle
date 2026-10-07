@@ -483,12 +483,12 @@ def sweater_voorkant(img, a, cx, kleur, label_y=318):
 
 
 def sweater_rugkant(img, a, cx):
-    img, a = rugkant_tshirt(img, a, cx, hals=(170, 182, 244), boord=(0, 354, 268), verschuif=300, hoek=None)
+    img, a = rugkant_tshirt(img, a, cx, hals=(178, 268, 240), boord=(0, 420, 268), verschuif=330, hoek=None)
     W = a.shape[1]
     return img[:, ::-1].copy(), a[:, ::-1].copy(), W - 1 - cx
 
 
-def rugprint(img, a, cx, art, maat, kraag, breedte_cm=25, max_cm=40, onder_kraag_cm=8.0):
+def rugprint(img, a, cx, art, maat, kraag, breedte_cm=25, max_cm=40, onder_kraag_cm=10.0):
     br = printmaat(art, breedte_cm * maat, max_cm * maat)
     cy = kraag + onder_kraag_cm * maat + br * art.shape[0] / art.shape[1] / 2
     return druk(img, a, art, cx, cy, br), (art, cx, cy, br, {})

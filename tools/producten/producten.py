@@ -424,6 +424,23 @@ for p in P:
     if p['handle'] in ECHT:
         p['beelden'] = [('extern', alt) for alt in ECHT[p['handle']]]
 
+# unieke teksten per product (teksten.py)
+from teksten import tekst_voor  # noqa: E402
+for p in P:
+    t = tekst_voor(p['handle'])
+    if t:
+        p['tekst'] = t + VERZENDING
+
+# tasfoto's (tools/tas/studio2.py): op zand, op papier, label en band, de rand
+for p in P:
+    if p['collectie'] == 'Draagtassen':
+        n = p['titel']
+        ECHT[p['handle']] = [f'{n} om een gekleurd surfboard op het zand, van bovenaf', f'{n} op een surfboard, op gekleurd papier',
+                             f'Geweven Tide Tode label en de band met ingeweven logo van de {n.lower()}', f'De {n.lower()} waar het paneel over de rand van het board valt']
+for p in P:
+    if p['handle'] in ECHT:
+        p['beelden'] = [('extern', alt) for alt in ECHT[p['handle']]]
+
 # oude tekenpagina's weg, zodat render.mjs nooit een echte foto overschrijft met een tekening
 for oud in UIT.glob('*.html'):
     oud.unlink()
