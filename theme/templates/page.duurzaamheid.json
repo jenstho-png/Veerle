@@ -143,6 +143,89 @@
         "link2_label": "Of bekijk de hele shop",
         "link2_url": "/collections/all"
       }
+    },
+    "meer": {
+      "type": "tt-meer",
+      "settings": {
+        "bg": "creme",
+        "label": "",
+        "heading": "Gemaakt om|lang *mee te gaan*",
+        "text": "Sterke stof, stevige stiksels en kleding van biologisch katoen. Gaat er iets stuk, dan repareren we het.",
+        "btn1_label": "Bekijk de draagtassen",
+        "btn1_link": "/collections/draagtassen",
+        "btn2_label": "Alles bekijken",
+        "btn2_link": "/collections/all"
+      },
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "titel": "Draagtas Golfjes",
+            "prijs": "€40",
+            "link": "/products/draagtas-golfjes",
+            "fallback": "tt-p-draagtas-golfjes",
+            "alt": "Draagtas Golfjes om een board op het zand"
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "titel": "Draagtas Navy",
+            "prijs": "€40",
+            "link": "/products/draagtas-navy",
+            "fallback": "tt-p-draagtas-navy",
+            "alt": "Draagtas Navy om een board op het zand"
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "titel": "Draagtas Salie",
+            "prijs": "€40",
+            "link": "/products/draagtas-salie",
+            "fallback": "tt-p-draagtas-salie",
+            "alt": "Draagtas Salie om een board op het zand"
+          }
+        },
+        "item-4": {
+          "type": "item",
+          "settings": {
+            "titel": "T-shirt Klassiek",
+            "prijs": "€35",
+            "link": "/products/t-shirt-klassiek",
+            "fallback": "tt-p-t-shirt-klassiek",
+            "alt": "Achterkant van het baby blue T-shirt Klassiek"
+          }
+        },
+        "item-5": {
+          "type": "item",
+          "settings": {
+            "titel": "Longsleeve Zon",
+            "prijs": "€45",
+            "link": "/products/longsleeve-zon",
+            "fallback": "tt-p-longsleeve-zon",
+            "alt": "Crème longsleeve met de zon"
+          }
+        },
+        "item-6": {
+          "type": "item",
+          "settings": {
+            "titel": "Strandhanddoek Tegel",
+            "prijs": "€45",
+            "link": "/products/strandhanddoek-tegel",
+            "fallback": "tt-p-strandhanddoek-tegel",
+            "alt": "Strandhanddoek in tegelprint op het zand"
+          }
+        }
+      },
+      "block_order": [
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4",
+        "item-5",
+        "item-6"
+      ]
     }
   },
   "order": [
@@ -150,6 +233,7 @@
     "duurzaam",
     "strand",
     "reparatie",
+    "meer",
     "patroon"
   ]
 }

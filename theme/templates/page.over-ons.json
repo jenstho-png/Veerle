@@ -112,11 +112,136 @@
         "link2_label": "Of bekijk de hele shop",
         "link2_url": "/collections/all"
       }
+    },
+    "usp": {
+      "type": "tt-usp",
+      "settings": {},
+      "blocks": {
+        "usp-1": {
+          "type": "usp",
+          "settings": {
+            "icoon": "voeten",
+            "tekst": "Handen vrij, ook op de scooter"
+          }
+        },
+        "usp-2": {
+          "type": "usp",
+          "settings": {
+            "icoon": "board",
+            "tekst": "Kleding van biologisch katoen"
+          }
+        },
+        "usp-3": {
+          "type": "usp",
+          "settings": {
+            "icoon": "golf",
+            "tekst": "Verzending door heel Europa"
+          }
+        },
+        "usp-4": {
+          "type": "usp",
+          "settings": {
+            "icoon": "tas",
+            "tekst": "We repareren je tas"
+          }
+        }
+      },
+      "block_order": [
+        "usp-1",
+        "usp-2",
+        "usp-3",
+        "usp-4"
+      ]
+    },
+    "meer": {
+      "type": "tt-meer",
+      "settings": {
+        "bg": "zand",
+        "label": "",
+        "heading": "Van de tas|naar *meer*",
+        "text": "Na de draagtas kwamen de shirts en truien, met een tekening op de rug. En dingen voor op het strand die we zelf misten.",
+        "btn1_label": "Kleding en accessoires",
+        "btn1_link": "/collections/kleding-en-accessoires",
+        "btn2_label": "Surfgear",
+        "btn2_link": "/collections/surfgear"
+      },
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "titel": "T-shirt Golf",
+            "prijs": "€35",
+            "link": "/products/t-shirt-golf",
+            "fallback": "tt-p-t-shirt-golf",
+            "alt": "Achterkant van het roze T-shirt Golf"
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "titel": "Longsleeve Vin",
+            "prijs": "€45",
+            "link": "/products/longsleeve-vin",
+            "fallback": "tt-p-longsleeve-vin",
+            "alt": "Navy longsleeve met de vin"
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "titel": "Sweater Boards",
+            "prijs": "€55",
+            "link": "/products/sweater-boards",
+            "fallback": "tt-p-sweater-boards",
+            "alt": "Crème sweater met twee boards"
+          }
+        },
+        "item-4": {
+          "type": "item",
+          "settings": {
+            "titel": "Strandhanddoek Tegel",
+            "prijs": "€45",
+            "link": "/products/strandhanddoek-tegel",
+            "fallback": "tt-p-strandhanddoek-tegel",
+            "alt": "Strandhanddoek in tegelprint op het zand"
+          }
+        },
+        "item-5": {
+          "type": "item",
+          "settings": {
+            "titel": "Bucket hat",
+            "prijs": "€30",
+            "link": "/products/bucket-hat-tegel",
+            "fallback": "tt-p-bucket-hat-tegel",
+            "alt": "Crème bucket hat met geborduurd board"
+          }
+        },
+        "item-6": {
+          "type": "item",
+          "settings": {
+            "titel": "Surfponcho Tegel",
+            "prijs": "€60",
+            "link": "/products/surfponcho-tegel",
+            "fallback": "tt-p-surfponcho-tegel",
+            "alt": "Opgevouwen surfponcho met tegelrand"
+          }
+        }
+      },
+      "block_order": [
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4",
+        "item-5",
+        "item-6"
+      ]
     }
   },
   "order": [
     "hero",
+    "usp",
     "verhaal",
+    "meer",
     "raster",
     "patroon"
   ]

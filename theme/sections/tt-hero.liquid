@@ -18,6 +18,14 @@
         <h1 class="tt-hero__logo tt-in" style="--d: .2s">{%- render 'tt-logo', variant: 'staand' -%}<span class="visually-hidden">{{ section.settings.heading | replace: '|', ' ' | remove: '*' }}</span></h1>
         {%- if section.settings.hand != blank -%}<p class="tt-hero__hand tt-in" style="--d: .5s">{{ section.settings.hand }}</p>{%- endif -%}
       </div>
+      {%- if section.settings.boards -%}
+      <div class="tt-hero__boards" aria-hidden="true">
+        {%- for n in (1..3) -%}
+          {%- assign bord = 'tt-hero-board-' | append: n | append: '.webp' | asset_url -%}
+          <img class="tt-hero__board tt-hero__board--{{ n }}" src="{{ bord }}" alt="" width="292" height="1100" loading="eager" decoding="async">
+        {%- endfor -%}
+      </div>
+      {%- endif -%}
       <div class="tt-hero__rechts tt-in" style="--d: .7s">
         {%- if section.settings.text != blank -%}<p>{{ section.settings.text }}</p>{%- endif -%}
         <div class="tt-knoppen">
@@ -61,6 +69,12 @@
       "id": "pagina",
       "label": "Lagere versie (voor subpagina's)",
       "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "boards",
+      "label": "Boards met draagtas rechts tonen",
+      "default": true
     },
     {
       "type": "checkbox",

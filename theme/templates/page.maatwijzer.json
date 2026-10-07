@@ -192,6 +192,89 @@
         "rij-4",
         "rij-5"
       ]
+    },
+    "meer": {
+      "type": "tt-meer",
+      "settings": {
+        "bg": "creme",
+        "label": "",
+        "heading": "Kies je *maat*",
+        "text": "Onze shirts vallen ruim en recht. Twijfel je tussen twee maten, kies dan de kleinste voor een normale pasvorm.",
+        "btn1_label": "Bekijk de kleding",
+        "btn1_link": "/collections/kleding-en-accessoires",
+        "btn2_label": "",
+        "btn2_link": ""
+      },
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "titel": "T-shirt Klassiek",
+            "prijs": "€35",
+            "link": "/products/t-shirt-klassiek",
+            "fallback": "tt-p-t-shirt-klassiek",
+            "alt": "Achterkant van het baby blue T-shirt Klassiek"
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "titel": "T-shirt Lijn naar zee",
+            "prijs": "€35",
+            "link": "/products/t-shirt-lijn-naar-zee",
+            "fallback": "tt-p-t-shirt-lijn-naar-zee",
+            "alt": "Achterkant van het crème T-shirt Lijn naar zee"
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "titel": "Longsleeve Zon",
+            "prijs": "€45",
+            "link": "/products/longsleeve-zon",
+            "fallback": "tt-p-longsleeve-zon",
+            "alt": "Crème longsleeve met de zon"
+          }
+        },
+        "item-4": {
+          "type": "item",
+          "settings": {
+            "titel": "Sweater Boards",
+            "prijs": "€55",
+            "link": "/products/sweater-boards",
+            "fallback": "tt-p-sweater-boards",
+            "alt": "Crème sweater met twee boards"
+          }
+        },
+        "item-5": {
+          "type": "item",
+          "settings": {
+            "titel": "UV-shirt lange mouw",
+            "prijs": "€45",
+            "link": "/products/uv-shirt-lange-mouw",
+            "fallback": "tt-p-uv-shirt-lange-mouw",
+            "alt": "Navy UV-shirt met lange mouwen"
+          }
+        },
+        "item-6": {
+          "type": "item",
+          "settings": {
+            "titel": "T-shirt Golf",
+            "prijs": "€35",
+            "link": "/products/t-shirt-golf",
+            "fallback": "tt-p-t-shirt-golf",
+            "alt": "Achterkant van het roze T-shirt Golf"
+          }
+        }
+      },
+      "block_order": [
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4",
+        "item-5",
+        "item-6"
+      ]
     }
   },
   "order": [
@@ -199,6 +282,7 @@
     "check",
     "tas",
     "kleding",
-    "rash"
+    "rash",
+    "meer"
   ]
 }

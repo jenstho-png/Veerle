@@ -49,6 +49,10 @@
     });
   }, { rootMargin: '0px 0px -8% 0px', threshold: 0.01 }) : null;
 
+  const fotoIo = (!stil && 'IntersectionObserver' in window) ? new IntersectionObserver((items) => {
+    items.forEach((e) => { if (e.isIntersecting) { fotoIo.unobserve(e.target); zichtbaar(e.target); } });
+  }, { rootMargin: '0px 0px 30% 0px', threshold: 0 }) : null;
+
   /* ---------- 2. De scroll-lus ---------- */
   /* Elk item: { el, soort, ... , top, h } met top/h in documentcoördinaten (gemeten aan de ouder). */
   const items = [];
@@ -451,7 +455,11 @@
     });
     const doelen = scope.querySelectorAll(DOELEN);
     if (!io) doelen.forEach(zichtbaar);
-    else doelen.forEach((el) => { if (!el.classList.contains('is-in')) io.observe(el); });
+    else doelen.forEach((el) => {
+      if (el.classList.contains('is-in')) return;
+      /* foto's nooit afdekken: ze staan er al, en het zakken begint ruim voordat ze in beeld komen */
+      if (el.classList.contains('tt-onthul') && fotoIo) fotoIo.observe(el); else io.observe(el);
+    });
     hover(scope);
     registreer(scope);
     scope.querySelectorAll('[data-tt-koop]').forEach(koop);

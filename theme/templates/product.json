@@ -273,7 +273,8 @@
     "tt-zo": {
       "type": "tt-zo",
       "settings": {
-        "toon": "draagtas"
+        "toon": "draagtas",
+        "stijl": "foto"
       },
       "blocks": {
         "stap-1": {
@@ -283,7 +284,7 @@
             "tekst": "Softtop of hardboard, nat of droog. Je hoeft hem niet eerst schoon te maken.",
             "fallback": "tt-foto-stap-1",
             "filename": "tide-tode-stap-1.jpg",
-            "alt": "Surfboard in het zand",
+            "alt": "De draagtas om de onderkant van een roze board",
             "ill": "draagtas"
           }
         },
@@ -294,7 +295,7 @@
             "tekst": "De brede schouderband draagt het gewicht. Je handen zijn vrij voor je stuur, je spullen of een rots om je aan vast te houden.",
             "fallback": "tt-foto-stap-2",
             "filename": "tide-tode-stap-2.jpg",
-            "alt": "Surfer met de tas over de schouder",
+            "alt": "De schouderband en het geweven label van de draagtas",
             "ill": "golf"
           }
         },
@@ -305,7 +306,7 @@
             "tekst": "Lopend door de duinen, op de fiets of achterop de scooter. Op het strand haal je hem er zo weer uit.",
             "fallback": "tt-foto-stap-3",
             "filename": "tide-tode-stap-3.jpg",
-            "alt": "De negen ontwerpen van de draagtas",
+            "alt": "Board met de draagtas Tegel op het strand",
             "ill": "busje"
           }
         }

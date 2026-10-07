@@ -22,6 +22,10 @@
     <ul class="tt-meer__rij">
       {%- for block in section.blocks -%}
         {%- assign mp = block.settings.product -%}
+        {%- if mp == blank and block.settings.link contains '/products/' -%}
+          {%- assign mh = block.settings.link | split: '/products/' | last | split: '?' | first -%}
+          {%- assign mp = all_products[mh] -%}
+        {%- endif -%}
         <li class="tt-meer__item tt-in" style="--d: {{ forloop.index0 | modulo: 3 | times: 0.1 }}s" {{ block.shopify_attributes }}>
           <a class="tt-meer__kaart" href="{% if mp != blank %}{{ mp.url }}{% else %}{{ block.settings.link | default: routes.all_products_collection_url }}{% endif %}">
             <span class="tt-meer__beeld tt-onthul">

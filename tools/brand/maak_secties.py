@@ -97,6 +97,9 @@ PRIJS = """{%- liquid
   if p == blank
     assign p = settings.tt_product
   endif
+  if p == blank
+    assign p = all_products['draagtas-tegel']
+  endif
   assign v = p.selected_or_first_available_variant
 -%}"""
 PRODUCT = PRIJS.replace("\n  assign v = p.selected_or_first_available_variant", "")
@@ -224,7 +227,7 @@ schrijf('tt-koop', PRIJS + """
     assign tekening = true
     assign aantal = 2
     if section.settings.extra_beelden
-      assign aantal = 7
+      assign aantal = 4
     endif
   endif
   assign leeg = false
@@ -247,8 +250,8 @@ schrijf('tt-koop', PRIJS + """
                 {%- else -%}
                   {%- assign naam = 'tt-product-' | append: n -%}
                   {%- case n -%}
-                    {%- when 3 -%}{%- assign alt_n = 'Het tegelvak van de draagtas om het midden van het board' -%}
-                    {%- when 4 -%}{%- assign alt_n = 'De dusty blue schouderband van de draagtas' -%}
+                    {%- when 3 -%}{%- assign alt_n = 'Het geweven label en de band van de draagtas' -%}
+                    {%- when 4 -%}{%- assign alt_n = 'De rand van de draagtas over het board' -%}
                     {%- when 5 -%}{%- assign alt_n = 'Tekening van de draagtas met genummerde onderdelen' -%}
                     {%- when 6 -%}{%- assign alt_n = 'De draagtas als sticker op een zwart-witfoto van de zee' -%}
                     {%- else -%}{%- assign alt_n = 'De kleuren van de tegelstof: terracotta, dusty blue, roest, crème en navy' -%}
@@ -292,13 +295,18 @@ schrijf('tt-koop', PRIJS + """
       {%- if aantal > 1 -%}
         <div class="tt-koop__voortgang" aria-hidden="true"><span data-tt-voortgang></span></div>
         <p class="tt-koop__teller" aria-hidden="true"><span data-tt-teller>1</span> / {{ aantal }}</p>
-        {%- unless tekening -%}
-          <ol class="tt-koop__duimen" aria-label="Kies een foto">
+        <ol class="tt-koop__duimen" aria-label="Kies een foto">
+          {%- if tekening -%}
+            {%- for n in (1..aantal) -%}
+              {%- assign duim = 'tt-product-' | append: n | append: '-800.jpg' | asset_url -%}
+              <li><button type="button" data-tt-duim aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Foto {{ forloop.index }}"><img src="{{ duim }}" alt="" width="80" height="100" loading="lazy"></button></li>
+            {%- endfor -%}
+          {%- else -%}
             {%- for m in media limit: max -%}
               <li><button type="button" data-tt-duim aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Foto {{ forloop.index }}">{{ m.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '', sizes: '80px', widths: '80, 160' }}</button></li>
             {%- endfor -%}
-          </ol>
-        {%- endunless -%}
+          {%- endif -%}
+        </ol>
       {%- endif -%}
     </div>
     <div class="tt-koop__info">
@@ -1719,6 +1727,10 @@ schrijf('tt-meer', """
     <ul class="tt-meer__rij">
       {%- for block in section.blocks -%}
         {%- assign mp = block.settings.product -%}
+        {%- if mp == blank and block.settings.link contains '/products/' -%}
+          {%- assign mh = block.settings.link | split: '/products/' | last | split: '?' | first -%}
+          {%- assign mp = all_products[mh] -%}
+        {%- endif -%}
         <li class="tt-meer__item tt-in" style="--d: {{ forloop.index0 | modulo: 3 | times: 0.1 }}s" {{ block.shopify_attributes }}>
           <a class="tt-meer__kaart" href="{% if mp != blank %}{{ mp.url }}{% else %}{{ block.settings.link | default: routes.all_products_collection_url }}{% endif %}">
             <span class="tt-meer__beeld tt-onthul">
