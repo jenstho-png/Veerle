@@ -251,43 +251,180 @@ def sweater_basis():
     return _CACHE['sweat']
 
 
-def tshirt_rug(kleur, print_art, breedte_frac=0.50, top_y=330):
-    """Achterkant: rugboord, rugprint hoog en gecentreerd. breedte_frac = printbreedte / rompbreedte (28 cm op 56 cm)."""
-    img, a, cx = tshirt_basis()
-    img, a = rugkant_tshirt(img, a, cx)
-    # achterkant ligt in spiegelbeeld (linkermouw rechts); eerst spiegelen, dan pas drukken
-    W = a.shape[1]
-    img, a = img[:, ::-1].copy(), a[:, ::-1].copy()
-    cx = W - 1 - cx
+# ---------- gedeelde stappen ----------
+UIT_ECHT = HIER / 'uit_echt'
+REF = ROOT / 'docs' / 'producten' / 'referentie'
+LICHT_INKT = {'creme', 'baby', 'zand', 'rose', 'wit'}
+
+
+def hexrgb(h):
+    return np.array([int(h[i:i + 2], 16) for i in (1, 3, 5)], np.float32) / 255
+
+
+def is_donker(kleur):
+    return float(hexrgb(kleur) @ np.array([0.299, 0.587, 0.114])) < 0.45
+
+
+def ontwerp(naam, kleur):
+    """Rugprint: -licht (navy en terracotta inkt) op lichte stof, -donker (creme inkt) op donkere stof."""
+    return E.art(UIT_ECHT / f'ontwerp-{naam}-{"donker" if is_donker(kleur) else "licht"}.png')
+
+
+def icoon(kleur):
+    return E.art(REF / 'icoon-navy.png', CREME if is_donker(kleur) else NAVY)
+
+
+def neklabel_art(kleur):
+    return E.art(UIT_ECHT / ('neklabel-creme.png' if is_donker(kleur) else 'neklabel-navy.png'))
+
+
+def kleur_stof(img, a, kleur, sterkte=1.8):
     m = (a > 0.5).astype(np.float32)
-    img = plooien(img, m)
+    img = plooien(img, m, sterkte=sterkte)
     img = MK.kleur_om(img, m, kleur, 1.0)
-    romp = 1565 - 827                                 # rompbreedte op borsthoogte (px in de bron)
-    br = romp * breedte_frac
-    ah, aw = print_art.shape[:2]
-    cy = top_y + br * ah / aw / 2
-    img = MK.zet_print(img, inkt(print_art, br), cx, cy, br, verplaatsing=6, schaduw_sterkte=0.9, structuur=0.9, dekking=0.94,
-                       masker=cv2.erode(m, np.ones((5, 5), np.uint8)))
-    return img, a
+    if is_donker(kleur):
+        # donkere stof: iets matter en een fractie lichter in de plooien, zoals geverfd katoen in zacht licht
+        img = img * (1 - m[..., None]) + np.clip(img * 1.04 + 0.012, 0, 1) * m[..., None]
+    return img
 
 
-def leg_neer(img, a, achtergrond, vulling=0.74, zaad=1):
+def druk(img, a, art, cx, cy, breedte, verplaatsing=6, dekking=0.94, structuur=0.9, korrel=0.05):
+    m = cv2.erode((a > 0.5).astype(np.float32), np.ones((5, 5), np.uint8))
+    return MK.zet_print(img, inkt(art, breedte, korrel), cx, cy, breedte, verplaatsing=verplaatsing, schaduw_sterkte=0.9,
+                        structuur=structuur, dekking=dekking, masker=m)
+
+
+def printmaat(art, breedte, max_hoogte):
+    """Breedte van de print in px: de gevraagde breedte, tenzij hij dan te hoog wordt."""
+    ah, aw = art.shape[:2]
+    return min(breedte, max_hoogte * aw / ah)
+
+
+def leg_neer(img, a, achtergrond, vulling=0.74, zaad=1, midden=None):
     rgba = ST.vrijstaand(img, a)
-    # vrijstaand blurt het masker licht; houd de rand strak
-    rgba[..., 3] = np.clip((rgba[..., 3] - 0.5) * 1.15 + 0.5, 0, 1)
+    rgba[..., 3] = np.clip((rgba[..., 3] - 0.5) * 1.15 + 0.5, 0, 1)    # vrijstaand blurt het masker licht; rand strak
     doek = ST.achtergrond(achtergrond, zaad=zaad)
-    doek = ST.leg(doek, rgba, breedte=ST.B * vulling, midden=(ST.B / 2, ST.H / 2), draai=0, hoogte=4)
+    doek = ST.leg(doek, rgba, breedte=ST.B * vulling, midden=midden or (ST.B / 2, ST.H / 2), draai=0, hoogte=4)
     return ST.afwerking(doek)
 
 
-def proef():
-    PROEF.mkdir(parents=True, exist_ok=True)
-    img, a = tshirt_rug(CREME_T, E.art(E.ART / 'ontwerp-lijn-licht.png'))
-    uit = leg_neer(img, a, 'baby')
-    ST.bewaar(uit, PROEF / 'kleding-proef-1.jpg', max_kb=400)
-    print('proef', PROEF / 'kleding-proef-1.jpg')
+def tricot(h, w, wale, zaad=4, amp=0.07):
+    """Fijne jersey-structuur (rijen V-steekjes) voor macro's: de bronfoto is daar te grof voor."""
+    rng = np.random.default_rng(zaad)
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    warp = cv2.GaussianBlur(rng.normal(0, 1, (h, w)).astype(np.float32), (0, 0), wale * 6)
+    warp = warp / (warp.std() + 1e-6) * wale * 0.6
+    u = (xx + warp) / wale
+    q = wale * 0.78
+    fx = u - np.floor(u)
+    v = (yy + warp * 0.5) / q + np.abs(fx - 0.5) * 0.9
+    fy = v - np.floor(v)
+    t = np.sin(np.pi * fx) ** 0.8 * (0.62 + 0.38 * np.sin(np.pi * fy) ** 0.6)
+    ci, ri = np.floor(u).astype(np.int64), np.floor(v).astype(np.int64)
+    var = rng.normal(0, 1, 4096).astype(np.float32)[(ci * 131 + ri * 31) % 4096] * 0.18
+    t = t + var * 0.3
+    t = cv2.GaussianBlur(t, (0, 0), max(0.5, wale * 0.08))
+    t = (t - t.mean()) / (t.std() + 1e-6)
+    return t * amp
+
+
+def macro(img, a, kader, prints, licht_hoek=True, wale_mm=0.85, kader_cm=None, maat=15.0, zaad=4, dof=3.0):
+    """Close-up van de eigen compositie op hogere resolutie: het stuk stof (zonder print) wordt vergroot, krijgt echte
+    breisteekjes, en de prints worden er op die resolutie opnieuw in gedrukt. Met een beetje scherptediepte."""
+    x0, y0, w = kader
+    h = w * ST.H / ST.B
+    f = ST.B / w
+    M = np.float32([[f, 0, -x0 * f], [0, f, -y0 * f]])
+    groot = cv2.warpAffine(img, M, (ST.B, ST.H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
+    ga = cv2.warpAffine(a, M, (ST.B, ST.H), flags=cv2.INTER_LINEAR, borderValue=0)
+    groot = cv2.GaussianBlur(groot, (0, 0), f * 0.35)                 # vergroting is zacht; geen blokjes
+    px_mm = f * maat / 10
+    t = tricot(ST.H, ST.B, max(3.0, wale_mm * px_mm), zaad=zaad)
+    groot = np.clip(groot * (1 + t[..., None]), 0, 1)
+    for art, cx, cy, br, kw in prints:
+        groot = MK.zet_print(groot, inkt(art, br * f, 0.04), (cx - x0) * f, (cy - y0) * f, br * f,
+                             verplaatsing=kw.get('verplaatsing', 6) * f * 0.6, schaduw_sterkte=0.9,
+                             structuur=kw.get('structuur', 1.4), dekking=kw.get('dekking', 0.93), masker=ga)
+    # scherptediepte: scherp rond het midden, zacht naar boven en onder
+    yy = np.mgrid[0:ST.H, 0:ST.B][0].astype(np.float32)
+    d = np.clip((np.abs(yy - ST.H * 0.5) / (ST.H * 0.5) - 0.3) / 0.7, 0, 1) ** 1.4
+    vaag = cv2.GaussianBlur(groot, (0, 0), dof)
+    groot = groot * (1 - d[..., None]) + vaag * d[..., None]
+    groot = np.clip(groot * ST._licht(), 0, 1)
+    return ST.afwerking(groot, korrel=0.009)
+
+
+def bewaar(img, naam):
+    DOEL.mkdir(parents=True, exist_ok=True)
+    ST.bewaar(img, DOEL / f'{naam}.jpg', max_kb=360)
+    print('beeld', naam)
+
+
+# ---------- t-shirt ----------
+TEE_MAAT = 15.0                         # px per cm in de bron (romp 858 px = 57 cm, boxy heavyweight maat M)
+TEE_KRAAG = 262                         # bovenkant rugboord in het midden
+
+
+def tee_voor(kleur):
+    img, a, cx = tshirt_basis()
+    img = kleur_stof(img, a, kleur)
+    H, W = a.shape
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    # ons neklabel binnen in de rug, net onder de rugboord; de voorboord valt er deels over
+    zicht = ((((xx - cx) / 132) ** 2 + ((yy - 212) / 130) ** 2) < 1) & ~((((xx - cx) / 230) ** 2 + ((yy - 26) / 279) ** 2) < 1)
+    zicht = cv2.GaussianBlur(zicht.astype(np.float32), (0, 0), 1.2)
+    lab = neklabel_art(kleur)
+    laag = MK.zet_print(img, lab, cx, 333, 5.6 * TEE_MAAT, verplaatsing=1.5, schaduw_sterkte=0.6, structuur=0.35, dekking=0.9)
+    img = img * (1 - zicht[..., None]) + laag * zicht[..., None]
+    # klein board op de linkerborst (van de drager: rechts in beeld)
+    ic = icoon(kleur)
+    hoogte = 8.0 * TEE_MAAT
+    br = hoogte * ic.shape[1] / ic.shape[0]
+    img = druk(img, a, ic, cx + 9.5 * TEE_MAAT, 222 + 15 * TEE_MAAT, br, verplaatsing=3)
+    return img, a, cx, [(ic, cx + 9.5 * TEE_MAAT, 222 + 15 * TEE_MAAT, br, {'verplaatsing': 3})]
+
+
+def tee_rug(kleur, art):
+    img, a, cx = tshirt_basis()
+    img, a = rugkant_tshirt(img, a, cx, hals=(215, 172, 200), boord=(26, 230, 279), verschuif=230, hoek=None)
+    W = a.shape[1]
+    img, a = img[:, ::-1].copy(), a[:, ::-1].copy()      # achterkant: in spiegelbeeld neergelegd
+    cx = W - 1 - cx
+    img = kleur_stof(img, a, kleur)
+    kaal = img.copy()
+    br = printmaat(art, 25 * TEE_MAAT, 44 * TEE_MAAT)
+    cy = TEE_KRAAG + 7.5 * TEE_MAAT + br * art.shape[0] / art.shape[1] / 2
+    img = druk(img, a, art, cx, cy, br)
+    return img, a, kaal, (art, cx, cy, br, {})
+
+
+def tee(handle, kleur, naam, achtergrond):
+    art = ontwerp(naam, kleur)
+    v, va, cx, _ = tee_voor(kleur)
+    bewaar(leg_neer(v, va, achtergrond, vulling=0.90), f'{handle}-1')
+    r, ra, kaal, pr = tee_rug(kleur, art)
+    bewaar(leg_neer(r, ra, achtergrond, vulling=0.80, zaad=2), f'{handle}-2')
+    _, pcx, pcy, br, _ = pr
+    ph = br * art.shape[0] / art.shape[1]
+    w = min(br * 0.78, 22 * TEE_MAAT)                       # kader van ca. 17 tot 22 cm breed
+    kader = (pcx - w / 2, pcy - ph / 2 - w * 0.08, w)
+    bewaar(macro(kaal, ra, kader, [pr], maat=TEE_MAAT), f'{handle}-3')
+
+
+TEES = [('t-shirt-lijn-naar-zee', CREME_T, 'lijn', 'baby'),
+        ('t-shirt-op-weg-naar-zee', CREME_T, 'herhaling', 'rose'),
+        ('t-shirt-klassiek', '#BCD0E6', 'boog', 'zandpapier'),
+        ('t-shirt-board', '#D9C4A0', 'grootboard', 'baby'),
+        ('t-shirt-zon', '#26355A', 'zon', 'zandpapier'),
+        ('t-shirt-golf', '#E8B4AE', 'golf', 'creme')]
+
+
+def tees(*welke):
+    for handle, kleur, naam, bg in TEES:
+        if not welke or handle in welke:
+            tee(handle, kleur, naam, bg)
 
 
 if __name__ == '__main__':
-    for stap in sys.argv[1:] or ['proef']:
-        globals()[stap]()
+    stap, *rest = sys.argv[1:] or ['tees']
+    globals()[stap](*rest)
