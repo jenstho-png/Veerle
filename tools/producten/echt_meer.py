@@ -130,6 +130,27 @@ def grabcut(img, rect, iter=6, schaal=0.4, voor=None, achter=None):
     return cv2.resize(uit, (w, h), interpolation=cv2.INTER_LINEAR) > 0.5
 
 
+def grabcut_poly(img, poly, band=30, iter=5, schaal=0.5):
+    """Met de hand getekende omtrek, GrabCut beslist alleen in een smalle band rond de lijn."""
+    h, w = img.shape[:2]
+    p = np.zeros((h, w), np.uint8)
+    cv2.fillPoly(p, [np.array(poly, np.int32)], 1)
+    k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * band + 1, 2 * band + 1))
+    zeker = cv2.erode(p, k); mogelijk = cv2.dilate(p, k)
+    m = np.full((h, w), cv2.GC_BGD, np.uint8)
+    m[mogelijk > 0] = cv2.GC_PR_BGD
+    m[p > 0] = cv2.GC_PR_FGD
+    m[zeker > 0] = cv2.GC_FGD
+    u8 = cv2.cvtColor((np.clip(img, 0, 1) * 255).astype(np.uint8), cv2.COLOR_RGB2BGR)
+    sm = cv2.resize(u8, (int(w * schaal), int(h * schaal)), interpolation=cv2.INTER_AREA)
+    ms = cv2.resize(m, (sm.shape[1], sm.shape[0]), interpolation=cv2.INTER_NEAREST)
+    bg = np.zeros((1, 65), np.float64); fg = np.zeros((1, 65), np.float64)
+    cv2.grabCut(sm, ms, None, bg, fg, iter, cv2.GC_INIT_WITH_MASK)
+    uit = cv2.resize(((ms == 1) | (ms == 3)).astype(np.float32), (w, h), interpolation=cv2.INTER_LINEAR) > 0.5
+    uit = cv2.morphologyEx(uit.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    return vul_gaten(cv2.morphologyEx(uit, cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8)))
+
+
 # ---------- pet ----------
 def pet():
     """Gedragen: man zet de (witte, 5-panel) pet recht; pet wordt navy met het crème board geborduurd op het voorpand."""
@@ -150,14 +171,17 @@ def pet():
 def bucket():
     """Gedragen tegen een klimopmuur: de (grijsgroene) bucket hat wordt crème met het kleine navy board geborduurd."""
     b = foto('buckethat-gedragen-1.jpg')
-    m = grabcut(b, (700, 560, 2000, 1520), voor=[[(800, 800), (1600, 760), (1650, 1080), (800, 1150)]],
-                achter=[[(1000, 1250), (1500, 1220), (1550, 1700), (1000, 1700)], [(0, 0), (2400, 0), (2400, 560), (0, 560)]])
-    m = vul_gaten(cv2.morphologyEx(m.astype(np.uint8), cv2.MORPH_OPEN, np.ones((7, 7), np.uint8)))
-    m = component(m, (1200, 950)).astype(np.uint8)
+    omtrek = [(733, 845), (764, 745), (827, 673), (955, 627), (1118, 613), (1318, 624), (1464, 655), (1573, 718), (1636, 827),
+              (1673, 973), (1700, 1040), (1800, 1120), (1890, 1180), (1955, 1230), (1945, 1290), (1900, 1340), (1840, 1400),
+              (1795, 1420), (1760, 1350), (1715, 1250), (1700, 1130), (1600, 1121), (1400, 1113), (1200, 1118), (1000, 1130),
+              (900, 1152), (830, 1195), (790, 1250), (752, 1340), (740, 1440), (690, 1478), (570, 1485), (590, 1440),
+              (660, 1395), (725, 1320), (740, 1200), (735, 1050)]
+    m = grabcut_poly(b, omtrek, band=22)
+    m = component(m, (1200, 900)).astype(np.uint8)
     L = MK.helderheid(b)
-    ref = float(np.percentile(L[m > 0], 70))
-    b, _ = kleur_rand(b, m, '#E9DFCB', gamma=0.9, ref=ref, rand=4)
-    b = borduur_op(b, L, ref, E.art('icoon-navy.png', NAVY), 1235, 950, 74, draai=-2)
+    ref = float(np.percentile(L[m > 0], 65))
+    b, _ = kleur_rand(b, m, '#F1E5CC', gamma=0.85, ref=ref, rand=4)
+    b = borduur_op(b, L, ref, E.art('icoon-navy.png', NAVY), 1230, 885, 62, draai=-2)
     E.bewaar(b, 'bucket-hat-tegel-2', vul=1.0, uitsnede=(340, 250, 2260, 2650))
 
 

@@ -118,13 +118,17 @@ def druk(img, a, quad, wit, blur=0.7, structuur=0.5, rand=0.8, licht=None, korre
         a = cv2.resize(a, (int(a.shape[1] * s * 1.5), int(a.shape[0] * s * 1.5)), interpolation=cv2.INTER_AREA)
     ah, aw = a.shape[:2]
     M = cv2.getPerspectiveTransform(np.float32([[0, 0], [aw, 0], [aw, ah], [0, ah]]), quad)
-    laag = cv2.warpPerspective(a, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
+    pm = a.copy()
+    pm[..., :3] *= a[..., 3:4]                      # voorvermenigvuldigd warpen: geen donkere randjes
+    laag = cv2.warpPerspective(pm, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
+    laag[..., :3] /= np.maximum(laag[..., 3:4], 1e-4)
     Lb = L(img) if licht is None else licht
     lichtf = np.clip(cv2.GaussianBlur(Lb, (0, 0), 1.5) / wit, 0, 1.08)[..., None]
     fijn = (Lb - cv2.GaussianBlur(Lb, (0, 0), 1.6))[..., None]
     kleur = laag[..., :3] * lichtf + fijn * structuur
     if blur:
-        kleur = cv2.GaussianBlur(kleur, (0, 0), blur)
+        a0 = laag[..., 3:4]
+        kleur = cv2.GaussianBlur(kleur * a0, (0, 0), blur) / np.maximum(cv2.GaussianBlur(a0, (0, 0), blur)[..., None], 1e-4)
     kleur = kleur + cv2.GaussianBlur(np.random.default_rng(7).normal(0, korrel, (h, w)).astype(np.float32), (0, 0), 0.6)[..., None]
     al = laag[..., 3]
     if rand:

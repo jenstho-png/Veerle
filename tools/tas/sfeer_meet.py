@@ -53,21 +53,19 @@ def segmenteer(img, hint):
     cv2.line(m, tuple(np.round(kern_n).astype(int)), tuple(np.round(kern_s).astype(int)), cv2.GC_FGD, max(int(b * 0.25), 3))
     for soort, waarde in (('fg', cv2.GC_FGD), ('bg', cv2.GC_BGD), ('pfg', cv2.GC_PR_FGD), ('pbg', cv2.GC_PR_BGD)):
         for item in hint.get(soort, []):
-            pts = np.array(item[:-1], np.int32) if isinstance(item[-1], (int, float)) else None
-            dik = item[-1]
-            if len(item) == 2:            # punt + dikte
-                cv2.circle(m, tuple(item[0]), int(dik), waarde, -1)
-            elif item[0] == 'poly':
+            if item[0] == 'poly':                     # ['poly', [[x,y],...]]
                 cv2.fillPoly(m, [np.array(item[1], np.int32)], waarde)
-            else:
-                cv2.polylines(m, [pts], False, waarde, int(dik))
+            elif item[0] == 'lijn':                   # ['lijn', [[x,y],...], dikte]
+                cv2.polylines(m, [np.array(item[1], np.int32)], False, waarde, int(item[2]))
+            else:                                     # [[x,y], straal]
+                cv2.circle(m, tuple(item[0]), int(item[1]), waarde, -1)
     bgd, fgd = np.zeros((1, 65), np.float64), np.zeros((1, 65), np.float64)
     # alleen rond het board rekenen (veel sneller), met een rand achtergrond eromheen
     ys, xs = np.nonzero(m != cv2.GC_BGD)
     marge = int(b * 0.5)
     y0, y1 = max(ys.min() - marge, 0), min(ys.max() + marge, h)
     x0, x1 = max(xs.min() - marge, 0), min(xs.max() + marge, w)
-    sub = np.ascontiguousarray(m[y0:y1, x0:x1])
+    sub = m[y0:y1, x0:x1].copy()
     cv2.setRNGSeed(1)
     cv2.grabCut(cv2.cvtColor(np.ascontiguousarray(img[y0:y1, x0:x1]), cv2.COLOR_RGB2BGR), sub, None, bgd, fgd, hint.get('iter', 6), cv2.GC_INIT_WITH_MASK)
     m[:] = cv2.GC_BGD

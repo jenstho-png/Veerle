@@ -15,9 +15,9 @@
           275.2
         ],
         "tail_tip": null,
-        "width_at_middle_px": 770.0,
+        "width_at_middle_px": 767.8,
         "middle_point": [
-          770.0,
+          771.4,
           1297.2
         ],
         "notes": "Tail runs out of the bottom of the frame (board visible from nose to y=2134). Small 'NATURE do it better' logo on deck at about (765,975). Plant leaves overlap right rail only below y~1450; middle clear.",
@@ -65,20 +65,20 @@
       "board": {
         "nose_tip": [
           826.3,
-          545.1
+          545.2
         ],
         "tail_tip": [
           819.6,
-          1850.1
+          1849.2
         ],
-        "width_at_middle_px": 355.0,
+        "width_at_middle_px": 379.0,
         "middle_point": [
-          823.5,
-          1197.6
+          824.1,
+          1197.2
         ],
         "notes": "Whole board visible and vertical. Swallow tail: tips at about (735,1840) and (905,1850). Leash coiled across lower deck around y~1660; middle clear. Dark board.",
         "axis_unit_to_nose": [
-          0.00517,
+          0.00519,
           -0.99999
         ],
         "mask": "maskers/board-muur-3.png",
@@ -95,22 +95,22 @@
       "size": "1600x2134",
       "board": {
         "nose_tip": [
-          598.6,
-          666.8
+          611.7,
+          667.7
         ],
         "tail_tip": [
-          589.1,
-          1477.8
+          617.0,
+          1477.7
         ],
-        "width_at_middle_px": 289.0,
+        "width_at_middle_px": 248.3,
         "middle_point": [
-          594.5,
-          1072.3
+          614.8,
+          1072.7
         ],
         "notes": "Whole board visible, near vertical; board is about 38% of frame height (medium size). Lots of clean white wall around it.",
         "axis_unit_to_nose": [
-          0.01171,
-          -0.99993
+          -0.00654,
+          -0.99998
         ],
         "mask": "maskers/board-muur-4.png",
         "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
@@ -126,22 +126,22 @@
       "size": "1600x2569",
       "board": {
         "nose_tip": [
-          737.3,
-          552.2
+          726.0,
+          538.8
         ],
         "tail_tip": [
-          799.5,
-          2134.0
+          817.9,
+          2101.1
         ],
-        "width_at_middle_px": 349.7,
+        "width_at_middle_px": 364.3,
         "middle_point": [
-          771.4,
-          1343.0
+          777.0,
+          1319.7
         ],
         "notes": "Tail is hidden behind the railing (tail_tip is an estimate). Railing crosses the board from about y=1600 down; middle (y 1000-1550) is clear but carries a Chiquita sticker at about (760,1390) and a vent plug strip at (740,1150).",
         "axis_unit_to_nose": [
-          -0.03931,
-          -0.99923
+          -0.05874,
+          -0.99827
         ],
         "mask": "maskers/board-muur-5.png",
         "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
@@ -157,22 +157,22 @@
       "size": "1600x2000",
       "board": {
         "nose_tip": [
-          443.5,
-          412.6
+          442.4,
+          403.3
         ],
         "tail_tip": [
           579.8,
-          1575.6
+          1576.2
         ],
-        "width_at_middle_px": 294.2,
+        "width_at_middle_px": 295.5,
         "middle_point": [
-          511.0,
-          994.2
+          510.6,
+          989.8
         ],
         "notes": "Coordinates are for the painted board on the left. Very busy artwork on the deck; middle unobstructed.",
         "axis_unit_to_nose": [
-          -0.11643,
-          -0.9932
+          -0.11633,
+          -0.99321
         ],
         "mask": "maskers/board-muur-6.png",
         "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
