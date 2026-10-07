@@ -250,17 +250,19 @@ def breng_aan(foto, masker, U, V, ppc, ontw, labelm=None, schoon=None, verplaats
 
 
 def bewaar(img, naam, max_kb=190):
-    """JPG onder max_kb: eerst kwaliteit omlaag, daarna een heel lichte vervaging (zandkorrels kosten veel bytes)."""
+    """JPG onder max_kb. Lukt dat niet met een nette kwaliteit, dan eerst de korrel van de stockfoto wat
+    ontruisen (vooral kleurruis; zandkorrels kosten veel bytes) en dan pas de kwaliteit verder omlaag."""
     import io
-    for blur in (0, 0.45, 0.7, 0.9):
-        b = cv2.GaussianBlur(img, (0, 0), blur) if blur else img
-        im = Image.fromarray((np.clip(b, 0, 1) * 255 + 0.5).astype(np.uint8))
-        for q in range(88, 59, -3):
+    u8 = (np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8)
+    for h, hk in ((0, 0), (2, 8), (3, 10), (4, 12), (5, 14)):
+        b = u8 if not h else cv2.cvtColor(cv2.fastNlMeansDenoisingColored(cv2.cvtColor(u8, cv2.COLOR_RGB2BGR), None, h, hk, 5, 15), cv2.COLOR_BGR2RGB)
+        im = Image.fromarray(b)
+        for q in range(88, 69, -3):
             buf = io.BytesIO()
             im.save(buf, 'JPEG', quality=q, optimize=True, progressive=True)
             if buf.tell() < max_kb * 1000:
                 (DOEL / f'{naam}.jpg').write_bytes(buf.getvalue())
-                print('foto', naam, f'q{q} blur{blur}', buf.tell() // 1000, 'kB')
+                print('foto', naam, f'q{q} ontruis{h}', buf.tell() // 1000, 'kB')
                 return
     raise SystemExit('te groot: ' + naam)
 
