@@ -280,12 +280,18 @@ def neklabel_art(kleur):
 
 def kleur_stof(img, a, kleur, sterkte=1.5):
     m = (a > 0.5).astype(np.float32)
-    img = plooien(img, m, sterkte=sterkte)
-    img = MK.kleur_om(img, m, kleur, 1.0)
-    if is_donker(kleur):
-        # donkere stof: iets matter en een fractie lichter in de plooien, zoals geverfd katoen in zacht licht
-        img = img * (1 - m[..., None]) + np.clip(img * 1.04 + 0.012, 0, 1) * m[..., None]
-    return img
+    if not is_donker(kleur):
+        img = plooien(img, m, sterkte=sterkte)
+        return MK.kleur_om(img, m, kleur, 1.0)
+    # donkere stof: plooien en breiwerk zie je vooral als lichte glans op de bolle kanten, niet als donkere schaduw
+    img = plooien(img, m, sterkte=2.2, fijn=2.4)
+    L = MK.helderheid(img)
+    ref = float(np.median(L[m > 0.5]))
+    s = L / max(ref, 1e-3)
+    doel = hexrgb(kleur)
+    nieuw = doel[None, None] * np.clip(s, 0, 1.5)[..., None] ** 1.2 + 0.20 * np.clip(s - 1, 0, None)[..., None]
+    nieuw = np.clip(nieuw * 1.03 + 0.008, 0, 1)
+    return img * (1 - m[..., None]) + nieuw * m[..., None]
 
 
 def druk(img, a, art, cx, cy, breedte, verplaatsing=6, dekking=0.94, structuur=0.9, korrel=0.05):
@@ -401,6 +407,10 @@ def tee_rug(kleur, art):
     return img, a, kaal, (art, cx, cy, br, {})
 
 
+# waar de macro op de print inzoomt (0 = bovenkant print, 1 = onderkant)
+MACRO_FOCUS = {'grootboard': 0.32, 'vin': 0.25}
+
+
 def tee(handle, kleur, naam, achtergrond):
     art = ontwerp(naam, kleur)
     v, va, cx, _ = tee_voor(kleur)
@@ -410,7 +420,8 @@ def tee(handle, kleur, naam, achtergrond):
     _, pcx, pcy, br, _ = pr
     ph = br * art.shape[0] / art.shape[1]
     w = br * 1.12                                           # hele printbreedte, bovenste deel
-    kader = (pcx - w / 2, pcy - ph / 2 - w * 0.10, w)
+    focus = MACRO_FOCUS.get(naam, 0.0)
+    kader = (pcx - w / 2, pcy - ph / 2 + focus * ph - w * 0.10, w)
     bewaar(macro(kaal, ra, kader, [pr], maat=TEE_MAAT), f'{handle}-3')
 
 

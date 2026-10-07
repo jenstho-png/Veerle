@@ -351,7 +351,7 @@ def wax_gebied(B, H, zaad=4):
 
 
 def proef():
-    doek = ST.achtergrond('baby')
+    doek = achtergrond('baby')
     pak = wikkel_pak('koud')
     doek = ST.leg(doek, pak, breedte=1180, midden=(800, 1000), draai=0, hoogte=13, contact=0.55)
     PROEF.mkdir(parents=True, exist_ok=True)
@@ -362,21 +362,42 @@ def proef():
 ACHTER = {'koud': 'baby', 'koel': 'zandpapier', 'warm': 'rose'}
 
 
-def bewaar(img, naam, map_=DOEL):
-    pad = ST.bewaar(ST.afwerking(img), map_ / f'{naam}.jpg')
-    print('foto', pad.relative_to(ROOT))
+def achtergrond(soort, zaad=1):
+    """stijl.achtergrond; het zand iets ontruisd (zandkorrels kosten veel bytes), zoals tools/tas/studio2.py."""
+    doek = ST.achtergrond(soort, zaad=zaad)
+    if soort == 'zand':
+        u8 = cv2.cvtColor((np.clip(doek, 0, 1) * 255 + 0.5).astype(np.uint8), cv2.COLOR_RGB2BGR)
+        doek = cv2.cvtColor(cv2.fastNlMeansDenoisingColored(u8, None, 5, 14, 5, 15), cv2.COLOR_BGR2RGB).astype(np.float32) / 255
+    return doek
+
+
+def bewaar(img, naam, map_=DOEL, max_kb=190):
+    """1600 x 2000 onder 190 kB: stijl.afwerking, dan de kwaliteit omlaag; past het niet, eerst wat kleurruis eruit."""
+    from PIL import Image
+    pad = map_ / f'{naam}.jpg'
+    u8 = (np.clip(ST.afwerking(img), 0, 1) * 255 + 0.5).astype(np.uint8)
+    for h, hk, qs in ((0, 0, range(88, 55, -3)), (2, 8, range(70, 45, -2)), (3, 10, range(56, 39, -2))):
+        b = u8 if not h else cv2.cvtColor(cv2.fastNlMeansDenoisingColored(cv2.cvtColor(u8, cv2.COLOR_RGB2BGR), None, h, hk, 5, 15),
+                                          cv2.COLOR_BGR2RGB)
+        im = Image.fromarray(b)
+        for q in qs:
+            im.save(pad, quality=q, optimize=True, progressive=True)
+            if pad.stat().st_size < max_kb * 1000:
+                print('foto', pad.relative_to(ROOT), f'q{q}' + (f' ontruis{h}' if h else ''), pad.stat().st_size // 1000, 'kB')
+                return pad
+    print('foto', pad.relative_to(ROOT), 'TE GROOT', pad.stat().st_size // 1000, 'kB')
     return pad
 
 
 def surfwax(soort, shots=(1, 2, 3)):
     if 1 in shots:
         # 1: hero, één pak groot en recht van boven
-        doek = ST.achtergrond(ACHTER[soort])
+        doek = achtergrond(ACHTER[soort])
         doek = ST.leg(doek, wikkel_pak(soort), breedte=1320, midden=(800, 1000), hoogte=15, contact=0.6)
         bewaar(doek, f'surfwax-{soort}-1')
     if 2 in shots:
         # 2: het blok uit de wikkel onder het pak
-        doek = ST.achtergrond(ACHTER[soort], zaad=2)
+        doek = achtergrond(ACHTER[soort], zaad=2)
         rgb, a, _ = wax_blok(soort, zaad=8)
         doek = ST.leg(doek, wikkel_pak(soort), breedte=1000, midden=(800, 655), hoogte=14, contact=0.6)
         doek = ST.leg(doek, np.dstack([rgb, a]).astype(np.float32), breedte=1000, midden=(800, 1365), hoogte=14, contact=0.6)
@@ -496,15 +517,15 @@ def waxkam(hoogte_verhouding=0.62, tand_lengte=215, tand_breedte=44):
 def waxkam_fotos():
     kam = waxkam()
     # 1: hero, recht van boven, groot in het midden
-    doek = ST.achtergrond('zand')
+    doek = achtergrond('zand')
     doek = ST.leg(doek, kam, breedte=1240, midden=(800, 1000), hoogte=7, contact=0.6)
     bewaar(doek, 'waxkam-1')
     # 2: detail van de tanden en het ingedrukte logo
-    doek = ST.achtergrond('zand', zaad=3)
+    doek = achtergrond('zand', zaad=3)
     doek = ST.leg(doek, kam, breedte=2700, midden=(1000, 780), hoogte=14, contact=0.6)
     bewaar(doek, 'waxkam-2')
     # 3: naast een pak surfwax (echte maten: pak 85 mm, kam 95 mm)
-    doek = ST.achtergrond('zand', zaad=4)
+    doek = achtergrond('zand', zaad=4)
     doek = ST.leg(doek, wikkel_pak('koel'), breedte=930, midden=(800, 640), hoogte=14, contact=0.6)
     doek = ST.leg(doek, kam, breedte=1040, midden=(800, 1400), hoogte=7, contact=0.6)
     bewaar(doek, 'waxkam-3')
@@ -605,11 +626,11 @@ def karabijn_fotos(naam, rgba=None):
     achter = KARABIJN[naam][6]
     h, w = rgba.shape[:2]
     # 1: hero van boven, haak, D-ring en lus recht onder elkaar, groot in beeld
-    doek = ST.achtergrond(achter)
+    doek = achtergrond(achter)
     doek = ST.leg(doek, rond_af(rgba), breedte=w * 1700 / h, midden=(800, 1000), hoogte=9, contact=0.55)
     bewaar(doek, f'karabijnhaak-{naam}-1')
     # 2: macro van de lus: geweven logo, stiksel en de D-ring (bovenkant van de lus in de bovenste helft)
-    doek = ST.achtergrond(achter, zaad=5)
+    doek = achtergrond(achter, zaad=5)
     schaal = 2.15 * 1700 / h
     d_y = 0.40 * h                                           # punt in de laag dat in het midden van de foto komt
     doek = ST.leg(doek, rond_af(rgba), breedte=w * schaal, midden=(800, 1000 + (h / 2 - d_y) * schaal), hoogte=16, contact=0.55)

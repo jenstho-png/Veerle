@@ -218,16 +218,19 @@ def opslaan(img, naam, max_kb=195):
     pad = ST.bewaar(ST.afwerking(img), DOEL / f'{naam}.jpg')
     if pad.stat().st_size <= max_kb * 1000:
         print('foto', naam, pad.stat().st_size // 1000, 'kB'); return
-    for korrel, zacht in [(0.008, 0), (0.005, 0), (0.003, 0.35), (0.0, 0.5), (0.0, 0.7)]:
+    for korrel, zacht in [(0.008, 0), (0.005, 0), (0.003, 0.35), (0.0, 0.55), (0.0, 0.8)]:
         bron = ST.afwerking(img, korrel=korrel)
         if zacht:
             bron = cv2.GaussianBlur(bron, (0, 0), zacht)
         im = Image.fromarray((np.clip(bron, 0, 1) * 255).astype(np.uint8))
-        for q in range(80, 57, -3):
+        for q in range(80, 49, -3):
             im.save(pad, quality=q, optimize=True, progressive=True)
             if pad.stat().st_size <= max_kb * 1000:
                 print('foto', naam, pad.stat().st_size // 1000, 'kB', 'korrel', korrel, 'q', q); return
-    print('LET OP te groot', naam, pad.stat().st_size // 1000, 'kB')
+    # volle stofpatronen over het hele beeld halen 200 kB niet zonder zichtbare blokjes: dan deze grens
+    bron = cv2.GaussianBlur(ST.afwerking(img, korrel=0.0), (0, 0), 0.55)
+    Image.fromarray((np.clip(bron, 0, 1) * 255).astype(np.uint8)).save(pad, quality=56, optimize=True, progressive=True)
+    print('LET OP boven de 200 kB:', naam, pad.stat().st_size // 1000, 'kB')
 
 
 def pet_navy_rgba(schaal=1.0):

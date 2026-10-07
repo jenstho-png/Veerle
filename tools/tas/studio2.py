@@ -154,7 +154,7 @@ def teken_board(bm, d, n, stijl, zaad=1):
     hout = np.array([0.66, 0.50, 0.34], np.float32) * (0.94 + 0.06 * np.sin(xx / 13.0))[..., None]
     kleur = kleur * (1 - 0.85 * s[..., None]) + hout * 0.85 * s[..., None]
     # potlood bij de staart, naast de stringer; klein shapersteken eronder
-    x0 = int(S.BX0 + S.LB * 0.865)                 # buiten de hero-uitsnede, in beeld op foto 2
+    x0 = int(S.BX0 + S.LB * 0.845)                 # net helemaal in beeld onderaan de hero
     font = cv2.FONT_HERSHEY_SCRIPT_SIMPLEX
     bt = cv2.getTextSize("7'2 x 22 x 2", font, 16 / 22.0, 1)[0][0]
     pk = stijl.get('potlood', (0.30, 0.30, 0.33))
