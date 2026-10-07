@@ -68,6 +68,24 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
   popup.querySelector('form')?.addEventListener('submit', () => store.set({ ...store.get(), done: true }));
   teaser?.addEventListener('click', show);
+  /* met de muis over de kortingsknop: de popup gaat open; ga je met de muis weg (en niet naar de kaart), dan sluit hij weer */
+  if (teaser && window.matchMedia('(hover: hover)').matches) {
+    const kaart = popup.querySelector('.tt-pop__kaart');
+    let viaHover = false, klok = null;
+    teaser.addEventListener('mouseenter', () => { viaHover = true; show(); });
+    document.addEventListener('pointermove', (e) => {
+      if (!viaHover || popup.hidden) return;
+      const binnen = kaart && kaart.contains(e.target);
+      if (binnen) { clearTimeout(klok); klok = null; }
+      else if (!klok) klok = setTimeout(() => { viaHover = false; klok = null; hide(); }, 900);
+    });
+    popup.querySelector('form')?.addEventListener('focusin', () => { viaHover = false; clearTimeout(klok); });
+  }
+  /* in de footer de kortingsknop verbergen, zodat de onderste regel leesbaar blijft */
+  const voet = document.querySelector('footer, .surf-footer, [class*="footer-group"]');
+  if (teaser && voet && 'IntersectionObserver' in window) {
+    new IntersectionObserver((es) => es.forEach((e) => document.documentElement.classList.toggle('tt-in-voet', e.isIntersecting)), { threshold: 0.05 }).observe(voet);
+  }
 
   /* Code kopiëren */
   popup.querySelectorAll('[data-tt-kopieer]').forEach((b) => b.addEventListener('click', () => {

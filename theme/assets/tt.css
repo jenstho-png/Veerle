@@ -2109,3 +2109,5 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
 /* uitgelicht product: grote foto wisselt met een schuif in plaats van een fade */
 .tt-uit__foto img { transition: clip-path .55s cubic-bezier(.65, 0, .35, 1) !important; }
 .tt-uit__foto img.is-wissel { opacity: 1 !important; clip-path: inset(0 0 0 100%); transition: none !important; }
+.tt-pop__teaser { transition: opacity .35s ease, transform .35s ease, rotate .4s ease; }
+.tt-in-voet .tt-pop__teaser { opacity: 0; transform: translateY(20px); pointer-events: none; }

@@ -24,9 +24,26 @@
   if recommendations.performed? and recommendations.products_count > 0
     assign heeft = true
   endif
+  comment
+    Bij een draagtas raden we geen andere tassen aan, maar accessoires en gear die erbij passen.
+  endcomment
+  assign bij_tas = false
+  if tt_groep == 'draagtas'
+    assign bij_tas = true
+    assign heeft = false
+    assign url = ''
+  endif
 -%}
 {%- capture kaarten -%}
-  {%- if heeft -%}
+  {%- if bij_tas -%}
+    {%- assign telt = 0 -%}
+    {%- for r in collections['surfgear'].products -%}
+      {%- if telt < n -%}{%- assign telt = telt | plus: 1 -%}<li class="tt-in">{%- render 'tt-productkaart', p: r -%}</li>{%- endif -%}
+    {%- endfor -%}
+    {%- for r in collections['kleding-en-accessoires'].products -%}
+      {%- if telt < n and r.type != 'T-shirt' and r.type != 'Longsleeve' and r.type != 'Hoodie' and r.type != 'UV-shirt' -%}{%- assign telt = telt | plus: 1 -%}<li class="tt-in">{%- render 'tt-productkaart', p: r -%}</li>{%- endif -%}
+    {%- endfor -%}
+  {%- elsif heeft -%}
     {%- for r in recommendations.products -%}<li class="tt-in">{%- render 'tt-productkaart', p: r -%}</li>{%- endfor -%}
   {%- else -%}
     {%- assign telt = 0 -%}
@@ -41,7 +58,7 @@
 <section class="tt tt-aanraders tt-bg--{{ section.settings.bg }}" data-tt-aanraders{% if url != blank and heeft == false %} data-url="{{ url }}"{% endif %}{% if kaarten == blank %} hidden{% endif %}>
   <div class="tt-wrap">
     <div class="tt-aanraders__kop">
-      {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}
+      {%- if bij_tas -%}{%- render 'tt-kop', text: 'Handig bij je *tas*', tag: 'h2', class: 'tt-kop--m' -%}{%- else -%}{%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--m' -%}{%- endif -%}
       {%- if section.settings.link_label != blank -%}<a class="tt-link tt-in" href="{{ section.settings.link | default: routes.all_products_collection_url }}">{{ section.settings.link_label }}</a>{%- endif -%}
     </div>
     <ul class="tt-aanraders__rij" data-tt-aanraders-lijst>{{ kaarten }}</ul>
