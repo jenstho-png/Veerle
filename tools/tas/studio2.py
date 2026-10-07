@@ -221,13 +221,19 @@ def bouw(handle):
     sh_d, spec = schaduwering(n, glans=0.10, k=22)
     board = teken_board(bm, d, n, stijl)
     board = np.clip(board * sh_d[..., None] + spec[..., None], 0, 1)
-    board = zandkorrels(board, bm, d)
 
     # stof: zelfde maten als scene.py, zoom alleen op de echte (schuine) randen van het vak
     hoeken = S.paneel_hoeken()
     stof = S.stoflaag() if handle == 'draagtas-tegel' else S.variant_stof(handle)
-    laag, pm_vol = S.leg_stof(stof, hoeken)
-    laag = S.zoom(laag, pm_vol, hoeken)
+    # het vak loopt om de rails naar de onderkant: schuine zijden doortrekken, zodat de verkorting over de rail
+    # nog stof vindt (de zomen boven en onder vallen zo buiten het board)
+    verder = hoeken.copy()
+    for a, b in ((0, 3), (1, 2)):
+        r = hoeken[a] - hoeken[b]
+        verder[a] = hoeken[a] + r / abs(r[1]) * 90
+        verder[b] = hoeken[b] - r / abs(r[1]) * 90
+    laag, pm_vol = S.leg_stof(stof, verder)
+    laag = S.zoom(laag, pm_vol, verder)
     lum = (laag @ np.array([.299, .587, .114], np.float32))[..., None]
     laag = np.clip((lum + (laag - lum) * S.KLEUR_STOF - 0.5) * 1.07 + 0.505, 0, 1)
     laag, pm = verkort(laag, pm_vol, d)
@@ -369,20 +375,21 @@ def maak_alles(handle):
     lus_y = pad[:, 1].min() - S.BAND / 2                # buitenkant van de lus
     paneel_y = BY + WB / 2                               # vak loopt tot de rail aan de andere kant
     uit = []
-    # 1: hero op zand: de hele tas (vak + lus) groot en in het midden, board loopt boven en onder uit beeld
+    # 1: hero op zand: de hele tas (vak + lus) groot en in het midden, board loopt boven en onder uit beeld;
+    #    scherpgesteld op de deck, het zand 7 cm lager is een fractie zachter
     s1 = ST.B / 1400
-    uit.append(foto(zand(), rb, rl, XM, (lus_y + paneel_y) / 2, s1))
+    uit.append(foto(zand(), rb, rl, XM, (lus_y + paneel_y) / 2, s1, dof=1.4))
     # 2: het hele board op fotopapier in een merkkleur
     s2 = ST.H / 2900 * 0.97
     uit.append(foto(ST.achtergrond(stijl['papier'], zaad=3), rb, rl, XM, 1080, s2))
-    # 3: macro van het geweven label op de stof, met de band en het geweven logo
-    s3 = ST.B / 760
-    uit.append(foto(zand_detail(s3 / s1, zaad=1), rb, rl, XM + 30, 1110, s3, dof=2.2))
-    # 4: de band die over de rail naar de lus loopt, het vak dat over de rail valt
-    s4 = ST.B / 820
-    uit.append(foto(zand_detail(s4 / s1, zaad=2), rb, rl, XM + 300, 930, s4, dof=2.2))
+    # 3: macro van het geweven label op de stof, met de band en het geweven logo en de rail
+    s3 = ST.B / 680
+    uit.append(foto(zand_detail(s3 / s1, zaad=1), rb, rl, XM + 40, 1010, s3, dof=2.0))
+    # 4: de band die over de rail van het board af loopt naar de lus, met het vak dat om de rail valt
+    s4 = ST.B / 700
+    uit.append(foto(zand_detail(s4 / s1, zaad=2), rb, rl, XM + 225, 985, s4, dof=1.6))
     for i, img in enumerate(uit, 1):
-        q = bewaar(ST.afwerking(img, korrel=0.007, zaad=7 + i), DOEL / f'{handle}-{i}.jpg')
+        q = bewaar(ST.afwerking(img, korrel=0.005, zaad=7 + i), DOEL / f'{handle}-{i}.jpg')
         print(f'  {handle}-{i}.jpg q{q}', (DOEL / f'{handle}-{i}.jpg').stat().st_size // 1000, 'kB')
     if handle == 'draagtas-tegel':
         for i in (1, 2, 3):

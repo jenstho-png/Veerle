@@ -149,6 +149,8 @@ def borduur(img, a, cx, cy, breedte, draai=0.0, steek=4.2, hoek=12.0, schaduw_br
     gx = cv2.Sobel(hoog, cv2.CV_32F, 1, 0, ksize=3); gy = cv2.Sobel(hoog, cv2.CV_32F, 0, 1, ksize=3)
     reliëf = 1 - (gx * 0.62 + gy * 0.78) * 0.9            # rand linksboven licht, rechtsonder donker
     kleur = laag[..., :3] * (draad * reliëf)[..., None]
+    donker = 1 - MK.helderheid(laag[..., :3])
+    kleur = kleur + (0.05 * profiel * donker * reliëf)[..., None]         # glans van het garen, zichtbaar op donker garen
     if schaduw_bron is not None:
         kleur = kleur * np.clip(schaduw_bron, 0.35, 1.2)[..., None]
     # stof: slagschaduw van het borduursel en een licht 'getrokken' rand
@@ -267,7 +269,7 @@ def bucket_rgba(schaal=1.0):
     img, m = kopie_schaal(img, m, schaal)
     k = schaal
     L = MK.helderheid(img)
-    ref = float(np.percentile(L[m > 0.5], 70))
+    ref = float(np.percentile(L[m > 0.5], 58))
     s_ = np.clip(L / ref, 0, 1.5)
     doel = hexrgb('#E9DFCB')
     # crème stof: schaduwen iets warmer, de gewassen structuur blijft
