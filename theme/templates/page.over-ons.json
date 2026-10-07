@@ -1,19 +1,5 @@
 {
   "sections": {
-    "hero": {
-      "type": "tt-hero",
-      "settings": {
-        "pagina": true,
-        "heading": "Ons *verhaal*",
-        "text": "Van een frustratie op surftrip naar een eigen merk.",
-        "btn_label": "Bekijk de draagtas",
-        "link_label": "",
-        "kaart": false,
-        "filename": "tide-tode-over-ons.jpg",
-        "alt": "Leeg strand bij zonsondergang",
-        "poster": false
-      }
-    },
     "verhaal": {
       "type": "tt-verhaal",
       "settings": {
@@ -156,8 +142,8 @@
     "stappen": {
       "type": "tt-duurzaam",
       "settings": {
-        "heading": "Zo is het *gegaan*",
-        "text": "In vier stappen.",
+        "heading": "Ons *verhaal*",
+        "text": "Van een frustratie op surftrip naar een eigen merk, in vier stappen.",
         "noot": "",
         "link_label": ""
       },
@@ -208,11 +194,10 @@
     }
   },
   "order": [
-    "hero",
     "stappen",
     "verhaal",
-    "usp",
     "meer",
+    "usp",
     "patroon"
   ]
 }

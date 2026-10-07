@@ -206,7 +206,7 @@
       if (!src || groot.dataset.nu === src) return;
       groot.dataset.nu = src;
       const nieuw = new Image();
-      nieuw.onload = () => { groot.removeAttribute('srcset'); groot.classList.add('is-wissel'); groot.src = src; requestAnimationFrame(() => groot.classList.remove('is-wissel')); };
+      nieuw.onload = () => { groot.removeAttribute('srcset'); groot.classList.add('is-wissel'); groot.src = src; requestAnimationFrame(() => requestAnimationFrame(() => groot.classList.remove('is-wissel'))); };
       nieuw.src = src;
       if (actief) actief.classList.remove('is-actief');
       actief = a; if (a) a.classList.add('is-actief');

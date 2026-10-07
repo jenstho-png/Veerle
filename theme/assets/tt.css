@@ -2099,3 +2099,13 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
 .tt-col__held { padding-top: 132px !important; }
 .tt-col__drie { max-width: 560px; justify-self: end; width: 100%; }
 @media (max-width: 989px) { .tt-col__held { padding-top: 104px !important; } .tt-col__drie { justify-self: stretch; } }
+
+/* Ons verhaal begint meteen met de stappen (geen grote foto), met ruimte voor het zwevende menu */
+.template-page main .shopify-section:first-child > .tt-duurzaam { padding-top: 150px !important; }
+
+/* ---------- hover op producten: de tweede foto schuift er van links in, geen fade ---------- */
+.tt-pk__img--2 { opacity: 1 !important; clip-path: inset(0 100% 0 0); transition: clip-path .6s cubic-bezier(.65, 0, .35, 1) !important; }
+.tt-pk:hover .tt-pk__img--2, .tt-pk:focus-visible .tt-pk__img--2 { clip-path: inset(0 0 0 0); }
+/* uitgelicht product: grote foto wisselt met een schuif in plaats van een fade */
+.tt-uit__foto img { transition: clip-path .55s cubic-bezier(.65, 0, .35, 1) !important; }
+.tt-uit__foto img.is-wissel { opacity: 1 !important; clip-path: inset(0 0 0 100%); transition: none !important; }
