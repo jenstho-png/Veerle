@@ -382,9 +382,11 @@ if __name__ == '__main__':
     for h in keuze:
         beeld = maak(None if h == 'draagtas-tegel' else variant_stof(h), band=hexkleur(TASSEN[h]))
         xm = BX0 + LB * 0.5
-        bewaar(uitsnede(beeld, xm, BY - 160, 1200, 1500), DOEL / f'{h}-1.jpg')
+        # stringer altijd in het midden van het beeld
+        bewaar(uitsnede(beeld, xm, BY, 1480, 1850), DOEL / f'{h}-1.jpg')
         bewaar(portret(beeld), DOEL / f'{h}-2.jpg')
-        bewaar(uitsnede(beeld, xm, BY - WB / 2 - 70, 820, 1025), DOEL / f'{h}-3.jpg')
+        # detail: label en het hele handvat
+        bewaar(uitsnede(beeld, xm, BY - WB / 2 - 120, 1000, 1250), DOEL / f'{h}-3.jpg')
         if h == 'draagtas-tegel':
             for n in (1, 2, 3):
                 src = DOEL / f'{h}-{n}.jpg'

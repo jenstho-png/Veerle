@@ -78,7 +78,7 @@ def huid(lengte, breedte, kort=0.6, band_kleur=(0.40, 0.50, 0.62), bandbreedte=N
     return rgba
 
 
-def plak(foto, rgba, quad, boardmasker=None, licht=1.0, korrel=0.025, verzadiging=0.85):
+def plak(foto, rgba, quad, boardmasker=None, licht=1.0, korrel=0.025, verzadiging=0.85, lus=None):
     """Vervorm rgba naar quad (4 punten in de foto: x0y0, x1y0, x1y1, x0y1 van de huid)."""
     h, w = foto.shape[:2]
     H, W = rgba.shape[:2]
@@ -104,8 +104,85 @@ def plak(foto, rgba, quad, boardmasker=None, licht=1.0, korrel=0.025, verzadigin
     # zachte schaduw op het board net buiten de tas
     s = cv2.GaussianBlur(a[..., 0], (0, 0), 6)
     uit = foto * (1 - 0.25 * (s - a[..., 0]).clip(0, 1)[..., None])
+    if lus is not None:
+        lrgb, la = lus
+        g2 = lrgb @ np.array([.299, .587, .114], np.float32)
+        lrgb = g2[..., None] + (lrgb - g2[..., None]) * verzadiging
+        lrgb = (lrgb * 0.86 + 0.05) * np.array([1.03, 1.0, 0.95], np.float32) * licht * 0.9
+        lrgb = lrgb + fotokorrel * 0.9
+        sch = cv2.GaussianBlur(np.roll(np.roll(la, 7, 0), 5, 1), (0, 0), 5)
+        uit = uit * (1 - 0.32 * (sch * (1 - la))[..., None])
+        la2 = cv2.GaussianBlur(la, (0, 0), 0.6)[..., None]
+        uit = uit * (1 - la2) + lrgb * la2
     a = cv2.GaussianBlur(a, (0, 0), 0.7)[..., None] if a.ndim == 2 else cv2.GaussianBlur(a[..., 0], (0, 0), 0.7)[..., None]
     return np.clip(uit * (1 - a) + kleur * a, 0, 1)
+
+
+def catmull(punten, n=60):
+    P = [punten[0]] + list(punten) + [punten[-1]]
+    uit = []
+    for i in range(1, len(P) - 2):
+        p0, p1, p2, p3 = map(np.asarray, P[i - 1:i + 3])
+        for t in np.linspace(0, 1, n, endpoint=False):
+            uit.append(0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (-p0 + 3 * p1 - 3 * p2 + p3) * t ** 3))
+    uit.append(np.asarray(punten[-1]))
+    return np.array(uit, np.float32)
+
+
+def band_laag(shape, pad, breedte, kleur, draai=False):
+    """Band langs een pad in fotocoördinaten: kleur, ribbels, ingeweven logo, stiksels. Geeft (rgb, alpha)."""
+    from scipy.spatial import cKDTree
+    h, w = shape
+    seg = np.diff(pad, axis=0)
+    lengte = np.r_[0, np.cumsum(np.linalg.norm(seg, axis=1))]
+    raak = np.r_[seg[:1], seg]; raak /= np.linalg.norm(raak, axis=1)[:, None] + 1e-9
+    norm = np.stack([-raak[:, 1], raak[:, 0]], 1)
+    x0, y0 = int(max(pad[:, 0].min() - breedte, 0)), int(max(pad[:, 1].min() - breedte, 0))
+    x1, y1 = int(min(pad[:, 0].max() + breedte, w)), int(min(pad[:, 1].max() + breedte, h))
+    yy, xx = np.mgrid[y0:y1, x0:x1].astype(np.float32)
+    pts = np.stack([xx.ravel(), yy.ravel()], 1)
+    _, idx = cKDTree(pad).query(pts)
+    rel = pts - pad[idx]
+    dw = (rel * norm[idx]).sum(1).reshape(yy.shape)
+    ln = (lengte[idx] + (rel * raak[idx]).sum(1)).reshape(yy.shape)
+    if draai:
+        # een hangende band draait: soms zie je hem plat, soms bijna op zijn kant
+        tot = lengte[-1]
+        c = np.abs(np.cos(ln / tot * np.pi * 1.6 + 0.4))
+        hw = breedte / 2 * (0.35 + 0.65 * c)
+    else:
+        c = np.ones_like(dw); hw = breedte / 2
+    a = np.clip((hw - np.abs(dw)) / 1.0, 0, 1)
+    rand = np.exp(-((hw - np.abs(dw)) / 1.4) ** 2)
+    rib = 1 + 0.05 * np.sin(dw * 2 * np.pi / 1.6) + rng.normal(0, 0.02, dw.shape)
+    k = np.array(kleur, np.float32)[None, None] * rib[..., None]
+    ls = SC.logo_strook(int(round(breedte)), periode=int(breedte * 3.6), hoogte=max(int(breedte * 0.27), 4))
+    t = cv2.remap(ls, (ln % ls.shape[1]).astype(np.float32), np.clip(dw + breedte / 2, 0, ls.shape[0] - 1).astype(np.float32), cv2.INTER_LINEAR)[..., None]
+    k = k * (1 - t) + np.clip(k * 1.28 + 0.04, 0, 1) * t
+    # een band die hangt draait iets: lichtverloop over de lengte
+    k = k * (0.62 + 0.38 * c)[..., None] * (1 - 0.35 * rand)[..., None]
+    rgb = np.zeros((h, w, 3), np.float32); al = np.zeros((h, w), np.float32)
+    rgb[y0:y1, x0:x1] = k; al[y0:y1, x0:x1] = a
+    return rgb, al
+
+
+def hangende_lus(foto, M, W, H, kort, uit_richting, boardbreedte, kleur, breedte):
+    """Lus die aan de zijkant uit de tas komt en door de zwaartekracht naar beneden hangt."""
+    xm, k2 = W / 2, W * kort / 2
+    tex = np.float32([[[xm - (k2 - W * 0.06), H]], [[xm + (k2 - W * 0.06), H]]])
+    p1, p2 = cv2.perspectiveTransform(tex, M)[:, 0]
+    uit = np.asarray(uit_richting, np.float32); uit /= np.linalg.norm(uit)
+    neer = np.array([0, 1], np.float32)
+    onder = p1 if p1[1] > p2[1] else p2
+    boven = p2 if p1[1] > p2[1] else p1
+    L = boardbreedte * 0.8
+    midden = onder + neer * L + uit * boardbreedte * 0.16
+    a1 = boven + uit * boardbreedte * 0.1 + neer * (onder[1] - boven[1] + L * 0.55)
+    a2 = onder + uit * boardbreedte * 0.02 + neer * L * 0.45
+    p1, p2 = boven, onder
+    b1 = midden - (p2 - p1) / np.linalg.norm(p2 - p1) * boardbreedte * 0.12 * np.sign((p2 - p1)[1] + 1e-6) + neer * -L * 0.05
+    pad = catmull([p1, a1, midden, a2, p2], n=80)
+    return band_laag(foto.shape[:2], pad, breedte, kleur, draai=True)
 
 
 def laad(naam):
@@ -132,7 +209,10 @@ def busje():
     cv2.fillPoly(bm, [rand], 1)
     bm = cv2.GaussianBlur(bm.astype(np.float32), (0, 0), 1.5)
     rgba = huid(half_l * 2, half_b * 2, band_kleur=(0.40, 0.49, 0.6))
-    return plak(foto, rgba, quad, bm, verzadiging=0.78)
+    H, W = rgba.shape[:2]
+    M = cv2.getPerspectiveTransform(np.float32([[0, 0], [W, 0], [W, H], [0, H]]), np.float32(quad))
+    lus = hangende_lus(foto, M, W, H, 0.6, -n, half_b * 2, (0.40, 0.49, 0.6), half_b * 2 / 5.5 * 47 / 98)
+    return plak(foto, rgba, quad, bm, verzadiging=0.78, lus=lus)
 
 
 
@@ -148,7 +228,10 @@ def knuffel():
     cv2.fillPoly(bm, [rand], 1)
     bm = cv2.GaussianBlur(bm.astype(np.float32), (0, 0), 1.5)
     rgba = huid(half_l * 2, half_b * 2, band_kleur=(0.40, 0.49, 0.6), zaad=9)
-    return plak(foto, rgba, quad, bm, licht=0.93, verzadiging=0.62)
+    H, W = rgba.shape[:2]
+    M = cv2.getPerspectiveTransform(np.float32([[0, 0], [W, 0], [W, H], [0, H]]), np.float32(quad))
+    lus = hangende_lus(foto, M, W, H, 0.6, -n, half_b * 2, (0.40, 0.49, 0.6), half_b * 2 / 5.5 * 47 / 98)
+    return plak(foto, rgba, quad, bm, licht=0.93, verzadiging=0.62, lus=lus)
 
 
 if __name__ == '__main__':
