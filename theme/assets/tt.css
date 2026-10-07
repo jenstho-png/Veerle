@@ -1620,3 +1620,10 @@ h1, h2, h3, .h0, .h1, .h2, .tt-kop, .mk-hero, .mk-h2, .mk-statement, .surf h1, .
   .tt-kaarten__ill { grid-row: span 3; aspect-ratio: 1; margin: 0; padding: 14%; }
 }
 .tt-koop__foto--leeg .tt-beeld__leeg svg, .tt-pk__leeg svg { width: 26% !important; height: auto !important; opacity: .45; color: var(--tt-deep); fill: currentColor; }
+.tt-col { padding-top: clamp(96px, 9vw, 128px); }
+.tt-col__held { align-items: center; }
+.tt-contact .tt-gegevens { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; }
+.tt-contact .tt-gegevens > div:nth-child(3) { grid-row: span 2; }
+.tt-contact__ill { grid-template-columns: auto 1fr; align-items: center; justify-items: start; gap: 18px; padding: 18px 22px; }
+.tt-contact__ill .tt-ill { width: 120px; }
+.tt-contact__ill figcaption { font-size: clamp(20px, 1.8vw, 26px); }

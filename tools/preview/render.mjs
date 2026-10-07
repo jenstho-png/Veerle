@@ -13,8 +13,8 @@ const engine = new Liquid({ root: [`${T}/snippets`], extname: '.liquid', strictF
 const noop = { parse(tk, remain) { this.tpls = []; const s = this.liquid.parser.parseStream(remain); s.on(`tag:end${tk.name}`, () => s.stop()).on('template', (t) => this.tpls.push(t)).on('end', () => {}); s.start(); }, *render() { return ''; } };
 engine.registerTag('schema', noop);
 engine.registerTag('form', {
-  parse(tk, remain) { this.tpls = []; const s = this.liquid.parser.parseStream(remain); s.on('tag:endform', () => s.stop()).on('template', (t) => this.tpls.push(t)); s.start(); },
-  *render(ctx, emitter) { ctx.push({ form: { posted_successfully: false } }); emitter.write('<form method="post">'); yield this.liquid.renderer.renderTemplates(this.tpls, ctx, emitter); emitter.write('</form>'); ctx.pop(); },
+  parse(tk, remain) { this.attrs = [...tk.args.matchAll(/([a-z-]+): '([^']*)'/g)].map(([, k, v]) => ` ${k}="${v}"`).join(''); this.tpls = []; const s = this.liquid.parser.parseStream(remain); s.on('tag:endform', () => s.stop()).on('template', (t) => this.tpls.push(t)); s.start(); },
+  *render(ctx, emitter) { ctx.push({ form: { posted_successfully: false } }); emitter.write(`<form method="post"${this.attrs}>`); yield this.liquid.renderer.renderTemplates(this.tpls, ctx, emitter); emitter.write('</form>'); ctx.pop(); },
 });
 engine.registerTag('paginate', {
   parse(tk, remain) { this.tpls = []; const s = this.liquid.parser.parseStream(remain); s.on('tag:endpaginate', () => s.stop()).on('template', (t) => this.tpls.push(t)); s.start(); },
