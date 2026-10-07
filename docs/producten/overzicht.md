@@ -2,7 +2,7 @@
 
 27 producten in 3 collecties. Importeren: Shopify admin, Producten, Importeren, `producten.csv`.
 
-De beelden zijn getekend in de merkstijl en worden bij de import van GitHub opgehaald. Vervang ze door echte foto's zodra die er zijn.
+De productfoto's worden bij de import van GitHub opgehaald.
 
 ## Draagtassen
 
@@ -30,7 +30,7 @@ De beelden zijn getekend in de merkstijl en worden bij de import van GitHub opge
 | Karabijnhaak zwart | € 8,00 | `karabijnhaak-zwart` |
 | Stickerset | € 6,00 | `stickerset` |
 
-## Kleding en merch
+## Kleding en accessoires
 
 | Product | Prijs | Handle |
 |---|---|---|
@@ -54,7 +54,7 @@ Maak in Shopify drie automatische collecties (Producten, Collecties, Collectie m
 |---|---|---|
 | Draagtassen | Producttag is gelijk aan `Draagtassen` | `draagtassen` |
 | Surfgear | Producttag is gelijk aan `Surfgear` | `surfgear` |
-| Kleding en merch | Producttag is gelijk aan `Kleding en merch` | `kleding-en-merch` |
+| Kleding en accessoires | Producttag is gelijk aan `Kleding en accessoires` | `kleding-en-accessoires` |
 
 ## Nog controleren met Veerle
 

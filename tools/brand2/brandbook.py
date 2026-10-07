@@ -512,7 +512,7 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
     <div style="background-image:url({productfoto(PB / 'fabriek' / 'lifestyle-knuffel.jpg', 800)})"></div>
   </div>
 </div></section>''')
-    # 3g kleding en merch: echte productfoto's
+    # 3g kleding en accessoires: echte productfoto's
     def raster(items):
         return ''.join(f'<figure><div style="background-image:url({productfoto(PB / "beelden" / f"{f}.jpg", 520)})"></div><figcaption>{t}</figcaption></figure>'
                        for f, t in items if (PB / 'beelden' / f'{f}.jpg').exists())
@@ -524,13 +524,13 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
   <p>Zware shirts van biologisch katoen. Op de rug een verhaal: de lijn naar zee langs onze surfspots, de getijden van Scheveningen. In de nek altijd ons eigen label.</p>
   <div class="negen">{raster(kleding)}</div>
 </div></section>''')
-    merch = [('karabijnhaak-messing-1', 'KARABIJNHAAK'), ('karabijnhaak-zwart-1', 'MAT ZWART'), ('pet-navy-1', 'PET'),
+    accessoires = [('karabijnhaak-messing-1', 'KARABIJNHAAK'), ('karabijnhaak-zwart-1', 'MAT ZWART'), ('pet-navy-1', 'PET'),
              ('bucket-hat-tegel-1', 'BUCKET HAT'), ('canvas-tas-1', 'CANVAS TAS'), ('stickerset-1', 'STICKERVEL'),
              ('surfwax-koud-1', 'SURF WAX'), ('strandhanddoek-tegel-1', 'HANDDOEK'), ('waxkam-1', 'WAXKAM')]
-    paginas.append(f'''<section class="pagina" aria-label="Merch en gear"><div class="fotop">
-  <h2>MERCH EN GEAR</h2>
+    paginas.append(f'''<section class="pagina" aria-label="Accessoires en gear"><div class="fotop">
+  <h2>ACCESSOIRES EN GEAR</h2>
   <p>Kleine dingen met dezelfde zorg. De karabijnhaak heeft een lus van onze tasband met het geweven logo, de pet een geborduurd board.</p>
-  <div class="negen">{raster(merch)}</div>
+  <div class="negen">{raster(accessoires)}</div>
 </div></section>''')
     # 4 kleur en letter
     kleuren = [('Navy', NAVY, '#F3ECDD'), ('Crème', CREME, NAVY), ('Baby', BABY, NAVY), ('Rose', ROSE, NAVY), ('Zand', ZAND, NAVY)]

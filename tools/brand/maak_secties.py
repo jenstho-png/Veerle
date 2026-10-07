@@ -1229,7 +1229,7 @@ schrijf('tt-collectie', """
         {"type": "link", "settings": {"label": "Alles", "handle": "all"}},
         {"type": "link", "settings": {"label": "Draagtassen", "handle": "draagtassen"}},
         {"type": "link", "settings": {"label": "Surfgear", "handle": "surfgear"}},
-        {"type": "link", "settings": {"label": "Kleding en merch", "handle": "kleding-en-merch"}}]}]})
+        {"type": "link", "settings": {"label": "Kleding en accessoires", "handle": "kleding-en-accessoires"}}]}]})
 
 # ---------- ALLE COLLECTIES ----------
 schrijf('tt-collecties', """
@@ -1266,7 +1266,7 @@ schrijf('tt-collecties', """
     "presets": [{"name": "TT: alle collecties", "blocks": [
         {"type": "collectie", "settings": {"label": "Draagtassen", "handle": "draagtassen", "kleur": "baby", "ill": "draagtas"}},
         {"type": "collectie", "settings": {"label": "Surfgear", "handle": "surfgear", "kleur": "rose", "ill": "golf"}},
-        {"type": "collectie", "settings": {"label": "Kleding en merch", "handle": "kleding-en-merch", "kleur": "zand", "ill": "busje"}}]}]})
+        {"type": "collectie", "settings": {"label": "Kleding en accessoires", "handle": "kleding-en-accessoires", "kleur": "zand", "ill": "busje"}}]}]})
 
 # ---------- DUURZAAMHEID: wat we nu al doen, in een paar punten ----------
 # Alleen keuzes die echt zo zijn. Geen keurmerken, percentages of CO2-cijfers.
@@ -1396,8 +1396,8 @@ schrijf('tt-meer', """
         {"type": "text", "id": "label", "label": "Klein label boven de kop", "default": "Kleding en gear"},
         kop("Meer dan|een *tas*"),
         {"type": "textarea", "id": "text", "label": "Tekst", "default": "Zware shirts met een verhaal op de rug, een hoodie voor na het surfen en kleine dingen die je elke sessie gebruikt."},
-        {"type": "text", "id": "btn1_label", "label": "Knop", "default": "Kleding en merch"},
-        {"type": "text", "id": "btn1_link", "label": "Knop (adres)", "default": "/collections/kleding-en-merch"},
+        {"type": "text", "id": "btn1_label", "label": "Knop", "default": "Kleding en accessoires"},
+        {"type": "text", "id": "btn1_link", "label": "Knop (adres)", "default": "/collections/kleding-en-accessoires"},
         {"type": "text", "id": "btn2_label", "label": "Tweede link", "default": "Surfgear"},
         {"type": "text", "id": "btn2_link", "label": "Tweede link (adres)", "default": "/collections/surfgear"},
     ],

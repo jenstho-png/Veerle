@@ -17,8 +17,8 @@
         "link-2": {
           "type": "link",
           "settings": {
-            "label": "Kleding en merch",
-            "link": "/collections/kleding-en-merch"
+            "label": "Kleding en accessoires",
+            "link": "/collections/kleding-en-accessoires"
           }
         },
         "link-3": {
@@ -109,7 +109,7 @@
         "text": "Gemeten op een plat neergelegd shirt, van oksel tot oksel en van schouder tot zoom. Onze shirts vallen ruim.",
         "noot": "Tussen twee maten? Kies de kleinste voor een normale pasvorm, de grootste voor oversized.",
         "btn_label": "Bekijk de kleding",
-        "btn_link": "/collections/kleding-en-merch"
+        "btn_link": "/collections/kleding-en-accessoires"
       },
       "blocks": {
         "rij-1": {

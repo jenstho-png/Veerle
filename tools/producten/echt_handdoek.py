@@ -44,18 +44,19 @@ NAVY, CREME, TERRA = hexkl('#22324F'), hexkl('#F3ECDD'), hexkl('#C0603E')
 GAREN_NAVY = hexkl('#26365A')
 GAREN_CREME = hexkl('#EFE6D4')
 GAREN_TERRA = hexkl('#BD5E3D')
+GAREN_BLAUW = hexkl('#B3C8E3')      # baby blue, het derde garen voor de middentonen
 
 BREED, LANG = 90.0, 170.0          # cm
 TEGEL = 16.8                        # cm per tegel: 5 over de breedte, 8 over de lengte
 VELD = (3.0, 17.8, 87.0, 152.2)     # tegelveld u0, v0, u1, v1 in cm
 KADER_V = VELD[1] - 1.3             # dun navy kader rond het veld
-MOTIEVEN = [0, 1, 5, 6, 9, 2]       # tegels uit de stof die als jacquard goed lezen
+MOTIEVEN = [1, 6, 2, 0, 3]          # tegels uit de stof die als jacquard goed lezen
 SPIEGEL = {2: False}                # de molen (tegel 2) is alleen draaisymmetrisch
 
 
 # ---------- ontwerp ----------
 def motief(i, n=480):
-    """Tegel uit de echte stof als zachte twee-kleurenkaart (1 = crème, 0 = navy)."""
+    """Tegel uit de echte stof als zachte toonkaart. Geeft (X - drempel navy, X - drempel blauw) in eenheden van de spreiding."""
     t = np.asarray(Image.open(FABRIEK / f'tegel-0{i}.png').convert('RGB')).astype(np.float32) / 255
     L = MK.helderheid(t)
     L = cv2.GaussianBlur(cv2.resize(L, (n, n), interpolation=cv2.INTER_CUBIC), (0, 0), n / 130)
@@ -63,8 +64,8 @@ def motief(i, n=480):
     if SPIEGEL.get(i, True):
         acc += [np.fliplr(a) for a in acc]
     X = cv2.GaussianBlur(np.mean(acc, 0), (0, 0), n / 200)
-    th = np.percentile(X, 47)
-    return (X - th) / (X.std() + 1e-6)
+    X = (X - X.mean()) / (X.std() + 1e-6)
+    return np.dstack([X - np.percentile(X, 30), X - np.percentile(X, 58)])
 
 
 _MOT = {}
@@ -93,7 +94,7 @@ def ontwerp(ppc):
         if (i, tp) not in _MOT:
             _MOT[(i, tp)] = cv2.resize(motief(i), (tp, tp), interpolation=cv2.INTER_CUBIC)
     nk, nr = int(round((u1 - u0) / TEGEL)), int(round((v1 - v0) / TEGEL))
-    veld = np.ones((nr * tp, nk * tp), np.float32)
+    veld = np.ones((nr * tp, nk * tp, 2), np.float32)
     for r in range(nr):
         for c in range(nk):
             i = MOTIEVEN[(r * 2 + c * 1 + (r // 2)) % len(MOTIEVEN)]
@@ -104,11 +105,13 @@ def ontwerp(ppc):
         kl = cv2.resize(veld, (int(veld.shape[1] / cel), int(veld.shape[0] / cel)), interpolation=cv2.INTER_AREA)
         trap = cv2.resize(kl, (veld.shape[1], veld.shape[0]), interpolation=cv2.INTER_NEAREST)
         veld = cv2.GaussianBlur(trap, (0, 0), cel * 0.18) * 0.7 + veld * 0.3
-    # zachte rand tussen garens (scherpte past bij de schaal)
-    a = np.clip(veld * 2.2 * max(1.0, ppc / 12) + 0.5, 0, 1)
+    # drie garens: navy, baby blue en crème, met een zachte rand (scherpte past bij de schaal)
+    k = 2.2 * max(1.0, ppc / 12)
+    aN = np.clip(veld[..., 0] * k + 0.5, 0, 1)[..., None]
+    aB = np.clip(veld[..., 1] * k + 0.5, 0, 1)[..., None]
     x0, y0 = int(round(u0 * ppc)), int(round(v0 * ppc))
     sub = img[y0:y0 + veld.shape[0], x0:x0 + veld.shape[1]]
-    sub[:] = GAREN_NAVY * (1 - a[..., None]) + GAREN_CREME * a[..., None]
+    sub[:] = GAREN_NAVY * (1 - aN) + aN * (GAREN_BLAUW * (1 - aB) + GAREN_CREME * aB)
     # voegen tussen de tegels: dun navy
     voeg = np.zeros((H, W), np.float32)
     for k in range(nk + 1):
@@ -313,7 +316,7 @@ def foto2():
     vul = bril.copy(); ff = np.zeros((h + 2, w + 2), np.uint8); cv2.floodFill(vul, ff, (0, 0), 1); bril = bril | (1 - vul)
     bril = cv2.dilate(bril, np.ones((3, 3), np.uint8)).astype(np.float32)
     masker = cv2.GaussianBlur(binnen, (0, 0), 1.0) * (1 - cv2.GaussianBlur(bril, (0, 0), 1.0))
-    schoon = strepen_weg(f)
+    schoon = strepen_weg(f, 61)
     ontw, lm = ontwerp_met_label(s * 1.5)
     uit = breng_aan(f, masker, U, V, s * 1.5, ontw, schoon=schoon, verplaatsing=0.5, detail=0.6, waas=0.12)
     uit = uit[0:1950, 0:1560]

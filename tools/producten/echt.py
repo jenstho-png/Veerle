@@ -235,7 +235,7 @@ def hoodie():
     bewaar(h, 'hoodie-busje-3', vul=1.0, uitsnede=(800, 380, 1140, 805))      # detail van de borstprint
 
 
-# ---------- merch ----------
+# ---------- accessoires ----------
 def pet():
     p = foto('pet-navy-1.jpg')
     # de klepsticker van de stockpet vervangen door die van ons, in dezelfde stand (perspectief) op de klep

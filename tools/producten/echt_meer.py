@@ -146,6 +146,21 @@ def pet():
     E.bewaar(p, 'pet-navy-2', vul=1.0, uitsnede=staand(p, 1300, 2050, 2600))
 
 
+# ---------- bucket hat ----------
+def bucket():
+    """Gedragen tegen een klimopmuur: de (grijsgroene) bucket hat wordt crème met het kleine navy board geborduurd."""
+    b = foto('buckethat-gedragen-1.jpg')
+    m = grabcut(b, (700, 560, 2000, 1520), voor=[[(800, 800), (1600, 760), (1650, 1080), (800, 1150)]],
+                achter=[[(1000, 1250), (1500, 1220), (1550, 1700), (1000, 1700)], [(0, 0), (2400, 0), (2400, 560), (0, 560)]])
+    m = vul_gaten(cv2.morphologyEx(m.astype(np.uint8), cv2.MORPH_OPEN, np.ones((7, 7), np.uint8)))
+    m = component(m, (1200, 950)).astype(np.uint8)
+    L = MK.helderheid(b)
+    ref = float(np.percentile(L[m > 0], 70))
+    b, _ = kleur_rand(b, m, '#E9DFCB', gamma=0.9, ref=ref, rand=4)
+    b = borduur_op(b, L, ref, E.art('icoon-navy.png', NAVY), 1235, 950, 74, draai=-2)
+    E.bewaar(b, 'bucket-hat-tegel-2', vul=1.0, uitsnede=(340, 250, 2260, 2650))
+
+
 def borduur_op(img, L_bron, ref, a, cx, cy, breedte, draai=0, sterkte=0.8):
     """E.borduur, en daarna het licht van de stof (uit de bronfoto) ook over het borduursel."""
     uit = E.borduur(img, a, cx, cy, breedte, draai)

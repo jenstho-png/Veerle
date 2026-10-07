@@ -126,7 +126,7 @@ await page('actie', 'page.actie.json', { request: { page_type: 'page', path: '/p
   const col = { title: 'Alle producten', handle: 'all', description: '<p>Draagtassen, surfgear en kleding van Tide-Tode.</p>', products: lijst, products_count: lijst.length,
     sort_options: [{ value: 'manual', name: 'Uitgelicht' }, { value: 'price-ascending', name: 'Prijs, laag naar hoog' }], default_sort_by: 'manual' };
   globals.collection = col;
-  globals.collections = { draagtassen: { products_count: 9, products: [lijst[0]] }, surfgear: { products_count: 7 }, 'kleding-en-merch': { products_count: 11 } };
+  globals.collections = { draagtassen: { products_count: 9, products: [lijst[0]] }, surfgear: { products_count: 7 }, 'kleding-en-accessoires': { products_count: 11 } };
   globals.routes.collections_url = '/collections';
   await page('collectie', 'collection.json', { request: { page_type: 'collection', path: '/collections/all' } });
   await page('collecties', 'list-collections.json', { request: { page_type: 'list-collections', path: '/collections' } });

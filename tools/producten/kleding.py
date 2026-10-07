@@ -1,4 +1,4 @@
-# Kleding en merch. Wordt uitgevoerd binnen producten.py (gebruikt de helpers en P daaruit).
+# Kleding en accessoires. Wordt uitgevoerd binnen producten.py (gebruikt de helpers en P daaruit).
 MATEN = ['S', 'M', 'L', 'XL']
 IL = json.load(open(ROOT / 'tools' / 'brand2' / 'illustraties.json'))
 
@@ -160,13 +160,13 @@ KLEDING = [
          voor=lambda: poncho(), achter=lambda: poncho(True), voor_bg=ZAND, achter_bg=BABY, alt='Zeeblauwe surfponcho met tegelrand', regel='Omkleden zonder gedoe'),
 ]
 for k in KLEDING:
-    P.append(dict(handle=k['handle'], titel=k['titel'], type=k['type'], collectie='Kleding en merch', prijs=k['prijs'], gram=k['gram'], tags=['kleding', 'merch'], maten=k.get('maten'),
+    P.append(dict(handle=k['handle'], titel=k['titel'], type=k['type'], collectie='Kleding en accessoires', prijs=k['prijs'], gram=k['gram'], tags=['kleding'], maten=k.get('maten'),
                   tekst=k['tekst'] + VERZENDING, seo_titel=f"{k['titel']} | Tide-Tode", seo_tekst=k['seo_tekst'],
                   beelden=[('pack', lambda k=k: (k['voor'](), '0 0 600 600', 1450, 0), k['voor_bg'], 'Voorkant', k['alt'] + ', voorkant'),
                            ('pack', lambda k=k: (k['achter'](), '0 0 600 600', 1450, 0), k['achter_bg'], 'Achterkant', k['alt'] + ', achterkant met print'),
                            ('sfeer', lambda k=k: (k['achter'](), '0 0 600 600', 1450, 0), k['regel'], k['alt'] + ' als sticker op een foto van de zee')]))
 
-MERCH = [
+ACCESSOIRES = [
     dict(handle='pet-navy', titel='Pet navy', type='Pet', prijs='30.00', gram=90,
          tekst='<p>Navy pet van katoen met ons board-icoon geborduurd op de voorkant. Verstelbaar aan de achterkant, één maat.</p>',
          seo_tekst='Navy katoenen pet met geborduurd Tide-Tode icoon. Verstelbaar, één maat.',
@@ -184,8 +184,8 @@ MERCH = [
          seo_tekst='Canvas tas met busjesprint voor handdoek, wetsuit en lunch. 38 bij 42 cm.',
          svg=lambda: (tote(), '0 0 600 600', 1300, 0), achter=ROSE, label='Canvas', alt='Canvas tas met het busje en OP WEG NAAR ZEE', regel='Alles mee naar het strand'),
 ]
-for k in MERCH:
-    P.append(dict(handle=k['handle'], titel=k['titel'], type=k['type'], collectie='Kleding en merch', prijs=k['prijs'], gram=k['gram'], tags=['merch'],
+for k in ACCESSOIRES:
+    P.append(dict(handle=k['handle'], titel=k['titel'], type=k['type'], collectie='Kleding en accessoires', prijs=k['prijs'], gram=k['gram'], tags=['accessoires'],
                   tekst=k['tekst'] + VERZENDING, seo_titel=f"{k['titel']} | Tide-Tode", seo_tekst=k['seo_tekst'],
                   beelden=[('pack', k['svg'], k['achter'], k['label'], k['alt']), ('sfeer', k['svg'], k['regel'], k['alt'] + ' als sticker op een foto van de zee')]))
 

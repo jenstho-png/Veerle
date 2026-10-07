@@ -28,8 +28,8 @@
         "link-4": {
           "type": "link",
           "settings": {
-            "label": "Kleding en merch",
-            "handle": "kleding-en-merch"
+            "label": "Kleding en accessoires",
+            "handle": "kleding-en-accessoires"
           }
         }
       },

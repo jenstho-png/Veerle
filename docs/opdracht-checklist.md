@@ -13,7 +13,7 @@ Bijgewerkt op woensdag 7 oktober 2026.
 | Eigen lay-out, geen standaard themalook | ✅ | Eigen secties in de Tide-Tode huisstijl (merkboek), eigen letters, iconen, stickers en tekeningen |
 | Geen standaardteksten, ook knoppen en footer | ✅ | Alle teksten zelf geschreven. 🛠 Controleer na publiceren de winkelwagen en het afrekenen: die teksten pas je aan via Online winkel > Thema's > ... > Standaardthemacontent bewerken |
 | Minimaal 20 eigen producten | ✅ | 27 producten in `docs/producten/producten.csv`. 🛠 Importeren via Producten > Importeren. 📝 Maak daarna screenshots van de gepubliceerde producten |
-| Minstens drie collecties | ✅ | Draagtassen, Surfgear, Kleding en merch. 🛠 Aanmaken als automatische collecties op tag, zie `docs/producten/overzicht.md` |
+| Minstens drie collecties | ✅ | Draagtassen, Surfgear, Kleding en accessoires. 🛠 Aanmaken als automatische collecties op tag, zie `docs/producten/overzicht.md` |
 | Privacybeleid, algemene voorwaarden, veelgestelde vragen | ✅ | Teksten in `docs/juridisch/`, FAQ-pagina bestaat al. 🛠 Plakken in Instellingen > Beleid, zie `docs/juridisch/README.md` |
 | Herroepingsrecht en modelformulier | ✅ | `docs/juridisch/herroepingsrecht.html`. 🛠 Pagina "Herroepingsrecht" aanmaken met template `page.juridisch` |
 | Over ons, retourbeleid en contact | ✅ | Over ons (`page.over-ons`), retourbeleid in `docs/juridisch/`, contactpagina (`page.contact`) |
@@ -39,7 +39,7 @@ Bijgewerkt op woensdag 7 oktober 2026.
 - Shop
   - Draagtassen → `/collections/draagtassen`
   - Surfgear → `/collections/surfgear`
-  - Kleding en merch → `/collections/kleding-en-merch`
+  - Kleding en accessoires → `/collections/kleding-en-accessoires`
   - Alles → `/collections/all`
 - Maatwijzer → `/pages/maatwijzer`
 - Ons verhaal → `/pages/over-ons`
@@ -82,7 +82,7 @@ Het thema laat de nullen achter de komma al weg, dus je ziet €40 en €5.
 | Home (Instellingen > Voorkeuren) | Tide-Tode: draagtassen voor je surfboard | Draagtas voor je surfboard. Board erin, tas over je schouder en je handen zijn vrij. Voor softtops en hardboards. |
 | Draagtassen | Surfboard draagtassen in negen prints | Draagtassen voor je surfboard in tegel, golfjes, ruit en meer. Eén maat voor softtops en hardboards. |
 | Surfgear | Surfwax, waxkam en karabijnhaken | Surfwax voor koud, koel en warm water, een waxkam, karabijnhaken en stickers van Tide-Tode. |
-| Kleding en merch | Surfkleding: T-shirts, longsleeves en hoodies | Surfkleding met eigen prints: T-shirts, longsleeves, een UV-shirt, hoodie, poncho en meer. |
+| Kleding en accessoires | Surfkleding: T-shirts, longsleeves en hoodies | Surfkleding met eigen prints: T-shirts, longsleeves, een UV-shirt, hoodie, poncho en meer. |
 | Over ons | Over Tide-Tode: hoe de draagtas begon | Bedacht op surftrips in Australië en Midden-Amerika. Lees waarom Veerle de draagtas voor surfboards maakte. |
 | Duurzaamheid | Duurzaamheid bij Tide-Tode | Een tas die jaren meegaat, reparatie in plaats van een nieuwe, verpakking zonder plastic en drie dingen mee van het strand. |
 | Veelgestelde vragen | Veelgestelde vragen over de draagtas | Welke boards passen, kan hij mee in het vliegtuig, verzenden en retourneren. Alle antwoorden op een rij. |

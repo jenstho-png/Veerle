@@ -504,8 +504,8 @@ with open(DOCS / 'producten.csv', 'w', newline='', encoding='utf-8') as fh:
 
 # ---------- overzicht ----------
 regels = ['# Assortiment Tide-Tode', '', f'{len(P)} producten in 3 collecties. Importeren: Shopify admin, Producten, Importeren, `producten.csv`.', '',
-          'De beelden zijn getekend in de merkstijl en worden bij de import van GitHub opgehaald. Vervang ze door echte foto\'s zodra die er zijn.', '']
-for col in ('Draagtassen', 'Surfgear', 'Kleding en merch'):
+          'De productfoto\'s worden bij de import van GitHub opgehaald.', '']
+for col in ('Draagtassen', 'Surfgear', 'Kleding en accessoires'):
     regels += [f'## {col}', '', '| Product | Prijs | Handle |', '|---|---|---|']
     regels += [f"| {p['titel']} | € {p['prijs'].replace('.', ',')} | `{p['handle']}` |" for p in P if p['collectie'] == col]
     regels.append('')
@@ -514,7 +514,7 @@ regels += ['## Collecties aanmaken', '',
            '| Collectie | Voorwaarde | Handle |', '|---|---|---|',
            '| Draagtassen | Producttag is gelijk aan `Draagtassen` | `draagtassen` |',
            '| Surfgear | Producttag is gelijk aan `Surfgear` | `surfgear` |',
-           '| Kleding en merch | Producttag is gelijk aan `Kleding en merch` | `kleding-en-merch` |', '',
+           '| Kleding en accessoires | Producttag is gelijk aan `Kleding en accessoires` | `kleding-en-accessoires` |', '',
            '## Nog controleren met Veerle', '',
            '- Prijzen: alle draagtassen € 40 (uit de intake), de rest zijn ronde voorstelprijzen.',
            '- Materialen en gewichten van de kleding, de UPF van het UV-shirt, maat handdoek en canvas tas.',

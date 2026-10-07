@@ -120,7 +120,7 @@ def druk(img, a, quad, wit, blur=0.7, structuur=0.5, rand=0.8, licht=None, korre
     M = cv2.getPerspectiveTransform(np.float32([[0, 0], [aw, 0], [aw, ah], [0, ah]]), quad)
     laag = cv2.warpPerspective(a, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
     Lb = L(img) if licht is None else licht
-    lichtf = np.clip(cv2.GaussianBlur(Lb, (0, 0), 1.0) / wit, 0, 1.08)[..., None]
+    lichtf = np.clip(cv2.GaussianBlur(Lb, (0, 0), 1.5) / wit, 0, 1.08)[..., None]
     fijn = (Lb - cv2.GaussianBlur(Lb, (0, 0), 1.6))[..., None]
     kleur = laag[..., :3] * lichtf + fijn * structuur
     if blur:
@@ -194,11 +194,11 @@ def bewaar(img, naam, x0, y0, b, rechts=0):
 # ---------- -1: stapel van drie blokken ----------
 # banden (voorkant, lb rb ro lo) en de zichtbare uiteinden van de blokken, gemeten op wax2-stapel-1.jpg (2400 x 3598)
 STAPEL_BANDEN = [
-    [(1181, 2398), (2072, 2398), (2073, 2705), (1181, 2705)],
+    [(1181, 2394), (2072, 2394), (2073, 2705), (1181, 2705)],
     [(1200, 2706), (2095, 2706), (2096, 2998), (1200, 2998)],
     [(1178, 2999), (2064, 2999), (2071, 3292), (1179, 3292)],
 ]
-STAPEL_TEKST = [(1240, 2318, 1990, 2410), (1330, 2505, 1910, 2585), (1400, 2748, 1905, 2820), (1330, 3140, 1910, 3215)]
+STAPEL_TEKST = [(1240, 2318, 1990, 2432), (1170, 3275, 1200, 3300), (1330, 2505, 1910, 2585), (1400, 2748, 1905, 2820), (1330, 3140, 1910, 3215)]
 STAPEL_BLOKKEN = [((1085, 2320, 2200, 2706), (1183, 2072)), ((1085, 2700, 2210, 3000), (1202, 2095)), ((1085, 2995, 2200, 3300), (1180, 2068))]
 
 
@@ -232,7 +232,7 @@ def stapel(soort):
         m[y0:y1, br - 3:x1] = 1
         m = cv2.dilate((m & vol), np.ones((3, 3), np.uint8)).astype(np.float32)
         m = cv2.GaussianBlur(m, (0, 0), 1.6)
-        img = wax_kleur(img, m, d['kleur'], glad=5, vlak=6 if y0 > 2900 else 0, laag=0.62)
+        img = wax_kleur(img, m, d['kleur'], glad=15 if y0 > 2900 else 5, laag=0.62)
     # 2. oude tekst van de wikkels weg
     img = poets(img, STAPEL_TEKST)
     # 3. onze wikkel erop: crème papier met druk

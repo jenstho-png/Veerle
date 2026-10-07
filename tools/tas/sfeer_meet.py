@@ -231,11 +231,39 @@ def meet(naam, hint, check=None):
     res = dict(c=c.tolist(), a=a.tolist(), t_neus=None if t_neus is None else float(t_neus),
                t_staart=None if t_staart is None else float(t_staart), t_balans=float(tb),
                breedte=breedte, midden=mid.tolist(), tt=tt, lo=lo_g, hi=hi_g)
+    # zichtbaar board = gladde omtrek min occluders (pixels binnen de omtrek die GrabCut geen board vond,
+    # alleen als ze in een hint-zone 'occ' liggen of groot genoeg zijn)
+    omtrek = omtrek_masker(img.shape[:2], res)
+    occ = (omtrek > 0) & (fg == 0)
+    occ = cv2.morphologyEx(occ.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    if hint.get('occ_zones'):
+        zone = np.zeros_like(occ)
+        for poly in hint['occ_zones']:
+            cv2.fillPoly(zone, [np.array(poly, np.int32)], 1)
+        occ = occ * zone
+    else:
+        occ[:] = 0
+    zicht = ((omtrek > 0) & (occ == 0)).astype(np.uint8)
     MASK.mkdir(exist_ok=True)
-    Image.fromarray(fg * 255).save(MASK / (pathlib.Path(naam).stem + '.png'))
+    Image.fromarray(zicht * 255).save(MASK / (pathlib.Path(naam).stem + '.png'))
+    np.savez_compressed(MASK / (pathlib.Path(naam).stem + '.npz'), c=c, a=a, tt=tt, lo=lo_g, hi=hi_g, t_balans=tb,
+                        t_neus=np.nan if t_neus is None else t_neus, t_staart=np.nan if t_staart is None else t_staart)
+    fg = zicht
     if check:
         controle(img, fg, res, check / f'meet-{pathlib.Path(naam).stem}.jpg', hint)
     return res, fg
+
+
+def omtrek_masker(shape, r, sub=4):
+    """Gevulde gladde omtrek (anti-aliased niet nodig: 1 px nauwkeurig) uit het profiel."""
+    c, a = np.array(r['c']), np.array(r['a']); n = np.array([-a[1], a[0]])
+    tt, lo, hi = r['tt'], r['lo'], r['hi']
+    links = c[None] + a[None] * tt[:, None] + n[None] * lo[:, None]
+    rechts = c[None] + a[None] * tt[:, None] + n[None] * hi[:, None]
+    pts = np.concatenate([links, rechts[::-1]])
+    m = np.zeros(shape, np.uint8)
+    cv2.fillPoly(m, [np.round(pts * sub).astype(np.int32)], 1, lineType=cv2.LINE_8, shift=2)
+    return m
 
 
 def controle(img, fg, r, pad, hint):
