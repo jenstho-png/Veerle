@@ -14,6 +14,7 @@
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--xl' -%}
     <div class="tt-knoppen tt-in">
       <a class="tt-knop tt-knop--licht" href="{% if section.settings.btn_link != blank %}{{ section.settings.btn_link }}{% elsif p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}<span aria-hidden="true">→</span></a>
+      {%- if section.settings.link2_label != blank -%}<a class="tt-link" href="{{ section.settings.link2_url | default: routes.all_products_collection_url }}">{{ section.settings.link2_label }}</a>{%- endif -%}
     </div>
   </div>
 </section>
@@ -46,6 +47,18 @@
       "type": "url",
       "id": "btn_link",
       "label": "Knop-link"
+    },
+    {
+      "type": "text",
+      "id": "link2_label",
+      "label": "Tweede link",
+      "default": "Of bekijk de hele shop"
+    },
+    {
+      "type": "text",
+      "id": "link2_url",
+      "label": "Tweede link (adres)",
+      "default": "/collections/all"
     },
     {
       "type": "header",

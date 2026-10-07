@@ -532,7 +532,10 @@
     },
     "tt-patroon": {
       "type": "tt-patroon",
-      "settings": {}
+      "settings": {
+        "link2_label": "Of bekijk de hele shop",
+        "link2_url": "/collections/all"
+      }
     },
     "reviews": {
       "type": "apps",

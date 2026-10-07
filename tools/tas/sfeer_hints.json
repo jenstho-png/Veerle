@@ -1,0 +1,159 @@
+{
+ "board-muur-1.jpg": {
+  "neus": [
+   765,
+   275
+  ],
+  "staart": [
+   765,
+   2225
+  ],
+  "breedte": 750,
+  "staart_buiten": true
+ },
+ "board-muur-3.jpg": {
+  "neus": [
+   828,
+   543
+  ],
+  "staart": [
+   828,
+   1851
+  ],
+  "breedte": 360
+ },
+ "board-muur-4.jpg": {
+  "neus": [
+   608,
+   667
+  ],
+  "staart": [
+   612,
+   1481
+  ],
+  "breedte": 237
+ },
+ "board-muur-5.jpg": {
+  "neus": [
+   681,
+   497
+  ],
+  "staart": [
+   790,
+   2140
+  ],
+  "breedte": 380
+ },
+ "board-muur-6.jpg": {
+  "neus": [
+   458,
+   400
+  ],
+  "staart": [
+   567,
+   1575
+  ],
+  "breedte": 320
+ },
+ "board-hek-1.jpg": {
+  "neus": [
+   817,
+   75
+  ],
+  "staart": [
+   673,
+   2525
+  ],
+  "breedte": 490,
+  "staart_buiten": true
+ },
+ "board-bus-2.jpg": {
+  "neus": [
+   1149,
+   91
+  ],
+  "staart": [
+   1071,
+   1009
+  ],
+  "breedte": 285,
+  "staart_buiten": true
+ },
+ "board-auto-1.jpg": {
+  "neus": [
+   969,
+   260
+  ],
+  "staart": [
+   973,
+   800
+  ],
+  "breedte": 156
+ },
+ "board-zand-1.jpg": {
+  "neus": [
+   810,
+   133
+  ],
+  "staart": [
+   812,
+   2098
+  ],
+  "breedte": 550
+ },
+ "board-zand-2.jpg": {
+  "neus": [
+   800,
+   96
+  ],
+  "staart": [
+   860,
+   1007
+  ],
+  "breedte": 293
+ },
+ "board-zand-3.jpg": {
+  "neus": [
+   800,
+   180
+  ],
+  "staart": [
+   800,
+   896
+  ],
+  "breedte": 144
+ },
+ "board-persoon-1.jpg": {
+  "neus": [
+   696,
+   376
+  ],
+  "staart": [
+   610,
+   2276
+  ],
+  "breedte": 480
+ },
+ "board-persoon-2.jpg": {
+  "neus": [
+   1387,
+   664
+  ],
+  "staart": [
+   164,
+   677
+  ],
+  "breedte": 237
+ },
+ "board-gras-1.jpg": {
+  "neus": [
+   1126,
+   544
+  ],
+  "staart": [
+   375,
+   1975
+  ],
+  "breedte": 540
+ }
+}

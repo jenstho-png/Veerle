@@ -266,7 +266,10 @@
     },
     "surfcheck": {
       "type": "tt-surfcheck",
-      "settings": {},
+      "settings": {
+        "btn_label": "Welke wax past bij dit water",
+        "btn_link": "/collections/surfgear"
+      },
       "blocks": {
         "spot-1": {
           "type": "spot",
@@ -471,7 +474,92 @@
     },
     "patroon": {
       "type": "tt-patroon",
-      "settings": {}
+      "settings": {
+        "link2_label": "Of bekijk de hele shop",
+        "link2_url": "/collections/all"
+      }
+    },
+    "meer": {
+      "type": "tt-meer",
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "titel": "T-shirt Lijn naar zee",
+            "prijs": "€35",
+            "link": "/products/t-shirt-lijn-naar-zee",
+            "fallback": "tt-meer-1",
+            "alt": "Achterkant van het crème T-shirt Lijn naar zee",
+            "filename": ""
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "titel": "T-shirt Getijden",
+            "prijs": "€35",
+            "link": "/products/t-shirt-getijden",
+            "fallback": "tt-meer-2",
+            "alt": "Navy T-shirt Getijden aan een hanger",
+            "filename": ""
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "titel": "Hoodie Busje",
+            "prijs": "€65",
+            "link": "/products/hoodie-busje",
+            "fallback": "tt-meer-3",
+            "alt": "Baby blue hoodie met klein logo",
+            "filename": ""
+          }
+        },
+        "item-4": {
+          "type": "item",
+          "settings": {
+            "titel": "Karabijnhaak messing",
+            "prijs": "€10",
+            "link": "/products/karabijnhaak-messing",
+            "fallback": "tt-meer-4",
+            "alt": "Messing karabijnhaak met sleutellus van tasband",
+            "filename": ""
+          }
+        },
+        "item-5": {
+          "type": "item",
+          "settings": {
+            "titel": "Pet navy",
+            "prijs": "€30",
+            "link": "/products/pet-navy",
+            "fallback": "tt-meer-5",
+            "alt": "Navy pet met geborduurd board",
+            "filename": ""
+          }
+        },
+        "item-6": {
+          "type": "item",
+          "settings": {
+            "titel": "Canvas tas",
+            "prijs": "€20",
+            "link": "/products/canvas-tas",
+            "fallback": "tt-meer-6",
+            "alt": "Canvas tas met het busje",
+            "filename": ""
+          }
+        }
+      },
+      "block_order": [
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4",
+        "item-5",
+        "item-6"
+      ],
+      "settings": {
+        "bg": "creme"
+      }
     }
   },
   "order": [
@@ -483,6 +571,7 @@
     "zo",
     "stickerzee",
     "wie",
+    "meer",
     "surfcheck",
     "kaart",
     "duurzaam",

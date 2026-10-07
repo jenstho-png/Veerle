@@ -46,8 +46,9 @@ GAREN_CREME = hexkl('#EFE6D4')
 GAREN_TERRA = hexkl('#BD5E3D')
 
 BREED, LANG = 90.0, 170.0          # cm
-TEGEL = 14.0                        # cm per tegel
-VELD = (3.0, 15.0, 87.0, 155.0)     # tegelveld u0, v0, u1, v1 in cm
+TEGEL = 16.8                        # cm per tegel: 5 over de breedte, 8 over de lengte
+VELD = (3.0, 17.8, 87.0, 152.2)     # tegelveld u0, v0, u1, v1 in cm
+KADER_V = VELD[1] - 1.3             # dun navy kader rond het veld
 MOTIEVEN = [0, 1, 5, 6, 9, 2]       # tegels uit de stof die als jacquard goed lezen
 SPIEGEL = {2: False}                # de molen (tegel 2) is alleen draaisymmetrisch
 
@@ -116,8 +117,9 @@ def ontwerp(ppc):
         voeg = np.maximum(voeg, strook(v0 + k * TEGEL - 0.12, v0 + k * TEGEL + 0.12, V) * strook(u0 - 0.12, u1 + 0.12, U))
     verf(voeg, GAREN_NAVY)
     # kader rond het veld
-    kader = (strook(1.7, 2.2, U) + strook(BREED - 2.2, BREED - 1.7, U)) * strook(13.7, LANG - 13.7, V) \
-        + (strook(13.7, 14.2, V) + strook(LANG - 14.2, LANG - 13.7, V)) * strook(1.7, BREED - 1.7, U)
+    kv = KADER_V
+    kader = (strook(1.7, 2.2, U) + strook(BREED - 2.2, BREED - 1.7, U)) * strook(kv, LANG - kv, V) \
+        + (strook(kv, kv + 0.5, V) + strook(LANG - kv - 0.5, LANG - kv, V)) * strook(1.7, BREED - 1.7, U)
     verf(np.clip(kader, 0, 1), GAREN_NAVY)
     # terracotta banden aan de korte kanten, met twee crème biesjes
     for a_, b_ in [(2.0, 9.0), (LANG - 9.0, LANG - 2.0)]:
@@ -254,10 +256,10 @@ def bewaar(img, naam, max_kb=190):
     ontruisen (vooral kleurruis; zandkorrels kosten veel bytes) en dan pas de kwaliteit verder omlaag."""
     import io
     u8 = (np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8)
-    for h, hk in ((0, 0), (2, 8), (3, 10), (4, 12), (5, 14)):
+    for h, hk in ((0, 0), (3, 10), (5, 14), (6, 16)):
         b = u8 if not h else cv2.cvtColor(cv2.fastNlMeansDenoisingColored(cv2.cvtColor(u8, cv2.COLOR_RGB2BGR), None, h, hk, 5, 15), cv2.COLOR_BGR2RGB)
         im = Image.fromarray(b)
-        for q in range(88, 69, -3):
+        for q in range(88, 60, -3):
             buf = io.BytesIO()
             im.save(buf, 'JPEG', quality=q, optimize=True, progressive=True)
             if buf.tell() < max_kb * 1000:
@@ -265,6 +267,13 @@ def bewaar(img, naam, max_kb=190):
                 print('foto', naam, f'q{q} ontruis{h}', buf.tell() // 1000, 'kB')
                 return
     raise SystemExit('te groot: ' + naam)
+
+
+def ontruis(img, h=5, hk=14):
+    """Korrel van de stockfoto wat temperen (anders past de foto nooit onder 190 kB)."""
+    u8 = cv2.cvtColor((np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8), cv2.COLOR_RGB2BGR)
+    d = cv2.fastNlMeansDenoisingColored(u8, None, h, hk, 5, 15)
+    return cv2.cvtColor(d, cv2.COLOR_BGR2RGB).astype(np.float32) / 255
 
 
 def grade(img, warm=0.0, contrast=1.0, licht=1.0):
@@ -282,7 +291,7 @@ def interp(punten, t):
 
 # ---------- foto 2: op het zand ----------
 def foto2():
-    f = MK.laad(STOCK / 'handdoek2-zand-1.jpg')
+    f = ontruis(MK.laad(STOCK / 'handdoek2-zand-1.jpg'), 4, 12)
     h, w = f.shape[:2]
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
     s = 15.5  # px per cm: 90 cm is ca. 1400 px, de linkerzoom valt buiten beeld
@@ -306,7 +315,7 @@ def foto2():
     masker = cv2.GaussianBlur(binnen, (0, 0), 1.0) * (1 - cv2.GaussianBlur(bril, (0, 0), 1.0))
     schoon = strepen_weg(f)
     ontw, lm = ontwerp_met_label(s * 1.5)
-    uit = breng_aan(f, masker, U, V, s * 1.5, ontw, schoon=schoon, verplaatsing=0.5, detail=0.9, waas=0.12)
+    uit = breng_aan(f, masker, U, V, s * 1.5, ontw, schoon=schoon, verplaatsing=0.5, detail=0.6, waas=0.12)
     uit = uit[0:1950, 0:1560]
     uit = cv2.resize(uit, (1600, 2000), interpolation=cv2.INTER_CUBIC)
     bewaar(uit, 'strandhanddoek-tegel-2')

@@ -8,12 +8,13 @@
         "kaart": false,
         "heading": "Duurzaam,|eerlijk gezegd",
         "text": "Wat we doen om de tas en de kleding lang mee te laten gaan. En wat jij na het surfen op het strand kunt doen.",
-        "btn_label": "Bekijk de draagtas",
+        "btn_label": "Bekijk de shop",
         "link_label": "Wat we nu doen",
         "link_url": "/pages/duurzaamheid#duurzaamheid",
         "image": "",
         "filename": "tide-tode-duurzaamheid.jpg",
-        "alt": "Leeg strand bij avondlicht"
+        "alt": "Leeg strand bij avondlicht",
+        "btn_link": "/collections/all"
       }
     },
     "duurzaam": {
@@ -139,7 +140,10 @@
     },
     "patroon": {
       "type": "tt-patroon",
-      "settings": {}
+      "settings": {
+        "link2_label": "Of bekijk de hele shop",
+        "link2_url": "/collections/all"
+      }
     }
   },
   "order": [

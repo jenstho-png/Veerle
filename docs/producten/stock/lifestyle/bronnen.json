@@ -1,5 +1,5 @@
 {
-  "coordinate_notes": "Pixel coordinates [x, y] in the saved file (origin top-left). nose_tip/tail_tip are the board's extreme points; tail_tip null means it is outside the frame. width_at_middle_px is the board width measured across the board (perpendicular to its long axis) around middle_point. Estimated from a 100 px grid, accuracy roughly +/- 15 px.",
+  "coordinate_notes": "Pixel coordinates [x, y] in the saved file (origin top-left). nose_tip/tail_tip are the board's extreme points on its long axis (null = outside the frame). middle_point is the balance point (halfway nose-tail) on the board centre line, width_at_middle_px the board width there, perpendicular to the axis. For boards with a \"mask\" these come from the segmentation in maskers/ (tools/tas/sfeer_meet.py).",
   "photos": [
     {
       "file": "board-muur-1.jpg",
@@ -11,16 +11,22 @@
       "size": "1600x2134",
       "board": {
         "nose_tip": [
-          765,
-          275
+          770.0,
+          275.2
         ],
         "tail_tip": null,
-        "width_at_middle_px": 750,
+        "width_at_middle_px": 770.0,
         "middle_point": [
-          765,
-          1250
+          770.0,
+          1297.2
         ],
-        "notes": "Tail runs out of the bottom of the frame (board visible from nose to y=2134). Small 'NATURE do it better' logo on deck at about (765,975). Plant leaves overlap right rail only below y~1450; middle clear."
+        "notes": "Tail runs out of the bottom of the frame (board visible from nose to y=2134). Small 'NATURE do it better' logo on deck at about (765,975). Plant leaves overlap right rail only below y~1450; middle clear.",
+        "axis_unit_to_nose": [
+          0.00077,
+          -1.0
+        ],
+        "mask": "maskers/board-muur-1.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -58,19 +64,25 @@
       "size": "1600x2134",
       "board": {
         "nose_tip": [
-          828,
-          543
+          826.3,
+          545.1
         ],
         "tail_tip": [
-          828,
-          1851
+          819.6,
+          1850.1
         ],
-        "width_at_middle_px": 360,
+        "width_at_middle_px": 355.0,
         "middle_point": [
-          828,
-          1200
+          823.5,
+          1197.6
         ],
-        "notes": "Whole board visible and vertical. Swallow tail: tips at about (735,1840) and (905,1850). Leash coiled across lower deck around y~1660; middle clear. Dark board."
+        "notes": "Whole board visible and vertical. Swallow tail: tips at about (735,1840) and (905,1850). Leash coiled across lower deck around y~1660; middle clear. Dark board.",
+        "axis_unit_to_nose": [
+          0.00517,
+          -0.99999
+        ],
+        "mask": "maskers/board-muur-3.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -83,19 +95,25 @@
       "size": "1600x2134",
       "board": {
         "nose_tip": [
-          608,
-          667
+          598.6,
+          666.8
         ],
         "tail_tip": [
-          612,
-          1481
+          589.1,
+          1477.8
         ],
-        "width_at_middle_px": 237,
+        "width_at_middle_px": 289.0,
         "middle_point": [
-          610,
-          1075
+          594.5,
+          1072.3
         ],
-        "notes": "Whole board visible, near vertical; board is about 38% of frame height (medium size). Lots of clean white wall around it."
+        "notes": "Whole board visible, near vertical; board is about 38% of frame height (medium size). Lots of clean white wall around it.",
+        "axis_unit_to_nose": [
+          0.01171,
+          -0.99993
+        ],
+        "mask": "maskers/board-muur-4.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -108,19 +126,25 @@
       "size": "1600x2569",
       "board": {
         "nose_tip": [
-          681,
-          497
+          737.3,
+          552.2
         ],
         "tail_tip": [
-          790,
-          2140
+          799.5,
+          2134.0
         ],
-        "width_at_middle_px": 380,
+        "width_at_middle_px": 349.7,
         "middle_point": [
-          700,
-          1320
+          771.4,
+          1343.0
         ],
-        "notes": "Tail is hidden behind the railing (tail_tip is an estimate). Railing crosses the board from about y=1600 down; middle (y 1000-1550) is clear but carries a Chiquita sticker at about (760,1390) and a vent plug strip at (740,1150)."
+        "notes": "Tail is hidden behind the railing (tail_tip is an estimate). Railing crosses the board from about y=1600 down; middle (y 1000-1550) is clear but carries a Chiquita sticker at about (760,1390) and a vent plug strip at (740,1150).",
+        "axis_unit_to_nose": [
+          -0.03931,
+          -0.99923
+        ],
+        "mask": "maskers/board-muur-5.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -133,19 +157,25 @@
       "size": "1600x2000",
       "board": {
         "nose_tip": [
-          458,
-          400
+          443.5,
+          412.6
         ],
         "tail_tip": [
-          567,
-          1575
+          579.8,
+          1575.6
         ],
-        "width_at_middle_px": 320,
+        "width_at_middle_px": 294.2,
         "middle_point": [
-          510,
-          990
+          511.0,
+          994.2
         ],
-        "notes": "Coordinates are for the painted board on the left. Very busy artwork on the deck; middle unobstructed."
+        "notes": "Coordinates are for the painted board on the left. Very busy artwork on the deck; middle unobstructed.",
+        "axis_unit_to_nose": [
+          -0.11643,
+          -0.9932
+        ],
+        "mask": "maskers/board-muur-6.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -158,16 +188,22 @@
       "size": "1600x2000",
       "board": {
         "nose_tip": [
-          817,
-          75
+          721.4,
+          104.4
         ],
         "tail_tip": null,
-        "width_at_middle_px": 490,
+        "width_at_middle_px": 469.2,
         "middle_point": [
-          745,
-          1300
+          724.4,
+          1177.4
         ],
-        "notes": "Tail runs out of the bottom of the frame. 'South Point' logo at about (680,890), teal oval at nose. Worn and dirty deck. Other boards overlap only to the right."
+        "notes": "Tail runs out of the bottom of the frame. 'South Point' logo at about (680,890), teal oval at nose. Worn and dirty deck. Other boards overlap only to the right.",
+        "axis_unit_to_nose": [
+          -0.00528,
+          -0.99999
+        ],
+        "mask": "maskers/board-hek-1.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -205,16 +241,22 @@
       "size": "1600x896",
       "board": {
         "nose_tip": [
-          1149,
-          91
+          1143.7,
+          93.1
         ],
         "tail_tip": null,
-        "width_at_middle_px": 285,
+        "width_at_middle_px": 266.2,
         "middle_point": [
-          1110,
-          550
+          1119.8,
+          512.5
         ],
-        "notes": "Coordinates are for the plain white board on the right; its tail runs out of the bottom of the frame. The white/orange board in the centre (nose about (930,55)) is also usable. Grainy, film-like look."
+        "notes": "Coordinates are for the plain white board on the right; its tail runs out of the bottom of the frame. The white/orange board in the centre (nose about (930,55)) is also usable. Grainy, film-like look.",
+        "axis_unit_to_nose": [
+          0.0802,
+          -0.99678
+        ],
+        "mask": "maskers/board-bus-2.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -227,19 +269,25 @@
       "size": "1600x976",
       "board": {
         "nose_tip": [
-          969,
-          260
+          959.7,
+          263.4
         ],
         "tail_tip": [
-          973,
-          800
+          980.0,
+          801.0
         ],
-        "width_at_middle_px": 156,
+        "width_at_middle_px": 158.7,
         "middle_point": [
-          970,
-          530
+          970.3,
+          532.2
         ],
-        "notes": "Whole board visible, vertical. Medium-small (board is ~55% of frame height). Black 'Elsa'-style tag and small logos on deck; fins visible at the tail."
+        "notes": "Whole board visible, vertical. Medium-small (board is ~55% of frame height). Black 'Elsa'-style tag and small logos on deck; fins visible at the tail.",
+        "axis_unit_to_nose": [
+          -0.03766,
+          -0.99929
+        ],
+        "mask": "maskers/board-auto-1.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -252,19 +300,25 @@
       "size": "1600x2208",
       "board": {
         "nose_tip": [
-          810,
-          133
+          799.7,
+          134.1
         ],
         "tail_tip": [
-          812,
-          2098
+          806.5,
+          2098.1
         ],
-        "width_at_middle_px": 550,
+        "width_at_middle_px": 553.0,
         "middle_point": [
-          810,
-          1115
+          802.5,
+          1116.1
         ],
-        "notes": "Tail is pushed into the sand; tail_tip = lowest visible point. Big blue/red 'Magic Shot' bomb graphic on upper half (y 550-1110); lower middle plain red with stringer."
+        "notes": "Tail is pushed into the sand; tail_tip = lowest visible point. Big blue/red 'Magic Shot' bomb graphic on upper half (y 550-1110); lower middle plain red with stringer.",
+        "axis_unit_to_nose": [
+          -0.00344,
+          -0.99999
+        ],
+        "mask": "maskers/board-zand-1.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -277,19 +331,25 @@
       "size": "1600x1124",
       "board": {
         "nose_tip": [
-          800,
-          96
+          795.1,
+          97.9
         ],
         "tail_tip": [
-          860,
-          1007
+          877.4,
+          1008.2
         ],
-        "width_at_middle_px": 293,
+        "width_at_middle_px": 283.4,
         "middle_point": [
-          830,
-          550
+          836.4,
+          553.0
         ],
-        "notes": "Tail in the sand (tail_tip = lowest visible point). Leash cord wrapped around the nose area (y~270), dirty deck, small logo at (820,430), 'SLASH' on right rail."
+        "notes": "Tail in the sand (tail_tip = lowest visible point). Leash cord wrapped around the nose area (y~270), dirty deck, small logo at (820,430), 'SLASH' on right rail.",
+        "axis_unit_to_nose": [
+          -0.09003,
+          -0.99594
+        ],
+        "mask": "maskers/board-zand-2.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -302,19 +362,25 @@
       "size": "1600x1067",
       "board": {
         "nose_tip": [
-          800,
-          180
+          801.9,
+          179.9
         ],
         "tail_tip": [
-          800,
-          896
+          800.9,
+          895.9
         ],
-        "width_at_middle_px": 144,
+        "width_at_middle_px": 145.0,
         "middle_point": [
-          800,
-          540
+          801.5,
+          537.9
         ],
-        "notes": "Whole board visible and vertical. Board is ~67% of frame height but narrow (144 px). Small round logo at (800,415)."
+        "notes": "Whole board visible and vertical. Board is ~67% of frame height but narrow (144 px). Small round logo at (800,415).",
+        "axis_unit_to_nose": [
+          0.00133,
+          -1.0
+        ],
+        "mask": "maskers/board-zand-3.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -327,19 +393,25 @@
       "size": "1600x2400",
       "board": {
         "nose_tip": [
-          696,
-          376
+          710.9,
+          376.7
         ],
         "tail_tip": [
-          610,
-          2276
+          589.4,
+          2276.8
         ],
-        "width_at_middle_px": 480,
+        "width_at_middle_px": 471.9,
         "middle_point": [
-          650,
-          1320
+          649.5,
+          1326.7
         ],
-        "notes": "Hand touches only the nose; whole board visible, slight tilt. Small logo at about (667,960). Middle clear."
+        "notes": "Hand touches only the nose; whole board visible, slight tilt. Small logo at about (667,960). Middle clear.",
+        "axis_unit_to_nose": [
+          0.06381,
+          -0.99796
+        ],
+        "mask": "maskers/board-persoon-1.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -352,19 +424,25 @@
       "size": "1600x1066",
       "board": {
         "nose_tip": [
-          1387,
-          664
+          1386.7,
+          659.9
         ],
         "tail_tip": [
-          164,
-          677
+          163.7,
+          668.9
         ],
-        "width_at_middle_px": 237,
+        "width_at_middle_px": 238.0,
         "middle_point": [
-          775,
-          670
+          775.2,
+          665.0
         ],
-        "notes": "Board horizontal, nose on the right. CAVEAT: her fingers rest on the top rail at x~640 and x~920, either side of the middle; deck face between them is clear (about 280 px). Small 'DONO' logo at (585,670)."
+        "notes": "Board horizontal, nose on the right. CAVEAT: her fingers rest on the top rail at x~640 and x~920, either side of the middle; deck face between them is clear (about 280 px). Small 'DONO' logo at (585,670).",
+        "axis_unit_to_nose": [
+          0.99997,
+          -0.00734
+        ],
+        "mask": "maskers/board-persoon-2.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {
@@ -377,19 +455,25 @@
       "size": "1600x2400",
       "board": {
         "nose_tip": [
-          1126,
-          544
+          1181.8,
+          576.6
         ],
         "tail_tip": [
-          375,
-          1975
+          379.9,
+          1979.6
         ],
-        "width_at_middle_px": 540,
+        "width_at_middle_px": 583.7,
         "middle_point": [
-          753,
-          1262
+          781.3,
+          1278.4
         ],
-        "notes": "Whole board visible, diagonal (about 28 degrees from vertical). 'FATUM' text near nose, round logo at (770,1245) right in the middle, black traction pad on tail."
+        "notes": "Whole board visible, diagonal (about 28 degrees from vertical). 'FATUM' text near nose, round logo at (770,1245) right in the middle, black traction pad on tail.",
+        "axis_unit_to_nose": [
+          0.49625,
+          -0.86818
+        ],
+        "mask": "maskers/board-gras-1.png",
+        "measured": "GrabCut segmentation + manual hints (tools/tas/sfeer_meet.py), checked on zoomed crops; accuracy about +/- 2 px"
       }
     },
     {

@@ -506,6 +506,7 @@ schrijf('tt-slot', PRODUCT + """
     {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--xl' -%}
     <div class="tt-knoppen tt-in">
       <a class="tt-knop tt-knop--licht" href="{% if section.settings.btn_link != blank %}{{ section.settings.btn_link }}{% elsif p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}<span aria-hidden="true">→</span></a>
+      {%- if section.settings.link2_label != blank -%}<a class="tt-link" href="{{ section.settings.link2_url | default: routes.all_products_collection_url }}">{{ section.settings.link2_label }}</a>{%- endif -%}
     </div>
   </div>
 </section>
@@ -516,6 +517,8 @@ schrijf('tt-slot', PRODUCT + """
         kop("Tot in|het water"),
         {"type": "text", "id": "btn_label", "label": "Knop", "default": "Bestel de draagtas"},
         {"type": "url", "id": "btn_link", "label": "Knop-link"},
+        {"type": "text", "id": "link2_label", "label": "Tweede link", "default": "Of bekijk de hele shop"},
+        {"type": "text", "id": "link2_url", "label": "Tweede link (adres)", "default": "/collections/all"},
     ] + s,
     "presets": [{"name": "TT: slot"}]})
 
@@ -643,7 +646,7 @@ schrijf('tt-surfcheck', """
       </div>
       <div class="tt-surfcheck__onder">
         <p class="tt-surfcheck__bron">Indicatie van Open-Meteo. Check altijd zelf de omstandigheden ter plekke.</p>
-        {%- if section.settings.btn_label != blank -%}<a class="tt-link" href="{% if settings.tt_product != blank %}{{ settings.tt_product.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}</a>{%- endif -%}
+        {%- if section.settings.btn_label != blank -%}<a class="tt-link" href="{% if section.settings.btn_link != blank %}{{ section.settings.btn_link }}{% elsif settings.tt_product != blank %}{{ settings.tt_product.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}</a>{%- endif -%}
       </div>
     </div>
   </div>
@@ -654,7 +657,8 @@ schrijf('tt-surfcheck', """
         bg("deep"),
         kop("De zee van vandaag"),
         {"type": "textarea", "id": "text", "label": "Tekst", "default": "Golven, wind, watertemperatuur en getij voor een paar spots waar we graag komen."},
-        {"type": "text", "id": "btn_label", "label": "Link onder de check", "default": "Bekijk de draagtas"},
+        {"type": "text", "id": "btn_label", "label": "Link onder de check", "default": "Welke wax past bij dit water"},
+        {"type": "text", "id": "btn_link", "label": "Link (adres)", "default": "/collections/surfgear"},
     ],
     "blocks": [{"type": "spot", "name": "Spot", "settings": [
         {"type": "text", "id": "naam", "label": "Naam", "default": "Spot"},
@@ -903,7 +907,10 @@ schrijf('tt-patroon', PRODUCT + """
   <div class="tt-patroon__inhoud">
     <div class="tt-patroon__logo">{%- render 'tt-logo', variant: 'staand', label: shop.name -%}</div>
     {%- if section.settings.hand != blank -%}<p class="tt-patroon__hand">{{ section.settings.hand }}</p>{%- endif -%}
+    <div class="tt-knoppen tt-patroon__knoppen">
     {%- if section.settings.btn_label != blank -%}<a class="tt-knop tt-knop--licht" href="{% if section.settings.btn_link != blank %}{{ section.settings.btn_link }}{% elsif p != blank %}{{ p.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}<span aria-hidden="true">→</span></a>{%- endif -%}
+    {%- if section.settings.link2_label != blank -%}<a class="tt-link" href="{{ section.settings.link2_url | default: routes.all_products_collection_url }}">{{ section.settings.link2_label }}</a>{%- endif -%}
+    </div>
   </div>
 </section>
 """, {
@@ -913,6 +920,8 @@ schrijf('tt-patroon', PRODUCT + """
         {"type": "text", "id": "hand", "label": "Handgeschreven regel", "default": ""},
         {"type": "text", "id": "btn_label", "label": "Knop", "default": "Bestel de draagtas"},
         {"type": "url", "id": "btn_link", "label": "Knop-link"},
+        {"type": "text", "id": "link2_label", "label": "Tweede link", "default": "Of bekijk de hele shop"},
+        {"type": "text", "id": "link2_url", "label": "Tweede link (adres)", "default": "/collections/all"},
     ],
     "presets": [{"name": "TT: patroon"}]})
 
@@ -1346,5 +1355,58 @@ schrijf('tt-strand', """
         {"type": "ding", "settings": {"titel": "Een dop", "tekst": "Van een fles of een blikje"}},
         {"type": "ding", "settings": {"titel": "Een stuk touw", "tekst": "Of visdraad, waar vogels in verstrikt raken"}},
         {"type": "ding", "settings": {"titel": "Een stukje plastic", "tekst": "Een zakje, een rietje, een snoeppapiertje"}}]}]})
+
+# ---------- MEER: kleding en gear naast de draagtas ----------
+# De draagtas blijft het hoofdproduct; dit blok laat zien dat er meer is.
+schrijf('tt-meer', """
+<section class="tt tt-meer tt-bg--{{ section.settings.bg }}">
+  <div class="tt-wrap">
+    <div class="tt-meer__kop">
+      <div>
+        {%- if section.settings.label != blank -%}<p class="tt-duurzaam__label tt-in">{{ section.settings.label }}</p>{%- endif -%}
+        {%- render 'tt-kop', text: section.settings.heading, tag: 'h2', class: 'tt-kop--l' -%}
+      </div>
+      {%- if section.settings.text != blank -%}<p class="tt-lead tt-in">{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <ul class="tt-meer__rij">
+      {%- for block in section.blocks -%}
+        {%- assign mp = block.settings.product -%}
+        <li class="tt-meer__item tt-in" style="--d: {{ forloop.index0 | modulo: 3 | times: 0.1 }}s" {{ block.shopify_attributes }}>
+          <a class="tt-meer__kaart" href="{% if mp != blank %}{{ mp.url }}{% else %}{{ block.settings.link | default: routes.all_products_collection_url }}{% endif %}">
+            <span class="tt-meer__beeld tt-onthul">
+              {%- if mp != blank and mp.featured_media -%}{{ mp.featured_media | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 70vw', alt: mp.featured_media.alt | escape }}
+              {%- else -%}""" + BB(extra=", sizes: '(min-width: 750px) 33vw, 70vw'") + """{%- endif -%}
+            </span>
+            <span class="tt-meer__naam">{% if mp != blank %}{{ mp.title }}{% else %}{{ block.settings.titel }}{% endif %}</span>
+            <span class="tt-meer__prijs">{% if mp != blank %}{{ mp.price | money_without_trailing_zeros }}{% else %}{{ block.settings.prijs }}{% endif %}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+    <div class="tt-knoppen tt-meer__knoppen tt-in">
+      {%- if section.settings.btn1_label != blank -%}<a class="tt-knop" href="{{ section.settings.btn1_link | default: routes.all_products_collection_url }}">{{ section.settings.btn1_label }}<span aria-hidden="true">→</span></a>{%- endif -%}
+      {%- if section.settings.btn2_label != blank -%}<a class="tt-link" href="{{ section.settings.btn2_link | default: routes.all_products_collection_url }}">{{ section.settings.btn2_label }}</a>{%- endif -%}
+    </div>
+  </div>
+</section>
+""", {
+    "name": "TT: meer dan een tas", "tag": "div", "max_blocks": 8,
+    "settings": [
+        bg("creme"),
+        {"type": "text", "id": "label", "label": "Klein label boven de kop", "default": "Kleding en gear"},
+        kop("Meer dan|een *tas*"),
+        {"type": "textarea", "id": "text", "label": "Tekst", "default": "Zware shirts met een verhaal op de rug, een hoodie voor na het surfen en kleine dingen die je elke sessie gebruikt."},
+        {"type": "text", "id": "btn1_label", "label": "Knop", "default": "Kleding en merch"},
+        {"type": "text", "id": "btn1_link", "label": "Knop (adres)", "default": "/collections/kleding-en-merch"},
+        {"type": "text", "id": "btn2_label", "label": "Tweede link", "default": "Surfgear"},
+        {"type": "text", "id": "btn2_link", "label": "Tweede link (adres)", "default": "/collections/surfgear"},
+    ],
+    "blocks": [{"type": "item", "name": "Product", "settings": [
+        {"type": "product", "id": "product", "label": "Product", "info": "Leeg = de foto, naam en prijs hieronder."},
+        {"type": "text", "id": "titel", "label": "Naam", "default": "Product"},
+        {"type": "text", "id": "prijs", "label": "Prijs (tekst)", "default": ""},
+        {"type": "text", "id": "link", "label": "Link (adres)", "default": "/collections/all"},
+    ] + blok_beeld('tt-meer-1', '', '')}],
+    "presets": [{"name": "TT: meer dan een tas"}]})
 
 print('klaar')

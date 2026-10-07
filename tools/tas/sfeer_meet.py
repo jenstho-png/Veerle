@@ -62,9 +62,16 @@ def segmenteer(img, hint):
             else:
                 cv2.polylines(m, [pts], False, waarde, int(dik))
     bgd, fgd = np.zeros((1, 65), np.float64), np.zeros((1, 65), np.float64)
-    # werken op een kleinere schaal als het beeld groot is, daarna verfijnen op volle schaal rond de rand
+    # alleen rond het board rekenen (veel sneller), met een rand achtergrond eromheen
+    ys, xs = np.nonzero(m != cv2.GC_BGD)
+    marge = int(b * 0.5)
+    y0, y1 = max(ys.min() - marge, 0), min(ys.max() + marge, h)
+    x0, x1 = max(xs.min() - marge, 0), min(xs.max() + marge, w)
+    sub = np.ascontiguousarray(m[y0:y1, x0:x1])
     cv2.setRNGSeed(1)
-    cv2.grabCut(cv2.cvtColor(img, cv2.COLOR_RGB2BGR), m, None, bgd, fgd, hint.get('iter', 6), cv2.GC_INIT_WITH_MASK)
+    cv2.grabCut(cv2.cvtColor(np.ascontiguousarray(img[y0:y1, x0:x1]), cv2.COLOR_RGB2BGR), sub, None, bgd, fgd, hint.get('iter', 6), cv2.GC_INIT_WITH_MASK)
+    m[:] = cv2.GC_BGD
+    m[y0:y1, x0:x1] = sub
     fg = ((m == cv2.GC_FGD) | (m == cv2.GC_PR_FGD)).astype(np.uint8)
     # grootste component, gaten dicht
     n, lab, st, _ = cv2.connectedComponentsWithStats(fg, 8)
@@ -149,6 +156,42 @@ def glad(tt, v, venster=31, geldig=None):
     return uniform_filter1d(vv, max(venster // 2, 1), mode='nearest')
 
 
+def verfijn(img, c, a, tt, rand, kant, binnen=14, buiten=14, ref=(14, 34), drempel=0.5):
+    """Schuif de rand langs de normaal naar de echte overgang board -> achtergrond.
+    Per positie: kleurafstand tot de achtergrond net buiten de rand; de rand ligt waar die afstand
+    (van buiten naar binnen) voor het eerst boven `drempel` x het niveau binnen het board komt."""
+    n = np.array([-a[1], a[0]])
+    lab = cv2.cvtColor(img, cv2.COLOR_RGB2LAB).astype(np.float32)
+    lab = cv2.GaussianBlur(lab, (0, 0), 0.8)
+    ds = np.arange(-binnen - 10, ref[1] + 1, 0.5)
+    uit = rand.copy()
+    for i, t in enumerate(tt):
+        e = rand[i]
+        if np.isnan(e):
+            continue
+        pts = c[None] + a[None] * t + n[None] * (e + kant * ds)[:, None]
+        X = pts[:, 0].astype(np.float32); Y = pts[:, 1].astype(np.float32)
+        if X.min() < 0 or Y.min() < 0 or X.max() > img.shape[1] - 1 or Y.max() > img.shape[0] - 1:
+            continue
+        prof = cv2.remap(lab, X[None], Y[None], cv2.INTER_LINEAR)[0]
+        bg = np.median(prof[(ds >= ref[0]) & (ds <= ref[1])], 0)
+        D = np.linalg.norm(prof - bg, axis=1)
+        binnenniveau = np.median(D[(ds >= -binnen - 10) & (ds <= -binnen)])
+        ruis = np.median(D[(ds >= ref[0]) & (ds <= ref[1])]) + 1
+        if binnenniveau < ruis * 3:
+            continue            # board lijkt hier op de achtergrond: niet verschuiven
+        grens = ruis + (binnenniveau - ruis) * drempel
+        zoek = (ds >= -binnen) & (ds <= buiten)
+        boven = np.where(zoek & (D > grens))[0]
+        if len(boven):
+            j = boven.max()     # buitenste punt dat nog board is
+            if j + 1 < len(ds):
+                # sub-pixel tussen j en j+1
+                f = (D[j] - grens) / max(D[j] - D[j + 1], 1e-6)
+                uit[i] = e + kant * (ds[j] + 0.5 * np.clip(f, 0, 1))
+    return uit
+
+
 def meet(naam, hint, check=None):
     img = laad(naam)
     h, w = img.shape[:2]
@@ -166,6 +209,13 @@ def meet(naam, hint, check=None):
     for t0, t1 in hint.get('negeer_hi', []):
         ghi &= ~((tt >= t0) & (tt <= t1))
     lo_g = glad(tt, lo, 15, glo); hi_g = glad(tt, hi, 15, ghi)
+    if hint.get('verfijn', True):
+        vb = hint.get('verfijn_buiten', 14)
+        lo_r = verfijn(img, c, a, tt, lo_g, -1, buiten=vb, drempel=hint.get('drempel', 0.5))
+        hi_r = verfijn(img, c, a, tt, hi_g, 1, buiten=vb, drempel=hint.get('drempel', 0.5))
+        lo_g = glad(tt, lo_r, 21, glo); hi_g = glad(tt, hi_r, 21, ghi)
+    # handmatige correctie (px, + = naar buiten) per kant
+    lo_g = lo_g - hint.get('corr_lo', 0.0); hi_g = hi_g + hint.get('corr_hi', 0.0)
     t_neus = tt.max() if not hint.get('neus_buiten') else None
     t_staart = tt.min() if not hint.get('staart_buiten') else None
     # balanspunt

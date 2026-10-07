@@ -28,7 +28,7 @@
       </div>
       <div class="tt-surfcheck__onder">
         <p class="tt-surfcheck__bron">Indicatie van Open-Meteo. Check altijd zelf de omstandigheden ter plekke.</p>
-        {%- if section.settings.btn_label != blank -%}<a class="tt-link" href="{% if settings.tt_product != blank %}{{ settings.tt_product.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}</a>{%- endif -%}
+        {%- if section.settings.btn_label != blank -%}<a class="tt-link" href="{% if section.settings.btn_link != blank %}{{ section.settings.btn_link }}{% elsif settings.tt_product != blank %}{{ settings.tt_product.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{{ section.settings.btn_label }}</a>{%- endif -%}
       </div>
     </div>
   </div>
@@ -93,7 +93,13 @@
       "type": "text",
       "id": "btn_label",
       "label": "Link onder de check",
-      "default": "Bekijk de draagtas"
+      "default": "Welke wax past bij dit water"
+    },
+    {
+      "type": "text",
+      "id": "btn_link",
+      "label": "Link (adres)",
+      "default": "/collections/surfgear"
     }
   ],
   "blocks": [
