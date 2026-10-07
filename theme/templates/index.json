@@ -487,33 +487,33 @@
         "item-1": {
           "type": "item",
           "settings": {
-            "titel": "T-shirt Lijn naar zee",
+            "titel": "T-shirt Board",
             "prijs": "€35",
-            "link": "/products/t-shirt-lijn-naar-zee",
+            "link": "/products/t-shirt-board",
             "fallback": "tt-meer-1",
-            "alt": "Achterkant van het crème T-shirt Lijn naar zee",
+            "alt": "Achterkant van het zandkleurige T-shirt Board",
             "filename": ""
           }
         },
         "item-2": {
           "type": "item",
           "settings": {
-            "titel": "T-shirt Getijden",
+            "titel": "T-shirt Zon",
             "prijs": "€35",
-            "link": "/products/t-shirt-getijden",
+            "link": "/products/t-shirt-zon",
             "fallback": "tt-meer-2",
-            "alt": "Navy T-shirt Getijden aan een hanger",
+            "alt": "Achterkant van het navy T-shirt Zon",
             "filename": ""
           }
         },
         "item-3": {
           "type": "item",
           "settings": {
-            "titel": "Hoodie Busje",
+            "titel": "Hoodie Twee boards",
             "prijs": "€65",
-            "link": "/products/hoodie-busje",
+            "link": "/products/hoodie-twee-boards",
             "fallback": "tt-meer-3",
-            "alt": "Baby blue hoodie met klein logo",
+            "alt": "Achterkant van de navy hoodie Twee boards",
             "filename": ""
           }
         },
@@ -524,7 +524,7 @@
             "prijs": "€10",
             "link": "/products/karabijnhaak-messing",
             "fallback": "tt-meer-4",
-            "alt": "Messing karabijnhaak met sleutellus van tasband",
+            "alt": "Messing karabijnhaak met een lus van tasband",
             "filename": ""
           }
         },
@@ -542,11 +542,11 @@
         "item-6": {
           "type": "item",
           "settings": {
-            "titel": "Canvas tas",
-            "prijs": "€20",
-            "link": "/products/canvas-tas",
+            "titel": "Surfwax koud water",
+            "prijs": "€5",
+            "link": "/products/surfwax-koud",
             "fallback": "tt-meer-6",
-            "alt": "Canvas tas met het busje",
+            "alt": "Pak surfwax voor koud water",
             "filename": ""
           }
         }
@@ -563,7 +563,7 @@
         "bg": "creme",
         "label": "Tide Tode",
         "heading": "Meer dan|een *tas*",
-        "text": "Een merk voor de hele weg naar zee. Zware shirts met een verhaal op de rug, een hoodie voor na het surfen en kleine dingen die je elke sessie gebruikt."
+        "text": "Een merk voor de hele weg naar zee. Zware shirts met een tekening op de rug, een hoodie voor na het surfen en kleine dingen die je elke sessie gebruikt."
       }
     }
   },

@@ -508,20 +508,20 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
   <h2>ONDERWEG</h2>
   <p>Sfeerbeelden: echte plekken, natuurlijk licht, de tas in gebruik. Geen poses, geen studio.</p>
   <div class="twee">
-    <div style="background-image:url({productfoto(PB / 'fabriek' / 'lifestyle-busje.jpg', 800)})"></div>
-    <div style="background-image:url({productfoto(PB / 'fabriek' / 'lifestyle-knuffel.jpg', 800)})"></div>
+    <div style="background-image:url({productfoto(PB / 'fotos' / 'sfeer-zand-tegel.jpg', 800)})"></div>
+    <div style="background-image:url({productfoto(PB / 'fotos' / 'sfeer-muur-tegel.jpg', 800)})"></div>
   </div>
 </div></section>''')
     # 3g kleding en accessoires: echte productfoto's
     def raster(items):
         return ''.join(f'<figure><div style="background-image:url({productfoto(PB / "beelden" / f"{f}.jpg", 520)})"></div><figcaption>{t}</figcaption></figure>'
                        for f, t in items if (PB / 'beelden' / f'{f}.jpg').exists())
-    kleding = [('t-shirt-lijn-naar-zee-1', 'LIJN NAAR ZEE'), ('t-shirt-lijn-naar-zee-2', 'DE RUG'), ('t-shirt-lijn-naar-zee-3', 'GEDRAGEN'),
-               ('t-shirt-getijden-1', 'GETIJDEN'), ('t-shirt-getijden-2', 'DE RUG'), ('t-shirt-getijden-3', 'GEDRAGEN'),
-               ('hoodie-busje-1', 'HOODIE BUSJE'), ('longsleeve-tegel-2', 'LONGSLEEVE TEGEL'), ('longsleeve-golf-2', 'LONGSLEEVE GOLF')]
+    kleding = [('t-shirt-board-2', 'BOARD'), ('t-shirt-zon-2', 'ZON'), ('t-shirt-golf-2', 'GOLF'),
+               ('t-shirt-klassiek-2', 'KLASSIEK'), ('t-shirt-op-weg-naar-zee-2', 'OP WEG NAAR ZEE'), ('t-shirt-lijn-naar-zee-2', 'LIJN NAAR ZEE'),
+               ('hoodie-twee-boards-2', 'HOODIE'), ('sweater-boards-1', 'SWEATER'), ('longsleeve-vin-1', 'LONGSLEEVE VIN')]
     paginas.append(f'''<section class="pagina" aria-label="Kleding"><div class="fotop">
   <h2>KLEDING</h2>
-  <p>Zware shirts van biologisch katoen. Op de rug een verhaal: de lijn naar zee langs onze surfspots, de getijden van Scheveningen. In de nek altijd ons eigen label.</p>
+  <p>Zware shirts en truien van biologisch katoen. Op de rug een tekening in één of twee kleuren: een board, de zon, een golf. In de nek altijd ons eigen label.</p>
   <div class="negen">{raster(kleding)}</div>
 </div></section>''')
     accessoires = [('karabijnhaak-messing-1', 'KARABIJNHAAK'), ('karabijnhaak-zwart-1', 'MAT ZWART'), ('pet-navy-1', 'PET'),
