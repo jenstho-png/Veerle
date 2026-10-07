@@ -397,7 +397,11 @@ ECHT = {
     't-shirt-getijden': ['Navy T-shirt Getijden aan een hanger, voorkant met klein logo op de borst',
                          'Achterkant van het navy T-shirt Getijden met de getijdenlijn van Scheveningen',
                          'Navy T-shirt Getijden gedragen buiten'],
-    'longsleeve-golf': ['Crème longsleeve Golf, voorkant met klein board en HANDEN VRIJ op de mouw',
+    't-shirt-koud-water': ['Navy T-shirt Koud water, voorkant met klein board', 'Achterkant van het navy T-shirt met de Koud Water Surfclub-stempel', 'Detail van de print'],
+    't-shirt-op-weg-naar-zee': ['Crème T-shirt Op weg naar zee, voorkant met klein board', 'Achterkant van het crème T-shirt met zeven keer OP WEG NAAR ZEE', 'Detail van de print'],
+    't-shirt-klassiek': ['Baby blue T-shirt Klassiek, voorkant met klein board', 'Achterkant van het baby blue T-shirt met TIDE TODE in een boog', 'Detail van de print'],
+    't-shirt-board': ['Zandkleurig T-shirt Board, voorkant met klein board', 'Achterkant van het zandkleurige T-shirt met het grote board', 'Detail van de print'],
+    'longsleeve-golf': ['Crème longsleeve Golf, voorkant met klein board en NOORDZEE op de mouw',
                         'Achterkant van de crème longsleeve Golf met de golf en HANDEN VRIJ',
                         'Crème longsleeve Golf gedragen'],
     'longsleeve-tegel': ['Navy longsleeve Tegel, voorkant met een klein tegeltje op de borst',
@@ -637,5 +641,5 @@ for p in P:
         regels += [f'Voorkant, opslaan als `{h}.png`', '', '```', f'Use the attached drawing as reference. Create a flat lay of {voor}, laid out neatly and seen from above. {STIJL}', '```', '',
                    f'Achterkant, opslaan als `{h}-achter.png` (tekening: {RAW}{h}-2.jpg)', '', '```', f'Use the attached drawing as reference. Create a flat lay of {achter}, laid out neatly and seen from above. {STIJL}', '```', '']
     else:
-        regels += [f'Opslaan als `{h}.png`', '', '```', f'Use the attached drawing as reference. Create {OVERIG_EN[h]}. {STIJL}', '```', '']
+        regels += [f'Opslaan als `{h}.png`', '', '```', f'Use the attached drawing as reference. Create {OVERIG_EN.get(h, "the product shown in the drawing")}. {STIJL}', '```', '']
 (DOCS / 'chatgpt-prompts.md').write_text('\n'.join(regels))

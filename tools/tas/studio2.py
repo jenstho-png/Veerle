@@ -399,14 +399,14 @@ def maak_alles(handle):
     s1 = ST.B / 1400
     uit.append(foto(zand(), rb, rl, XM, (lus_y + paneel_y) / 2, s1, dof=1.4))
     # 2: het hele board op fotopapier in een merkkleur
-    s2 = ST.H / 2900 * 0.97
+    s2 = 0.76
     uit.append(foto(ST.achtergrond(stijl['papier'], zaad=3), rb, rl, XM, 1080, s2))
     # 3: macro van het geweven label op de stof, met de band en het geweven logo en de rail
     s3 = ST.B / 680
-    uit.append(foto(zand_detail(s3 / s1, zaad=1), rb, rl, XM + 60, 930, s3, dof=2.0))
-    # 4: de band die over de rail van het board af loopt naar de lus, met het vak dat om de rail valt
+    uit.append(foto(zand_detail(s3 / s1, zaad=1), rb, rl, XM + 60, 930, s3, dof=2.4))
+    # 4: de andere rail: het vak met zijn schuine zoom valt om de rail, de band loopt eronderdoor naar de onderkant
     s4 = ST.B / 700
-    uit.append(foto(zand_detail(s4 / s1, zaad=2), rb, rl, XM + 250, 900, s4, dof=1.6))
+    uit.append(foto(zand_detail(s4 / s1, zaad=2), rb, rl, XM + 300, 1490, s4, dof=2.4))
     for i, img in enumerate(uit, 1):
         q = bewaar(ST.afwerking(img, korrel=0.005, zaad=7 + i), DOEL / f'{handle}-{i}.jpg')
         print(f'  {handle}-{i}.jpg q{q}', (DOEL / f'{handle}-{i}.jpg').stat().st_size // 1000, 'kB')

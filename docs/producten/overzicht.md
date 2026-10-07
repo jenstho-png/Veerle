@@ -1,6 +1,6 @@
 # Assortiment Tide Tode
 
-27 producten in 3 collecties. Importeren: Shopify admin, Producten, Importeren, `producten.csv`.
+31 producten in 3 collecties. Importeren: Shopify admin, Producten, Importeren, `producten.csv`.
 
 De productfoto's worden bij de import van GitHub opgehaald.
 
@@ -36,6 +36,10 @@ De productfoto's worden bij de import van GitHub opgehaald.
 |---|---|---|
 | T-shirt Lijn naar zee | € 35,00 | `t-shirt-lijn-naar-zee` |
 | T-shirt Getijden | € 35,00 | `t-shirt-getijden` |
+| T-shirt Koud water | € 35,00 | `t-shirt-koud-water` |
+| T-shirt Op weg naar zee | € 35,00 | `t-shirt-op-weg-naar-zee` |
+| T-shirt Klassiek | € 35,00 | `t-shirt-klassiek` |
+| T-shirt Board | € 35,00 | `t-shirt-board` |
 | Longsleeve Golf | € 45,00 | `longsleeve-golf` |
 | Longsleeve Tegel | € 45,00 | `longsleeve-tegel` |
 | UV-shirt lange mouw | € 45,00 | `uv-shirt-lange-mouw` |

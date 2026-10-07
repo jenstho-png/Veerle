@@ -332,7 +332,7 @@ def weefsel(shape, zaad=1, sterkte=0.035, periode=3.2):
     return 1 + sterkte * (0.6 * schering + 0.5 * ruis + 0.4 * slub)
 
 
-def franje(b, lengte=88, steek=13, zaad=4, kleur=None):
+def franje(b, lengte=88, steek=23, zaad=4, kleur=None):
     """Franjes onder een rand van breedte b: getwijnde koordjes met een knoopje, rafelig eindje. Geeft rgb, alpha."""
     kleur = BAND if kleur is None else kleur
     rng = np.random.default_rng(zaad)
@@ -341,15 +341,15 @@ def franje(b, lengte=88, steek=13, zaad=4, kleur=None):
     a = np.zeros((H, W), np.float32)
     lijn = np.zeros((H, W), np.float32)
     for x in np.arange(steek * 0.6, b, steek):
-        x0 = (x + rng.normal(0, 1.2) + 10) * S
-        L = (lengte + rng.normal(0, 6)) * S
-        dx = rng.normal(0, 4) * S
-        bocht = rng.normal(0, 3) * S
+        x0 = (x + rng.normal(0, 2.2) + 10) * S
+        L = (lengte + rng.normal(0, 9)) * S
+        dx = rng.normal(0, 13) * S
+        bocht = rng.normal(0, 8) * S
         t = np.linspace(0, 1, 40)
         px = x0 + dx * t + bocht * np.sin(np.pi * t)
         py = 2 * S + L * t
         pts = np.stack([px, py], 1).astype(np.int32)
-        dik = int(max(3, rng.normal(5.6, 0.5)) * S)
+        dik = int(max(4, rng.normal(7.0, 0.7)) * S)
         cv2.polylines(a, [pts], False, 1.0, dik, cv2.LINE_AA)
         # twijnlijntjes schuin over het koord
         for tt in np.arange(0.02, 0.93, 4.2 * S / L):
@@ -368,7 +368,7 @@ def franje(b, lengte=88, steek=13, zaad=4, kleur=None):
     d = cv2.distanceTransform((a > 0.5).astype(np.uint8), cv2.DIST_L2, 5)
     prof = np.clip(d / (2.8 * S), 0, 1) ** 0.5
     gx = cv2.Sobel(cv2.GaussianBlur(a, (0, 0), S), cv2.CV_32F, 1, 0); gy = cv2.Sobel(cv2.GaussianBlur(a, (0, 0), S), cv2.CV_32F, 0, 1)
-    licht = 0.78 + 0.22 * prof - 0.02 * (gx * 0.6 + gy * 0.8)
+    licht = 0.86 + 0.18 * prof - 0.02 * (gx * 0.6 + gy * 0.8)
     licht = licht * (1 - 0.18 * cv2.GaussianBlur(lijn, (0, 0), 0.6 * S))
     rgb = kleur[None, None] * licht[..., None] * weefsel((H, W), zaad, 0.05, 1.5 * S)[..., None]
     rgb = cv2.resize(rgb, (W // S, H // S), interpolation=cv2.INTER_AREA)
@@ -397,14 +397,18 @@ def geweven_label(b=150):
     rand = np.ones((h, b), np.float32)
     rand[:2] = rand[-2:] = 0.8; rand[:, :2] = rand[:, -2:] = 0.8
     lab = lab * rand[..., None]
+    st = np.zeros((h, b), np.float32)
+    st[3, 4:-4] = st[-4, 4:-4] = 1; st[3:-3, 3] = st[3:-3, -4] = 1
+    st = st * ((np.arange(b)[None] // 3 + np.arange(h)[:, None] // 3) % 2 == 0)
+    lab = lab * (1 - 0.5 * st[..., None]) + hexrgb('#1A2840') * 0.5 * st[..., None]
     return np.clip(lab, 0, 1)
 
 
-def gevouwen_handdoek(B=980, H=1240, tegel_b=150, zaad=11):
+def gevouwen_handdoek(B=1120, H=1400, tegel_b=165, zaad=11):
     """Strandhanddoek netjes gevouwen, recht van boven. Boven, links en rechts zijn vouwen (rond), onder komen beide
     korte kanten samen: de effen zoom met franjes en daaronder de tweede laag. Geeft rgba."""
-    R = 30                                    # straal van de vouw
-    rand = 46                                 # effen zoom
+    R = 44                                    # straal van de vouw
+    rand = 52                                 # effen zoom
     fl = 92                                   # franjelengte
     totH = H + fl + 30
     rng = np.random.default_rng(zaad)
@@ -427,6 +431,10 @@ def gevouwen_handdoek(B=980, H=1240, tegel_b=150, zaad=11):
     zoom_y0 = H - rand
     zoom = (yy >= zoom_y0) & (yy < H)
     band = BAND[None, None] * weefsel((totH, B), zaad, 0.06, 1.6)[..., None]
+    # twee smalle navy streepjes ingeweven in de zoom
+    for sy in (zoom_y0 + 12, zoom_y0 + 19):
+        streep = np.clip(1.6 - np.abs(yy - sy), 0, 1)[..., None] * zoom[..., None]
+        band = band * (1 - streep) + hexrgb(NAVY)[None, None] * weefsel((totH, B), zaad + 5, 0.08, 1.6)[..., None] * streep
     stof = np.where(zoom[..., None], band, lap_w)
     # rijgsteek tussen patroon en zoom
     stof = stof * (1 - 0.18 * np.exp(-((yy - zoom_y0) / 1.6) ** 2))[..., None]
@@ -437,8 +445,10 @@ def gevouwen_handdoek(B=980, H=1240, tegel_b=150, zaad=11):
     hoog = np.minimum(np.minimum(rond(el), rond(er)), rond(eb))
     hoog = hoog + cv2.GaussianBlur(rng.normal(0, 1, (totH, B)).astype(np.float32), (0, 0), 70) * 120
     gy_, gx_ = np.gradient(cv2.GaussianBlur(hoog, (0, 0), 2))
-    schaduw = 1 - 0.55 * (gx_ * 0.62 + gy_ * 0.78)
-    schaduw = np.clip(schaduw, 0.55, 1.12)
+    schaduw = 1 - 0.75 * (gx_ * 0.62 + gy_ * 0.78)
+    # waar de vouw naar beneden wegdraait valt minder licht op de stof
+    schaduw = schaduw * (0.80 + 0.20 * np.clip(np.minimum(np.minimum(el, er), eb) / R, 0, 1) ** 0.5)
+    schaduw = np.clip(schaduw, 0.5, 1.12)
     stof = stof * schaduw[..., None]
     # silhouet: rechthoek met heel licht golvende randen
     golf = cv2.GaussianBlur(rng.normal(0, 1, (4, max(B, totH))).astype(np.float32), (0, 0), sigmaX=40, sigmaY=0.01) * 60
@@ -453,7 +463,7 @@ def gevouwen_handdoek(B=980, H=1240, tegel_b=150, zaad=11):
     alpha = np.maximum(alpha, l2)
     # franjes van beide lagen, een beetje verspringend
     for laag_y, z, donker in [(H + 10, zaad + 2, 0.86), (H - 2, zaad + 3, 1.0)]:
-        fr, fa = franje(B - 30, lengte=fl, steek=13, zaad=z)
+        fr, fa = franje(B - 30, lengte=fl, steek=23, zaad=z)
         fr = fr * donker
         y0 = laag_y; x0 = 15
         hh = min(fa.shape[0], totH - y0)
@@ -471,9 +481,9 @@ def gevouwen_handdoek(B=980, H=1240, tegel_b=150, zaad=11):
             rgb[y0:y0 + hh, x0:x0 + fa.shape[1]] = rgb[y0:y0 + hh, x0:x0 + fa.shape[1]] * (1 - vlak[..., None]) + fr[:hh] * vlak[..., None]
             alpha[y0:y0 + hh, x0:x0 + fa.shape[1]] = np.maximum(alpha[y0:y0 + hh, x0:x0 + fa.shape[1]], vlak)
     # geweven label op de zoom, links
-    lab = geweven_label(132)
+    lab = geweven_label(104)
     lh, lw = lab.shape[:2]
-    ly, lx = zoom_y0 + (rand - lh) // 2, 70
+    ly, lx = zoom_y0 + 24, 64
     sch = np.zeros((totH, B), np.float32); sch[ly + 2:ly + lh + 2, lx + 2:lx + lw + 2] = 1
     sch = cv2.GaussianBlur(sch, (0, 0), 1.6)
     rgb = rgb * (1 - 0.3 * sch * (1 - 0))[..., None]
@@ -481,10 +491,162 @@ def gevouwen_handdoek(B=980, H=1240, tegel_b=150, zaad=11):
     return np.dstack([np.clip(rgb, 0, 1), alpha]).astype(np.float32)
 
 
+def kreukels(B, H, zaad=0):
+    """Zachte plooien uit een echte foto van een strandlaken op zand (stock/handdoek2-zand-1.jpg, Unsplash):
+    alleen de lichtval van de plooien, strepen en harde zon eruit, zacht gemaakt voor raamlicht."""
+    f = MK.laad(ROOT / 'docs' / 'producten' / 'stock' / 'handdoek2-zand-1.jpg')
+    L = MK.helderheid(f)[830:2133, 0:1075]
+    L = cv2.morphologyEx(L, cv2.MORPH_OPEN, np.ones((15, 3), np.uint8))          # witte streepjes weg
+    m = np.zeros(L.shape, np.uint8); m[100:420, 860:1075] = 255                       # zonnebril
+    L = cv2.inpaint((np.clip(L, 0, 1) * 255).astype(np.uint8), m, 25, cv2.INPAINT_TELEA).astype(np.float32) / 255
+    L = cv2.medianBlur((np.clip(L, 0, 1) * 255).astype(np.uint8), 9).astype(np.float32) / 255
+    L = cv2.GaussianBlur(L, (0, 0), 13)
+    rel = L / (cv2.GaussianBlur(L, (0, 0), 160) + 1e-3)
+    rel = cv2.resize(rel, (B, H), interpolation=cv2.INTER_CUBIC)
+    return 1 + np.clip(rel - 1, -0.5, 0.4) * 0.8
+
+
+def liggende_handdoek(B=1400, H=1700, tegel_b=104, zaad=21):
+    """Uitgespreid laken, recht van boven: patroon met zachte plooien, zoom met streepjes, franjes en label onderaan."""
+    rand, fl = 58, 96
+    totH = H + fl + 30
+    rng = np.random.default_rng(zaad)
+    kr = kreukels(B, H, zaad)
+    gy_, gx_ = np.gradient(cv2.GaussianBlur(kr, (0, 0), 6))
+    lap = tegel_lap(B + 80, H + 80, tegel_b, zaad)
+    yy, xx = np.mgrid[0:totH, 0:B].astype(np.float32)
+    kr_v = np.pad(kr, ((0, totH - H), (0, 0)), mode='edge')
+    gx_v = np.pad(gx_, ((0, totH - H), (0, 0)), mode='edge'); gy_v = np.pad(gy_, ((0, totH - H), (0, 0)), mode='edge')
+    stof = cv2.remap(lap, xx + 40 + gx_v * 260, yy + 40 + gy_v * 260, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+    zoom_y0 = H - rand
+    zoom = (yy >= zoom_y0) & (yy < H)
+    band = BAND[None, None] * weefsel((totH, B), zaad, 0.06, 1.6)[..., None]
+    for sy in (zoom_y0 + 13, zoom_y0 + 20):
+        streep = np.clip(1.6 - np.abs(yy - sy), 0, 1)[..., None] * zoom[..., None]
+        band = band * (1 - streep) + hexrgb(NAVY)[None, None] * streep
+    stof = np.where(zoom[..., None], band, stof)
+    stof = stof * (1 - 0.18 * np.exp(-((yy - zoom_y0) / 1.6) ** 2))[..., None]
+    stof = stof * kr_v[..., None]
+    # label rechts op de zoom
+    lab = geweven_label(104)
+    lh, lw = lab.shape[:2]
+    ly, lx = zoom_y0 + 26, B - 70 - lw
+    sch = np.zeros((totH, B), np.float32); sch[ly + 2:ly + lh + 2, lx + 2:lx + lw + 2] = 1
+    stof = stof * (1 - 0.3 * cv2.GaussianBlur(sch, (0, 0), 1.6))[..., None]
+    stof[ly:ly + lh, lx:lx + lw] = lab * kr_v[ly:ly + lh, lx:lx + lw, None]
+    golf = cv2.GaussianBlur(rng.normal(0, 1, (3, max(B, totH))).astype(np.float32), (0, 0), sigmaX=50, sigmaY=0.01) * 70
+    alpha = np.clip(np.minimum(np.minimum(xx - 1.5 - golf[0, :totH][:, None], B - 1.5 + golf[1, :totH][:, None] - xx),
+                               H - yy + golf[2, :B][None] * 0.3) + 0.5, 0, 1)
+    rgb = stof * alpha[..., None]
+    fr, fa = franje(B - 30, lengte=fl, steek=23, zaad=zaad + 2)
+    y0, x0 = H - 3, 15
+    hh = min(fa.shape[0], totH - y0)
+    rgb[y0:y0 + hh, x0:x0 + fa.shape[1]] = rgb[y0:y0 + hh, x0:x0 + fa.shape[1]] * (1 - fa[:hh, :, None]) + fr[:hh] * fa[:hh, :, None]
+    alpha[y0:y0 + hh, x0:x0 + fa.shape[1]] = np.maximum(alpha[y0:y0 + hh, x0:x0 + fa.shape[1]], fa[:hh])
+    return np.dstack([np.clip(rgb, 0, 1), alpha]).astype(np.float32)
+
+
+def handdoek_macro():
+    """Detail: echte macrofoto van een platgeweven laken met getwijnde franjes (Unsplash), naar ons crème garen gekleurd,
+    met de navy streepjes en het tegelpatroon evenwijdig aan de zoom, even onscherp als de foto daar is."""
+    f = MK.laad(STOCK / 'handdoek-franje-macro-1.jpg')
+    h, w = f.shape[:2]
+    L = MK.helderheid(f)
+    ref = float(np.percentile(L, 92))
+    rgb = BAND[None, None] * np.clip(L / ref, 0, 1.2)[..., None] ** 1.05
+    # zoomlijn (knoopjes) en loodrecht daarop, het laken in
+    P1, P2 = np.array([960., 430.]), np.array([1640., 1420.])
+    d = (P2 - P1) / np.linalg.norm(P2 - P1); n = np.array([d[1], -d[0]])
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    sd = (xx - P1[0]) * n[0] + (yy - P1[1]) * n[1]            # afstand tot de zoom, positief = laken
+    langs = (xx - P1[0]) * d[0] + (yy - P1[1]) * d[1]
+    # scherpte van de foto per plek (scherptediepte), om de toevoegingen even onscherp te maken
+    lap_ = cv2.Laplacian(cv2.GaussianBlur(L, (0, 0), 3.0), cv2.CV_32F)
+    scherp = cv2.GaussianBlur(np.abs(lap_), (0, 0), 60)
+    lo, hi = np.percentile(scherp, 10), np.percentile(scherp, 97)
+    scherp = np.clip((scherp - lo) / (hi - lo), 0, 1) ** 0.7
+    begin = 360.0                                              # waar het patroon begint (zelfde verhouding als de zoom op het laken)
+    laag = np.zeros((h, w, 3), np.float32); dek = np.zeros((h, w), np.float32)
+    # tegelpatroon in de richting van de zoom
+    tb = 300
+    lap = tegel_lap(3200, 2600, tb, 5)
+    u = (langs + 1200) % lap.shape[1]; v = np.clip(sd - begin, 0, None) % lap.shape[0]
+    pat = cv2.remap(lap, u.astype(np.float32), v.astype(np.float32), cv2.INTER_LINEAR)
+    pm = np.clip((sd - begin) / 3, 0, 1)
+    laag = pat; dek = pm
+    for off in (begin - 85, begin - 135):
+        st = np.clip(11 - np.abs(sd - off), 0, 1)
+        laag = laag * (1 - st[..., None]) + hexrgb(NAVY)[None, None] * st[..., None]
+        dek = np.maximum(dek, st)
+    # onscherp maken naar de scherptediepte: mengen tussen drie vervagingen
+    lagen = [np.dstack([laag * dek[..., None], dek])]
+    for sg in (4, 12, 28):
+        lagen.append(cv2.GaussianBlur(lagen[0], (0, 0), sg))
+    t = (1 - scherp) * 3
+    i0 = np.clip(np.floor(t).astype(int), 0, 2); fr = (t - i0)[..., None]
+    stapel = np.stack(lagen, 0)
+    mix = np.take_along_axis(stapel, i0[None, ..., None].repeat(4, -1), 0)[0] * (1 - fr) + \
+          np.take_along_axis(stapel, (i0 + 1)[None, ..., None].repeat(4, -1), 0)[0] * fr
+    kl = mix[..., :3] / np.maximum(mix[..., 3:4], 1e-3); a = mix[..., 3:4]
+    # garen geverfd: kleur maal de licht/donker en structuur van de foto
+    schaduw = np.clip(L / ref, 0, 1.2)[..., None]
+    rgb = rgb * (1 - a) + kl * schaduw * a
+    rgb = np.clip(rgb * np.array([1.04, 1.0, 0.94], np.float32), 0, 1)
+    # uitsnede 4:5 rond de knoopjes, naar 1600 x 2000
+    x0, y0, cw, ch = 700, 0, 1280, 1600
+    uit = cv2.resize(rgb[y0:y0 + ch, x0:x0 + cw], (1600, 2000), interpolation=cv2.INTER_CUBIC)
+    return uit
+
+
 def handdoek():
     fold = gevouwen_handdoek()
-    doek = ST.leg(ST.achtergrond('zand'), fold, breedte=fold.shape[1], midden=(800, 1000), hoogte=9)
-    opslaan(doek, 'strandhanddoek-tegel-1')
+    opslaan(ST.leg(ST.achtergrond('zand'), fold, breedte=fold.shape[1], midden=(800, 1000), hoogte=9), 'strandhanddoek-tegel-1')
+    lig = liggende_handdoek()
+    H = 1700
+    top = 1640 - H
+    opslaan(ST.leg(ST.achtergrond('zand', zaad=2), lig, breedte=lig.shape[1], midden=(800, top + lig.shape[0] / 2), hoogte=4), 'strandhanddoek-tegel-2')
+    opslaan(handdoek_macro(), 'strandhanddoek-tegel-3')
+
+
+# ---------- canvas tas ----------
+def tas_rgba():
+    """Blanco naturel canvas tas plat van boven (Unsplash, op grijs), merkje weg, busje 'OP WEG NAAR ZEE' in de stof gedrukt."""
+    import echt as E
+    img = MK.laad(STOCK / 'tas-naturel-plat-1.jpg')
+    stuk = (grabcut(img, (700, 90, 1760, 1530), schaal=0.5, iter_=10) > 0.5).astype(np.uint8)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(stuk)
+    stuk = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
+    # kleine gaatjes dicht, de opening binnen het hengsel blijft open
+    inv = (1 - stuk).astype(np.uint8)
+    n2, lab2, st2, _ = cv2.connectedComponentsWithStats(inv)
+    for i in range(1, n2):
+        if st2[i, cv2.CC_STAT_AREA] < 20000:
+            stuk[lab2 == i] = 1
+    stuk = cv2.erode(stuk, np.ones((3, 3), np.uint8))
+    m = cv2.GaussianBlur(stuk.astype(np.float32), (0, 0), 1.1)
+    img = E.poets(img, 1576, 1404, 84, 84)
+    img = np.clip(img * np.array([1.0, 0.975, 0.92], np.float32) * 1.03, 0, 1)        # naturel, ongebleekt katoen
+    body = (m > 0.5).astype(np.float32)
+    body[:480] = 0
+    img = MK.zet_print(img, MK.laad_art(REF / 'hoodie-busje-rugprint-los.png'), 1214, 930, 520, verplaatsing=6,
+                       schaduw_sterkte=0.9, structuur=0.6, dekking=0.95, masker=cv2.GaussianBlur(body, (0, 0), 1))
+    return img, m, {'print': (1214, 930)}
+
+
+def tas():
+    p, m, pt = tas_rgba()
+    rgba = ST.vrijstaand(p, m)
+    opslaan(ST.leg(ST.achtergrond('zand'), rgba, hoogte_px=1720, midden=(800, 1000), hoogte=5), 'canvas-tas-1')
+    # 2: op zandpapier, met een gevouwen strandlaken eronder dat er rechtsonder uitpiept
+    doek = ST.achtergrond('zandpapier')
+    laken = gevouwen_handdoek(B=760, H=980, tegel_b=112, zaad=31)
+    doek = ST.leg(doek, laken, breedte=laken.shape[1], midden=(1060, 1290), hoogte=8)
+    doek = ST.leg(doek, rgba, hoogte_px=1420, midden=(720, 900), hoogte=5)
+    opslaan(doek, 'canvas-tas-2')
+    # 3: detail van de print in het canvas
+    s = 2.3
+    mid = midden_voor(m, (pt['print'][0], pt['print'][1] + 20), s, (800, 1000))
+    opslaan(ST.leg(ST.achtergrond('zand', zaad=3), rgba, breedte=rgba.shape[1] * s, midden=mid, hoogte=5), 'canvas-tas-3')
 
 
 def proef():

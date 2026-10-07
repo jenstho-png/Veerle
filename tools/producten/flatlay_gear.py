@@ -403,30 +403,29 @@ KAM_X0, KAM_X1 = 1128, 2701
 TERRA = '#C0603E'
 
 
-def kam_textuur(img, b, h, zaad=12):
-    """Fijne korrel van het echte plastic (b x h, rond 1): stroken effen plastic links en rechts naast de sleufjes,
-    met zachte naden naast elkaar gelegd (alleen de fijne structuur, het licht maken we zelf)."""
+def kam_textuur(img, b, h, zaad=12, n=48):
+    """Korrel van het echte plastic (b x h, rond 1). Het gemiddelde ruisspectrum van veel kleine vlakjes effen plastic
+    (links en rechts naast de sleufjes) wordt op nieuwe ruis gezet: dezelfde korrel, zonder naden of herhaling."""
     L = MK.helderheid(img)
-    detail = L / np.maximum(cv2.GaussianBlur(L, (0, 0), 6), 1e-3)
-    stroken = [(978, 1092), (2738, 2836)]
-    rng = np.random.default_rng(zaad)
-    som = np.zeros((h, b), np.float32)
-    gew = np.zeros((h, b), np.float32)
-    x = -10
-    while x < b:
-        sx0, sx1 = stroken[rng.integers(len(stroken))]
-        y0 = int(rng.uniform(2830, 4330 - h)) if 4330 - h > 2830 else 2830
-        stuk = detail[y0:y0 + h, sx0:sx1]
-        if stuk.shape[0] < h:
-            stuk = np.concatenate([stuk, stuk[::-1]], 0)[:h]
-        w = stuk.shape[1]
-        rand = np.minimum(np.arange(w) + 1, w - np.arange(w)).astype(np.float32)
-        wt = np.clip(rand / 12, 0, 1)[None, :] * np.ones((h, 1), np.float32)
-        xa, xb = max(x, 0), min(x + w, b)
-        som[:, xa:xb] += (stuk * wt)[:, xa - x:xb - x]
-        gew[:, xa:xb] += wt[:, xa - x:xb - x]
-        x += w - 14
-    return (som / np.maximum(gew, 1e-3)).astype(np.float32)
+    detail = L / np.maximum(cv2.GaussianBlur(L, (0, 0), 8), 1e-3) - 1
+    spec = np.zeros((n, n), np.float32)
+    tel = 0
+    venster = np.outer(np.hanning(n), np.hanning(n)).astype(np.float32)   # geen lekstrepen langs de assen
+    for sx0, sx1 in [(1052, 1108), (2722, 2790)]:
+        for y in range(2850, 4300 - n, n // 2):
+            for x in range(sx0, sx1 - n + 1, 8):
+                stuk = detail[y:y + n, x:x + n]
+                spec += np.abs(np.fft.fft2((stuk - stuk.mean()) * venster)) ** 2
+                tel += 1
+    filt = np.sqrt(spec / tel)
+    kern = np.real(np.fft.fftshift(np.fft.ifft2(filt))).astype(np.float32)
+    kern /= np.sqrt((kern ** 2).sum())
+    wit = np.random.default_rng(zaad).normal(0, 1, (h, b)).astype(np.float32)
+    korrel = cv2.filter2D(wit, -1, kern, borderType=cv2.BORDER_REFLECT)
+    stuk = detail[2850:4300, 1060:1100]
+    doel = float(1.4826 * np.median(np.abs(stuk - np.median(stuk))))         # robuust: zonder randjes en stofjes
+    korrel = korrel / (korrel.std() + 1e-6) * doel
+    return (1 + korrel + ruis((h, b), 0.008, 50, zaad + 1)).astype(np.float32)
 
 
 def logo_masker(breedte):
@@ -440,57 +439,49 @@ def logo_masker(breedte):
     return cv2.resize(m, (breedte, h), interpolation=cv2.INTER_AREA)
 
 
-def waxkam(hoogte_verhouding=0.62):
-    """Waxkam met schraper: plat terracotta plastic, tanden onder (echt, uit de foto), rechte schraaprand boven,
-    logo licht in het plastic gedrukt. Geeft RGBA (float32) op ca. 16 px per mm."""
+KAM_SLEUF = [1128, 1199, 1271, 1344, 1420, 1494, 1566, 1639, 1713, 1791, 1870, 1948, 2023, 2106, 2181, 2258, 2329, 2404, 2479, 2554, 2628, 2701]
+
+
+def waxkam(hoogte_verhouding=0.62, tand_lengte=215, tand_breedte=44):
+    """Waxkam met schraper: plat terracotta plastic, tanden onder, rechte schraaprand boven, logo licht in het plastic
+    gedrukt. Steek en lichtverloop van de tanden en de korrel van het plastic komen uit de echte kamfoto.
+    Geeft RGBA (float32), ca. 16 px per mm."""
     img = MK.laad(FLAT / 'kam-plat-voor-1.jpg')
     hsv = cv2.cvtColor((img * 255).astype(np.uint8), cv2.COLOR_RGB2HSV)
     S = hsv[..., 1].astype(np.float32)
     W = KAM_X1 - KAM_X0
     H = int(round(W * hoogte_verhouding))
-    # tandenrij: bovenkant van de sleufjes + de getrapte punten, in het midden van de tanden in elkaar overgevloeid
-    boven = slice(2700, 2830)
-    onder = slice(4395, 4600)
-    ov = 30
-    def rij(y):
-        return img[y, KAM_X0:KAM_X1], S[y, KAM_X0:KAM_X1]
-    rb, sb = rij(boven)
-    ro, so = rij(onder)
-    t = np.linspace(0, 1, ov, dtype=np.float32)[:, None]
-    mid_rgb = rb[-ov:] * (1 - t[..., None]) + ro[:ov] * t[..., None]
-    mid_s = sb[-ov:] * (1 - t) + so[:ov] * t
-    tand_rgb = np.concatenate([rb[:-ov], mid_rgb, ro[ov:]], 0)
-    tand_s = np.concatenate([sb[:-ov], mid_s, so[ov:]], 0)
-    th = tand_rgb.shape[0]
-    tand_a = np.clip((tand_s - 80) / 25, 0, 1) * np.clip((MK.helderheid(tand_rgb) - 0.28) / 0.08, 0, 1)
-    tand_a = cv2.GaussianBlur(tand_a, (0, 0), 0.9)
-    # lijf: glad plastic met de echte korrel, licht zoals op de foto (vlakke belichting)
-    lijf_h = H - th + 52                                   # 52 px plastic boven de sleufjes overlapt
-    tex = kam_textuur(img, W, lijf_h)
-    ref = np.median(MK.helderheid(tand_rgb)[tand_a > 0.9])
-    Lt = MK.helderheid(tand_rgb) / ref
-    Llijf = tex * float(np.median(Lt[:40][tand_a[:40] > 0.9]))
-    L = np.ones((H, W), np.float32)
-    L[:lijf_h] = Llijf
-    # overgang lijf -> tandenrij zacht (52 px): tanden-plastic is hetzelfde plastic
-    ovl = np.linspace(0, 1, 52, dtype=np.float32)[:, None]
-    L[lijf_h - 52:lijf_h] = Llijf[-52:] * (1 - ovl) + Lt[:52] * ovl
-    L[lijf_h:] = Lt[52:]
-    alpha = np.ones((H, W), np.float32)
-    alpha[lijf_h - 52:] = tand_a
-    alpha[lijf_h - 52:lijf_h] = np.maximum(alpha[lijf_h - 52:lijf_h], 1 - ovl)
-    # buitenrand: rechte zijkanten en schraaprand, afgeronde bovenhoeken
+    k = 4                                                     # vorm 4x zo fijn tekenen, dan verkleinen (gladde randen)
+    m = np.zeros((H * k, W * k), np.uint8)
+    y_wortel = H - tand_lengte
+    cv2.rectangle(m, (0, 0), (W * k - 1, (y_wortel + 2) * k), 255, -1)
+    r = tand_breedte / 2
+    for i in range(len(KAM_SLEUF) - 1):
+        c = (KAM_SLEUF[i] + KAM_SLEUF[i + 1]) / 2 - KAM_X0
+        x0, x1 = int((c - r) * k), int((c + r) * k)
+        cv2.rectangle(m, (x0, y_wortel * k), (x1, int((H - r) * k)), 255, -1)
+        cv2.circle(m, (int(c * k), int((H - r) * k)), int(r * k), 255, -1, cv2.LINE_AA)
+    # binnenhoeken tussen tand en lijf afronden (spuitgietwerk heeft nooit scherpe hoeken)
+    m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (13 * k, 13 * k)))
+    alpha = cv2.resize(m.astype(np.float32) / 255, (W, H), interpolation=cv2.INTER_AREA)
+    # afgeronde bovenhoeken en een net niet kaarsrechte buitenrand
     d = rand_afstand((H, W), 0, 0, W - 1, H + 200, 46, 31, ruw=0.6)
     alpha = alpha * np.clip(d + 0.5, 0, 1)
-    # rand van het plastic (2,5 mm dik, afgeschuind): licht naar het raam, schaduw aan de andere kant
-    L = L * schuine_rand(d, 10, 0.16)
+    # licht: echte korrel, rand afgeschuind, punten van de tanden met het echte verloop
+    L = kam_textuur(img, W, H)
+    L = 1 + (L - 1) * 0.9
+    dt = cv2.distanceTransform((alpha > 0.5).astype(np.uint8), cv2.DIST_L2, 5)
+    L = L * schuine_rand(np.minimum(dt, np.clip(d, 0, None)), 9, 0.15)
+    # zachte glans van het raam op het gladde plastic
+    yy0, xx0 = np.mgrid[0:H, 0:W].astype(np.float32)
+    L = L * (1.03 - 0.06 * (xx0 / W * 0.5 + yy0 / H * 0.5))
     # schraaprand boven: smalle facet die het licht vangt
     yy = np.arange(H, dtype=np.float32)[:, None]
-    L = L * (1 + 0.10 * np.exp(-((yy - 9) / 3.5) ** 2) - 0.05 * np.exp(-((yy - 18) / 3) ** 2))
+    L = L * (1 + 0.09 * np.exp(-((yy - 9) / 3.5) ** 2) - 0.04 * np.exp(-((yy - 18) / 3) ** 2))
     # logo in het plastic gedrukt (ca. 0,3 mm diep): binnenrand linksboven in de schaduw, rechtsonder licht
     lm = logo_masker(int(W * 0.52))
     lh, lw = lm.shape
-    ly = int((lijf_h - 52) * 0.47 - lh / 2)
+    ly = int(y_wortel * 0.48 - lh / 2)
     lx = (W - lw) // 2
     diep = np.zeros((H, W), np.float32)
     diep[ly:ly + lh, lx:lx + lw] = lm
@@ -498,8 +489,8 @@ def waxkam(hoogte_verhouding=0.62):
     gy, gx = np.gradient(h_)
     n = np.dstack([-gx, -gy, np.ones_like(gx)])
     n /= np.linalg.norm(n, axis=2, keepdims=True)
-    reliëf = (np.clip(n @ L3, 0, 1) / L3[2])
-    L = L * (1 + (reliëf - 1) * 0.9) * (1 - 0.035 * cv2.GaussianBlur(diep, (0, 0), 1.0))
+    relief = np.clip(n @ L3, 0, 1) / L3[2]
+    L = L * (1 + (relief - 1) * 0.9) * (1 - 0.035 * cv2.GaussianBlur(diep, (0, 0), 1.0))
     kleur = hexrgb(TERRA)
     rgb = np.clip(kleur[None, None] * (0.93 * np.clip(L, 0.3, 1.3))[..., None] ** 1.05, 0, 1)
     return np.dstack([rgb, alpha]).astype(np.float32)
@@ -520,6 +511,71 @@ def waxkam_fotos():
     doek = ST.leg(doek, wikkel_pak('koel'), breedte=930, midden=(800, 640), hoogte=14, contact=0.6)
     doek = ST.leg(doek, kam, breedte=1040, midden=(800, 1400), hoogte=7, contact=0.6)
     bewaar(doek, 'waxkam-3')
+
+
+# ---------- karabijnhaak ----------
+KARABIJN = {
+    # naam: donker metaal, licht metaal, gamma, band, garen (stiksel), tekst (geweven logo), achtergrond
+    'messing': ([0.42, 0.29, 0.1], [1.0, 0.88, 0.58], 1.15, '#22324F', '#C0603E', '#DCD3C2', 'zand'),
+    'zwart': ([0.05, 0.055, 0.065], [0.62, 0.64, 0.68], 2.2, '#67809F', '#F3ECDD', '#22324F', 'baby'),
+}
+
+
+def karabijn_rgba(naam):
+    """De karabijnhaak uit echt.karabijn() (gegoten logo, D-ring, lus van tasband) als vrijstaande laag.
+    We bouwen hem twee keer op: op zwart en op wit. Het verschil geeft de dekking; de schaduwen die echt.py op de oude
+    witte fotoachtergrond tekende, rekenen we eruit (ze zijn glad), zodat stijl.leg de schaduw van de studio geeft."""
+    donker, licht, gamma, band, garen, tekst, _ = KARABIJN[naam]
+    k = E.foto('karabiner-zilver-1.jpg')
+    m = E.omkleur_masker(k, 0.15, (800, 589), vullen=False, sluit=81)
+    L = MK.helderheid(k)
+    t = np.clip(L, 0, 1) ** gamma
+    metaal = np.array(donker)[None, None] + (np.array(licht) - np.array(donker))[None, None] * t[..., None]
+    glim = np.clip((L - 0.965) / 0.03, 0, 1)[..., None]
+    spec = np.array(licht) * 0.25 + 0.75 if naam == 'messing' else np.array([0.9, 0.92, 0.95])
+    metaal = metaal * (1 - glim) + spec[None, None] * glim
+    cnts, _ = cv2.findContours((m > 0.5).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    romp = np.zeros_like(m); cv2.fillPoly(romp, [cv2.convexHull(np.vstack(cnts))], 1)
+    romp = cv2.erode(romp, np.ones((9, 9), np.uint8))
+    grijs = (L < 0.935) & (cv2.dilate((m > 0.5).astype(np.uint8), np.ones((61, 61), np.uint8)) > 0)
+    glans = cv2.morphologyEx((romp * grijs).astype(np.uint8), cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8)).astype(np.float32)
+    zone = np.maximum(m, cv2.GaussianBlur(glans, (0, 0), 1.2))
+    uit = (k * (1 - zone[..., None]) + metaal * zone[..., None]).astype(np.float32)
+    uit = E.gegoten_logo(uit, m, 760, 600, 250, 29.2, sterkte=1.0 if naam == 'messing' else 1.4)
+    L0, B0, CW_, CH_ = 360, 300, 2600, 3250
+    hm = np.zeros((CH_, CW_), np.float32); hm[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = np.maximum(m, 0)
+    za = np.zeros((CH_, CW_), np.float32); za[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = zone
+    zc = np.zeros((CH_, CW_, 3), np.float32); zc[B0:B0 + m.shape[0], L0:L0 + m.shape[1]] = uit
+    r = np.array([-0.215, 0.977]); C = np.array([592 + L0, 1068 + B0])
+    Sd = C + r * 150
+    lagen = []
+    for grond in (0.0, 1.0):
+        doek = zc * za[..., None] + grond * (1 - za[..., None])
+        doek = E.d_ring(doek, hm, Sd, r, 300, 26, donker, licht)
+        doek = E.bandlabel(doek, tuple(Sd), tuple(r), 1450, 280, band, garen, tekst, buig=0.09, R=13)
+        lagen.append(doek)
+    P, Wt = lagen
+    verschil = (Wt - P).mean(-1)                         # = (1 - dekking) x schaduw op de achtergrond
+    zeker_buiten = cv2.erode((verschil > 0.45).astype(np.uint8), np.ones((9, 9), np.uint8)).astype(np.float32)
+    sch = cv2.GaussianBlur(verschil * zeker_buiten, (0, 0), 14) / np.maximum(cv2.GaussianBlur(zeker_buiten, (0, 0), 14), 1e-4)
+    sch = np.where(zeker_buiten > 0, verschil, np.clip(sch, 0.3, 1))
+    a = np.clip(1 - verschil / np.maximum(sch, 1e-3), 0, 1)
+    a = np.where(a < 0.03, 0, a)
+    kleur = np.clip(P / np.maximum(a[..., None], 1e-3), 0, 1)
+    rgba = ST.vrijstaand(kleur, a)
+    return rgba, Sd, r
+
+
+def karabijn_fotos(naam):
+    rgba, Sd, r = karabijn_rgba(naam)
+    achter = KARABIJN[naam][6]
+    hoek = float(np.degrees(np.arctan2(r[0], r[1])))     # band recht naar beneden leggen
+    # 1: hero van boven, haak en lus groot in beeld, band recht
+    doek = ST.achtergrond(achter)
+    hgt = rgba.shape[0]
+    doek = ST.leg(doek, rgba, hoogte_px=None, breedte=rgba.shape[1] * 1720 / hgt, midden=(800, 1000), draai=-hoek, hoogte=9, contact=0.55)
+    bewaar(doek, f'karabijnhaak-{naam}-1')
+    return rgba, hoek
 
 
 if __name__ == '__main__':

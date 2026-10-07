@@ -32,7 +32,7 @@ def lijn(k):
         o.append(f'<text x="292" y="{y + 20}" {DISP} font-size="68" letter-spacing="2" fill="{k["hoofd"]}">{naam}</text>')
         o.append(f'<text x="296" y="{y + 62}" {MONO} font-size="22" letter-spacing="5" fill="{k["zacht"]}">{plek}</text>')
     o.append(BB.logo_in('liggend', 290, 1050, 420, k['hoofd']))
-    o.append(f'<text x="500" y="1200" {MONO} font-size="24" letter-spacing="9" fill="{k["accent"]}" text-anchor="middle">HANDEN VRIJ SINDS 2025</text>')
+    o.append(f'<text x="500" y="1200" {MONO} font-size="24" letter-spacing="9" fill="{k["accent"]}" text-anchor="middle">SINDS 2025</text>')
     return ''.join(o)
 
 
@@ -116,7 +116,7 @@ def board(k):
     o.append(pijl(760, 140, 760, 1060, "7'2\"", 800, 600, 90))
     o.append(pijl(360, 1120, 640, 1120, '22\"', 500, 1170))
     o.append(pijl(240, 560, 240, 680, '2¾\"', 200, 620, -90))
-    o.append(f'<text x="500" y="1225" {MONO} font-size="22" letter-spacing="9" fill="{k["accent"]}" text-anchor="middle">TIDE TODE  HANDEN VRIJ SINDS 2025</text>')
+    o.append(f'<text x="500" y="1225" {MONO} font-size="22" letter-spacing="9" fill="{k["accent"]}" text-anchor="middle">TIDE TODE  SINDS 2025</text>')
     return ''.join(o)
 
 
@@ -157,7 +157,7 @@ def tegel(k):
 <rect x="206" y="126" width="588" height="588" rx="18" fill="none" stroke="{k["hoofd"]}" stroke-width="2.5"/>
 <text x="500" y="820" {DISP} font-size="92" letter-spacing="4" fill="{k["hoofd"]}" text-anchor="middle">TIDE TODE</text>
 <text x="500" y="890" {MONO} font-size="28" letter-spacing="10" fill="{k["accent"]}" text-anchor="middle">UIT DE STOF VAN ONZE TAS</text>
-<text x="500" y="960" {MONO} font-size="22" letter-spacing="9" fill="{k["zacht"]}" text-anchor="middle">HANDEN VRIJ OP WEG NAAR ZEE</text>'''
+<text x="500" y="960" {MONO} font-size="22" letter-spacing="9" fill="{k["zacht"]}" text-anchor="middle">NOORDZEE</text>'''
 
 
 def koudwater(k):
@@ -192,7 +192,7 @@ def herhaling(k):
         # alleen omlijnd (één inktkleur), de laatste regel vol in de accentkleur
         verf = f'fill="{k["accent"]}"' if i == 6 else f'fill="none" stroke="{k["hoofd"]}" stroke-width="2.6"'
         regels += f'<text x="500" y="{230 + i * 112}" {DISP} font-size="96" letter-spacing="3" {verf} text-anchor="middle">OP WEG NAAR ZEE</text>'
-    return regels + f'<text x="500" y="1060" {MONO} font-size="26" letter-spacing="12" fill="{k["hoofd"]}" text-anchor="middle">TIDE TODE  HANDEN VRIJ</text>'
+    return regels + f'<text x="500" y="1060" {MONO} font-size="26" letter-spacing="12" fill="{k["hoofd"]}" text-anchor="middle">TIDE TODE</text>'
 
 
 def weerbericht(k):
@@ -213,11 +213,91 @@ def boog(k):
 <defs><path id="bg" d="M170 640 a330 330 0 0 1 660 0"/></defs>
 <text {DISP} font-size="150" letter-spacing="10" fill="{k["hoofd"]}"><textPath href="#bg" startOffset="50%" text-anchor="middle">TIDE TODE</textPath></text>
 {BB.board_in(500, 600, 210, k["hoofd"])}
-<text x="500" y="800" {MONO} font-size="34" letter-spacing="16" fill="{k["hoofd"]}" text-anchor="middle">HANDEN VRIJ</text>
+<text x="500" y="800" {MONO} font-size="34" letter-spacing="16" fill="{k["hoofd"]}" text-anchor="middle">NOORDZEE</text>
 <text x="500" y="852" {MONO} font-size="24" letter-spacing="14" fill="{k["hoofd"]}" text-anchor="middle">SINDS 2025</text>'''
 
 
-ONTWERPEN = {'koudwater': koudwater, 'evenweg': evenweg, 'herhaling': herhaling, 'weerbericht': weerbericht, 'boog': boog, 'lijn': lijn, 'getij': getij, 'club': club, 'handen': handen, 'board': board, 'klok': klok, 'tegel': tegel}
+def grootboard(k):
+    """Ons board groot, met TIDE TODE en HANDEN VRIJ langs de rails geschreven."""
+    import re as _re, numpy as np
+    from scipy.spatial import ConvexHull
+    L = BB.LOGO['board']
+    pts = np.array([[float(a), float(b)] for a, b in _re.findall(r'(-?\d+\.?\d*) (-?\d+\.?\d*)', L['d'])])
+    h_doel = 860
+    sch = h_doel / L['h']
+    cx, cy = 500, 600
+    ox, oy = cx - L['w'] * sch / 2, cy - h_doel / 2
+    P = pts * sch + [ox, oy]
+    hull = P[ConvexHull(P).vertices]
+    c = hull.mean(0)
+    # rand iets naar buiten voor de tekst
+    v = hull - c
+    gat = 34
+    buiten = hull + v / np.linalg.norm(v, axis=1)[:, None] * gat
+    neus = int(np.argmin(buiten[:, 1])); staart = int(np.argmax(buiten[:, 1]))
+    n = len(buiten)
+    def keten(a, b):
+        i, uit = a, [buiten[a]]
+        while i != b:
+            i = (i + 1) % n; uit.append(buiten[i])
+        return np.array(uit)
+    k1, k2 = keten(neus, staart), keten(staart, neus)
+    rechts, links = (k1, k2) if k1[:, 0].mean() > cx else (k2, k1)
+    if rechts[0][1] > rechts[-1][1]: rechts = rechts[::-1]          # rechts: van neus naar staart (tekst naar buiten)
+    if links[0][1] < links[-1][1]: links = links[::-1]               # links: van staart naar neus
+    d = lambda a: 'M' + ' L'.join(f'{x:.1f} {y:.1f}' for x, y in a)
+    return f'''
+<defs><path id="gbr" d="{d(rechts)}"/><path id="gbl" d="{d(links)}"/></defs>
+{BB.board_in(cx, cy, h_doel, k["hoofd"])}
+<text {DISP} font-size="64" letter-spacing="10" fill="{k["hoofd"]}"><textPath href="#gbr" startOffset="50%" text-anchor="middle">TIDE TODE</textPath></text>
+'''
+
+
+def paklijst(k):
+    """Wat mee moet. Het laatste vinkje in de accentkleur."""
+    items = [('BOARD', 1), ('WAX', 1), ('WETSUIT', 1), ('HANDDOEK', 1), ('KOFFIE', 2)]
+    o = [f'<text x="250" y="250" {DISP} font-size="92" letter-spacing="3" fill="{k["hoofd"]}">PAKLIJST</text>']
+    for i, (t, soort) in enumerate(items):
+        y = 380 + i * 120
+        kl = k['accent'] if soort == 2 else k['hoofd']
+        o.append(f'<rect x="250" y="{y - 52}" width="60" height="60" rx="6" fill="none" stroke="{k["hoofd"]}" stroke-width="6"/>')
+        o.append(f'<path d="M262 {y - 24} l18 20 l38 -52" fill="none" stroke="{kl}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>')
+        o.append(f'<text x="350" y="{y}" {MONO} font-size="46" letter-spacing="8" fill="{kl}">{t}</text>')
+    o.append(f'<text x="250" y="1020" {MONO} font-size="24" letter-spacing="10" fill="{k["hoofd"]}">TIDE TODE</text>')
+    return ''.join(o)
+
+
+def hawaii(k):
+    """Droge Hollandse knipoog. Alleen tekst."""
+    return f'''
+<text x="500" y="420" {DISP} font-size="110" letter-spacing="3" fill="{k["hoofd"]}" text-anchor="middle">NOORDZEE</text>
+<text x="500" y="520" {MONO} font-size="40" letter-spacing="12" fill="{k["hoofd"]}" text-anchor="middle">IS GEEN HAWAII</text>
+<line x1="380" y1="590" x2="620" y2="590" stroke="{k["accent"]}" stroke-width="5"/>
+<text x="500" y="680" {MONO} font-size="40" letter-spacing="12" fill="{k["accent"]}" text-anchor="middle">GELUKKIG</text>
+<text x="500" y="900" {MONO} font-size="24" letter-spacing="10" fill="{k["hoofd"]}" text-anchor="middle">TIDE TODE</text>'''
+
+
+def groeten(k):
+    """Oude ansichtkaart: groeten uit."""
+    return f'''
+<rect x="150" y="260" width="700" height="480" rx="8" fill="none" stroke="{k["hoofd"]}" stroke-width="7"/>
+<rect x="170" y="280" width="660" height="440" rx="4" fill="none" stroke="{k["hoofd"]}" stroke-width="2" stroke-dasharray="6 8"/>
+<text x="500" y="380" {MONO} font-size="38" letter-spacing="14" fill="{k["hoofd"]}" text-anchor="middle">GROETEN UIT</text>
+<text x="500" y="520" {DISP} font-size="120" letter-spacing="2" fill="{k["accent"]}" text-anchor="middle">DE GOLVEN</text>
+<path d="M240 610 q35 -30 70 0 t70 0 t70 0 t70 0 t70 0 t70 0 t70 0" fill="none" stroke="{k["hoofd"]}" stroke-width="6" stroke-linecap="round"/>
+<path d="M240 660 q35 -30 70 0 t70 0 t70 0 t70 0 t70 0 t70 0 t70 0" fill="none" stroke="{k["hoofd"]}" stroke-width="6" stroke-linecap="round"/>
+<text x="500" y="830" {MONO} font-size="24" letter-spacing="10" fill="{k["hoofd"]}" text-anchor="middle">TIDE TODE</text>'''
+
+
+def zout(k):
+    """Drie regels over een goede dag."""
+    regel = lambda y, t, kl: f'<text x="500" y="{y}" {DISP} font-size="86" letter-spacing="3" fill="{kl}" text-anchor="middle">{t}</text>'
+    return (regel(380, 'ZOUT IN JE HAAR', k['hoofd']) + regel(500, 'ZAND IN JE AUTO', k['hoofd']) + regel(620, 'GEEN HAAST', k['accent'])
+            + BB.board_in(500, 800, 150, k['hoofd'])
+            + f'<text x="500" y="960" {MONO} font-size="24" letter-spacing="10" fill="{k["hoofd"]}" text-anchor="middle">TIDE TODE</text>')
+
+
+ONTWERPEN = {'paklijst': paklijst, 'hawaii': hawaii, 'groeten': groeten, 'zout': zout, 'grootboard': grootboard, 'koudwater': koudwater, 'evenweg': evenweg, 'herhaling': herhaling, 'weerbericht': weerbericht, 'boog': boog, 'lijn': lijn, 'getij': getij, 'club': club, 'handen': handen, 'board': board, 'klok': klok, 'tegel': tegel}
 
 if __name__ == '__main__':
     for naam, f in ONTWERPEN.items():

@@ -263,6 +263,54 @@ Achterkant, opslaan als `t-shirt-getijden-achter.png` (tekening: https://raw.git
 Use the attached drawing as reference. Create a flat lay of the same navy t-shirt seen from the back, with a print of six colourful sticker illustrations (wave, sun, shell, palm, starfish, camper van) and the small text TIDE TODE SURF CLUB below, laid out neatly and seen from above. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
 ```
 
+## T-shirt Koud water
+
+Stuur mee:
+
+1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/t-shirt-koud-water-tekening.png
+
+Opslaan als `t-shirt-koud-water.png`
+
+```
+Use the attached drawing as reference. Create the product shown in the drawing. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
+```
+
+## T-shirt Op weg naar zee
+
+Stuur mee:
+
+1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/t-shirt-op-weg-naar-zee-tekening.png
+
+Opslaan als `t-shirt-op-weg-naar-zee.png`
+
+```
+Use the attached drawing as reference. Create the product shown in the drawing. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
+```
+
+## T-shirt Klassiek
+
+Stuur mee:
+
+1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/t-shirt-klassiek-tekening.png
+
+Opslaan als `t-shirt-klassiek.png`
+
+```
+Use the attached drawing as reference. Create the product shown in the drawing. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
+```
+
+## T-shirt Board
+
+Stuur mee:
+
+1. Tekening voorkant: https://raw.githubusercontent.com/jenstho-png/Veerle/claude/new-session-yk0x8x/docs/producten/referentie/t-shirt-board-tekening.png
+
+Opslaan als `t-shirt-board.png`
+
+```
+Use the attached drawing as reference. Create the product shown in the drawing. Use the attachments as follows: the drawing shows shape, proportions and where everything sits; the fabric or print files are the exact artwork, reproduce them precisely and do not redraw, change or add any letters. Photorealistic studio product photo. Straight front view, the whole product centred with generous margin, soft natural daylight from the upper left, subtle realistic shadow under the product, true-to-life fabric texture and stitching. Transparent background, PNG, portrait 1600 x 2000 pixels. Match the attached drawing exactly in shape, colours and print. No added text, no extra logos, no props, no people, no watermark.
+```
+
 ## Longsleeve Golf
 
 Stuur mee:

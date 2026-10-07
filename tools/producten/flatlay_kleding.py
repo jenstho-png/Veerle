@@ -96,6 +96,43 @@ def rand_vast(img, m, zoek=(-26, 10)):
     return cv2.resize(groot.astype(np.float32) / 255, (m.shape[1], m.shape[0]), interpolation=cv2.INTER_AREA)
 
 
+def pen_pad(punten, cx, stap=2.0):
+    """Linkerhelft van de omtrek (van boven-midden linksom naar onder-midden), gespiegeld tot een gesloten, symmetrisch pad."""
+    P = np.array(punten, np.float32)
+    spiegel = P[::-1].copy(); spiegel[:, 0] = 2 * cx - spiegel[:, 0]
+    pad = np.vstack([P, spiegel[1:-1]])
+    uit = []
+    for a, b in zip(pad, np.roll(pad, -1, 0)):
+        n = max(1, int(np.linalg.norm(b - a) / stap))
+        uit.append(a + (b - a) * np.arange(n)[:, None] / n)
+    return np.vstack(uit)
+
+
+def pen_masker(img, punten, cx, zoek=7, glad=5, S=8, snap=True):
+    """Uitknippen zoals met het pentool: handmatig gezette punten (linkerhelft), gespiegeld, en per punt binnen +-zoek px
+    vastgezet op de echte stofrand. Antialiased gevuld met S x supersampling."""
+    c = pen_pad(punten, cx)
+    c = uniform_filter1d(c, glad, axis=0, mode='wrap')
+    if snap and zoek > 0:
+        L = cv2.GaussianBlur(img.mean(-1), (0, 0), 1.0)
+        t = np.gradient(c, axis=0); t /= np.linalg.norm(t, axis=1, keepdims=True) + 1e-6
+        nrm = np.stack([t[:, 1], -t[:, 0]], 1)
+        # normaal naar buiten: weg van het zwaartepunt
+        if ((c + nrm * 5 - c.mean(0)) ** 2).sum(1).mean() < ((c - c.mean(0)) ** 2).sum(1).mean():
+            nrm = -nrm
+        offs = np.arange(-zoek, zoek + 0.01, 0.5)
+        P = c[:, None, :] + nrm[:, None, :] * offs[None, :, None]
+        v = map_coordinates(L, [P[..., 1], P[..., 0]], order=1)
+        best = offs[np.argmin(np.gradient(v, axis=1), axis=1)]
+        best = uniform_filter1d(median_filter(best, size=15, mode='wrap'), 9, mode='wrap')
+        # symmetrisch houden: links en rechts dezelfde correctie
+        n = len(best)
+        c = c + nrm * (best[:, None] - 0.5)
+    groot = np.zeros((img.shape[0] * S, img.shape[1] * S), np.uint8)
+    cv2.fillPoly(groot, [np.round(c * S).astype(np.int32)], 255, lineType=cv2.LINE_AA)
+    return cv2.resize(groot.astype(np.float32) / 255, (img.shape[1], img.shape[0]), interpolation=cv2.INTER_AREA)
+
+
 def symmetrisch(img, a, cx, band=200, overgang=120):
     """Rechts = gespiegelde linkerhelft (mouw, schouder, zijnaad); het midden blijft origineel zodat er geen spiegelnaad is."""
     H, W = a.shape
@@ -123,6 +160,8 @@ def rugkant_tshirt(img, a, cx, hals=(213, 174, 178), boord=(118, 218, 144), vers
     boven = ((xx - cx) / ta) ** 2 + ((yy - tcy) / tb) ** 2 < 1
     R = cv2.GaussianBlur((onder & ~boven & (yy > ecy - 30)).astype(np.float32), (0, 0), 4)
     img = img * (1 - R[..., None]) + np.roll(img, -verschuif, axis=0) * R[..., None]
+    if hoek is None:
+        return img, a
     # halspunten wegknippen: bovenrand loopt vloeiend van de rugboord naar de schouder
     y0, y1, d0, d1 = hoek
     dx = np.abs(xx - cx)
@@ -168,14 +207,19 @@ def inkt(art, breedte, sterkte=0.05, zaad=3):
 _CACHE = {}
 
 
+TEE_PUNTEN = [(1240, 263), (1180, 258), (1130, 245), (1095, 225), (1080, 212), (1040, 224), (950, 262), (870, 295), (800, 346),
+              (700, 410), (600, 478), (497, 547), (560, 650), (620, 745), (660, 810), (740, 800), (815, 792), (813, 900),
+              (811, 1200), (811, 1490), (830, 1499), (1000, 1500), (1240, 1500)]
+TEE_CX = 1240.0
+
+
 def tshirt_basis():
-    """Witte flat-lay tee (mockupbee, Unsplash), uitgeknipt en symmetrisch. Coördinaten in de 2400x1600 bron."""
+    """Witte boxy heavyweight tee (Mr Mockup, Pexels), met het pentool uitgeknipt en symmetrisch. Coordinaten in de 2600x1733 bron."""
     if 'tee' not in _CACHE:
-        img = MK.laad(FLAT / 'tshirt-wit-plat-1.jpg')
-        a = masker_vlak(img)
-        cx = 1191.5                                   # hart van hals en romp (gemeten op de bron)
-        img, a = symmetrisch(img, a, cx)
-        _CACHE['tee'] = (img, a, cx)
+        img = MK.laad(FLAT / 'tshirt-wit-boxy-1.jpg')
+        a = pen_masker(img, TEE_PUNTEN, TEE_CX)
+        img, a = symmetrisch(img, a, TEE_CX)
+        _CACHE['tee'] = (img, a, TEE_CX)
     return _CACHE['tee']
 
 
