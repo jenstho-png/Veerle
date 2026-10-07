@@ -77,25 +77,137 @@ def logo_in(soort, x, y, breedte, kleur):
 
 
 # ---------- logostickers ----------
+def glans(vorm):
+    """Vinyl: een zachte glans over de sticker, geknipt op de buitenvorm."""
+    uid = abs(hash(vorm)) % 99999
+    return (f'<defs><linearGradient id="gl{uid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".32"/>'
+            f'<stop offset=".38" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".06"/></linearGradient>'
+            f'<clipPath id="cl{uid}">{vorm}</clipPath></defs><rect x="-50" y="-50" width="1200" height="1200" fill="url(#gl{uid})" clip-path="url(#cl{uid})"/>')
+
+
+def ster(cx, cy, r, kleur):
+    pts = ' '.join(f'{cx + (r if i % 2 == 0 else r * .38) * math.cos(math.pi / 4 * i - math.pi / 2):.1f},{cy + (r if i % 2 == 0 else r * .38) * math.sin(math.pi / 4 * i - math.pi / 2):.1f}' for i in range(8))
+    return f'<polygon points="{pts}" fill="{kleur}"/>'
+
+
 def zegel(achter=ROSE, voor=NAVY, rand=PAPIER):
     return f'''<svg viewBox="0 0 340 340" class="badge" aria-hidden="true">
-  <circle cx="170" cy="170" r="168" fill="{rand}"/><circle cx="170" cy="170" r="156" fill="{achter}"/>
-  <defs><path id="zb" d="M60 170a110 110 0 0 1 220 0"/><path id="zo" d="M44 170a126 126 0 0 0 252 0"/></defs>
-  <text font-family="Courier Prime, monospace" font-weight="700" font-size="30" letter-spacing="9" fill="{voor}"><textPath href="#zb" startOffset="50%" text-anchor="middle">TIDE TODE</textPath></text>
-  <text font-family="Courier Prime, monospace" font-weight="700" font-size="19" letter-spacing="5" fill="{voor}"><textPath href="#zo" startOffset="50%" text-anchor="middle">VAN SURFERS VOOR SURFERS</textPath></text>
-  <circle cx="44" cy="170" r="6" fill="{voor}"/><circle cx="296" cy="170" r="6" fill="{voor}"/>
-  {board_in(170, 178, 150, voor)}
+  <circle cx="170" cy="170" r="168" fill="{rand}"/><circle cx="170" cy="170" r="154" fill="{achter}"/>
+  <circle cx="170" cy="170" r="142" fill="none" stroke="{voor}" stroke-width="2" stroke-dasharray="2 6" opacity=".55"/>
+  <defs><path id="zb" d="M58 170a112 112 0 0 1 224 0"/><path id="zo" d="M40 170a130 130 0 0 0 260 0"/></defs>
+  <text font-family="Courier Prime, monospace" font-weight="700" font-size="31" letter-spacing="11" fill="{voor}"><textPath href="#zb" startOffset="50%" text-anchor="middle">TIDE TODE</textPath></text>
+  <text font-family="Courier Prime, monospace" font-weight="700" font-size="22" letter-spacing="8" fill="{voor}"><textPath href="#zo" startOffset="50%" text-anchor="middle">HANDEN VRIJ</textPath></text>
+  {ster(40, 170, 9, voor)}{ster(300, 170, 9, voor)}
+  {board_in(170, 172, 132, voor)}
+  {glans('<circle cx="170" cy="170" r="168"/>')}
 </svg>'''
 
 
 def ovaal():
+    """Klassieke surfshop-ovaal: tekst langs de rand, logo in het midden."""
     return f'''<svg viewBox="0 0 520 330" class="badge" aria-hidden="true">
   <ellipse cx="260" cy="165" rx="258" ry="163" fill="{PAPIER}"/>
-  <ellipse cx="260" cy="165" rx="240" ry="146" fill="{CREME}" stroke="{BABY}" stroke-width="12"/>
-  <text x="260" y="88" text-anchor="middle" font-family="Courier Prime, monospace" font-weight="700" font-size="24" letter-spacing="8" fill="{NAVY}">SURFBOARD DRAAGTAS</text>
-  {logo_in('liggend', 95, 118, 330, NAVY)}
-  <text x="262" y="250" text-anchor="middle" font-family="Homemade Apple, cursive" font-size="30" fill="{NAVY}">handen vrij</text>
-  <path d="M190 262 Q262 254 336 262" stroke="{NAVY}" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <ellipse cx="260" cy="165" rx="244" ry="149" fill="{NAVY}"/>
+  <ellipse cx="260" cy="165" rx="178" ry="92" fill="{CREME}"/>
+  <defs><path id="ovb" d="M60 165 A200 118 0 0 1 460 165"/><path id="ovo" d="M48 165 A212 130 0 0 0 472 165"/></defs>
+  <text font-family="Courier Prime, monospace" font-weight="700" font-size="22" letter-spacing="9" fill="{CREME}"><textPath href="#ovb" startOffset="50%" text-anchor="middle">SURFBOARD DRAAGTAS</textPath></text>
+  <text font-family="Courier Prime, monospace" font-weight="700" font-size="19" letter-spacing="7" fill="{BABY}"><textPath href="#ovo" startOffset="50%" text-anchor="middle">HANDEN VRIJ</textPath></text>
+  {ster(46, 165, 9, BABY)}{ster(474, 165, 9, BABY)}
+  {logo_in('liggend', 120, 143, 280, NAVY)}
+  {glans('<ellipse cx="260" cy="165" rx="258" ry="163"/>')}
+</svg>'''
+
+
+# ---------- extra stickers ----------
+def zonsondergang_sticker():
+    kl = [ROSE, ZAND, '#C0603E', CREME]
+    banen = ''.join(f'<rect x="0" y="{150 + k * 26}" width="340" height="16" fill="{kl[k % 3 + (1 if k > 2 else 0) - (1 if k > 2 else 0)]}"/>' for k in range(5))
+    return f'''<svg viewBox="0 0 340 340" class="badge" aria-hidden="true">
+  <rect x="2" y="2" width="336" height="336" rx="60" fill="{PAPIER}"/>
+  <defs><clipPath id="zsk"><rect x="16" y="16" width="308" height="308" rx="48"/></clipPath></defs>
+  <g clip-path="url(#zsk)">
+    <rect width="340" height="340" fill="{CREME}"/>
+    <circle cx="170" cy="200" r="104" fill="#C0603E"/>
+    {''.join(f'<rect x="0" y="{196 + k * 22}" width="340" height="{9 + k * 2}" fill="{CREME}"/>' for k in range(6))}
+    <rect x="0" y="262" width="340" height="80" fill="{NAVY}"/>
+  </g>
+  {board_in(170, 168, 150, NAVY)}
+  <text x="170" y="304" text-anchor="middle" font-family="Courier Prime, monospace" font-weight="700" font-size="22" letter-spacing="8" fill="{CREME}">TIDE TODE</text>
+  {glans('<rect x="2" y="2" width="336" height="336" rx="60"/>')}
+</svg>'''
+
+
+def boog_sticker():
+    t = ILL['golf']
+    paden = ''.join(f'<path d="{p}"/>' for p in t['d'])
+    vorm = 'M20 330 L20 170 A150 150 0 0 1 320 170 L320 330 Z'
+    return f'''<svg viewBox="0 0 340 350" class="badge" aria-hidden="true">
+  <path d="M6 344 L6 170 A164 164 0 0 1 334 170 L334 344 Z" fill="{PAPIER}"/>
+  <path d="{vorm}" fill="{BABY}"/>
+  <circle cx="170" cy="150" r="46" fill="{ZAND}"/>
+  <g transform="translate(40 128) scale(.65)" fill="none" stroke="{NAVY}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">{paden}</g>
+  <rect x="20" y="266" width="300" height="64" fill="{NAVY}"/>
+  <text x="170" y="306" text-anchor="middle" font-family="Courier Prime, monospace" font-weight="700" font-size="20" letter-spacing="6" fill="{CREME}">OP WEG NAAR ZEE</text>
+  {glans('<path d="M6 344 L6 170 A164 164 0 0 1 334 170 L334 344 Z"/>')}
+</svg>'''
+
+
+def tegelcirkel_sticker():
+    tegels = ''
+    kl = ['#C0603E', BABY, CREME, '#9E3B2E', BABY, '#C0603E', CREME]
+    for r in range(8):
+        for k in range(8):
+            x, y = k * 44, r * 44
+            c = kl[(r * 3 + k) % len(kl)]
+            b = CREME if c != CREME else '#C0603E'
+            tegels += f'<rect x="{x}" y="{y}" width="44" height="44" fill="{c}"/><path d="M{x + 22} {y + 6}L{x + 38} {y + 22}L{x + 22} {y + 38}L{x + 6} {y + 22}Z" fill="{b}"/><circle cx="{x + 22}" cy="{y + 22}" r="5" fill="{NAVY}"/>'
+    return f'''<svg viewBox="0 0 340 340" class="badge" aria-hidden="true">
+  <circle cx="170" cy="170" r="168" fill="{PAPIER}"/>
+  <defs><clipPath id="tck"><circle cx="170" cy="170" r="154"/></clipPath></defs>
+  <g clip-path="url(#tck)">{tegels}</g>
+  <circle cx="170" cy="170" r="70" fill="{NAVY}" stroke="{PAPIER}" stroke-width="8"/>
+  {board_in(170, 170, 96, CREME)}
+  {glans('<circle cx="170" cy="170" r="168"/>')}
+</svg>'''
+
+
+def vaantje_sticker():
+    vorm = 'M20 40 L470 110 L20 180 Z'
+    return f'''<svg viewBox="0 0 490 220" class="badge" aria-hidden="true">
+  <path d="M4 22 L4 198 L488 110 Z" fill="{PAPIER}" stroke="{PAPIER}" stroke-width="14" stroke-linejoin="round"/>
+  <path d="{vorm}" fill="{NAVY}"/>
+  <rect x="20" y="40" width="22" height="140" fill="#C0603E"/>
+  <text x="66" y="100" font-family="Courier Prime, monospace" font-weight="700" font-size="18" letter-spacing="7" fill="{BABY}">SURF CLUB</text>
+  {logo_in('liggend', 64, 116, 168, CREME)}
+  {glans('<path d="M4 22 L4 198 L488 110 Z"/>')}
+</svg>'''
+
+
+def postzegel_sticker():
+    gaatjes = ''.join(f'<circle cx="{x}" cy="{y}" r="7" fill="{PAPIER}"/>' for x in range(16, 300, 22) for y in (12, 368)) + ''.join(f'<circle cx="{x}" cy="{y}" r="7" fill="{PAPIER}"/>' for y in range(34, 350, 22) for x in (12, 288))
+    tas = TAS.lijn().replace('<svg ', '<svg x="34" y="70" width="232" height="116" ', 1)
+    return f'''<svg viewBox="0 0 300 380" class="badge" aria-hidden="true">
+  <rect x="0" y="0" width="300" height="380" fill="{PAPIER}"/>
+  <rect x="20" y="20" width="260" height="340" fill="{CREME}"/>
+  {gaatjes}
+  <rect x="30" y="30" width="240" height="320" fill="none" stroke="{NAVY}" stroke-width="2"/>
+  {tas}
+  <text x="150" y="250" text-anchor="middle" font-family="Courier Prime, monospace" font-weight="700" font-size="20" letter-spacing="6" fill="{NAVY}">TIDE TODE</text>
+  <text x="150" y="282" text-anchor="middle" font-family="Courier Prime, monospace" font-weight="700" font-size="14" letter-spacing="4" fill="{NAVY}">DRAAGTAS</text>
+  <text x="150" y="330" text-anchor="middle" font-family="Courier Prime, monospace" font-weight="700" font-size="14" letter-spacing="5" fill="#C0603E">EST 2025</text>
+  {glans('<rect x="0" y="0" width="300" height="380"/>')}
+</svg>'''
+
+
+def ruit_sticker():
+    ruit = ''.join(f'<rect x="{x}" y="{y}" width="20" height="20" fill="{NAVY if (x // 20 + y // 20) % 2 else CREME}"/>' for x in range(16, 504, 20) for y in (16, 36))
+    ruit += ''.join(f'<rect x="{x}" y="{y}" width="20" height="20" fill="{NAVY if (x // 20 + y // 20) % 2 else CREME}"/>' for x in range(16, 504, 20) for y in (124, 144))
+    return f'''<svg viewBox="0 0 520 180" class="badge" aria-hidden="true">
+  <rect x="2" y="2" width="516" height="176" rx="24" fill="{PAPIER}"/>
+  <defs><clipPath id="rk"><rect x="16" y="16" width="488" height="148" rx="12"/></clipPath></defs>
+  <g clip-path="url(#rk)"><rect x="0" y="0" width="520" height="180" fill="{ROSE}"/>{ruit}</g>
+  {logo_in('liggend', 120, 70, 280, NAVY)}
+  {glans('<rect x="2" y="2" width="516" height="176" rx="24"/>')}
 </svg>'''
 
 
@@ -103,7 +215,33 @@ def pil():
     return f'''<svg viewBox="0 0 520 170" class="badge" aria-hidden="true">
   <rect x="2" y="2" width="516" height="166" rx="83" fill="{PAPIER}"/>
   <rect x="14" y="14" width="492" height="142" rx="71" fill="{NAVY}"/>
-  {logo_in('liggend', 80, 64, 360, CREME)}
+  {ster(62, 85, 10, BABY)}{ster(458, 85, 10, BABY)}
+  {logo_in('liggend', 98, 62, 324, CREME)}
+  {glans('<rect x="2" y="2" width="516" height="166" rx="83"/>')}
+</svg>'''
+
+
+def tegelsticker():
+    """Sticker van een echte tegel uit de stof van de tas."""
+    tegel = b64(HIER.parent.parent / 'docs' / 'producten' / 'fabriek' / 'tegels-2x2.png', 'image/png')
+    return f'''<svg viewBox="0 0 300 340" class="badge" aria-hidden="true">
+  <rect x="2" y="2" width="296" height="336" rx="34" fill="{PAPIER}"/>
+  <defs><clipPath id="tgk"><rect x="16" y="16" width="268" height="308" rx="22"/></clipPath></defs>
+  <image href="{tegel}" x="16" y="16" width="268" height="308" preserveAspectRatio="xMidYMid slice" clip-path="url(#tgk)"/>
+  {glans('<rect x="2" y="2" width="296" height="336" rx="34"/>')}
+</svg>'''
+
+
+def labelsticker():
+    """Zoals het geweven label op de tas."""
+    steek = ''.join(f'<line x1="{x}" y1="22" x2="{x + 7}" y2="22"/><line x1="{x}" y1="218" x2="{x + 7}" y2="218"/>' for x in range(26, 330, 13))
+    return f'''<svg viewBox="0 0 360 240" class="badge" aria-hidden="true">
+  <rect x="2" y="2" width="356" height="236" rx="16" fill="{PAPIER}"/>
+  <rect x="12" y="12" width="336" height="216" rx="6" fill="{NAVY}"/>
+  <g stroke="{BABY}" stroke-width="2" opacity=".7">{steek}</g>
+  {logo_in('gestapeld', 92, 58, 176, CREME)}
+  <text x="180" y="196" text-anchor="middle" font-family="Courier Prime, monospace" font-weight="700" font-size="15" letter-spacing="6" fill="{BABY}">EST 2025</text>
+  {glans('<rect x="2" y="2" width="356" height="236" rx="16"/>')}
 </svg>'''
 
 
@@ -116,15 +254,17 @@ def golfrand():
     pts2 = []
     for i in range(0, 361, 2):
         a = math.radians(i)
-        r = 162 + 7 * math.cos(a * 16)
+        r = 163 + 7 * math.cos(a * 16)
         pts2.append(f'{170 + r * math.cos(a):.1f},{170 + r * math.sin(a):.1f}')
-    t = ILL['golf']
-    paden = ''.join(f'<path d="{p}"/>' for p in t['d'])
+    g = LOGO['icoonGolf']
+    s = 170 / g['w']
     return f'''<svg viewBox="0 0 340 340" class="badge" aria-hidden="true">
   <polygon points="{' '.join(pts2)}" fill="{PAPIER}"/><polygon points="{' '.join(pts)}" fill="{NAVY}"/>
-  <g transform="translate(70 66) scale(.5)" fill="none" stroke="{CREME}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">{paden}</g>
-  <text x="170" y="250" text-anchor="middle" font-family="Courier Prime, monospace" font-weight="700" font-size="22" letter-spacing="7" fill="{CREME}">EST 2025</text>
+  <path transform="translate({170 - g['w'] * s / 2:.1f} 62) scale({s:.4f})" fill="{CREME}" fill-rule="evenodd" d="{g['d']}"/>
+  <text x="170" y="262" text-anchor="middle" font-family="Courier Prime, monospace" font-weight="700" font-size="24" letter-spacing="8" fill="{CREME}">EST 2025</text>
+  {glans('<polygon points="' + ' '.join(pts2) + '"/>')}
 </svg>'''
+
 
 
 def constructie():
@@ -226,7 +366,11 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
 /* 5 en 6 stickers */
 .stickers .s { position: absolute; filter: drop-shadow(0 .6cqw 1cqw rgba(0, 0, 0, .25)); }
 .stickers .voet { position: absolute; left: 0; right: 0; bottom: 4cqw; text-align: center; color: var(--creme); }
-.badges .badge { position: absolute; filter: drop-shadow(0 .8cqw 1.4cqw rgba(0, 0, 0, .28)); }
+.vel { background: var(--baby); display: grid; place-items: center; }
+.vel__blad { position: relative; width: 90%; height: 92%; background: #FFFDF8; border-radius: 1.6cqw; box-shadow: 0 1.4cqw 3cqw rgba(34, 50, 79, .22); }
+.vel__kop { position: absolute; left: 0; right: 0; top: 4cqw; margin: 0; text-align: center; font: 700 1.5cqw var(--mono); letter-spacing: .3em; color: var(--navy); }
+.vel .badge { position: absolute; filter: drop-shadow(0 .15cqw .2cqw rgba(0, 0, 0, .18)); }
+.badges .badge { position: absolute; filter: drop-shadow(0 .25cqw .25cqw rgba(0, 0, 0, .22)) drop-shadow(0 1.2cqw 1.8cqw rgba(60, 40, 20, .25)); }
 
 /* 7 illustraties */
 .ill { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr 1fr; height: 100%; padding: 6cqw; gap: 2cqw 4cqw; }
@@ -386,12 +530,26 @@ svg.vol { position: absolute; inset: 0; width: 100%; height: 100%; display: bloc
     # 6 logostickers op zand
     paginas.append(f'''<section class="pagina badges" aria-label="Logostickers">
   <img class="bg" src="{foto('zand')}" alt="">
-  {ovaal().replace('class="badge"', 'class="badge" style="left:8cqw;top:10cqw;width:52cqw;transform:rotate(-8deg)"')}
-  {zegel().replace('class="badge"', 'class="badge" style="left:58cqw;top:22cqw;width:34cqw;transform:rotate(9deg)"')}
-  {golfrand().replace('class="badge"', 'class="badge" style="left:14cqw;top:58cqw;width:30cqw;transform:rotate(-4deg)"')}
-  {pil().replace('class="badge"', 'class="badge" style="left:46cqw;top:78cqw;width:46cqw;transform:rotate(-12deg)"')}
-  {icsticker('icoonC', 'left:56cqw;top:56cqw;width:17cqw;transform:rotate(12deg)')}
-  {icsticker('icoonB', 'left:66cqw;top:4cqw;width:15cqw;transform:rotate(-10deg)', rond=True)}
+  {ovaal().replace('class="badge"', 'class="badge" style="left:5cqw;top:5cqw;width:50cqw;transform:rotate(-7deg)"')}
+  {zegel().replace('class="badge"', 'class="badge" style="left:60cqw;top:4cqw;width:33cqw;transform:rotate(8deg)"')}
+  {golfrand().replace('class="badge"', 'class="badge" style="left:6cqw;top:42cqw;width:29cqw;transform:rotate(-6deg)"')}
+  {tegelsticker().replace('class="badge"', 'class="badge" style="left:39cqw;top:38cqw;width:20cqw;transform:rotate(6deg)"')}
+  {labelsticker().replace('class="badge"', 'class="badge" style="left:63cqw;top:42cqw;width:31cqw;transform:rotate(-5deg)"')}
+  {pil().replace('class="badge"', 'class="badge" style="left:4cqw;top:72cqw;width:40cqw;transform:rotate(-9deg)"')}
+  {icsticker('icoonB', 'left:76cqw;top:76cqw;width:16cqw;transform:rotate(-10deg)', rond=True)}
+</section>''')
+    # 6b stickervel
+    paginas.append(f'''<section class="pagina vel" aria-label="Stickervel">
+  <div class="vel__blad">
+    <p class="vel__kop">STICKERVEL</p>
+    {zonsondergang_sticker().replace('class="badge"', 'class="badge" style="left:6cqw;top:12cqw;width:30cqw;transform:rotate(-5deg)"')}
+    {boog_sticker().replace('class="badge"', 'class="badge" style="left:40cqw;top:9cqw;width:26cqw;transform:rotate(4deg)"')}
+    {tegelcirkel_sticker().replace('class="badge"', 'class="badge" style="left:66cqw;top:12cqw;width:21cqw;transform:rotate(-8deg)"')}
+    {vaantje_sticker().replace('class="badge"', 'class="badge" style="left:5cqw;top:50cqw;width:46cqw;transform:rotate(-7deg)"')}
+    {postzegel_sticker().replace('class="badge"', 'class="badge" style="left:58cqw;top:46cqw;width:24cqw;transform:rotate(6deg)"')}
+    {ruit_sticker().replace('class="badge"', 'class="badge" style="left:10cqw;top:84cqw;width:52cqw;transform:rotate(3deg)"')}
+    {icsticker('icoonC', 'left:72cqw;top:88cqw;width:16cqw;transform:rotate(-12deg)')}
+  </div>
 </section>''')
     # 7 illustraties
     paginas.append(f'''<section class="pagina" aria-label="Illustraties"><div class="ill">

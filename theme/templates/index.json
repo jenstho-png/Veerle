@@ -120,7 +120,7 @@
           "type": "foto",
           "settings": {
             "fallback": "tt-foto-beginner",
-            "alt": "Surfster met board onder een roze lucht"
+            "alt": "Board in de Tide-Tode draagtas bij de zee"
           }
         },
         "logo-4": {
@@ -218,7 +218,7 @@
             "tekst": "Lopend door de duinen, op de fiets of achterop de scooter. Op het strand haal je hem er zo weer uit.",
             "fallback": "tt-foto-stap-3",
             "filename": "tide-tode-stap-3.jpg",
-            "alt": "Surfer loopt met board naar zee"
+            "alt": "De negen ontwerpen van de draagtas"
           }
         }
       },
@@ -244,7 +244,7 @@
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-beginner",
             "filename": "tide-tode-beginner.jpg",
-            "alt": "Beginner met een softtop op het strand"
+            "alt": "Surfer houdt een board met de Tide-Tode draagtas vast bij de zee"
           }
         },
         "kaart-2": {
@@ -255,7 +255,7 @@
             "knop": "Bekijk de draagtas",
             "fallback": "tt-foto-avontuur",
             "filename": "tide-tode-avontuur.jpg",
-            "alt": "Surfer klimt over rotsen naar een afgelegen spot"
+            "alt": "Board met de Tide-Tode draagtas tegen een busje in de duinen"
           }
         }
       },

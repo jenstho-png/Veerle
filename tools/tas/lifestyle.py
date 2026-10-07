@@ -15,6 +15,7 @@ import scene as SC  # noqa: E402
 from stof import lap  # noqa: E402
 
 ASSETS = ROOT / 'theme' / 'assets'
+BRON = ROOT / 'docs' / 'producten' / 'stock' / 'bron'   # originele sfeerfoto's (Unsplash), zonder tas
 rng = np.random.default_rng(5)
 
 
@@ -198,7 +199,7 @@ def hangende_lus(foto, M, W, H, boardbreedte, kleur, breedte):
 
 
 def laad(naam):
-    return np.asarray(Image.open(ASSETS / naam).convert('RGB')).astype(np.float32) / 255
+    return np.asarray(Image.open(BRON / naam).convert('RGB')).astype(np.float32) / 255
 
 
 def bewaar(img, pad, kwaliteit=86):
@@ -206,7 +207,7 @@ def bewaar(img, pad, kwaliteit=86):
 
 
 def busje():
-    foto = laad('tt-foto-mood-6.jpg')
+    foto = laad('busje.jpg')
     neus, staart = np.array([420, 330], np.float32), np.array([150, 1270], np.float32)
     u = neus - staart; u /= np.linalg.norm(u)
     n = np.array([-u[1], u[0]])
@@ -226,7 +227,7 @@ def busje():
 
 
 def knuffel():
-    foto = laad('tt-foto-stap-1.jpg')
+    foto = laad('knuffel.jpg')
     u = np.array([0.0, -1.0], np.float32); n = np.array([1.0, 0.0], np.float32)
     neus_y, staart_y = 141, 1382
     c = np.array([492, (neus_y + staart_y) / 2], np.float32)   # balanspunt

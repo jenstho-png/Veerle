@@ -301,7 +301,7 @@ def variant_stof(handle, tegel=118):
     return np.clip(vlak * (1 + binding + ruis + vlek + garen)[..., None], 0, 1)
 
 
-def maak(patroon=None, band=(0.56, 0.66, 0.78)):
+def maak(patroon=None, band=(0.56, 0.66, 0.78), los=False):
     yy, xx = np.mgrid[0:CH, 0:CW].astype(np.float32)
     r = np.sqrt(((xx - CW * .5) / CW) ** 2 + ((yy - CH * .45) / CH) ** 2)
     beeld = DOEK[None, None] * (1.03 - 0.1 * r[..., None]) + rng.normal(0, 0.004, (CH, CW, 1)).astype(np.float32)
@@ -345,6 +345,9 @@ def maak(patroon=None, band=(0.56, 0.66, 0.78)):
     beeld = beeld * vig[..., None]
     beeld = cv2.GaussianBlur(beeld, (0, 0), 0.45)
     beeld = np.clip(beeld + rng.normal(0, 0.008, beeld.shape).astype(np.float32), 0, 1)
+    if los:
+        # board, tas en band los van de achtergrond (voor nieuwe composities)
+        return beeld, np.clip(np.maximum(bm, bmk), 0, 1)
     return beeld
 
 

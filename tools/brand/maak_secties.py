@@ -65,7 +65,7 @@ PRIJS = """{%- liquid
 PRODUCT = PRIJS.replace("\n  assign v = p.selected_or_first_available_variant", "")
 
 # ---------- HERO: volle foto, grote belofte, productkaartje ----------
-s, fb = beeld('', 'Foto', 'tt-foto-hero', 'tide-tode-hero.jpg', 'Surfer loopt met board over het strand naar zee')
+s, fb = beeld('', 'Foto', 'tt-foto-hero', 'tide-tode-hero.jpg', 'Avondlicht op een leeg strand')
 schrijf('tt-hero', PRIJS + """
 <section class="tt tt-hero{% if section.settings.pagina %} tt-hero--pagina{% endif %}" id="tt-hero-{{ section.id }}">
   <div class="tt-hero__foto">""" + B('', fb, ", sizes: '100vw', loading: 'eager'") + """</div>
@@ -339,7 +339,7 @@ schrijf('tt-koop', PRIJS + """
         {"type": "detail", "settings": {"titel": "Verzending en retour", "tekst": "<p>We versturen door heel Europa. Je hebt 14 dagen bedenktijd.</p>"}}]}]})
 
 # ---------- PROBLEEM: tekst die volloopt, met losse foto's ----------
-s1, fb1 = beeld('', 'Foto links', 'tt-foto-probleem-1', 'tide-tode-sjouwen.jpg', 'Board onder de arm op weg naar het strand')
+s1, fb1 = beeld('', 'Foto links', 'tt-foto-probleem-1', 'tide-tode-sjouwen.jpg', 'Zandpad door de duinen naar het strand')
 s2, fb2 = beeld('b2_', 'Foto rechts', 'tt-foto-probleem-2', 'tide-tode-onderweg.jpg', 'Onderweg naar de spot')
 schrijf('tt-probleem', """
 <section class="tt tt-probleem tt-bg--{{ section.settings.bg }}">
@@ -393,7 +393,7 @@ schrijf('tt-zo', """
     "presets": [{"name": "TT: zo werkt het", "blocks": [
         {"type": "stap", "settings": {"ill": "draagtas", "titel": "Schuif je board in de tas", "tekst": "Softtop of hardboard, nat of droog. Je hoeft hem niet eerst schoon te maken.", "fallback": "tt-foto-stap-1", "filename": "tide-tode-stap-1.jpg", "alt": "Surfboard in het zand"}},
         {"type": "stap", "settings": {"ill": "golf", "titel": "Hang hem over je schouder", "tekst": "De brede schouderband draagt het gewicht. Je handen zijn vrij voor je stuur, je spullen of een rots om je aan vast te houden.", "fallback": "tt-foto-stap-2", "filename": "tide-tode-stap-2.jpg", "alt": "Surfer met de tas over de schouder"}},
-        {"type": "stap", "settings": {"ill": "busje", "titel": "Op naar de spot", "tekst": "Lopend door de duinen, op de fiets of achterop de scooter. Op het strand haal je hem er zo weer uit.", "fallback": "tt-foto-stap-3", "filename": "tide-tode-stap-3.jpg", "alt": "Surfer loopt met board naar zee"}}]}]})
+        {"type": "stap", "settings": {"ill": "busje", "titel": "Op naar de spot", "tekst": "Lopend door de duinen, op de fiets of achterop de scooter. Op het strand haal je hem er zo weer uit.", "fallback": "tt-foto-stap-3", "filename": "tide-tode-stap-3.jpg", "alt": "De negen ontwerpen van de draagtas"}}]}]})
 
 # ---------- MOOD: Pinterest-muur ----------
 schrijf('tt-muur', """
@@ -466,8 +466,8 @@ schrijf('tt-wie', """
         {"type": "select", "id": "sticker_kleur", "label": "Stickerkleur", "options": KLEUREN, "default": "sunshine"},
         {"type": "select", "id": "sticker_icoon", "label": "Stickericoon", "options": [{"value": "", "label": "Geen"}] + ICONEN, "default": ""}] + blok_beeld('tt-foto-beginner', '', '')}],
     "presets": [{"name": "TT: voor wie", "blocks": [
-        {"type": "kaart", "settings": {"titel": "Als je leert surfen", "tekst": "Een grote softtop, een lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.", "knop": "Bekijk de draagtas", "fallback": "tt-foto-beginner", "filename": "tide-tode-beginner.jpg", "alt": "Beginner met een softtop op het strand"}},
-        {"type": "kaart", "settings": {"titel": "Als je de rustige spots opzoekt", "tekst": "Door de bush, over rotsen, achterop de scooter. Je board hangt over je schouder, zodat je je handen vrij hebt om te klimmen.", "knop": "Bekijk de draagtas", "fallback": "tt-foto-avontuur", "filename": "tide-tode-avontuur.jpg", "alt": "Surfer klimt over rotsen naar een afgelegen spot"}}]}]})
+        {"type": "kaart", "settings": {"titel": "Als je leert surfen", "tekst": "Een grote softtop, een lange wandeling van hostel of hotel naar het strand. Met de tas loop je ontspannen en heb je je handen vrij.", "knop": "Bekijk de draagtas", "fallback": "tt-foto-beginner", "filename": "tide-tode-beginner.jpg", "alt": "Surfer houdt een board met de Tide-Tode draagtas vast bij de zee"}},
+        {"type": "kaart", "settings": {"titel": "Als je de rustige spots opzoekt", "tekst": "Door de bush, over rotsen, achterop de scooter. Je board hangt over je schouder, zodat je je handen vrij hebt om te klimmen.", "knop": "Bekijk de draagtas", "fallback": "tt-foto-avontuur", "filename": "tide-tode-avontuur.jpg", "alt": "Board met de Tide-Tode draagtas tegen een busje in de duinen"}}]}]})
 
 # ---------- VERHAAL ----------
 s, fb = beeld('', 'Foto', 'tt-foto-verhaal', 'tide-tode-verhaal.jpg', 'Op reis met een surfboard')
@@ -820,9 +820,9 @@ schrijf('tt-raster', """
             {"type": "text", "id": "onder", "label": "Regel eronder", "default": "Est 2025"}]},
     ],
     "presets": [{"name": "TT: fotoraster", "blocks": [
-        {"type": "foto", "settings": {"fallback": "tt-foto-stap-3", "alt": "Surfer loopt met een geel board over het strand"}},
+        {"type": "foto", "settings": {"fallback": "tt-foto-stap-3", "alt": "Alle negen draagtassen naast elkaar"}},
         {"type": "tekst", "settings": {"titel": "De Draagtas", "regels": "Zware stof\nBrede schouderband\nSofttop en hardboard", "link_label": "Bekijk de draagtas"}},
-        {"type": "foto", "settings": {"fallback": "tt-foto-beginner", "alt": "Surfster met board onder een roze lucht"}},
+        {"type": "foto", "settings": {"fallback": "tt-foto-beginner", "alt": "Board in de Tide-Tode draagtas bij de zee"}},
         {"type": "logo", "settings": {"icoon": "maan", "onder": "Est 2025"}},
         {"type": "foto", "settings": {"fallback": "tt-foto-mood-5", "alt": "Twee surfers lopen de zee in"}},
         {"type": "logo", "settings": {"icoon": "icoon-zon", "onder": "Handen vrij"}},

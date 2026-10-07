@@ -1,0 +1,432 @@
+{
+  "coordinate_notes": "Pixel coordinates [x, y] in the saved file (origin top-left). nose_tip/tail_tip are the board's extreme points; tail_tip null means it is outside the frame. width_at_middle_px is the board width measured across the board (perpendicular to its long axis) around middle_point. Estimated from a 100 px grid, accuracy roughly +/- 15 px.",
+  "photos": [
+    {
+      "file": "board-muur-1.jpg",
+      "unsplash_page": "https://unsplash.com/photos/3Q848rifJQ0",
+      "image_url": "https://images.unsplash.com/photo-1588605800921-78dc67c62685?w=1600&q=85&fm=jpg",
+      "photographer": "Роман Смирнов",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "White fish surfboard leaning against grey concrete wall, deck facing camera, very large in frame; wooden board and plant beside it",
+      "size": "1600x2134",
+      "board": {
+        "nose_tip": [
+          765,
+          275
+        ],
+        "tail_tip": null,
+        "width_at_middle_px": 750,
+        "middle_point": [
+          765,
+          1250
+        ],
+        "notes": "Tail runs out of the bottom of the frame (board visible from nose to y=2134). Small 'NATURE do it better' logo on deck at about (765,975). Plant leaves overlap right rail only below y~1450; middle clear."
+      }
+    },
+    {
+      "file": "board-muur-2.jpg",
+      "unsplash_page": "https://unsplash.com/photos/G0KUyfMq3ys",
+      "image_url": "https://images.unsplash.com/photo-1767318982929-1951201771f6?w=1600&q=85&fm=jpg",
+      "photographer": "Fabio Sasso",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "White longboard leaning against mossy stone wall, bottom (3 fins) facing camera, tilted about 17 degrees",
+      "size": "1600x1067",
+      "board": {
+        "nose_tip": [
+          387,
+          118
+        ],
+        "tail_tip": [
+          668,
+          988
+        ],
+        "width_at_middle_px": 195,
+        "middle_point": [
+          527,
+          553
+        ],
+        "notes": "Whole board visible, clean white bottom; fins near tail (y 700-960)."
+      }
+    },
+    {
+      "file": "board-muur-3.jpg",
+      "unsplash_page": "https://unsplash.com/photos/y7EHW-R46Ow",
+      "image_url": "https://images.unsplash.com/photo-1708639524420-8d66f7fd5085?w=1600&q=85&fm=jpg",
+      "photographer": "Bruno Moscon Imperial",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Dark grey/black marbled fish surfboard leaning upright against ochre stucco wall under a hedge, deck facing camera, straight-on",
+      "size": "1600x2134",
+      "board": {
+        "nose_tip": [
+          828,
+          543
+        ],
+        "tail_tip": [
+          828,
+          1851
+        ],
+        "width_at_middle_px": 360,
+        "middle_point": [
+          828,
+          1200
+        ],
+        "notes": "Whole board visible and vertical. Swallow tail: tips at about (735,1840) and (905,1850). Leash coiled across lower deck around y~1660; middle clear. Dark board."
+      }
+    },
+    {
+      "file": "board-muur-4.jpg",
+      "unsplash_page": "https://unsplash.com/photos/uFwGk-TFT4k",
+      "image_url": "https://images.unsplash.com/photo-1714952303978-bbc0275cf4f7?w=1600&q=85&fm=jpg",
+      "photographer": "Bruno Moscon Imperial",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Black fish surfboard leaning against white wall next to a door, deck facing camera, concrete pavement",
+      "size": "1600x2134",
+      "board": {
+        "nose_tip": [
+          608,
+          667
+        ],
+        "tail_tip": [
+          612,
+          1481
+        ],
+        "width_at_middle_px": 237,
+        "middle_point": [
+          610,
+          1075
+        ],
+        "notes": "Whole board visible, near vertical; board is about 38% of frame height (medium size). Lots of clean white wall around it."
+      }
+    },
+    {
+      "file": "board-muur-5.jpg",
+      "unsplash_page": "https://unsplash.com/photos/lchtJmCZNMw",
+      "image_url": "https://images.unsplash.com/photo-1782244777126-ca99fe98debc?w=1600&q=85&fm=jpg",
+      "photographer": "Marcus Ganahl",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Green/yellow surfboard leaning against yellow wall behind a white wrought-iron balcony railing, deck facing camera",
+      "size": "1600x2569",
+      "board": {
+        "nose_tip": [
+          681,
+          497
+        ],
+        "tail_tip": [
+          790,
+          2140
+        ],
+        "width_at_middle_px": 380,
+        "middle_point": [
+          700,
+          1320
+        ],
+        "notes": "Tail is hidden behind the railing (tail_tip is an estimate). Railing crosses the board from about y=1600 down; middle (y 1000-1550) is clear but carries a Chiquita sticker at about (760,1390) and a vent plug strip at (740,1150)."
+      }
+    },
+    {
+      "file": "board-muur-6.jpg",
+      "unsplash_page": "https://unsplash.com/photos/IF-GAiX0ce4",
+      "image_url": "https://images.unsplash.com/photo-1639159525753-a58fb0d3d390?w=1600&q=85&fm=jpg",
+      "photographer": "Dmitry Limonov",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Graffiti-painted fish surfboard (left) leaning against dark wooden fence on a deck, deck facing camera; second red/white board on the right",
+      "size": "1600x2000",
+      "board": {
+        "nose_tip": [
+          458,
+          400
+        ],
+        "tail_tip": [
+          567,
+          1575
+        ],
+        "width_at_middle_px": 320,
+        "middle_point": [
+          510,
+          990
+        ],
+        "notes": "Coordinates are for the painted board on the left. Very busy artwork on the deck; middle unobstructed."
+      }
+    },
+    {
+      "file": "board-hek-1.jpg",
+      "unsplash_page": "https://unsplash.com/photos/_QLzjP424vU",
+      "image_url": "https://images.unsplash.com/photo-1609357973192-aa9064f03044?w=1600&q=85&fm=jpg",
+      "photographer": "Cheyenne Doig",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Cream longboard in front of a rack of white boards next to a bamboo fence, deck facing camera, very large in frame",
+      "size": "1600x2000",
+      "board": {
+        "nose_tip": [
+          817,
+          75
+        ],
+        "tail_tip": null,
+        "width_at_middle_px": 490,
+        "middle_point": [
+          745,
+          1300
+        ],
+        "notes": "Tail runs out of the bottom of the frame. 'South Point' logo at about (680,890), teal oval at nose. Worn and dirty deck. Other boards overlap only to the right."
+      }
+    },
+    {
+      "file": "board-bus-1.jpg",
+      "unsplash_page": "https://unsplash.com/photos/PGeZNaocvkU",
+      "image_url": "https://images.unsplash.com/photo-1567603112886-4dfe84eaac85?w=1600&q=85&fm=jpg",
+      "photographer": "Leonor Oom",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "White/cream surfboard with orange rail leaning against the back of a white VW camper van on sand, bottom (thruster fins) facing camera",
+      "size": "1600x2133",
+      "board": {
+        "nose_tip": [
+          729,
+          533
+        ],
+        "tail_tip": [
+          196,
+          2071
+        ],
+        "width_at_middle_px": 335,
+        "middle_point": [
+          462,
+          1302
+        ],
+        "notes": "Whole board visible, tilted about 19 degrees. Small 'UA' logo at about (580,790); fins near tail. Middle clear."
+      }
+    },
+    {
+      "file": "board-bus-2.jpg",
+      "unsplash_page": "https://unsplash.com/photos/ZPpVObKlmgk",
+      "image_url": "https://images.unsplash.com/photo-1743779035871-9653b8c58c24?w=1600&q=85&fm=jpg",
+      "photographer": "Amanda Vick",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Three surfboards (teal, white/orange, white) leaning against a cream VW T1 bus by the sea, decks facing camera; landscape",
+      "size": "1600x896",
+      "board": {
+        "nose_tip": [
+          1149,
+          91
+        ],
+        "tail_tip": null,
+        "width_at_middle_px": 285,
+        "middle_point": [
+          1110,
+          550
+        ],
+        "notes": "Coordinates are for the plain white board on the right; its tail runs out of the bottom of the frame. The white/orange board in the centre (nose about (930,55)) is also usable. Grainy, film-like look."
+      }
+    },
+    {
+      "file": "board-auto-1.jpg",
+      "unsplash_page": "https://unsplash.com/photos/K9sEnoQG5ok",
+      "image_url": "https://images.unsplash.com/photo-1539193618376-3dc9878cd660?w=1600&q=85&fm=jpg",
+      "photographer": "Sara Garnica",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Cream shortboard standing upright against the side of a yellow VW Beetle, deck facing camera; landscape",
+      "size": "1600x976",
+      "board": {
+        "nose_tip": [
+          969,
+          260
+        ],
+        "tail_tip": [
+          973,
+          800
+        ],
+        "width_at_middle_px": 156,
+        "middle_point": [
+          970,
+          530
+        ],
+        "notes": "Whole board visible, vertical. Medium-small (board is ~55% of frame height). Black 'Elsa'-style tag and small logos on deck; fins visible at the tail."
+      }
+    },
+    {
+      "file": "board-zand-1.jpg",
+      "unsplash_page": "https://unsplash.com/photos/yG9x3th3GYI",
+      "image_url": "https://images.unsplash.com/photo-1629481657693-90665fc83bad?w=1600&q=85&fm=jpg",
+      "photographer": "Josh Muller",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Red surfboard standing upright in sand on a pebble beach, deck facing camera straight-on, fills most of the frame",
+      "size": "1600x2208",
+      "board": {
+        "nose_tip": [
+          810,
+          133
+        ],
+        "tail_tip": [
+          812,
+          2098
+        ],
+        "width_at_middle_px": 550,
+        "middle_point": [
+          810,
+          1115
+        ],
+        "notes": "Tail is pushed into the sand; tail_tip = lowest visible point. Big blue/red 'Magic Shot' bomb graphic on upper half (y 550-1110); lower middle plain red with stringer."
+      }
+    },
+    {
+      "file": "board-zand-2.jpg",
+      "unsplash_page": "https://unsplash.com/photos/eDvBvr3ZZWk",
+      "image_url": "https://images.unsplash.com/photo-1609464535687-8b09dff1c607?w=1600&q=85&fm=jpg",
+      "photographer": "Frames For Your Heart",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Weathered white surfboard standing upright in sand at sunset, deck facing camera, sea and sky behind",
+      "size": "1600x1124",
+      "board": {
+        "nose_tip": [
+          800,
+          96
+        ],
+        "tail_tip": [
+          860,
+          1007
+        ],
+        "width_at_middle_px": 293,
+        "middle_point": [
+          830,
+          550
+        ],
+        "notes": "Tail in the sand (tail_tip = lowest visible point). Leash cord wrapped around the nose area (y~270), dirty deck, small logo at (820,430), 'SLASH' on right rail."
+      }
+    },
+    {
+      "file": "board-zand-3.jpg",
+      "unsplash_page": "https://unsplash.com/photos/XFMjz4X3hGs",
+      "image_url": "https://images.unsplash.com/photo-1531722569936-825d3dd91b15?w=1600&q=85&fm=jpg",
+      "photographer": "Dendy Darma Satyazi",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Yellow longboard standing upright in beach sand, deck facing camera, misty sea behind; very clean background",
+      "size": "1600x1067",
+      "board": {
+        "nose_tip": [
+          800,
+          180
+        ],
+        "tail_tip": [
+          800,
+          896
+        ],
+        "width_at_middle_px": 144,
+        "middle_point": [
+          800,
+          540
+        ],
+        "notes": "Whole board visible and vertical. Board is ~67% of frame height but narrow (144 px). Small round logo at (800,415)."
+      }
+    },
+    {
+      "file": "board-persoon-1.jpg",
+      "unsplash_page": "https://unsplash.com/photos/f4mLA8nDbRg",
+      "image_url": "https://images.unsplash.com/photo-1522322904670-5cf2a8529d21?w=1600&q=85&fm=jpg",
+      "photographer": "Igor Starkov",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Woman in bikini standing next to a cream surfboard with red rails, holding it upright by the nose; deck facing camera, sea behind",
+      "size": "1600x2400",
+      "board": {
+        "nose_tip": [
+          696,
+          376
+        ],
+        "tail_tip": [
+          610,
+          2276
+        ],
+        "width_at_middle_px": 480,
+        "middle_point": [
+          650,
+          1320
+        ],
+        "notes": "Hand touches only the nose; whole board visible, slight tilt. Small logo at about (667,960). Middle clear."
+      }
+    },
+    {
+      "file": "board-persoon-2.jpg",
+      "unsplash_page": "https://unsplash.com/photos/0yEgAmO5TGk",
+      "image_url": "https://images.unsplash.com/photo-1560616275-5ca158bd4876?w=1600&q=85&fm=jpg",
+      "photographer": "Daniel Salcius",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Woman holding a peach longboard horizontally in front of her against a pink wall, deck facing camera",
+      "size": "1600x1066",
+      "board": {
+        "nose_tip": [
+          1387,
+          664
+        ],
+        "tail_tip": [
+          164,
+          677
+        ],
+        "width_at_middle_px": 237,
+        "middle_point": [
+          775,
+          670
+        ],
+        "notes": "Board horizontal, nose on the right. CAVEAT: her fingers rest on the top rail at x~640 and x~920, either side of the middle; deck face between them is clear (about 280 px). Small 'DONO' logo at (585,670)."
+      }
+    },
+    {
+      "file": "board-gras-1.jpg",
+      "unsplash_page": "https://unsplash.com/photos/QOVQoqLfxyc",
+      "image_url": "https://images.unsplash.com/photo-1761640431158-0f9e1d8146d6?w=1600&q=85&fm=jpg",
+      "photographer": "Daniel J. Schwarz",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "White shortboard with blue rails lying flat on grass, shot from above at a mild angle, deck facing camera",
+      "size": "1600x2400",
+      "board": {
+        "nose_tip": [
+          1126,
+          544
+        ],
+        "tail_tip": [
+          375,
+          1975
+        ],
+        "width_at_middle_px": 540,
+        "middle_point": [
+          753,
+          1262
+        ],
+        "notes": "Whole board visible, diagonal (about 28 degrees from vertical). 'FATUM' text near nose, round logo at (770,1245) right in the middle, black traction pad on tail."
+      }
+    },
+    {
+      "file": "textuur-zand-1.jpg",
+      "unsplash_page": "https://unsplash.com/photos/AHaaWiSZJbY",
+      "image_url": "https://images.unsplash.com/photo-1608114759160-ad0b1bac35b2?w=1600&q=85&fm=jpg",
+      "photographer": "Dongsh",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Fine light beige beach sand with gentle wind ripples, shot from straight above",
+      "size": "1600x2131"
+    },
+    {
+      "file": "textuur-hout-1.jpg",
+      "unsplash_page": "https://unsplash.com/photos/VFUTPASjhB8",
+      "image_url": "https://images.unsplash.com/photo-1597113365542-bb91d3d7e1c2?w=1600&q=85&fm=jpg",
+      "photographer": "Andrey Haimin",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Light grey weathered wooden planks (horizontal), shot straight on",
+      "size": "1600x1143"
+    },
+    {
+      "file": "textuur-hout-2.jpg",
+      "unsplash_page": "https://unsplash.com/photos/JH_R66BihvA",
+      "image_url": "https://images.unsplash.com/photo-1611072337226-1140ab367200?w=1600&q=85&fm=jpg",
+      "photographer": "simon",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Light oak wood planks, pale and even, shot straight on",
+      "size": "1600x1179"
+    },
+    {
+      "file": "textuur-beton-1.jpg",
+      "unsplash_page": "https://unsplash.com/photos/ctXf1GVyf9A",
+      "image_url": "https://images.unsplash.com/photo-1536566482680-fca31930a0bd?w=1600&q=85&fm=jpg",
+      "photographer": "Annie Spratt",
+      "license": "Unsplash License (free; verified: /download redirects to images.unsplash.com)",
+      "description": "Light grey smooth concrete surface, even texture, shot straight on",
+      "size": "1600x2399"
+    }
+  ]
+}
