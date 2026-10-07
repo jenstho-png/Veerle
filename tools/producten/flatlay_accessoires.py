@@ -212,18 +212,22 @@ def midden_voor(m, punt, s, doel=(800, 1000)):
 
 
 def opslaan(img, naam, max_kb=195):
-    """ST.bewaar, en als zand of stof dan nog te zwaar is (eis: onder 200 kB) verder omlaag in kwaliteit."""
+    """Afwerking en ST.bewaar zoals overal. Is zand of stof dan nog te zwaar (eis: onder 200 kB), dan eerst minder
+    korrel (ruis is duur in jpg), en pas daarna lagere kwaliteit en een fractie zachter."""
     from PIL import Image
-    img = ST.afwerking(img)
-    pad = ST.bewaar(img, DOEL / f'{naam}.jpg')
-    q = 70
-    while pad.stat().st_size > max_kb * 1000:
-        bron = img if q > 58 else cv2.GaussianBlur(img, (0, 0), 0.45 + (58 - q) * 0.05)
-        q -= 2
-        Image.fromarray((np.clip(bron, 0, 1) * 255).astype(np.uint8)).save(pad, quality=q, optimize=True, progressive=True)
-        if q <= 44:
-            break
-    print('foto', naam, pad.stat().st_size // 1000, 'kB', 'q', q)
+    pad = ST.bewaar(ST.afwerking(img), DOEL / f'{naam}.jpg')
+    if pad.stat().st_size <= max_kb * 1000:
+        print('foto', naam, pad.stat().st_size // 1000, 'kB'); return
+    for korrel, zacht in [(0.008, 0), (0.005, 0), (0.003, 0.35), (0.0, 0.5), (0.0, 0.7)]:
+        bron = ST.afwerking(img, korrel=korrel)
+        if zacht:
+            bron = cv2.GaussianBlur(bron, (0, 0), zacht)
+        im = Image.fromarray((np.clip(bron, 0, 1) * 255).astype(np.uint8))
+        for q in range(80, 57, -3):
+            im.save(pad, quality=q, optimize=True, progressive=True)
+            if pad.stat().st_size <= max_kb * 1000:
+                print('foto', naam, pad.stat().st_size // 1000, 'kB', 'korrel', korrel, 'q', q); return
+    print('LET OP te groot', naam, pad.stat().st_size // 1000, 'kB')
 
 
 def pet_navy_rgba(schaal=1.0):

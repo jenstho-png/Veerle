@@ -60,9 +60,8 @@ def smooth(a, b, x):
 # ---------------------------------------------------------------- board
 def vorm():
     """Masker, afstand tot de rand, hoogte en normalen van het board."""
-    bm = S.board_masker()
+    bm = S.board_masker(aa=True)                                      # zachte (anti-aliased) rand
     d = cv2.distanceTransform((bm > 0.5).astype(np.uint8), cv2.DIST_L2, cv2.DIST_MASK_PRECISE).astype(np.float32)
-    d = d + (bm - 0.5).clip(0, 0.5)                                   # zachte rand
     q = np.clip(d / RR, 0, 1)
     z = RH * (1 - (1 - q) ** 2.2) + 16 * smooth(RR, 330, d)           # ronde rail + lichte bolling
     zs = cv2.GaussianBlur(z, (0, 0), 4.0)
@@ -173,7 +172,7 @@ def teken_board(bm, d, n, stijl, zaad=1):
 def verkort(laag, m, d, alleen_onder=False):
     """De stof loopt over de rail naar beneden: van boven gezien schuift het patroon daar in elkaar."""
     yy, xx = np.mgrid[0:CH, 0:CW].astype(np.float32)
-    sn = np.clip(1 - d / RR, 0, 1)
+    sn = np.clip(1 - (d + 2.5) / RR, 0, 1)                               # niet oneindig steil op de uiterste rand
     extra = RR * (np.arcsin(sn) - sn)
     teken = np.sign(yy - BY)
     if alleen_onder:
@@ -181,7 +180,10 @@ def verkort(laag, m, d, alleen_onder=False):
     ys = (yy + teken * extra).astype(np.float32)
     uit = cv2.remap(laag, xx, ys, cv2.INTER_LINEAR)
     um = cv2.remap(m, xx, ys, cv2.INTER_LINEAR)
-    return uit, um
+    # waar de stof steil wegloopt valt het patroon samen: daar iets zachter (zoals de camera het ziet)
+    zacht = cv2.GaussianBlur(uit, (0, 0), 1.1)
+    w = smooth(12, 2, d)[..., None]
+    return uit * (1 - w) + zacht * w, um
 
 
 def verschuif(m, afstand, blur):
@@ -211,6 +213,9 @@ def bouw(handle):
         verder[b] = hoeken[b] - r / abs(r[1]) * 90
     laag, pm_vol = S.leg_stof(stof, verder)
     laag = S.zoom(laag, pm_vol, verder)
+    aa = np.zeros((CH, CW), np.uint8)                                      # zelfde vorm, met zachte rand
+    cv2.fillPoly(aa, [np.round(verder * 4).astype(np.int32)], 255, lineType=cv2.LINE_AA, shift=2)
+    pm_vol = aa.astype(np.float32) / 255
     lum = (laag @ np.array([.299, .587, .114], np.float32))[..., None]
     laag = np.clip((lum + (laag - lum) * S.KLEUR_STOF - 0.5) * 1.07 + 0.505, 0, 1)
     laag, pm = verkort(laag, pm_vol, d)
@@ -255,8 +260,8 @@ def bouw(handle):
 
     # band naast het board (lus): eigen laag, ligt plat op de grond
     b_grond = bmk * (1 - alpha_board)
-    rgba_board = np.dstack([beeld, alpha_board]).astype(np.float32)
-    rgba_lus = np.dstack([bb, b_grond]).astype(np.float32)
+    rgba_board = np.dstack([np.clip(beeld, 0, 1), alpha_board]).astype(np.float32)
+    rgba_lus = np.dstack([np.clip(bb, 0, 1), b_grond]).astype(np.float32)
     return rgba_board, rgba_lus
 
 
@@ -381,7 +386,7 @@ def maak_alles(handle):
     uit = []
     # 1: hero op zand: de hele tas (vak + lus) groot en in het midden, board loopt boven en onder uit beeld;
     #    scherpgesteld op de deck, het zand 7 cm lager is een fractie zachter
-    s1 = ST.B / 1400
+    s1 = ST.B / 1640                                      # ruim: linkerrail met de omslag en de hele lus in beeld
     uit.append(foto(zand(), rb, rl, XM, (lus_y + paneel_y) / 2, s1, dof=1.4))
     # 2: het hele board op fotopapier in een merkkleur
     s2 = 0.76
@@ -391,7 +396,7 @@ def maak_alles(handle):
     uit.append(foto(zand_detail(s3 / s1, zaad=1), rb, rl, XM + 60, 930, s3, dof=2.4))
     # 4: de andere rail: het vak met zijn schuine zoom valt om de rail, de band loopt eronderdoor naar de onderkant
     s4 = ST.B / 700
-    uit.append(foto(zand_detail(s4 / s1, zaad=2), rb, rl, XM + 300, 1490, s4, dof=2.4))
+    uit.append(foto(zand_detail(s4 / s1, zaad=2), rb, rl, XM + 380, 1490, s4, dof=2.4))
     for i, img in enumerate(uit, 1):
         q = bewaar(ST.afwerking(img, korrel=0.005, zaad=7 + i), DOEL / f'{handle}-{i}.jpg')
         print(f'  {handle}-{i}.jpg q{q}', (DOEL / f'{handle}-{i}.jpg').stat().st_size // 1000, 'kB')

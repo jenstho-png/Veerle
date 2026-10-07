@@ -33,7 +33,8 @@ def smooth(a, b, x):
     return t * t * (3 - 2 * t)
 
 
-def board_masker():
+def board_masker(aa=False):
+    """Masker van het board. aa=True: met echte anti-aliasing (zachte rand van 1 px) in plaats van 0/1."""
     t = np.array([0, .015, .05, .12, .25, .42, .58, .75, .88, .96, 1.0])
     f = np.array([0, .26, .5, .72, .9, .995, 1.0, .93, .74, .5, .34])
     spl = PchipInterpolator(t, f)
@@ -43,8 +44,8 @@ def board_masker():
     onder = [(BX0 + x * LB, BY + h) for x, h in zip(xs, half)][::-1]
     pts = np.array(boven + onder, np.float32)
     m = np.zeros((CH, CW), np.uint8)
-    cv2.fillPoly(m, [np.round(pts * 4).astype(np.int32)], 1, lineType=cv2.LINE_AA, shift=2)
-    return m.astype(np.float32)
+    cv2.fillPoly(m, [np.round(pts * 4).astype(np.int32)], 255 if aa else 1, lineType=cv2.LINE_AA, shift=2)
+    return m.astype(np.float32) / (255 if aa else 1)
 
 
 def teken_board(m):

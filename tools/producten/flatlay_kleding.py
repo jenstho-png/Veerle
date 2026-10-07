@@ -278,7 +278,7 @@ def neklabel_art(kleur):
     return E.art(UIT_ECHT / ('neklabel-creme.png' if is_donker(kleur) else 'neklabel-navy.png'))
 
 
-def kleur_stof(img, a, kleur, sterkte=1.8):
+def kleur_stof(img, a, kleur, sterkte=1.5):
     m = (a > 0.5).astype(np.float32)
     img = plooien(img, m, sterkte=sterkte)
     img = MK.kleur_om(img, m, kleur, 1.0)
@@ -338,13 +338,16 @@ def macro(img, a, kader, prints, licht_hoek=True, wale_mm=0.85, kader_cm=None, m
     groot = cv2.warpAffine(img, M, (ST.B, ST.H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
     ga = cv2.warpAffine(a, M, (ST.B, ST.H), flags=cv2.INTER_LINEAR, borderValue=0)
     groot = cv2.GaussianBlur(groot, (0, 0), f * 0.35)                 # vergroting is zacht; geen blokjes
-    px_mm = f * maat / 10
-    t = tricot(ST.H, ST.B, max(3.0, wale_mm * px_mm), zaad=zaad)
-    groot = np.clip(groot * (1 + t[..., None]), 0, 1)
     for art, cx, cy, br, kw in prints:
-        groot = MK.zet_print(groot, inkt(art, br * f, 0.04), (cx - x0) * f, (cy - y0) * f, br * f,
-                             verplaatsing=kw.get('verplaatsing', 6) * f * 0.6, schaduw_sterkte=0.9,
-                             structuur=kw.get('structuur', 1.4), dekking=kw.get('dekking', 0.93), masker=ga)
+        groot = MK.zet_print(groot, inkt(art, br * f, 0.03), (cx - x0) * f, (cy - y0) * f, br * f,
+                             verplaatsing=kw.get('verplaatsing', 6) * f * 0.5, schaduw_sterkte=0.9,
+                             structuur=0.0, dekking=kw.get('dekking', 0.95), masker=ga)
+    # breisteekjes over stof en inkt samen: de inkt zit in de stof
+    px_mm = f * maat / 10
+    t = tricot(ST.H, ST.B, max(3.0, wale_mm * px_mm), zaad=zaad, amp=0.035)
+    ruis = cv2.GaussianBlur(np.random.default_rng(zaad + 1).normal(0, 1, (ST.H, ST.B)).astype(np.float32), (0, 0), 1.2)
+    t = t + ruis / (ruis.std() + 1e-6) * 0.012
+    groot = np.clip(groot * (1 + t[..., None]), 0, 1)
     # scherptediepte: scherp rond het midden, zacht naar boven en onder
     yy = np.mgrid[0:ST.H, 0:ST.B][0].astype(np.float32)
     d = np.clip((np.abs(yy - ST.H * 0.5) / (ST.H * 0.5) - 0.3) / 0.7, 0, 1) ** 1.4
@@ -406,8 +409,8 @@ def tee(handle, kleur, naam, achtergrond):
     bewaar(leg_neer(r, ra, achtergrond, vulling=0.80, zaad=2), f'{handle}-2')
     _, pcx, pcy, br, _ = pr
     ph = br * art.shape[0] / art.shape[1]
-    w = min(br * 0.78, 22 * TEE_MAAT)                       # kader van ca. 17 tot 22 cm breed
-    kader = (pcx - w / 2, pcy - ph / 2 - w * 0.08, w)
+    w = br * 1.12                                           # hele printbreedte, bovenste deel
+    kader = (pcx - w / 2, pcy - ph / 2 - w * 0.10, w)
     bewaar(macro(kaal, ra, kader, [pr], maat=TEE_MAAT), f'{handle}-3')
 
 
