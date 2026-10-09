@@ -1,6 +1,6 @@
 # Wat je nog in Shopify doet
 
-Bijgewerkt op woensdag 7 oktober 2026. Thema: Tide Tode 37.
+Bijgewerkt op vrijdag 9 oktober 2026. Thema: Tide Tode 37.
 
 ## A1, A2 en A6. Juridische pagina's
 
