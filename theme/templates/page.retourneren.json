@@ -2,7 +2,9 @@
   "sections": {
     "tekst": {
       "type": "tt-tekst",
-      "settings": {},
+      "settings": {
+        "vast": "retour"
+      },
       "blocks": {
         "link-1": {
           "type": "link",

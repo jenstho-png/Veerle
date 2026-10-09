@@ -2,7 +2,9 @@
   "sections": {
     "tekst": {
       "type": "tt-tekst",
-      "settings": {},
+      "settings": {
+        "vast": "voorwaarden"
+      },
       "blocks": {
         "link-1": {
           "type": "link",

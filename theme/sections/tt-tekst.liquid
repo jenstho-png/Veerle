@@ -7,7 +7,9 @@
   endcomment
   assign leeg = inhoud | strip_html | strip
   assign vast = ''
-  if leeg == blank
+  if leeg == blank and section.settings.vast != blank and section.settings.vast != 'geen'
+    assign vast = section.settings.vast
+  elsif leeg == blank
     if page.handle contains 'herroep'
       assign vast = 'herroepingsrecht'
     elsif page.handle contains 'voorwaarden'
@@ -55,6 +57,20 @@
   "name": "TT: tekstpagina",
   "tag": "div",
   "settings": [
+    {
+      "type": "select",
+      "id": "vast",
+      "label": "Vaste tekst als de pagina leeg is",
+      "options": [
+        { "value": "geen", "label": "Geen" },
+        { "value": "verzending", "label": "Verzending" },
+        { "value": "retour", "label": "Retourneren" },
+        { "value": "herroepingsrecht", "label": "Herroepingsrecht" },
+        { "value": "voorwaarden", "label": "Algemene voorwaarden" },
+        { "value": "privacy", "label": "Privacybeleid" }
+      ],
+      "default": "geen"
+    },
     {
       "type": "select",
       "id": "bg",
@@ -135,14 +151,14 @@
           "type": "link",
           "settings": {
             "label": "Verzenden",
-            "link": "/policies/shipping-policy"
+            "link": "/pages/verzending"
           }
         },
         {
           "type": "link",
           "settings": {
             "label": "Retourneren",
-            "link": "/policies/refund-policy"
+            "link": "/pages/retourneren"
           }
         },
         {
@@ -156,14 +172,14 @@
           "type": "link",
           "settings": {
             "label": "Algemene voorwaarden",
-            "link": "/policies/terms-of-service"
+            "link": "/pages/algemene-voorwaarden"
           }
         },
         {
           "type": "link",
           "settings": {
             "label": "Privacybeleid",
-            "link": "/policies/privacy-policy"
+            "link": "/pages/privacy"
           }
         },
         {

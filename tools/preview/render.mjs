@@ -110,6 +110,10 @@ globals.page = { title: 'Herroepingsrecht', content: fs.readFileSync(path.resolv
 await page('herroepingsrecht', 'page.juridisch.json', { request: { page_type: 'page', path: '/pages/herroepingsrecht' } });
 globals.page = { title: 'Herroepingsrecht', handle: 'herroepingsrecht', content: '' };
 await page('herroepingsrecht-leeg', 'page.juridisch.json', { request: { page_type: 'page', path: '/pages/herroepingsrecht' } });
+for (const [h, t] of [['verzending', 'Verzending'], ['retourneren', 'Retourneren'], ['herroepingsrecht', 'Herroepingsrecht'], ['algemene-voorwaarden', 'Algemene voorwaarden'], ['privacy', 'Privacybeleid']]) {
+  globals.page = { title: t, handle: 'pagina', content: '' };
+  await page(`jur-${h}`, `page.${h}.json`, { request: { page_type: 'page', path: `/pages/${h}` } });
+}
 globals.page = { title: 'Maatwijzer', content: '<p>Hier lees je welke boards in de draagtas passen en welke maat kleding je kiest.</p>' };
 await page('maatwijzer', 'page.maatwijzer.json', { request: { page_type: 'page', path: '/pages/maatwijzer' } });
 globals.page = { title: 'Duurzaamheid', content: '' };

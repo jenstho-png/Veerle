@@ -36,7 +36,11 @@ Bijgewerkt op woensdag 7 oktober 2026.
 | Maatwijzer | `/pages/maatwijzer` | `page.maatwijzer` | ✅ 🛠 |
 | Veelgestelde vragen | `/pages/veelgestelde-vragen` | `page.veelgestelde-vragen` | ✅ 🛠 |
 | Contact | `/pages/contact` | `page.contact` | ✅ 🛠 |
-| Herroepingsrecht | `/pages/herroepingsrecht` | `page.juridisch` (tekst uit `docs/juridisch/herroepingsrecht.html`) | ✅ 🛠 |
+| Verzending | `/pages/verzending` | `page.verzending` (tekst zit in het thema) | ✅ 🛠 |
+| Retourneren | `/pages/retourneren` | `page.retourneren` (tekst zit in het thema) | ✅ 🛠 |
+| Herroepingsrecht | `/pages/herroepingsrecht` | `page.herroepingsrecht` (tekst zit in het thema) | ✅ 🛠 |
+| Algemene voorwaarden | `/pages/algemene-voorwaarden` | `page.algemene-voorwaarden` (tekst zit in het thema) | ✅ 🛠 |
+| Privacybeleid | `/pages/privacy` | `page.privacy` (tekst zit in het thema) | ✅ 🛠 |
 | Actie | `/pages/actie` | `page.actie` | ✅ 🛠 |
 
 De pagina's hebben hun inhoud al in het template. Maak ze aan met precies deze URL, dan werken alle links in het menu en de footer.

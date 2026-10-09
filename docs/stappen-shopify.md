@@ -1,28 +1,26 @@
 # Wat je nog in Shopify doet
 
-Bijgewerkt op woensdag 7 oktober 2026. Thema: Tide Tode 36.
+Bijgewerkt op woensdag 7 oktober 2026. Thema: Tide Tode 37.
 
-## A1 en A6. Beleid invullen (verzending, retour, voorwaarden, privacy)
+## A1, A2 en A6. Juridische pagina's
 
-De teksten zijn klaar in `docs/juridisch/ingevuld/`. Open elk bestand in je browser, selecteer alles en kopieer.
+De teksten zitten in het thema. Je maakt alleen de pagina's aan en laat de inhoud leeg.
 
-1. Ga naar **Instellingen > Beleid**.
-2. Plak bij elk beleid de tekst uit het bijbehorende bestand.
+1. Ga naar **Online winkel > Pagina's > Pagina toevoegen**.
+2. Vul de titel in, laat het tekstvak leeg en kies rechts bij **Thema-template** het template uit de tabel.
+3. Klik op **Opslaan**. Controleer onderaan bij **Zoekmachinevermelding** dat de URL klopt.
 
-| Beleid in Shopify | Bestand |
-|---|---|
-| Verzendbeleid | `verzendbeleid.html` |
-| Restitutiebeleid (retour) | `retourbeleid.html` |
-| Servicevoorwaarden | `algemene-voorwaarden.html` |
-| Privacybeleid | `privacybeleid.html` (vervangt de lange standaardtekst van Shopify) |
+| Titel | URL | Template |
+|---|---|---|
+| Verzending | `/pages/verzending` | `verzending` |
+| Retourneren | `/pages/retourneren` | `retourneren` |
+| Herroepingsrecht | `/pages/herroepingsrecht` | `herroepingsrecht` |
+| Algemene voorwaarden | `/pages/algemene-voorwaarden` | `algemene-voorwaarden` |
+| Privacybeleid | `/pages/privacy` | `privacy` |
 
-3. Klik op **Opslaan**.
+De footer en het blok "Meer informatie" linken al naar deze adressen.
 
-Zolang een beleid leeg is, verbergt het thema de link ernaartoe in de footer en in het blok "Meer informatie". Er staan dus geen links meer die een 404 geven. Zodra je de tekst plakt, komt de link vanzelf terug.
-
-## A2. Herroepingsrecht
-
-De pagina laat nu altijd de herroepingstekst zien, ook als de pagina in Shopify leeg is. Je hoeft niets te doen. Maak alleen de pagina aan als die nog niet bestaat: **Online winkel > Pagina's**, titel "Herroepingsrecht", template `page.juridisch`.
+Het privacybeleid in **Instellingen > Beleid** is nog de lange standaardtekst van Shopify. Die verschijnt bij het afrekenen. Vervang hem door de tekst uit `docs/juridisch/ingevuld/privacybeleid.html`, dan zeggen de pagina en het afrekenen hetzelfde. Bij de andere beleidsvelden mag je dat ook doen, maar het hoeft niet.
 
 ## A3. Social media
 
