@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "formulier": { "type": "tt-formulier", "settings": {} },
+    "stappen": { "type": "tt-zo", "settings": { "stijl": "foto" } },
+    "patroon": { "type": "tt-patroon", "settings": {} }
+  },
+  "order": [ "formulier", "stappen", "patroon" ]
+}

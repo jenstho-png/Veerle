@@ -2342,3 +2342,32 @@ main .shopify-section:has(> .tt-usp) + .shopify-section > section.tt { margin-to
 .tt-pop__weg { position: fixed; z-index: 86; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: var(--tt-deep, #22324F); color: var(--tt-creme, #F3ECDD); font: 400 15px/22px var(--tt-tekst); text-align: center; cursor: pointer; box-shadow: 0 4px 10px -4px rgba(10, 20, 35, .5); transition: opacity .35s ease; }
 .tt-pop__weg[hidden], .tt-in-hero .tt-pop__weg, .tt-in-voet .tt-pop__weg, .tt-pop-open .tt-pop__weg { opacity: 0; pointer-events: none; }
 .tt-pop__weg[hidden] { display: none; }
+
+/* ---------- landingspagina met formulier (ActiveCampaign) ---------- */
+.tt-formulier { padding: clamp(120px, 10vw, 150px) 0 clamp(56px, 6vw, 90px) !important; }
+.tt-formulier__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+.tt-formulier__tekst { position: relative; }
+.tt-formulier__intro { margin-top: 18px; max-width: 46ch; font: 400 15px/1.7 var(--tt-tekst); }
+.tt-formulier__intro p { margin: 0; }
+.tt-formulier__punten { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 10px; font: 400 14px/1.4 var(--tt-tekst); }
+.tt-formulier__punten li { display: flex; gap: 12px; align-items: center; }
+.tt-formulier__punten li::before { content: "✓"; display: grid; place-items: center; width: 22px; height: 22px; flex: none; border-radius: 50%; background: var(--tt-deep); color: var(--tt-creme); font-size: 11px; }
+.tt-stickers--formulier { right: 0; top: -70px; width: 110px; rotate: 10deg; }
+.tt-formulier__vak { background: #FFFDF8; border-radius: 22px; padding: clamp(22px, 3vw, 40px); box-shadow: 0 40px 70px -46px rgba(10, 25, 45, .55), 0 0 0 1px rgba(34, 50, 79, .08); }
+.tt-formulier__leeg { margin: 0; font: 400 14px/1.6 var(--tt-tekst); opacity: .7; }
+/* het ActiveCampaign-formulier in de huisstijl */
+.tt-formulier__vak ._form, .tt-formulier__vak form { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; font-family: var(--tt-tekst) !important; color: var(--tt-deep) !important; }
+.tt-formulier__vak ._form-title { font: 400 30px/1 var(--tt-kop, 'Tide Tode Display') !important; text-transform: uppercase; color: var(--tt-deep) !important; margin-bottom: 14px !important; }
+.tt-formulier__vak ._form-label, .tt-formulier__vak label { font: 700 10.5px/1 var(--tt-tekst) !important; letter-spacing: .18em !important; text-transform: uppercase !important; color: var(--tt-deep) !important; margin-bottom: 8px !important; }
+.tt-formulier__vak input[type="text"], .tt-formulier__vak input[type="email"], .tt-formulier__vak input[type="tel"] { width: 100% !important; height: 52px !important; padding: 0 18px !important; border: 1px solid rgba(34, 50, 79, .2) !important; border-radius: 999px !important; background: #FFFDF8 !important; font: 400 15px var(--tt-tekst) !important; color: var(--tt-deep) !important; box-shadow: none !important; }
+.tt-formulier__vak ._form_element { margin-bottom: 16px !important; }
+.tt-formulier__vak button, .tt-formulier__vak ._submit { width: 100% !important; height: 54px !important; border: 0 !important; border-radius: 999px !important; background: var(--tt-deep) !important; color: var(--tt-creme) !important; font: 700 12px var(--tt-tekst) !important; letter-spacing: .2em !important; text-transform: uppercase !important; cursor: pointer; padding: 0 22px !important; }
+.tt-formulier__vak ._form-branding { display: none !important; }
+@media (max-width: 749px) {
+  .tt-formulier { padding-top: 96px !important; }
+  .tt-formulier__grid { grid-template-columns: 1fr; gap: 26px; }
+  .tt-stickers--formulier { top: -40px; width: 72px; }
+}
+.tt-formulier__intro { margin-bottom: 24px !important; }
+.tt-stickers--formulier { right: auto; left: -10px; top: -130px; width: 96px; rotate: -10deg; }
+@media (max-width: 749px) { .tt-stickers--formulier { left: auto; right: 0; top: -60px; width: 64px; } }

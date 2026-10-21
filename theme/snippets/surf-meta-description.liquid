@@ -37,6 +37,8 @@
           assign desc = 'Welke gegevens ' | append: shop.name | append: ' bewaart, waarvoor en hoe lang. En wat je rechten zijn.'
         when 'cookiebeleid'
           assign desc = 'Welke cookies ' | append: shop.name | append: ' gebruikt en hoe je zelf kiest wat je toestaat.'
+        when 'aanmelden'
+          assign desc = 'Schrijf je in voor de nieuwsbrief van ' | append: shop.name | append: ' en krijg 10% korting op je eerste draagtas.'
         when 'actie'
           assign desc = 'Schrijf je in bij ' | append: shop.name | append: ' en ontvang 10% korting op je eerste bestelling.'
       endcase
