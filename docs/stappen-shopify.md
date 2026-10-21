@@ -1,6 +1,6 @@
 # Wat je nog in Shopify doet
 
-Bijgewerkt op vrijdag 9 oktober 2026. Thema: Tide Tode 37.
+Bijgewerkt op woensdag 21 oktober 2026. Thema: Tide Tode 38. Deadline: donderdag 22 oktober 12:00.
 
 ## A1, A2 en A6. Juridische pagina's
 
@@ -17,6 +17,7 @@ De teksten zitten in het thema. Je maakt alleen de pagina's aan en laat de inhou
 | Herroepingsrecht | `/pages/herroepingsrecht` | `herroepingsrecht` |
 | Algemene voorwaarden | `/pages/algemene-voorwaarden` | `algemene-voorwaarden` |
 | Privacybeleid | `/pages/privacy` | `privacy` |
+| Cookiebeleid | `/pages/cookiebeleid` | `cookiebeleid` |
 
 De footer en het blok "Meer informatie" linken al naar deze adressen.
 
@@ -59,3 +60,26 @@ Clarity laadt pas als een bezoeker analytische cookies accepteert. Laat je drie 
 - De home heet nu "Tide Tode, draagtas voor je surfboard" in de zoekresultaten en de browsertab.
 - Plak je een link in WhatsApp, dan komt er een afbeelding mee: de drie boards op het zand met het logo.
 - Wil je het zelf instellen, dan kan dat bij **Online winkel > Voorkeuren**.
+
+## Techniek uit de opdracht
+
+| Wat | Waar | Klaar als |
+|---|---|---|
+| Shopify Payments in testmodus | Instellingen > Betalingen, KvK 41104408, daarna Testmodus aan | Je ziet iDEAL, Bancontact en creditcard staan |
+| PostNL-app | App Store: "PostNL" installeren en koppelen | De app staat onder Apps |
+| DHL-app | App Store: "DHL eCommerce" of "DHL Parcel" installeren | De app staat onder Apps |
+| Microsoft Clarity | Zie A5 hierboven | Er staan sessies in Clarity |
+| ActiveCampaign | Proefperiode van 14 dagen: kijk vandaag of je er nog in kunt. Koppel via de app "ActiveCampaign for Shopify" | Mails en workflow staan erin |
+| Landingspagina met formulier | PageFly (gratis app) of een formulier in ActiveCampaign. De pagina `/pages/actie` uit het thema kun je als voorbeeld gebruiken | Er is minstens één reactie binnengekomen |
+
+## Screenshots voor je verslag
+
+- Het collectieoverzicht en een productpagina
+- Thema-instellingen > Social media, en de profielen zelf
+- Shopify Payments met de betaalmethoden
+- De PostNL- en DHL-app
+- Clarity met geregistreerde sessies
+- De ActiveCampaign-mails en de workflow
+- De landingspagina met het formulier, plus een binnengekomen reactie
+
+Zet de link naar de webshop en het wachtwoord van de winkel (Online winkel > Voorkeuren > Wachtwoordbeveiliging) in je reflectiedocument. Dat is een apart beoordelingspunt.

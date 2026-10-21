@@ -1,0 +1,81 @@
+{
+  "sections": {
+    "tekst": {
+      "type": "tt-tekst",
+      "settings": {
+        "vast": "cookies"
+      },
+      "blocks": {
+        "link-1": {
+          "type": "link",
+          "settings": {
+            "label": "Verzenden",
+            "link": "/pages/verzending"
+          }
+        },
+        "link-2": {
+          "type": "link",
+          "settings": {
+            "label": "Retourneren",
+            "link": "/pages/retourneren"
+          }
+        },
+        "link-3": {
+          "type": "link",
+          "settings": {
+            "label": "Herroepingsrecht",
+            "link": "/pages/herroepingsrecht"
+          }
+        },
+        "link-4": {
+          "type": "link",
+          "settings": {
+            "label": "Algemene voorwaarden",
+            "link": "/pages/algemene-voorwaarden"
+          }
+        },
+        "link-5": {
+          "type": "link",
+          "settings": {
+            "label": "Privacybeleid",
+            "link": "/pages/privacy"
+          }
+        },
+        "link-6": {
+          "type": "link",
+          "settings": {
+            "label": "Veelgestelde vragen",
+            "link": "/pages/veelgestelde-vragen"
+          }
+        },
+        "link-7": {
+          "type": "link",
+          "settings": {
+            "label": "Contact",
+            "link": "/pages/contact"
+          }
+        },
+        "link-cookie": {
+          "type": "link",
+          "settings": {
+            "label": "Cookiebeleid",
+            "link": "/pages/cookiebeleid"
+          }
+        }
+      },
+      "block_order": [
+        "link-1",
+        "link-2",
+        "link-3",
+        "link-4",
+        "link-5",
+        "link-cookie",
+        "link-6",
+        "link-7"
+      ]
+    }
+  },
+  "order": [
+    "tekst"
+  ]
+}

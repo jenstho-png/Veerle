@@ -54,6 +54,13 @@
             "label": "Contact",
             "link": "/pages/contact"
           }
+        },
+        "link-cookie": {
+          "type": "link",
+          "settings": {
+            "label": "Cookiebeleid",
+            "link": "/pages/cookiebeleid"
+          }
         }
       },
       "block_order": [
@@ -62,6 +69,7 @@
         "link-3",
         "link-4",
         "link-5",
+        "link-cookie",
         "link-6",
         "link-7"
       ]

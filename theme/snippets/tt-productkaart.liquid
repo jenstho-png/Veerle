@@ -33,7 +33,8 @@
       {{ p.featured_media | image_url: width: 900 | image_tag: loading: laad, sizes: '(min-width: 990px) 25vw, 50vw', widths: '360, 540, 720, 900', class: 'tt-pk__img', alt: alt1 }}
       {%- if p.media.size > 1 -%}
         {%- assign tweede = p.media[1] -%}
-        {{ tweede | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 25vw, 50vw', widths: '360, 540, 720, 900', class: 'tt-pk__img tt-pk__img--2', alt: '' }}
+        {%- assign alt2 = tweede.alt | default: p.title -%}
+        {{ tweede | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 25vw, 50vw', widths: '360, 540, 720, 900', class: 'tt-pk__img tt-pk__img--2', alt: alt2 }}
       {%- endif -%}
     {%- else -%}
       <span class="tt-pk__leeg">{%- render 'tt-logo', variant: 'maan-simpel' -%}<span>Foto volgt</span></span>

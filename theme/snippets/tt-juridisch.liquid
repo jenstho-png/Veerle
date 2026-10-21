@@ -1,6 +1,6 @@
 {%- comment -%}
   Juridische teksten van Tide Tode (uit docs/juridisch/ingevuld). Worden getoond op een tekstpagina als de pagina in Shopify nog leeg is.
-  Gebruik: {% render 'tt-juridisch', naam: 'herroepingsrecht' %}  Namen: herroepingsrecht, voorwaarden, verzending, retour, privacy
+  Gebruik: {% render 'tt-juridisch', naam: 'herroepingsrecht' %}  Namen: herroepingsrecht, voorwaarden, verzending, retour, privacy, cookies
 {%- endcomment -%}
 {%- case naam -%}
   {%- when 'herroepingsrecht' -%}
@@ -154,4 +154,22 @@
 <p>De webshop draait op een beveiligde verbinding (https). Alleen mensen die je gegevens nodig hebben voor hun werk, kunnen erbij.</p>
 <h2>Wijzigingen</h2>
 <p>We kunnen dit privacybeleid aanpassen. De nieuwste versie staat altijd op deze pagina.</p>
+  {%- when 'cookies' -%}
+<p>Tide Tode gebruikt cookies. Hier lees je welke, waarvoor, en hoe je zelf kiest wat je toestaat.</p>
+<h2>Wat cookies zijn</h2>
+<p>Een cookie is een klein bestand dat je browser bewaart als je onze webshop bezoekt. Daarmee onthoudt de webshop bijvoorbeeld wat er in je winkelwagen zit.</p>
+<h2>Welke cookies we gebruiken</h2>
+<table>
+<tr><th>Soort</th><th>Waarvoor</th><th>Toestemming nodig</th></tr>
+<tr><td><strong>Functioneel</strong> (Shopify)</td><td>Je winkelwagen, het afrekenen, je taal en de beveiliging van de webshop</td><td>Nee, zonder deze cookies werkt de webshop niet</td></tr>
+<tr><td><strong>Analytisch</strong> (Google Analytics, Microsoft Clarity, Shopify)</td><td>Zien hoe bezoekers de webshop gebruiken, welke pagina's goed werken en waar mensen vastlopen. Clarity maakt opnames van klikken en scrollen, zonder wat je typt</td><td>Ja</td></tr>
+<tr><td><strong>Marketing</strong> (Meta-pixel, TikTok-pixel, Google)</td><td>Advertenties laten zien aan mensen die de webshop al hebben bezocht en meten of een advertentie werkt</td><td>Ja</td></tr>
+</table>
+<h2>Jouw keuze</h2>
+<p>Bij je eerste bezoek vragen we in de cookiemelding of je analytische en marketingcookies toestaat. Weigeren is net zo makkelijk als accepteren. Zonder toestemming plaatsen we alleen de functionele cookies.</p>
+<p>Wil je je keuze later veranderen, open dan de cookiemelding opnieuw via de link onderaan de pagina, of wis de cookies in de instellingen van je browser.</p>
+<h2>Hoe lang</h2>
+<p>Functionele cookies blijven maximaal een jaar bewaard, de meeste verdwijnen als je de browser sluit. Analytische en marketingcookies blijven maximaal twee jaar, tenzij je ze eerder wist.</p>
+<h2>Meer weten</h2>
+<p>Wat we met je gegevens doen, staat in ons <a href="/pages/privacy">privacybeleid</a>. Vragen? Mail naar <a href="mailto:hallo@tidetode.nl">hallo@tidetode.nl</a>.</p>
 {%- endcase -%}

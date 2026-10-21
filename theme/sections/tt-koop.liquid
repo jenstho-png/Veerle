@@ -113,11 +113,12 @@
           {%- if tekening -%}
             {%- for n in (1..aantal) -%}
               {%- assign duim = 'tt-product-' | append: n | append: '-800.jpg' | asset_url -%}
-              <li><button type="button" data-tt-duim aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Foto {{ forloop.index }}"><img src="{{ duim }}" alt="" width="80" height="100" loading="lazy"></button></li>
+              <li><button type="button" data-tt-duim aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Foto {{ forloop.index }}"><img src="{{ duim }}" alt="{{ p.title | escape }}, foto {{ forloop.index }}" width="80" height="100" loading="lazy"></button></li>
             {%- endfor -%}
           {%- else -%}
             {%- for m in media limit: max -%}
-              <li><button type="button" data-tt-duim aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Foto {{ forloop.index }}">{{ m.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '', sizes: '80px', widths: '80, 160' }}</button></li>
+              {%- assign alt_duim = m.alt | default: p.title -%}
+              <li><button type="button" data-tt-duim aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Foto {{ forloop.index }}">{{ m.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: alt_duim, sizes: '80px', widths: '80, 160' }}</button></li>
             {%- endfor -%}
           {%- endif -%}
         </ol>
@@ -261,7 +262,7 @@
   {%- endif -%}
   {%- if p != blank and v != blank -%}
     <div class="tt-balk" data-tt-balk aria-hidden="true">
-      {%- if p.featured_media -%}<span class="tt-balk__beeld">{{ p.featured_media | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}</span>{%- endif -%}
+      {%- if p.featured_media -%}<span class="tt-balk__beeld">{{ p.featured_media | image_url: width: 120 | image_tag: loading: 'lazy', alt: p.title }}</span>{%- endif -%}
       <span class="tt-balk__naam">{{ p.title }}<span>{{ v.price | money_without_trailing_zeros }}</span></span>
       <button type="button" class="tt-knop" tabindex="-1" data-tt-balkknop{% unless v.available %} disabled{% endunless %}>In winkelwagen</button>
     </div>

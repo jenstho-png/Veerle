@@ -8,6 +8,8 @@
     when 'index'
       if settings.surf_meta_home != blank
         assign desc = settings.surf_meta_home
+      else
+        assign desc = 'Draagtassen voor je surfboard. Board erin, tas over je schouder en je handen vrij op weg naar zee. Plus surfkleding en gear van ' | append: shop.name | append: '.'
       endif
     when 'page'
       case page.handle
@@ -17,10 +19,42 @@
           assign desc = 'Antwoorden over de surfboard draagtas van ' | append: shop.name | append: ': welke boards passen, meenemen in het vliegtuig, op de fiets of scooter en wat er nog komt.'
         when 'contact'
           assign desc = 'Vraag over je surfboard draagtas of een bestelling? Neem contact op met ' | append: shop.name | append: '. We reageren meestal binnen één werkdag.'
+        when 'duurzaamheid'
+          assign desc = 'Zo maakt ' | append: shop.name | append: ' het: stof die jaren meegaat, reparatie als er iets stuk gaat, verpakking zonder plastic en kleine series.'
+        when 'maatwijzer'
+          assign desc = 'Past je board in de draagtas? Bekijk per boardtype de lengte en vind de juiste maat voor shirts en truien van ' | append: shop.name | append: '.'
+        when 'verzending'
+          assign desc = 'Verzendkosten, levertijden en track and trace bij ' | append: shop.name | append: '. We versturen naar Nederland en België.'
+        when 'retourneren'
+          assign desc = 'Iets terugsturen bij ' | append: shop.name | append: '? Je hebt 14 dagen bedenktijd. Zo werkt retourneren en terugbetalen.'
+        when 'herroepingsrecht'
+          assign desc = 'Je herroepingsrecht bij ' | append: shop.name | append: ': 14 dagen bedenktijd, hoe je herroept en het modelformulier.'
+        when 'herroepen'
+          assign desc = 'Bestelling herroepen bij ' | append: shop.name | append: '. Vul je bestelnummer in en je krijgt binnen één werkdag een bevestiging.'
+        when 'algemene-voorwaarden'
+          assign desc = 'De algemene voorwaarden van ' | append: shop.name | append: ' voor bestellen, betalen, leveren, retour en garantie.'
+        when 'privacy'
+          assign desc = 'Welke gegevens ' | append: shop.name | append: ' bewaart, waarvoor en hoe lang. En wat je rechten zijn.'
+        when 'cookiebeleid'
+          assign desc = 'Welke cookies ' | append: shop.name | append: ' gebruikt en hoe je zelf kiest wat je toestaat.'
+        when 'actie'
+          assign desc = 'Schrijf je in bij ' | append: shop.name | append: ' en ontvang 10% korting op je eerste bestelling.'
       endcase
+      if desc == blank
+        assign desc = page.content | strip_html | strip | truncate: 155
+      endif
     when 'collection'
       if collection.description == blank
-        assign desc = 'Draagtassen voor je surfboard, waxblokjes en karabijnhaken van ' | append: shop.name | append: '. Sterk, gemaakt voor nat en zand en om mee op pad te gaan.'
+        case collection.handle
+          when 'draagtassen'
+            assign desc = 'Draagtassen voor je surfboard in negen prints. Past om softtops en hardboards, met een brede schouderband. Van ' | append: shop.name | append: '.'
+          when 'surfgear'
+            assign desc = 'Surfwax voor koud, koel en warm water, een waxkam, karabijnhaken en stickers van ' | append: shop.name | append: '.'
+          when 'kleding-en-accessoires'
+            assign desc = 'Shirts, truien, een surfponcho, petten en een strandhanddoek van biologisch katoen. Kleding en accessoires van ' | append: shop.name | append: '.'
+          else
+            assign desc = 'Alles van ' | append: shop.name | append: ': draagtassen voor je surfboard, surfgear, kleding en accessoires.'
+        endcase
       endif
   endcase
 -%}

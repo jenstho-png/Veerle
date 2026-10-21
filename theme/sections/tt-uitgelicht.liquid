@@ -4,9 +4,9 @@
     <div class="tt-uit__beeld">
       <div class="tt-uit__foto tt-onthul">
         {%- if p != blank and p.featured_media -%}
-          {{ p.featured_media | image_url: width: 1400 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 44vw, 92vw', widths: '600, 900, 1200, 1400', alt: '', class: 'tt-beeld__img' }}
+          {{ p.featured_media | image_url: width: 1400 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 44vw, 92vw', widths: '600, 900, 1200, 1400', alt: p.title, class: 'tt-beeld__img' }}
         {%- else -%}
-          {%- render 'tt-beeld', fallback: section.settings.fallback, alt: '', sizes: '(min-width: 990px) 44vw, 92vw' -%}
+          {%- render 'tt-beeld', fallback: section.settings.fallback, alt: 'De draagtas om een surfboard op het zand', sizes: '(min-width: 990px) 44vw, 92vw' -%}
         {%- endif -%}
       </div>
       {%- if section.settings.stickers -%}
@@ -38,9 +38,9 @@
               <li {{ block.shopify_attributes }}>
                 <a class="tt-uit__meer" href="{{ section.settings.link2 | default: '/collections/draagtassen' }}" aria-label="Nog {{ meer }} ontwerpen bekijken">
                   {%- if bp != blank and bp.featured_media -%}
-                    {{ bp.featured_media | image_url: width: 240 | image_tag: loading: 'lazy', sizes: '90px', widths: '120, 240', alt: '' }}
+                    {{ bp.featured_media | image_url: width: 240 | image_tag: loading: 'lazy', sizes: '90px', widths: '120, 240', alt: bp.title }}
                   {%- else -%}
-                    <img src="{{ block.settings.fallback | append: '-800.jpg' | asset_url }}" alt="" width="120" height="120" loading="lazy">
+                    <img src="{{ block.settings.fallback | append: '-800.jpg' | asset_url }}" alt="Draagtas {{ block.settings.naam | escape }}" width="120" height="120" loading="lazy">
                   {%- endif -%}
                   <span>+{{ meer }}</span>
                 </a>
@@ -55,10 +55,10 @@
             <li {{ block.shopify_attributes }}>
               <button type="button" class="{% if forloop.first %}is-actief{% endif %}" data-tt-groot="{{ groot }}" data-naam="{{ block.settings.naam | escape }}" data-nr="{{ forloop.index | prepend: '0' | slice: -2, 2 }}" data-url="{% if bp != blank %}{{ bp.url }}{% else %}/products/{{ block.settings.handle }}{% endif %}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
                 {%- if bp != blank and bp.featured_media -%}
-                  {{ bp.featured_media | image_url: width: 240 | image_tag: loading: 'lazy', sizes: '90px', widths: '120, 240', alt: '' }}
+                  {{ bp.featured_media | image_url: width: 240 | image_tag: loading: 'lazy', sizes: '90px', widths: '120, 240', alt: bp.title }}
                 {%- else -%}
                   {%- assign klein = block.settings.fallback | append: '-800.jpg' | asset_url -%}
-                  <img src="{{ klein }}" alt="" width="120" height="120" loading="lazy">
+                  <img src="{{ klein }}" alt="Draagtas {{ block.settings.naam | escape }}" width="120" height="120" loading="lazy">
                 {%- endif -%}
                 <span class="visually-hidden">{{ block.settings.naam }}</span>
               </button>

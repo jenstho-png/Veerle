@@ -20,6 +20,8 @@
       assign vast = 'retour'
     elsif page.handle contains 'privacy'
       assign vast = 'privacy'
+    elsif page.handle contains 'cookie'
+      assign vast = 'cookies'
     endif
   endif
 -%}
@@ -67,7 +69,8 @@
         { "value": "retour", "label": "Retourneren" },
         { "value": "herroepingsrecht", "label": "Herroepingsrecht" },
         { "value": "voorwaarden", "label": "Algemene voorwaarden" },
-        { "value": "privacy", "label": "Privacybeleid" }
+        { "value": "privacy", "label": "Privacybeleid" },
+        { "value": "cookies", "label": "Cookiebeleid" }
       ],
       "default": "geen"
     },

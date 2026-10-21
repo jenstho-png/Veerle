@@ -12,9 +12,9 @@
         <li class="tt-in" {{ block.shopify_attributes }}>
           <a class="tt-cols__tegel tt-cols__tegel--{{ block.settings.kleur }}" href="{{ doel }}">
             <span class="tt-cols__beeld">
-              {%- if c.featured_image -%}{{ c.featured_image | image_url: width: 1000 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', widths: '500, 750, 1000', alt: '' }}
-              {%- elsif block.settings.fallback != blank -%}{%- render 'tt-beeld', fallback: block.settings.fallback, alt: '', sizes: '(min-width: 750px) 33vw, 100vw' -%}
-              {%- elsif c.products.first.featured_media -%}{{ c.products.first.featured_media | image_url: width: 1000 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', widths: '500, 750, 1000', alt: '' }}
+              {%- if c.featured_image -%}{{ c.featured_image | image_url: width: 1000 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', widths: '500, 750, 1000', alt: c.title }}
+              {%- elsif block.settings.fallback != blank -%}{%- render 'tt-beeld', fallback: block.settings.fallback, alt: block.settings.label, sizes: '(min-width: 750px) 33vw, 100vw' -%}
+              {%- elsif c.products.first.featured_media -%}{{ c.products.first.featured_media | image_url: width: 1000 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', widths: '500, 750, 1000', alt: c.title }}
               {%- else -%}<span class="tt-cols__ill">{%- render 'tt-ill', naam: block.settings.ill -%}</span>{%- endif -%}
             </span>
             <span class="tt-cols__onder">

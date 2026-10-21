@@ -32,7 +32,7 @@
       {%- if met_foto.size >= 3 -%}
       <div class="tt-col__drie" aria-hidden="true">
         {%- for cp in met_foto limit: 3 -%}
-          <a class="tt-col__drie-foto tt-onthul" href="{{ cp.url }}" tabindex="-1">{{ cp.featured_media | image_url: width: 700 | image_tag: loading: 'eager', sizes: '(min-width: 990px) 16vw, 32vw', widths: '360, 520, 700', alt: '', class: 'tt-beeld__img' }}</a>
+          <a class="tt-col__drie-foto tt-onthul" href="{{ cp.url }}" tabindex="-1">{{ cp.featured_media | image_url: width: 700 | image_tag: loading: 'eager', sizes: '(min-width: 990px) 16vw, 32vw', widths: '360, 520, 700', alt: cp.title, class: 'tt-beeld__img' }}</a>
         {%- endfor -%}
       </div>
       {%- else -%}
